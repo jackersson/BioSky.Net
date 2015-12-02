@@ -17,7 +17,7 @@ namespace BioShell
   class BioModuleLoader
   {
     private readonly IWindsorContainer _mainContainer;
-
+    
     public BioModuleLoader(IWindsorContainer mainContainer)
     {
       _mainContainer = mainContainer;
