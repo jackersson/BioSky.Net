@@ -9,7 +9,7 @@
                       xmlns:y="clr-namespace:BioModule.Views;assembly=BioModule"  
                       xmlns:ky="clr-namespace:BioModule.ViewModels;assembly=BioModule"  
                       xmlns:z="clr-namespace:BioModule;assembly=BioModule" 
-                      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"                     
                       xmlns:cal="http://www.caliburnproject.org"
                       mc:Ignorable="d"
                       BorderThickness="1"
@@ -17,14 +17,55 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       d:DesignHeight="400" d:DesignWidth="400"
                       Title="BioShellView">
+    
+    
 
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25*"/>
-            <RowDefinition Height="395*"/>
-            <RowDefinition Height="47*"/>
+        <Grid.RowDefinitions>           
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
         <ContentControl Grid.Row="1" x:Name="CurrentTabControl" />
+
+        <TabControl Grid.Row="2" ItemsSource="{Binding FlyoutPages}">
+            <TabControl.Resources>
+                <DataTemplate DataType="{x:Type ky:SettingsViewModel}">
+                    <y:SettingsView x:Name="CurrentFlyout"></y:SettingsView>
+                </DataTemplate>                
+            </TabControl.Resources>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+        				Text="{Binding Caption}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding ScreenViewModel}"></ContentControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+
+        <Button Width="48" Grid.Row="0" Style="{DynamicResource MetroCircleButtonStyle}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <cal:ActionMessage MethodName="ShowSettings" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
     </Grid>
+
+    
+
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl x:Name="Flyouts">
+            <Controls:Flyout Header="Flyout" Position="Right" 
+                             Width="200" Theme="Dark">
+
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+
 </Controls:MetroWindow>

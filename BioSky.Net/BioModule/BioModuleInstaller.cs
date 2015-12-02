@@ -21,6 +21,7 @@ namespace BioModule
           .Register(Component.For<UsersViewModel>())
           .Register(Component.For<TabViewModel>())
           .Register(Component.For<VisitorsViewModel>())
+          .Register(Component.For<SettingsViewModel>())
           .Register(Component.For<IBioModule>().ImplementedBy<BioModuleImpl>());
     }
   }

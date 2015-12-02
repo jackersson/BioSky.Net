@@ -8,7 +8,8 @@ using System.Reflection;
 namespace BioContracts
 {
   public interface IBioShell
-  {    
+  {
+    ShellFlyoutControl FlyoutControl { get; }
     ShellTabControl TabControl { get; }
     IBioModule LoadModule(Assembly assembly);
   }

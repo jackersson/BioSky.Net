@@ -10,19 +10,21 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+
 using MahApps.Metro.Controls;
 
-namespace BioShell.Views
+namespace BioModule.Views
 {
-  /// <summary>
-  /// Interaction logic for BioShellView.xaml
-  /// </summary>
-  public partial class BioShellView : MetroWindow
-  {
-    public BioShellView()
+    /// <summary>
+    /// Interaction logic for SettingsView.xaml
+    /// </summary>
+    public partial class SettingsView : UserControl
     {
-      InitializeComponent();     
-    }   
-  }
+        public SettingsView()
+        {
+            //InitializeComponent();
+        }
+    }
 }

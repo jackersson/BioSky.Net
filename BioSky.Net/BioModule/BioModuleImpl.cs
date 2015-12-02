@@ -15,17 +15,19 @@ namespace BioModule
     private readonly TabViewModel      _tabControlViewModel;   
     private readonly UsersViewModel    _usersViewModel     ;
     private readonly VisitorsViewModel _visitorsViewModel  ;
-
+    private readonly SettingsViewModel _settingsViewModel;
 
     public BioModuleImpl( IBioShell shell
                         , TabViewModel tabControlViewModel
                         , UsersViewModel usersViewModel
-                        , VisitorsViewModel visitorsViewModel )
+                        , VisitorsViewModel visitorsViewModel
+                        , SettingsViewModel settingsViewModel)
     {
       _shell = shell;     
       _tabControlViewModel = tabControlViewModel;
       _usersViewModel      = usersViewModel;
       _visitorsViewModel   = visitorsViewModel;
+      _settingsViewModel   = settingsViewModel;
     }
 
     public void Init()
@@ -35,7 +37,9 @@ namespace BioModule
 
       _tabControlViewModel.update(_shell.TabControl);
 
-      _shell.TabControl.ScreenViewModel = _tabControlViewModel;    
+      _shell.TabControl.ScreenViewModel = _tabControlViewModel;
+
+      _shell.FlyoutControl.FlyoutPages.Add(new ShellFlyoutPage() { Caption = "Settings", ScreenViewModel = _settingsViewModel });
     }
   }
 }

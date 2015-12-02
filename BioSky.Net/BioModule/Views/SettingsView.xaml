@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="BioModule.Views.SettingsView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="300" >
+
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50*"/>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Height="48" Width="48" Style="{DynamicResource MetroCircleButtonStyle}">
+            <Image Source="{Binding SaveIconSource}" Width="32" Height="32"  />
+        </Button>
+        <Controls:NumericUpDown Grid.Row="2" Height="10" Width="50" Value="5" IsEnabled="true"
+                                        x:Name="Test"
+                                        TextAlignment="Left"
+                                        Minimum="0"
+                                        Maximum="10" />
+
+        <TextBox Grid.Column="0" Grid.Row="3" Width="200" Height="40"
+                         Controls:TextBoxHelper.Watermark="Number smaller than 10"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"/>
+
+        <TextBox Grid.Column="0" Grid.Row="4" Width="200" Height="40"
+                         Controls:TextBoxHelper.Watermark="Number smaller than 10"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"/>
+
+        <TextBox Grid.Column="0" Grid.Row="5" Height="40" Width="200"
+                         IsEnabled="False"
+                         Controls:TextBoxHelper.Watermark="Person information"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"/>
+
+
+
+    </Grid>
+</UserControl>

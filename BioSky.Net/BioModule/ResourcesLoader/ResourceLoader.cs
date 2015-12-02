@@ -27,6 +27,7 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _addIconSource   ;
     private static BitmapSource _removeIconSource;
     private static BitmapSource _deleteIconSource;
+    private static BitmapSource _saveIconSource  ;
 
     public static BitmapSource AddIconSource
     {
@@ -57,6 +58,16 @@ namespace BioModule.ResourcesLoader
           _deleteIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.delete);
         return _deleteIconSource;
       }
-    }   
+    }
+
+    public static BitmapSource SaveIconSource
+    {
+        get
+        {
+            if (_saveIconSource == null)
+                _saveIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.ok);
+            return _saveIconSource;
+        }
+    }
   }
 }

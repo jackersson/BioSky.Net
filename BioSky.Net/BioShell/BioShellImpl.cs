@@ -21,7 +21,9 @@ namespace BioShell
       _shellViewModel = shellViewModel;
     }
     
-    public ShellTabControl TabControl { get { return _shellViewModel.TabControl;  } }    
+    public ShellTabControl TabControl { get { return _shellViewModel.TabControl;  } }
+
+    public ShellFlyoutControl FlyoutControl { get { return _shellViewModel.FlyoutControl; } }    
 
     public IBioModule LoadModule(Assembly assembly)
     {
