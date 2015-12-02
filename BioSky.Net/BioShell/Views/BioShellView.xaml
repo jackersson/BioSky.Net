@@ -1,0 +1,30 @@
+﻿<Controls:MetroWindow x:Class="BioShell.Views.BioShellView"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:local="clr-namespace:BioShell.Views"
+                      xmlns:localvm="clr-namespace:BioShell.ViewModels"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:y="clr-namespace:BioModule.Views;assembly=BioModule"  
+                      xmlns:ky="clr-namespace:BioModule.ViewModels;assembly=BioModule"  
+                      xmlns:z="clr-namespace:BioModule;assembly=BioModule" 
+                      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                      xmlns:cal="http://www.caliburnproject.org"
+                      mc:Ignorable="d"
+                      BorderThickness="1"
+                      WindowStartupLocation="CenterScreen"
+                      BorderBrush="{DynamicResource AccentColorBrush}"
+                      d:DesignHeight="400" d:DesignWidth="400"
+                      Title="BioShellView">
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25*"/>
+            <RowDefinition Height="395*"/>
+            <RowDefinition Height="47*"/>
+        </Grid.RowDefinitions>
+        <ContentControl Grid.Row="1" x:Name="CurrentTabControl" />
+    </Grid>
+</Controls:MetroWindow>
