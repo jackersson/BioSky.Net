@@ -15,7 +15,7 @@ namespace BioModule.ViewModels
 
         public BitmapSource SaveIconSource
         {
-            get { return ResourceLoader.SaveIconSource; }
+            get { return ResourceLoader.OkIconSource; }
         } 
 
 

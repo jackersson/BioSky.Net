@@ -23,13 +23,27 @@ namespace BioShell.ViewModels
 {
   public class BioShellViewModel : PropertyChangedBase
   {
+
+    public BioShellViewModel()
+    {
+      _tabControl   = new ShellTabControl   ();
+      _flyouts      = new ShellFlyoutControl();
+      //_trackControl = new ShellTrackControl ();
+
+      IsSettingsOpen = false;
+    }
+
+
     private ShellTabControl    _tabControl;
-    private ShellFlyoutControl _flyouts;
+    private ShellFlyoutControl _flyouts   ;
+   // private ShellTrackControl  _trackControl;
 
     public ShellTabControl TabControl
     {
       get { return _tabControl; }          
     }
+
+  
 
     public ShellFlyoutControl FlyoutControl
     {
@@ -49,13 +63,12 @@ namespace BioShell.ViewModels
 
     public ObservableCollection<ShellFlyoutPage> FlyoutPages
     {
-      get { return _flyouts.FlyoutPages; }      
+      get
+      {        
+        return _flyouts.FlyoutPages;
+      }      
     }
-
-    public void AddTabPage()
-    {
-      NotifyOfPropertyChange(() => CurrentTabControl);
-    }
+   
     public object CurrentTabControl
     {
       get { return _tabControl.ScreenViewModel;  }     
@@ -65,35 +78,29 @@ namespace BioShell.ViewModels
     {
       get { return _flyouts.FlyoutPages[0].ScreenViewModel; }
     }
-   
-    public BioShellViewModel()
-    {
-      _tabControl = new ShellTabControl();
-      _flyouts    = new ShellFlyoutControl();
 
-      //FlyoutControl.FlyoutPages.Add(new ShellFlyoutPage { Caption = "Test" });
-      //_flyouts.Items.Add( new Flyout() )
+    public object CurrentFlyoutCaption
+    {
+      get { return _flyouts.FlyoutPages[0].Caption; }
+    }
+
+
+    private bool _isSettingOpen;
+    public bool IsSettingsOpen
+    {
+      get { return _isSettingOpen; }
+      set
+      {
+        _isSettingOpen = value;
+        NotifyOfPropertyChange(() => IsSettingsOpen);
+      }
     }
 
     public void ShowSettings()
-    {
-      NotifyOfPropertyChange(() => FlyoutPages);
-      NotifyOfPropertyChange(() => CurrentFlyout);
-
-
-      //this.ToggleFlyout(0);
+    {      
+      IsSettingsOpen = !IsSettingsOpen;      
     }
 
-    private void ToggleFlyout(int index)
-    {
-      /*var flyout = this.FlyoutControl.Items[index] as Flyout;
-      if (flyout == null)
-      {
-          return;
-      }
-
-      flyout.IsOpen = !flyout.IsOpen;*/
-    }
 
   
 

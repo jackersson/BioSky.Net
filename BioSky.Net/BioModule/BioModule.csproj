@@ -114,6 +114,22 @@
     </Compile>
     <Compile Include="ResourcesLoader\ResourceLoader.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\TrackControlItemViewModel.cs" />
+    <Compile Include="ViewModels\TrackControlViewModel.cs" />
+    <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
+    <Compile Include="ViewModels\UserPageViewModel.cs" />
+    <Compile Include="Views\TrackControlItemView.xaml.cs">
+      <DependentUpon>TrackControlItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrackControlView.xaml.cs">
+      <DependentUpon>TrackControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserContactlessCardView.xaml.cs">
+      <DependentUpon>UserContactlessCardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserPageView.xaml.cs">
+      <DependentUpon>UserPageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\UsersViewModel.cs" />
     <Compile Include="ViewModels\TabViewModel.cs" />
     <Compile Include="ViewModels\VisitorsViewModel.cs" />
@@ -131,6 +147,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\TrackControlItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TrackControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserContactlessCardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -174,6 +206,42 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ok.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\contact_card.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\facial_scan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fingerprint_scan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iris_scan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user_image.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\card_in_use.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disconnected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\not_verified.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\verified.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

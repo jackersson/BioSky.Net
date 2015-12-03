@@ -30,6 +30,13 @@
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
                     <local:VisitorsView x:Name="CurrentViewTab"></local:VisitorsView>
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:UserPageViewModel}">
+                    <local:UserPageView x:Name="CurrentViewTab"></local:UserPageView>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
+                    <local:TrackControlView x:Name="CurrentViewTab"></local:TrackControlView>
+                </DataTemplate>
             </TabControl.Resources>
             <TabControl.ItemTemplate>                
                 <DataTemplate>

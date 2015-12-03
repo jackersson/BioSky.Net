@@ -15,14 +15,14 @@ using System.Windows.Shapes;
 
 namespace BioModule.Views
 {
-    /// <summary>
-    /// Interaction logic for SettingsView.xaml
-    /// </summary>
-    public partial class SettingsView : UserControl
+  /// <summary>
+  /// Interaction logic for TrackControlItemView.xaml
+  /// </summary>
+  public partial class TrackControlItemView : UserControl
   {
-        public SettingsView()
-        {
-            InitializeComponent();
-        }
+    public TrackControlItemView()
+    {
+      InitializeComponent();
     }
+  }
 }

@@ -11,6 +11,8 @@ namespace BioContracts
   {
     ShellFlyoutControl FlyoutControl { get; }
     ShellTabControl TabControl { get; }
+
+    
     IBioModule LoadModule(Assembly assembly);
   }
 }
