@@ -5,13 +5,78 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Caliburn.Micro;
+using BioContracts;
 using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
 
 namespace BioModule.ViewModels
 {
   public class UserPageViewModel : PropertyChangedBase
   {
+
+
+    public UserPageViewModel()
+    {
+      _tabPages = new ObservableCollection<ShellTabPage>();
+
+      _tabPages.Add(new ShellTabPage() { Caption = "Cards", ScreenViewModel = new UserContactlessCardViewModel() });
+      _tabPages.Add(new ShellTabPage() { Caption = "Information", ScreenViewModel = new UserInformationViewModel() });
+      
+    }
+
+    private ObservableCollection<ShellTabPage> _tabPages;
+
+    public ObservableCollection<ShellTabPage> TabPages
+    {
+      get { return _tabPages; }
+      private set
+      {
+        if (_tabPages != value)
+        {
+          _tabPages = value;
+          NotifyOfPropertyChange(() => TabPages);
+        }
+      }
+    }
+
+    private ShellTabPage _selectedTabPage;
+    public ShellTabPage SelectedTabPage
+    {
+      get { return _selectedTabPage; }
+      set
+      {
+        if (_selectedTabPage == value)
+          return;
+        _selectedTabPage = value;
+        NotifyOfPropertyChange(() => SelectedTabPage);
+        NotifyOfPropertyChange(() => CurrentViewTab);
+      }
+    }
+
+    public object CurrentViewTab
+    {
+      get { return _selectedTabPage == null ? null : _selectedTabPage.ScreenViewModel; }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //************************************ Resources ****************************************************
     public BitmapSource UserDefaultImageIconSource
     {
       get { return ResourceLoader.UserDefaultImageIconSource; }

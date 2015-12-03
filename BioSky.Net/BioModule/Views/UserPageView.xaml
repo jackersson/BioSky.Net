@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BioModule.ViewModels"
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:local="clr-namespace:BioModule.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="400" d:DesignWidth="400">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -14,6 +15,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <vm:UserPageViewModel/>
+    </UserControl.DataContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -43,6 +48,28 @@
             <Image Width="24" Height="24" Source="{Binding DeleteIconSource}" />
         </Button>
 
+        <TabControl Grid.Column="1" Grid.RowSpan="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding TabPages}">
+            <TabControl.Resources>
+                <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
+                    <local:UserInformationView x:Name="CurrentViewTab"></local:UserInformationView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:UserContactlessCardViewModel}">
+                    <local:UserContactlessCardView x:Name="CurrentViewTab"></local:UserContactlessCardView>
+                </DataTemplate>               
+            </TabControl.Resources>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+        				Text="{Binding Caption}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding ScreenViewModel}"></ContentControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+        <!--
         <ListView Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Top">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -75,6 +102,7 @@
                 </StackPanel>
             </ListBoxItem>
         </ListView>
+        -->
         <ScrollViewer Grid.Column="0" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Margin="8,7,10,10" Grid.RowSpan="5" >
             <Image Source="{Binding UserDefaultImageIconSource}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Stretch="Fill"/>
         </ScrollViewer>

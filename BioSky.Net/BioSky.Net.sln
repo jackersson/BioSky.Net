@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioModule", "BioModule\BioM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioShell", "BioShell\BioShell.csproj", "{352C02F8-4638-4153-907E-57F8C7020BF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioData", "BioData\BioData.csproj", "{87F37BE5-5A7C-465A-9533-95D095304BC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{352C02F8-4638-4153-907E-57F8C7020BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{352C02F8-4638-4153-907E-57F8C7020BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{352C02F8-4638-4153-907E-57F8C7020BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87F37BE5-5A7C-465A-9533-95D095304BC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87F37BE5-5A7C-465A-9533-95D095304BC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87F37BE5-5A7C-465A-9533-95D095304BC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87F37BE5-5A7C-465A-9533-95D095304BC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

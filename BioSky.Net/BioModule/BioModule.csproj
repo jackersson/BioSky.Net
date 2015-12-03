@@ -113,6 +113,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourcesLoader\ResourceLoader.cs" />
+    <Compile Include="ViewModels\UserInformationViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TrackControlItemViewModel.cs" />
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
@@ -126,6 +127,9 @@
     </Compile>
     <Compile Include="Views\UserContactlessCardView.xaml.cs">
       <DependentUpon>UserContactlessCardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserInformationView.xaml.cs">
+      <DependentUpon>UserInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserPageView.xaml.cs">
       <DependentUpon>UserPageView.xaml</DependentUpon>
@@ -156,6 +160,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserContactlessCardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -242,6 +250,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\verified.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
