@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BioSkyNetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" Nullable="false" />
+          <Property Name="Location Name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Devices IN " Type="varchar(max)" />
+          <Property Name="Devices OUT" Type="varchar(max)" />
+          <Property Name="User Notification" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="First Name " Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Last Name " Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date Of Birth" Type="smalldatetime" />
+          <Property Name="Gender" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="Country" Type="varchar" MaxLength="50" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+          <Property Name="Photo" Type="varchar(max)" />
+          <Property Name="Thumbnail" Type="uniqueidentifier" />
+          <Property Name="Email" Type="varchar(max)" />
+          <Property Name="Comments" Type="varchar" MaxLength="50" />
+          <Property Name="Rights" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Card ID" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Visitor">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User UID" Type="bigint" />
+          <Property Name="Photo ID" Type="bigint" />
+          <Property Name="Full Photo ID" Type="bigint" />
+          <Property Name="Detection Time" Type="timestamp" StoreGeneratedPattern="Computed" />
+          <Property Name="Locaion ID" Type="bigint" />
+          <Property Name="Status" Type="char" MaxLength="10" />
+        </EntityType>
+        <EntityContainer Name="BioSkyNetModelStoreContainer">
+          <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Visitor" EntityType="Self.Visitor" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BioSkyNetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BioSkyNetEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="Location" EntityType="BioSkyNetModel.Location" />
+          <EntitySet Name="User" EntityType="BioSkyNetModel.User" />
+          <EntitySet Name="Visitor" EntityType="BioSkyNetModel.Visitor" />
+        </EntityContainer>
+        <EntityType Name="Location">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" />
+          <Property Name="Location_Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Devices_IN_" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Devices_OUT" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="User_Notification" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="First_Name_" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Last_Name_" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date_Of_Birth" Type="DateTime" Precision="0" />
+          <Property Name="Gender" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Photo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Thumbnail" Type="Guid" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Rights" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Card_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Visitor">
+          <Key>
+            <PropertyRef Name="UID" />
+          </Key>
+          <Property Name="UID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_UID" Type="Int64" />
+          <Property Name="Photo_ID" Type="Int64" />
+          <Property Name="Full_Photo_ID" Type="Int64" />
+          <Property Name="Detection_Time" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Locaion_ID" Type="Int64" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BioSkyNetModelStoreContainer" CdmEntityContainer="BioSkyNetEntities" >
+          <EntitySetMapping Name="Location">
+            <EntityTypeMapping TypeName="BioSkyNetModel.Location">
+              <MappingFragment StoreEntitySet="Location">
+                <ScalarProperty Name="User_Notification" ColumnName="User Notification" />
+                <ScalarProperty Name="Devices_OUT" ColumnName="Devices OUT" />
+                <ScalarProperty Name="Devices_IN_" ColumnName="Devices IN " />
+                <ScalarProperty Name="Location_Name" ColumnName="Location Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="BioSkyNetModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="Card_ID" ColumnName="Card ID" />
+                <ScalarProperty Name="Rights" ColumnName="Rights" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Thumbnail" ColumnName="Thumbnail" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Date_Of_Birth" ColumnName="Date Of Birth" />
+                <ScalarProperty Name="Last_Name_" ColumnName="Last Name " />
+                <ScalarProperty Name="First_Name_" ColumnName="First Name " />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Visitor">
+            <EntityTypeMapping TypeName="BioSkyNetModel.Visitor">
+              <MappingFragment StoreEntitySet="Visitor">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Locaion_ID" ColumnName="Locaion ID" />
+                <ScalarProperty Name="Detection_Time" ColumnName="Detection Time" />
+                <ScalarProperty Name="Full_Photo_ID" ColumnName="Full Photo ID" />
+                <ScalarProperty Name="Photo_ID" ColumnName="Photo ID" />
+                <ScalarProperty Name="User_UID" ColumnName="User UID" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
