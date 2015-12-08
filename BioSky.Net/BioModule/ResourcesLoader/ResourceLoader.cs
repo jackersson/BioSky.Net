@@ -41,6 +41,17 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _cardIconSource        ;
     private static BitmapSource _verificationIconSource;
 
+    private static BitmapSource _refreshIconSource;
+
+    private static BitmapSource _uploadIconSource;
+
+    private static BitmapSource _addUserIconSource;
+    private static BitmapSource _addLocationIconSource;
+    private static BitmapSource _journalListIconSource;
+    private static BitmapSource _usersListIconSource;
+
+
+    
     public static BitmapSource CancelIconSource
     {
       get
@@ -91,7 +102,72 @@ namespace BioModule.ResourcesLoader
             return _okIconSource;
         }
     }
+    //************************************************Image View**********************************************
+    public static BitmapSource UploadIconSource
+    {
+      get
+      {
+        if (_uploadIconSource == null)
+          _uploadIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.upload);
+        return _uploadIconSource;
+      }
+    }
 
+
+
+    //************************************************Flayout Settings*****************************************
+
+    public static BitmapSource RefreshIconSource
+    {
+      get
+      {
+        if (_refreshIconSource == null)
+          _refreshIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.refresh);
+        return _refreshIconSource;
+      }
+    }
+
+    //************************************************Toolbar Settings*****************************************
+
+    public static BitmapSource AddUserIconSource
+    {
+      get
+      {
+        if (_addUserIconSource == null)
+          _addUserIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.add_user);
+        return _addUserIconSource;
+      }
+    }
+
+    public static BitmapSource AddLocationIconSource
+    {
+      get
+      {
+        if (_addLocationIconSource == null)
+          _addLocationIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.add_location);
+        return _addLocationIconSource;
+      }
+    }
+
+    public static BitmapSource JournalListIconSource
+    {
+      get
+      {
+        if (_journalListIconSource == null)
+          _journalListIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.journal_list);
+        return _journalListIconSource;
+      }
+    }
+
+    public static BitmapSource UsersListIconSource
+    {
+      get
+      {
+        if (_usersListIconSource == null)
+          _usersListIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.users_list);
+        return _usersListIconSource;
+      }
+    }
 
     //*************************************************** User Page *******************************************
     public static BitmapSource UserInformationIconSource

@@ -20,8 +20,9 @@ namespace BioModule.ViewModels
     {
       _tabPages = new ObservableCollection<ShellTabPage>();
 
-      _tabPages.Add(new ShellTabPage() { Caption = "Cards", ScreenViewModel = new UserContactlessCardViewModel() });
       _tabPages.Add(new ShellTabPage() { Caption = "Information", ScreenViewModel = new UserInformationViewModel() });
+      _tabPages.Add(new ShellTabPage() { Caption = "Cards", ScreenViewModel = new UserContactlessCardViewModel() });
+      
       
     }
 
