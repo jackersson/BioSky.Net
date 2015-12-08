@@ -42,7 +42,7 @@ namespace BioShell
 
         return module;
       }
-      catch (Exception ex)
+      catch (Exception )
       {
         //TODO: good exception handling 
         return null;

@@ -3,51 +3,79 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                 xmlns:vm="clr-namespace:BioModule.ViewModels"
                  xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  mc:Ignorable="d"                  
                  d:DesignHeight="600" d:DesignWidth="300" >
 
-    
+    <UserControl.DataContext>
+        <vm:SettingsViewModel/>
+    </UserControl.DataContext>
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="48"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50*"/>
             <RowDefinition Height="50*"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="50*"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="50*"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
+            <RowDefinition Height="48"/>
             <RowDefinition Height="50*"/>
             <RowDefinition Height="50*"/>
             <RowDefinition Height="50*"/>
             <RowDefinition Height="50*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Height="48" Width="48" Style="{DynamicResource MetroCircleButtonStyle}">
+
+        <Label Grid.Row="1"  Grid.Column="1" Grid.ColumnSpan="3" Content="Location Name"  HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+        <Controls:SplitButton Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Name="SplitButton1"                                  
+                              HorizontalContentAlignment="Left"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              ItemsSource="{Binding Albums}"
+                              DisplayMemberPath="Title" />
+
+
+        <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Content="Devices" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+
+        <Controls:SplitButton Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Name="SplitButton2"                                  
+                                  HorizontalContentAlignment="Left"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  ItemsSource="{Binding Albums}"
+                                  DisplayMemberPath="Title" 
+                                  />
+
+        <Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Content="Email Notification" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+        <Controls:SplitButton Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" Name="SplitButton3"                                  
+                                  HorizontalContentAlignment="Left"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"                         
+                                  ItemsSource="{Binding Albums}"
+                                  DisplayMemberPath="Title"      />
+
+        <Button Grid.Row="8" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Source="{Binding SaveIconSource}" Width="32" Height="32"  />
         </Button>
-        <Controls:NumericUpDown Grid.Row="2" Height="10" Width="50" Value="5" IsEnabled="true"
-                                        x:Name="Test"
-                                        TextAlignment="Left"
-                                        Minimum="0"
-                                        Maximum="10" />
 
-        <TextBox Grid.Column="0" Grid.Row="3" Width="200" Height="40"
-                         Controls:TextBoxHelper.Watermark="Number smaller than 10"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"/>
+        <Button  Grid.Row="8" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
+            <Image Source="{Binding RefreshIconSource}" Width="32" Height="32"  />
+        </Button>
 
-        <TextBox Grid.Column="0" Grid.Row="4" Width="200" Height="40"
-                         Controls:TextBoxHelper.Watermark="Number smaller than 10"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"/>
-
-        <TextBox Grid.Column="0" Grid.Row="5" Height="40" Width="200"
-                         IsEnabled="False"
-                         Controls:TextBoxHelper.Watermark="Person information"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"/>
-
-
+        <Button Grid.Row="8" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
+            <Image Source="{Binding CancelIconSource}" Width="32" Height="32"  />
+        </Button>
 
     </Grid>
 </UserControl>

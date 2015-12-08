@@ -21,30 +21,37 @@
                       d:DesignHeight="400" d:DesignWidth="400"
                       Title="BioShellView">
 
-    
+
     <Grid>
-        <Grid.RowDefinitions>           
-            <RowDefinition Height="48"/>                   
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="296*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
-        
-        <ContentControl Grid.Row="1" x:Name="CurrentTabControl" />
-                
-        
 
-        <Button Width="48" Grid.Row="0" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleButtonStyle}">
+        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="CurrentTabControl" Grid.ColumnSpan="2" />
+
+
+        <Button Width="48" Grid.Row="0" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="1">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cal:ActionMessage MethodName="ShowSettings" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
+        
+        <y:MainMenu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"></y:MainMenu>
+        
+        <y:ToolBar Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"></y:ToolBar>
     </Grid>
 
 
-    <!--
+
     <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl >            
+        <Controls:FlyoutsControl >
             <Controls:FlyoutsControl.Resources>
                 <DataTemplate DataType="{x:Type ky:SettingsViewModel}">
                     <y:SettingsView x:Name="CurrentFlyout"></y:SettingsView>
@@ -57,5 +64,5 @@
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
--->
+
 </Controls:MetroWindow>

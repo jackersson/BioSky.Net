@@ -16,7 +16,17 @@ namespace BioModule.ViewModels
         public BitmapSource SaveIconSource
         {
             get { return ResourceLoader.OkIconSource; }
-        } 
+        }
+
+        public BitmapSource CancelIconSource
+        {
+          get { return ResourceLoader.CancelIconSource; }
+        }
+
+        public BitmapSource RefreshIconSource
+        {
+          get { return ResourceLoader.RefreshIconSource; }
+        }
 
 
     }

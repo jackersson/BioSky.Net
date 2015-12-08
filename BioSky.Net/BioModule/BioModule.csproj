@@ -113,12 +113,24 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourcesLoader\ResourceLoader.cs" />
+    <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\MainMenuModel.cs" />
+    <Compile Include="ViewModels\ToolBarModel.cs" />
     <Compile Include="ViewModels\UserInformationViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TrackControlItemViewModel.cs" />
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
     <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
     <Compile Include="ViewModels\UserPageViewModel.cs" />
+    <Compile Include="Views\ImageView.xaml.cs">
+      <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToolBar.xaml.cs">
+      <DependentUpon>ToolBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TrackControlItemView.xaml.cs">
       <DependentUpon>TrackControlItemView.xaml</DependentUpon>
     </Compile>
@@ -151,6 +163,18 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TrackControlItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -192,6 +216,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +278,24 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\upload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\users_list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\journal_list.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_location.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

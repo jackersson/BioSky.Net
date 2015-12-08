@@ -73,6 +73,26 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap add_location {
+            get {
+                object obj = ResourceManager.GetObject("add_location", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap add_user {
+            get {
+                object obj = ResourceManager.GetObject("add_user", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cancel {
             get {
                 object obj = ResourceManager.GetObject("cancel", resourceCulture);
@@ -173,6 +193,16 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap journal_list {
+            get {
+                object obj = ResourceManager.GetObject("journal_list", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap not_verified {
             get {
                 object obj = ResourceManager.GetObject("not_verified", resourceCulture);
@@ -193,6 +223,16 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap refresh {
+            get {
+                object obj = ResourceManager.GetObject("refresh", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap remove {
             get {
                 object obj = ResourceManager.GetObject("remove", resourceCulture);
@@ -203,9 +243,29 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap upload {
+            get {
+                object obj = ResourceManager.GetObject("upload", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap user_image {
             get {
                 object obj = ResourceManager.GetObject("user_image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap users_list {
+            get {
+                object obj = ResourceManager.GetObject("users_list", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
