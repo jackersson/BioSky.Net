@@ -11,9 +11,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
 
-    <UserControl.DataContext>
-        <vm:TabViewModel/>
-    </UserControl.DataContext>
+    
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,10 +23,11 @@
         <TabControl ItemsSource="{Binding TabPages}">
             <TabControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">
-                    <local:UsersView x:Name="CurrentViewTab"></local:UsersView>
+                    <local:UsersView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}">                    
+                    </local:UsersView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
-                    <local:VisitorsView x:Name="CurrentViewTab"></local:VisitorsView>
+                    <local:VisitorsView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:VisitorsView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPageViewModel}">
                     <local:UserPageView x:Name="CurrentViewTab"></local:UserPageView>

@@ -54,6 +54,7 @@ namespace BioConsole
       string connectionString3 = buildConnectionString(dbPath);
       System.Console.WriteLine(connectionString3);
 
+      /*
       using (BioSkyNetEntities db = new BioSkyNetEntities(connectionString3))
       {
 
@@ -101,6 +102,7 @@ namespace BioConsole
         Console.ReadLine();
 
       }
+      */
     }
   }
 }

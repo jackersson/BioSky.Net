@@ -69,6 +69,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BioAccessDevice\BioAccessDevice.csproj">
+      <Project>{09df37b6-4105-4c3a-8f1c-8bc4ec95dc05}</Project>
+      <Name>BioAccessDevice</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BioData\BioData.csproj">
       <Project>{979ee57f-fd15-43c8-917a-4e53ad1c4ad4}</Project>
       <Name>BioData</Name>

@@ -13,17 +13,37 @@ namespace BioModule.ViewModels
 {
   public class TabViewModel : PropertyChangedBase
   {
+
+    /*
+    private UsersViewModel _usersViewModel;
+
+    public UsersViewModel UserViewModel
+    {
+      get { return _usersViewModel; }
+      private set
+      {
+        if (_usersViewModel != value)
+        {
+          _usersViewModel = value;
+          NotifyOfPropertyChange(() => UserViewModel);
+        }
+      }
+    }
+    */
     private ObservableCollection<ShellTabPage> _tabPages;
     ShellTabControl _tabControl;
-    public TabViewModel()
+    public TabViewModel( )
     {
-     
+      
     }
 
-    public void update(ShellTabControl tabcontrol)
+    public void update(ShellTabControl tabcontrol/*, UsersViewModel usersViewModel*/)
     {
       _tabControl = tabcontrol;
       TabPages = _tabControl.TabPages;
+
+      //_usersViewModel = usersViewModel;
+      //NotifyOfPropertyChange(() => UserViewModel);
     }
 
 

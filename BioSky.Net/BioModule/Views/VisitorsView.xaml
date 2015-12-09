@@ -4,9 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"           
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
+
+ 
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -29,8 +32,9 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <DataGrid Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5"/>
-
+        <DataGrid ItemsSource="{Binding Visitors}"  Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5">
+        </DataGrid>
+    
         <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">
             <Image Source="{Binding AddIconSource}" Width="32" Height="32" />
         </Button>
