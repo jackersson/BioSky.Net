@@ -19,10 +19,11 @@ namespace BioShell
       container
           .Register(Component.For<IWindsorContainer>().Instance(container))
           .Register(Component.For<ShellTabControl>())
-          .Register(Component.For<BioShellViewModel>() /*.LifeStyle.Singleton*/)          
+          .Register(Component.For<BioShellViewModel>() /*.LifeStyle.Singleton*/)
           .Register(Component.For<BioModuleLoader>())
+          .Register(Component.For<BioDataLoader>())
           .Register(Component.For<IBioShell>().ImplementedBy<BioShellImpl>());
-        
+
     }
   }
 }

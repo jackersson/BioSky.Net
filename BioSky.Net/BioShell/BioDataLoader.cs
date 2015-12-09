@@ -3,54 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Caliburn.Micro;
 using System.Reflection;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 
-
-using BioContracts;
-
-
 namespace BioShell
 {
-  class BioModuleLoader
+  class BioDataLoader
   {
     private readonly IWindsorContainer _mainContainer;
-    
-    public BioModuleLoader(IWindsorContainer mainContainer)
+
+    public BioDataLoader(IWindsorContainer mainContainer)
     {
       _mainContainer = mainContainer;
     }
 
-    public IBioModule LoadModule(Assembly assembly)
+    public bool LoadData(Assembly assembly)
     {
       try
       {
         var moduleInstaller = FromAssembly.Instance(assembly);
 
-        var modulecontainer = new WindsorContainer();
+        //var modulecontainer = new WindsorContainer();
 
-        _mainContainer.AddChildContainer(modulecontainer);
+        //_mainContainer.AddChildContainer(modulecontainer);
 
-        modulecontainer.Install(moduleInstaller);
-
-        var module = modulecontainer.Resolve<IBioModule>();
+        _mainContainer.Install(moduleInstaller);
 
         if (!AssemblySource.Instance.Contains(assembly))
           AssemblySource.Instance.Add(assembly);
 
-        return module;
+        return true;
       }
-      catch (Exception )
+      catch (Exception)
       {
         //TODO: good exception handling 
-        return null;
+        return false;
       }
     }
-
-    
-
-
   }
 }

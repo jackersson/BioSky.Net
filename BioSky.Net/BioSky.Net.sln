@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioConsole", "BioConsole\Bi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioData", "BioData\BioData.csproj", "{979EE57F-FD15-43C8-917A-4E53AD1C4AD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioAccessDevice", "BioAccessDevice\BioAccessDevice.csproj", "{09DF37B6-4105-4C3A-8F1C-8BC4EC95DC05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{979EE57F-FD15-43C8-917A-4E53AD1C4AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{979EE57F-FD15-43C8-917A-4E53AD1C4AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{979EE57F-FD15-43C8-917A-4E53AD1C4AD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09DF37B6-4105-4C3A-8F1C-8BC4EC95DC05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09DF37B6-4105-4C3A-8F1C-8BC4EC95DC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09DF37B6-4105-4C3A-8F1C-8BC4EC95DC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09DF37B6-4105-4C3A-8F1C-8BC4EC95DC05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

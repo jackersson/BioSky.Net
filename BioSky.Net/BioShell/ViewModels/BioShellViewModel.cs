@@ -30,7 +30,7 @@ namespace BioShell.ViewModels
       _flyouts      = new ShellFlyoutControl();
       //_trackControl = new ShellTrackControl ();
 
-      IsSettingsOpen = true;
+      IsSettingsOpen = false;
     }
 
 

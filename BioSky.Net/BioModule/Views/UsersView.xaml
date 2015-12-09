@@ -4,20 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:data="clr-namespace:BioData;assembly=BioData"
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="400">
+             d:DesignHeight="400" d:DesignWidth="400"
+>
+
     
+
     <UserControl.Resources>
         <ResourceDictionary>            
             <ResourceDictionary.MergedDictionaries>                
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Thickness x:Key="ControlMargin">0 5 0 5</Thickness>
+            <Thickness x:Key="ControlMargin">0 5 0 5</Thickness>         
         </ResourceDictionary>      
     </UserControl.Resources>
-    
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
@@ -31,7 +37,9 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <DataGrid Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5"/>
+        <DataGrid ItemsSource="{Binding Users}" AutoGenerateColumns="True" Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5" GridLinesVisibility="All">
+           
+        </DataGrid>
 
         <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">
             <Image Source="{Binding AddIconSource}" Width="32" Height="32" />

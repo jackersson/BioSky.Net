@@ -25,13 +25,20 @@ namespace BioShell
 
     protected override void OnStartup(object sender, StartupEventArgs e)
     {
-      var loader = _container.Resolve<BioModuleLoader>();
+      var loader     = _container.Resolve<BioModuleLoader>();
+      var dataloader = _container.Resolve<BioDataLoader>();
 
       var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-      var pattern = "*.dll";
+
+      var pattern = "BioData.dll";
+
+    
+      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
+
+           pattern = "BioModule.dll";
 
       Directory
-          .GetFiles(exeDir, pattern)
+          .GetFiles(exeDir, pattern)          
           .Select(Assembly.LoadFrom)
           .Select(loader.LoadModule)
           .Where(module => module != null)
