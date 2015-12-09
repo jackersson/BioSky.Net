@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             
-             
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:cal="http://www.caliburnproject.org"            
              xmlns:local="clr-namespace:BioModule.Views"
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="300">
+    
+    <UserControl.DataContext>
+        <vm:UserInformationViewModel/>
+    </UserControl.DataContext>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -21,11 +26,11 @@
             <RowDefinition Height="48"/>
 
         </Grid.RowDefinitions>
-        <ScrollViewer  Grid.Column="0" Grid.Row="0"  CanContentScroll="True"
+        <ScrollViewer  Grid.Column="0" Grid.Row="0"  CanContentScroll="True" 
                                   VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-                <TextBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <TextBox x:Name="FirstNameBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="First Name*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True" />
@@ -69,7 +74,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button cal:Message.Attach="[Event Click] = [Action UserInfo(FirstNameBox.Text)]" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding OkIconSource}" />
         </Button>
 

@@ -5,8 +5,10 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                  xmlns:vm="clr-namespace:BioModule.ViewModels"
                  xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 xmlns:cal="http://www.caliburnproject.org" 
+                 xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                  mc:Ignorable="d"                  
-                 d:DesignHeight="600" d:DesignWidth="300" >
+                 d:DesignHeight="600" d:DesignWidth="360" >
 
     <UserControl.DataContext>
         <vm:SettingsViewModel/>
@@ -14,66 +16,158 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="30*"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="32"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="48"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="50*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="1"  Grid.Column="1" Grid.ColumnSpan="3" Content="Location Name"  HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <ScrollViewer  Grid.Column="1" Grid.Row="0"  CanContentScroll="True"
+                                  VerticalScrollBarVisibility="Visible" Grid.ColumnSpan="4">
 
-        <Controls:SplitButton Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Name="SplitButton1"                                  
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30*"/>
+                        <ColumnDefinition Width="30*"/>
+
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="10"/>
+                    </Grid.RowDefinitions>
+
+                <Label Grid.Row="1"  Grid.Column="1" Grid.ColumnSpan="2" Content="Location Name"  HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+                <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Name="SplitButton1"                                  
                               HorizontalContentAlignment="Left"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
-                              ItemsSource="{Binding Albums}"
-                              DisplayMemberPath="Title" />
+ />
 
 
-        <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Content="Devices" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                    <Label Grid.Row="3" Grid.Column="1" Content="Devices" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
-        <Controls:SplitButton Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Name="SplitButton2"                                  
-                                  HorizontalContentAlignment="Left"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"
-                                  ItemsSource="{Binding Albums}"
-                                  DisplayMemberPath="Title" 
-                                  />
+                    <Label Grid.Row="4" Grid.Column="1" Content="In" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
-        <Label Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" Content="Email Notification" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                    <ListBox x:Name="DevicesIn" Grid.Row="5" Grid.Column="1"  Style="{StaticResource VirtualisedMetroListBox}" 
+                             ItemsSource="{Binding Path=LocationsIn}"
+                         BorderThickness="1"
+                         Margin="0,0,10,0"
+                         AllowDrop="True"                               
+                         SelectedIndex="0"                          
+                             >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewDrop">
+                            <cal:ActionMessage MethodName="OnDragDropIn">
+                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    </ListBox>
 
-        <Controls:SplitButton Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" Name="SplitButton3"                                  
-                                  HorizontalContentAlignment="Left"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch"                         
-                                  ItemsSource="{Binding Albums}"
-                                  DisplayMemberPath="Title"      />
+                    <Label Grid.Row="6" Grid.Column="1" Content="Out" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
-        <Button Grid.Row="8" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
+                <ListBox x:Name="DevicesOut" Grid.Row="7" Grid.Column="1" Margin="0,0,10,0"   Style="{StaticResource VirtualisedMetroListBox}"                         
+                         BorderThickness="1"                         
+                         SelectedIndex="0" 
+                         ItemsSource="{Binding Path=LocationsOut}"
+                         AllowDrop="True"                 
+                             >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewDrop">
+                            <cal:ActionMessage MethodName="OnDragDropOut">
+                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                            </cal:ActionMessage>
+                        </i:EventTrigger>                        
+                    </i:Interaction.Triggers>
+                </ListBox>
+
+                    <Label Grid.Row="4" Grid.Column="3" Content="All" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+
+                    <ListBox x:Name="Devices" Grid.Row="5" Grid.Column="3"  Style="{StaticResource VirtualisedMetroListBox}"                         
+                         BorderThickness="1"
+                         Margin="1"
+                         SelectedIndex="0" Grid.RowSpan="3" 
+                         ItemsSource="{Binding Path=Locations}"
+                         SelectedItem="{Binding Path=SelectedLocation, Mode=TwoWay}"                     
+                             >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseDown">
+                            <cal:ActionMessage MethodName="OnMouseDown">
+                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    </ListBox>
+
+
+                <Label Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Content="Email Notification" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+                    <Label Grid.Row="9" Grid.Column="1" Content="Email" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+                    <ListBox Grid.Row="10" Grid.Column="1" Margin="0,0,10,0"  Style="{StaticResource VirtualisedMetroListBox}"                         
+                         BorderThickness="1"
+                         ItemsSource="{Binding Path=Email}"                         
+                         SelectedIndex="0" 
+                         AllowDrop="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewDrop">
+                            <cal:ActionMessage MethodName="OnDragDropEmail">
+                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListBox>
+
+                    <Label Grid.Row="9" Grid.Column="3" Content="Users" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+
+                    <ListBox Grid.Row="10" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource VirtualisedMetroListBox}"                         
+                         BorderThickness="1"
+                         Margin="1"
+                         SelectedIndex="0" 
+                         ItemsSource="{Binding Path=Users}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseDown">
+                            <cal:ActionMessage MethodName="OnMouseDown">
+                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    </ListBox>
+                </Grid>
+
+            
+            
+        </ScrollViewer>
+
+
+        <Button Grid.Row="11" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Source="{Binding SaveIconSource}" Width="32" Height="32"  />
         </Button>
 
-        <Button  Grid.Row="8" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button  Grid.Row="11" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
             <Image Source="{Binding RefreshIconSource}" Width="32" Height="32"  />
         </Button>
 
-        <Button Grid.Row="8" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button Grid.Row="11" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Source="{Binding CancelIconSource}" Width="32" Height="32"  />
         </Button>
 

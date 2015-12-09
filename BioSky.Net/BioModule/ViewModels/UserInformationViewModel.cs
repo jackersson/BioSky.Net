@@ -14,6 +14,11 @@ namespace BioModule.ViewModels
   public class UserInformationViewModel : PropertyChangedBase
   {
 
+    public UserInformationViewModel()
+    {
+      _firstNameBox = new System.Windows.Controls.TextBox();
+    }
+
     public BitmapSource OkIconSource
     {
       get { return ResourceLoader.OkIconSource; }
@@ -28,6 +33,31 @@ namespace BioModule.ViewModels
     {
       get { return ResourceLoader.DeleteIconSource; }
     }
+
+    private System.Windows.Controls.TextBox _firstNameBox;
+    public System.Windows.Controls.TextBox FirstNameBox
+    {
+      get
+      {
+        return _firstNameBox;
+      }
+      set
+      {
+        if (_firstNameBox != value)
+          _firstNameBox = value;
+
+        NotifyOfPropertyChange(() => FirstNameBox);
+      }
+    }
+
+     public void UserInfo(string firstName)
+    {
+
+      string s = firstName;
+
+
+      Console.WriteLine(s);
+    } 
 
   }
 }

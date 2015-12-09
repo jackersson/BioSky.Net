@@ -18,6 +18,7 @@
                       BorderBrush="{DynamicResource AccentColorBrush}"
                       Width="640"
                       Height="480"
+                      Icon="C:\Users\Spark\Source\Repos\BioSky.Net\BioSky.Net\BioModule\Resources\logo.ico"
                       d:DesignHeight="400" d:DesignWidth="400"
                       Title="BioShellView">
 
@@ -57,7 +58,7 @@
                     <y:SettingsView x:Name="CurrentFlyout"></y:SettingsView>
                 </DataTemplate>
             </Controls:FlyoutsControl.Resources>
-            <Controls:Flyout Header="{Binding CurrentFlyoutCaption}" Theme="Dark" Position="Right" IsOpen="{Binding IsSettingsOpen}"  Width="200" >
+            <Controls:Flyout Header="{Binding CurrentFlyoutCaption}" Theme="Dark" Position="Right" IsOpen="{Binding IsSettingsOpen}"  Width="300" >
                 <Grid>
                     <ContentControl Content="{Binding CurrentFlyout}"></ContentControl>
                 </Grid>

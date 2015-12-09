@@ -227,6 +227,10 @@
       <Project>{fedd6c6d-6cd4-4d74-a19c-f2715b0d1f5b}</Project>
       <Name>BioContracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BioData\BioData.csproj">
+      <Project>{979ee57f-fd15-43c8-917a-4e53ad1c4ad4}</Project>
+      <Name>BioData</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\add.png" />
@@ -296,6 +300,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\add_location.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

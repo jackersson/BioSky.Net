@@ -26,7 +26,6 @@ namespace BioModule.ViewModels
     double _height;
     double _scale;
     
-    
 
 
     public double Scale
@@ -42,9 +41,7 @@ namespace BioModule.ViewModels
 
         NotifyOfPropertyChange(() => Scale);
       }
-    }
-
-    
+    }    
 
     private double CurrWidth
     {
@@ -102,10 +99,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private System.Windows.Controls.Image _currentImageControl;
-
-
-   
+    private System.Windows.Controls.Image _currentImageControl;  
     public System.Windows.Controls.Image CurrentImageControl
     {
       get
@@ -122,7 +116,6 @@ namespace BioModule.ViewModels
     }
 
     private System.Windows.Controls.Slider _sliderControl;
-
     public System.Windows.Controls.Slider Slider
     {
       get
@@ -138,10 +131,7 @@ namespace BioModule.ViewModels
       }
     }
     
-    
-
     private MahApps.Metro.Controls.ToggleSwitch _toggleZoomToFit;
-
     public MahApps.Metro.Controls.ToggleSwitch FitSwitchControll
     {
       get
@@ -172,7 +162,6 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => _isCheckedValueControll);
       }
     }
-
     public void ResizeOnSlider(double width, double height, int sliderValue)
     {
       int i = sliderValue;
@@ -190,10 +179,6 @@ namespace BioModule.ViewModels
         Scale = CurrWidth / _currentImage.Width;
       }
     }
-
-
-
-
     public void Resize(double width, double height)
     {
       bool val = FitSwitchControll.IsChecked.Value;
@@ -207,16 +192,11 @@ namespace BioModule.ViewModels
         ZoomToFit(width, height);
         
       }
-
-
       Console.WriteLine(val2);
 /*
       Console.WriteLine(val);
       Console.WriteLine(val3);*/
       Console.WriteLine(" ");
-
-
-
     }
 
     public void UploadClick()
@@ -239,8 +219,12 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => UserDefaultImageIconSource);
         }
       }
+    }
 
-
+    public void CancelClick()
+    {
+      _currentImage = ResourceLoader.UserDefaultImageIconSource;
+      NotifyOfPropertyChange(() => UserDefaultImageIconSource);
     }
 
     public BitmapSource UploadIconSource
@@ -264,8 +248,6 @@ namespace BioModule.ViewModels
       }      
     }
 
-
-
     public void ZoomToFit( double viewWidth, double viewHeight )
     {
 
@@ -279,57 +261,7 @@ namespace BioModule.ViewModels
         CurrHeight = aspect_ratio * viewHeight * ratio;
 
         Scale = CurrWidth / _currentImage.Width;
-      }
-
-
-        
-       /* Rectangle innerRectangle;
-        double zoom;
-        double aspectRatio;
-
-        //this.AutoScrollMinSize = Size.Empty;
-
-        innerRectangle = this.GetInsideViewPort(true);
-
-        if (_currentImage.Width > _currentImage.Height)
-        {
-          aspectRatio = ((double)innerRectangle.Width) / ((double)_currentImage.Width);
-          zoom = aspectRatio * 100.0;
-
-          if (innerRectangle.Height < ((_currentImage.Height * zoom) / 100.0))
-          {
-            aspectRatio = ((double)innerRectangle.Height) / ((double)_currentImage.Height);
-            zoom = aspectRatio * 100.0;
-          }
-        }
-        else
-        {
-          aspectRatio = ((double)innerRectangle.Height) / ((double)_currentImage.Height);
-          zoom = aspectRatio * 100.0;
-
-          if (innerRectangle.Width < ((_currentImage.Width * zoom) / 100.0))
-          {
-            aspectRatio = ((double)innerRectangle.Width) / ((double)_currentImage.Width);
-            zoom = aspectRatio * 100.0;
-          }
-        }
-
-        this.Zoom = (int)Math.Round(Math.Floor(zoom));*/
-      
-    }
-
-
-
-
-
-   // private static readonly int MinZoom = 10;
-   // private static readonly int MaxZoom = 200;
-
- /*   [DefaultValue(100), Category("Appearance")]*/
-   
-
-
-
-    
+      }      
+    }    
   }
 }
