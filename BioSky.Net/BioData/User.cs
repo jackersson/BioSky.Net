@@ -11,7 +11,19 @@ namespace BioData
 {
     using System;
     using System.Collections.Generic;
-    
+
+  public enum Gender
+  {
+    Male = 0,
+    Female
+  }
+
+  public enum Rights
+  {
+    Superviser = 0,
+    Manager,
+    Operator
+  }
     public partial class User
     {
         public long UID { get; set; }

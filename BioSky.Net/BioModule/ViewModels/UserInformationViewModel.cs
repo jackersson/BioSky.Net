@@ -9,55 +9,102 @@ using Caliburn.Micro;
 using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
 
+using BioData;
+using BioModule.Model;
+using System.Collections.ObjectModel;
+
+using System.Windows.Data;
+using System.Reflection;
+using System.Globalization;
+
 namespace BioModule.ViewModels
 {
+ 
+  public class StringToGenderConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType,
+        object parameter, CultureInfo culture)
+    {
+      Gender gender;
+      Enum.TryParse(value.ToString(), out gender);
+      return gender;
+    }
+
+    public object ConvertBack(object value, Type targetType,
+        object parameter, CultureInfo culture)
+    {
+      return Enum.GetName(value.GetType(), value);       
+    }
+  }
+
+  public class StringToRightsConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType,
+        object parameter, CultureInfo culture)
+    {
+      Rights right;
+      Enum.TryParse(value.ToString(), out right);
+      return right;
+    }
+
+    public object ConvertBack(object value, Type targetType,
+            object parameter, CultureInfo culture)
+    {
+      return Enum.GetName(value.GetType(), value); ;
+    }
+  }
+
   public class UserInformationViewModel : PropertyChangedBase
   {
-
-    public UserInformationViewModel()
-    {
-      _firstNameBox = new System.Windows.Controls.TextBox();
+    IBioEngine _bioEngine;
+    public UserInformationViewModel(IBioEngine bioEngine)
+    {     
+      _bioEngine = bioEngine;   
     }
 
-    public BitmapSource OkIconSource
+    public void Update(User user)
     {
-      get { return ResourceLoader.OkIconSource; }
+      User = user;      
     }
 
-    public BitmapSource CancelIconSource
-    {
-      get { return ResourceLoader.CancelIconSource; }
-    }
+    public void SaveUserInfo()
+    {      
+      _bioEngine.Database().saveUserChanges();       
+    }       
+ 
+    //*************************************************Icon Source**************************************************************
 
-    public BitmapSource DeleteIconSource
-    {
-      get { return ResourceLoader.DeleteIconSource; }
-    }
+     public BitmapSource OkIconSource
+     {
+       get { return ResourceLoader.OkIconSource; }
+     }
 
-    private System.Windows.Controls.TextBox _firstNameBox;
-    public System.Windows.Controls.TextBox FirstNameBox
-    {
-      get
-      {
-        return _firstNameBox;
-      }
-      set
-      {
-        if (_firstNameBox != value)
-          _firstNameBox = value;
+     public BitmapSource CancelIconSource
+     {
+       get { return ResourceLoader.CancelIconSource; }
+     }
 
-        NotifyOfPropertyChange(() => FirstNameBox);
-      }
-    }
+     public BitmapSource DeleteIconSource
+     {
+       get { return ResourceLoader.DeleteIconSource; }
+     }
 
-     public void UserInfo(string firstName)
-    {
+    //**************************************************Propertyes************************************************************
 
-      string s = firstName;
+     private User _user;
+     public User User
+     {
+       get
+       {
+         return _user;
+       }
+       set
+       {
+         if (_user != value)
+           _user = value;
 
-
-      Console.WriteLine(s);
-    } 
-
+         NotifyOfPropertyChange(() => User);
+       }
+     } 
   }
 }

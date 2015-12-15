@@ -10,10 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <UserControl.DataContext>
-        <vm:TrackControlViewModel/>
-    </UserControl.DataContext>
-
+ 
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
             <local:TrackControlItemView></local:TrackControlItemView>
@@ -51,15 +48,22 @@
             <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
         </Button>
 
+        <DataGrid x:Name="LocationsList"  Grid.Row="0" BorderThickness="2" ItemsSource="{Binding Locations}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseRightButtonDown">
+                    <cal:ActionMessage MethodName="OnMouseRightButtonDown">
+                        <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                    </cal:ActionMessage>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid.ContextMenu >
+                <ContextMenu x:Name="ContextMenu" IsEnabled="True">
+                    <MenuItem Header="Open in New Tab" IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
 
-        <ListBox  Grid.Row="0" BorderThickness="2" ItemsSource="{Binding TrackControlItems}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Caption}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        
         <ContentControl x:Name="CurrentViewTab" Grid.Row="1" Grid.ColumnSpan="4">
             <ContentControl.ContentTemplate>
                 <DataTemplate>

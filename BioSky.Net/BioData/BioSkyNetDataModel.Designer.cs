@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'F:\C#\BioSkyNetSuccess\BioSky.Net\BioSky.Net\BioData\BioSkyNetDataModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\Spark\Source\Repos\BioSky.Net\BioSky.Net\BioData\BioSkyNetDataModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

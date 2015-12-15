@@ -7,12 +7,29 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:cal="http://www.caliburnproject.org"            
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:uservm ="clr-namespace:BioData;assembly=BioData"
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="300">
-    
-    <UserControl.DataContext>
-        <vm:UserInformationViewModel/>
-    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="dataFromEnumGender" MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="uservm:Gender"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="dataFromEnumRights" MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="uservm:Rights"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <vm:StringToGenderConverter x:Key="converterGender" />
+        <vm:StringToRightsConverter x:Key="converterRights" />
+
+    </UserControl.Resources> 
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -33,48 +50,56 @@
                 <TextBox x:Name="FirstNameBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="First Name*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True" />
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Text="{Binding User.First_Name_}"/>
 
-                <TextBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <TextBox x:Name="LastNameBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Last Name*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True" />
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Text="{Binding User.Last_Name_}"/>
 
-                <DatePicker  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                     
+                <DatePicker x:Name="DateOfBirthBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                     
                          Controls:TextBoxHelper.Watermark="Date of Birth"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"/>
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Text="{Binding User.Date_Of_Birth}"/>
 
-                <ComboBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumGender}}" SelectedItem="{Binding User.Gender, Converter={StaticResource converterGender}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Gender*"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"/>
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                           />
 
-                <TextBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <TextBox x:Name="CountryBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Country"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True" />
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Text="{Binding User.Country}"/>
 
-                <TextBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <TextBox x:Name="CityBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="City"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True" />
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Text="{Binding User.City}"/>
 
-                <TextBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <TextBox x:Name="EmailBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Email"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True" />
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Text="{Binding User.Email}"/>
 
-                <TextBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <TextBox x:Name="CommentsBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Comments"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True" />
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Text="{Binding User.Comments}"/>
 
-                <ComboBox  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumRights}}" SelectedItem="{Binding User.Rights, Converter={StaticResource converterRights}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Rights*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"/>
             </StackPanel>
         </ScrollViewer>
 
-        <Button cal:Message.Attach="[Event Click] = [Action UserInfo(FirstNameBox.Text)]" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button cal:Message.Attach="[Event Click] = [Action SaveUserInfo]" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding OkIconSource}" />
         </Button>
 

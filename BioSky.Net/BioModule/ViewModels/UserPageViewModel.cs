@@ -10,20 +10,25 @@ using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
 
+using BioModule.Model;
+
 namespace BioModule.ViewModels
 {
   public class UserPageViewModel : PropertyChangedBase
   {
 
+    IBioEngine _bioEngine;
 
-    public UserPageViewModel()
+    public UserPageViewModel( IBioEngine bioEngine )
     {
+      _bioEngine = bioEngine;
+
       _tabPages = new ObservableCollection<ShellTabPage>();
 
-      _tabPages.Add(new ShellTabPage() { Caption = "Information", ScreenViewModel = new UserInformationViewModel() });
+      _tabPages.Add(new ShellTabPage() { Caption = "Information", ScreenViewModel = new UserInformationViewModel(_bioEngine) });
       _tabPages.Add(new ShellTabPage() { Caption = "Cards", ScreenViewModel = new UserContactlessCardViewModel() });
-      
-      
+
+      CurrentImageView = new ImageViewModel();
     }
 
     private ObservableCollection<ShellTabPage> _tabPages;
@@ -58,6 +63,21 @@ namespace BioModule.ViewModels
     public object CurrentViewTab
     {
       get { return _selectedTabPage == null ? null : _selectedTabPage.ScreenViewModel; }
+    }
+
+    private ImageViewModel _currentImageView;
+
+    public ImageViewModel CurrentImageView
+    {
+      get { return _currentImageView; }
+      private set
+      {
+        if (_currentImageView != value)
+        {
+          _currentImageView = value;
+          NotifyOfPropertyChange(() => CurrentImageView);
+        }
+      }
     }
 
 

@@ -18,21 +18,17 @@
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Left">
             
-            <MenuItem Header="File"
-                          ItemsSource="{Binding AppThemes, Mode=OneWay}">
+            <MenuItem Header="File">
                 <MenuItem Header="Exit" />
             </MenuItem>
-            <MenuItem Header="Edit"
-                          ItemsSource="{Binding AccentColors, Mode=OneWay}"/>
-            <MenuItem Header="View"
-                          ItemsSource="{Binding AccentColors, Mode=OneWay}">
+            <MenuItem Header="Edit"/>
+            <MenuItem Header="View">
                 <MenuItem Header="Toolbar" />
                 <MenuItem Header="Settings" />
                 <MenuItem Header="Output window" />
 
             </MenuItem>            
-            <MenuItem Header="Help"
-                          ItemsSource="{Binding AccentColors, Mode=OneWay}">
+            <MenuItem Header="Help">
                 <MenuItem Header="About" />
             </MenuItem>
         </Menu>

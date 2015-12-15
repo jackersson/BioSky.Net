@@ -10,6 +10,9 @@ namespace BioData
   {
     IList<User>    getAllUsers();
     IList<Visitor> getAllVisitors();
+    IList<Location> getAllLocations();
+
+    void saveUserChanges();
 
   }
 }

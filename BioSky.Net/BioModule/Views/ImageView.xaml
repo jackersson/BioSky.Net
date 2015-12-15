@@ -9,11 +9,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-
-    <UserControl.DataContext>
-        <vm:ImageViewModel/>
-    </UserControl.DataContext>
-
+  
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="106*"/>
@@ -27,7 +23,7 @@
         </Grid.RowDefinitions>
         <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
             <Grid >
-                <ScrollViewer x:Name="CurrentImageScrollViewer" cal:Message.Attach="[Event SizeChanged] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"    HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
+                <ScrollViewer Name="CurrentImageScrollViewer" cal:Message.Attach="[Event SizeChanged] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, Slider.Value)]"    HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
                     <Image x:Name="CurrentImageControl" RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding UserDefaultImageIconSource}">
                         <Image.LayoutTransform>
                             <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"></ScaleTransform>
@@ -37,28 +33,28 @@
             </Grid>
         </Border>
 
-        <Slider x:Name="Slider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                cal:Message.Attach="[Event ValueChanged] = [Action ResizeOnSlider(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, Slider.Value)]"
-                    Minimum="0"
-                    Maximum="100"
-                    Value="20"
-                    LargeChange="10"
-                    SmallChange="1"                       
+        <Slider Name="Slider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                cal:Message.Attach="[Event ValueChanged] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, Slider.Value)]"
+                    Minimum="30"
+                    Maximum="150"
+                    Value="50"
+                    LargeChange="20"
+                    SmallChange="10"                       
                     />
 
-        <Controls:ToggleSwitch x:Name="FitSwitchControll" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                cal:Message.Attach="[Event Checked] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
-                                   IsChecked="{Binding Path=isCheckedValueControll, Mode=TwoWay}"
+        <Controls:ToggleSwitch Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                cal:Message.Attach="[Event Checked] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, Slider.Value)]"                               
+                                   IsChecked="{Binding Path=IsCheckedValueControll, Mode=TwoWay}"                                
                                    OnLabel="Fit On"
-                                   OffLabel="Fit Off" 
+                                   OffLabel="Fit Off"                              
                                
                                     />
 
-        <Button cal:Message.Attach="[Event Click] = [Action CancelClick]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding CancelIconSource}" />
         </Button>
 
-        <Button cal:Message.Attach="[Event Click] = [Action UploadClick]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button cal:Message.Attach="[Event Click] = [Action UploadClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}">
             <Image Width="24" Height="24" Source="{Binding UploadIconSource}" />           
         </Button>
     </Grid>

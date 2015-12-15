@@ -5,50 +5,99 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:ct="clr-namespace:ChromeTabs;assembly=ChromeTabs"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+             xmlns:contracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="400">
+             d:DesignHeight="400" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance vm:TabViewModel, IsDesignTimeCreatable=False}">
 
-    
+
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
+
+                <!-- primary color -->
+                <ResourceDictionary>
+                    <!-- include your primary palette -->
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Blue.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                    <!--
+                            include three hues from the primary palette (and the associated forecolours).
+                            Do not rename, keep in sequence; light to dark.
+                        -->
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary50}"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary50}"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary50}"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
+                </ResourceDictionary>
+
+                <!-- secondary colour -->
+                <ResourceDictionary>
+                    <!-- include your secondary pallette -->
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Blue.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+
+                    <!-- include a single secondary accent color (and the associated forecolour) -->
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Primary700}"/>
+                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Primary700Foreground}"/>
+                </ResourceDictionary>
+
+                <!-- Include the Dragablz Material Design style -->
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>
+
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- tell Dragablz tab control to use the Material Design theme -->
+            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" />
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>             
-        </Grid.RowDefinitions>                
-                           
-       
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <TabControl ItemsSource="{Binding TabPages}">
-            <TabControl.Resources>
+        <dragablz:TabablzControl Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                 ItemsSource="{Binding TabPages}" 
+                                 
+                                 SelectedIndex="0" 
+                                 ShowDefaultCloseButton="True">
+            <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">
-                    <local:UsersView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}">                    
+                    <local:UsersView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}">
                     </local:UsersView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
                     <local:VisitorsView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:VisitorsView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPageViewModel}">
-                    <local:UserPageView x:Name="CurrentViewTab"></local:UserPageView>
+                    <local:UserPageView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:UserPageView>
                 </DataTemplate>
-
                 <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
                     <local:TrackControlView x:Name="CurrentViewTab"></local:TrackControlView>
                 </DataTemplate>
-            </TabControl.Resources>
-            <TabControl.ItemTemplate>                
+            </dragablz:TabablzControl.Resources>
+            <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
-                    <TextBlock
-        				Text="{Binding Caption}" />
+                    <StackPanel>
+                        <TextBlock Text="{Binding Caption}" />
+                    </StackPanel>
                 </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>                
+            </dragablz:TabablzControl.CustomHeaderItemTemplate>
+            <dragablz:TabablzControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding ScreenViewModel}"></ContentControl>
+                    <ContentControl Margin="2,2,2,2" Content="{Binding ScreenViewModel}"></ContentControl>
                 </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
+            </dragablz:TabablzControl.ContentTemplate>
+        </dragablz:TabablzControl>
 
     </Grid>
 </UserControl>

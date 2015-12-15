@@ -16,9 +16,6 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <UserControl.DataContext>
-        <vm:UserPageViewModel/>
-    </UserControl.DataContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -34,7 +31,7 @@
             <RowDefinition Height="*"/>
 
         </Grid.RowDefinitions>
-        <TabControl Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding TabPages}">
+        <TabControl Grid.Column="1" Grid.RowSpan="5" SelectedIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding TabPages}">
             <TabControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
                     <local:UserInformationView x:Name="CurrentViewTab"></local:UserInformationView>
@@ -89,7 +86,7 @@
             </ListBoxItem>
         </ListView>
         -->
-        <local:ImageView Grid.Column="0" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Grid.RowSpan="5"/>
+        <local:ImageView x:Name="ImageViewModel" DataContext="{Binding Mode=OneWay}" Grid.Column="0" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Grid.RowSpan="5"/>
 
     </Grid>
 </UserControl>

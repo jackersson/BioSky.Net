@@ -12,6 +12,14 @@ using BioModule.ResourcesLoader;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
+using BioData;
+using BioModule.Model;
+
+using System.Windows.Input;
+using System.Windows.Controls;
+using System.Windows.Media;
+
+
 namespace BioModule.ViewModels
 {
   public class TrackControlViewModel : PropertyChangedBase
@@ -76,15 +84,85 @@ namespace BioModule.ViewModels
     }
 
 
-
-    public TrackControlViewModel()
+    IBioEngine _bioEngine;
+    public TrackControlViewModel(IBioEngine bioEngine)
     {
   
-      _trackControl = new ShellTrackControl();
-      _trackControl.TrackItems.Add(new ShellTrackItem() { Caption = "MainDoors", ScreenViewModel = new TrackControlItemViewModel() });
+   
 
+      _bioEngine = bioEngine;
+      _locations = new ObservableCollection<Location>();
+
+    
+
+
+      List<Location> locations = (List<Location>)_bioEngine.Database().getAllLocations();
+      foreach (Location location in locations)
+      _locations.Add(location);
+      
       NotifyOfPropertyChange(() => TrackControlItems);
       NotifyOfPropertyChange(() => CurrentViewTab);
+      NotifyOfPropertyChange(() => Locations);
+
+    }   
+
+
+    private ObservableCollection<Location> _locations;
+    public ObservableCollection<Location> Locations
+    {
+      get { return _locations; }
+      set
+      {
+        if (_locations != value)
+        {
+          _locations = value;
+          NotifyOfPropertyChange(() => Locations);
+        }
+      }
     }
+    
+
+    //**********************************************************Context Menu*****************************************************
+
+  
+
+    private Location _selectedItem;
+    public Location SelectedItem
+    {
+      get
+      {
+        return _selectedItem;
+      }
+      set
+      {
+        if (_selectedItem != value)
+          _selectedItem = value;
+
+        NotifyOfPropertyChange(() => SelectedItem);
+      }
+    }
+
+    private bool _menuOpenStatus;
+    public bool MenuOpenStatus
+    {
+      get
+      {
+        return _menuOpenStatus;
+      }
+      set
+      {
+        if (_menuOpenStatus != value)
+          _menuOpenStatus = value;
+
+        NotifyOfPropertyChange(() => MenuOpenStatus);
+      }
+    }
+
+
+    public void OnMouseRightButtonDown(MouseButtonEventArgs e)
+    {
+      
+    }
+
   }
 }

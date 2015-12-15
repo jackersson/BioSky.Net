@@ -50,7 +50,7 @@
     </Grid>
 
 
-<!--
+
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl >
             <Controls:FlyoutsControl.Resources>
@@ -64,5 +64,5 @@
                 </Grid>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts> -->
+    </Controls:MetroWindow.Flyouts> 
 </Controls:MetroWindow>

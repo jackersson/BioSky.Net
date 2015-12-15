@@ -25,7 +25,7 @@ namespace BioData
       {
         using (var dbContext = _entityFrameworkContextFactory.Create<BioSkyNetEntities>())
         {
-          return dbContext.Users.ToList();
+          return dbContext.Users.ToList();          
         }
       }
       catch ( Exception e)
@@ -46,6 +46,38 @@ namespace BioData
       catch (Exception e)
       {
         return new List<Visitor>();
+      }
+    }
+
+    public IList<Location> getAllLocations()
+    {
+      try
+      {
+        using (var dbContext = _entityFrameworkContextFactory.Create<BioSkyNetEntities>())
+        {          
+          return dbContext.Locations.ToList();          
+        }
+      }
+      catch (Exception e)
+      {
+        return new List<Location>();
+      }
+    }
+
+    public void saveUserChanges()
+    {
+      try
+      {
+        using (var dbContext = _entityFrameworkContextFactory.Create<BioSkyNetEntities>())
+        {
+          
+          dbContext.SaveChanges();
+          
+        }
+      }
+      catch (Exception e)
+      {
+       
       }
     }
 

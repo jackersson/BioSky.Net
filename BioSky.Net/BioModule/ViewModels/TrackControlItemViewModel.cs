@@ -9,10 +9,14 @@ using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
 using System.Windows;
 
+
+
 namespace BioModule.ViewModels
 {
   public class TrackControlItemViewModel : PropertyChangedBase
-  {   
+  {
+    
+    //*************************************************************Icon Source***********************************************
     public BitmapSource OkIconSource
     {
       get { return ResourceLoader.OkIconSource; }

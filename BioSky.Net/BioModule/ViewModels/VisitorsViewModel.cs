@@ -12,6 +12,11 @@ using BioData;
 using System.Collections.ObjectModel;
 using BioModule.Model;
 
+using System.Windows.Input;
+using System.Windows.Controls;
+using System.Windows;
+using System.Windows.Media;
+
 namespace BioModule.ViewModels
 {
   public class VisitorsViewModel : PropertyChangedBase
@@ -34,13 +39,10 @@ namespace BioModule.ViewModels
     IBioEngine _bioEngine;
     public VisitorsViewModel(IBioEngine bioEngine)
     {
-      _bioEngine = bioEngine;
-      _visitors = new ObservableCollection<Visitor>();
-
-      byte[] detection_time = new byte[]{125};
-      Visitor user2 = new Visitor { UID = 2, Detection_Time = detection_time, Status = "Ok" };
-      _visitors.Add(user2);
-
+      _bioEngine    = bioEngine;
+      _visitors     = new ObservableCollection<Visitor>();
+    
+      
       List <Visitor> visitors = (List<Visitor>)_bioEngine.Database().getAllVisitors();
       foreach (Visitor visitor in visitors)
         _visitors.Add(visitor);
@@ -62,5 +64,46 @@ namespace BioModule.ViewModels
     {
       get { return ResourceLoader.DeleteIconSource; }
     }
+//**********************************************************Context Menu*****************************************************
+    
+  
+    private Visitor _selectedItem;
+    public Visitor SelectedItem
+    {
+      get
+      {
+        return _selectedItem;
+      }
+      set
+      {
+        if (_selectedItem != value)
+          _selectedItem = value;
+
+        NotifyOfPropertyChange(() => SelectedItem);
+      }
+    }
+
+    private bool _menuOpenStatus;
+    public bool MenuOpenStatus
+    {
+      get
+      {
+        return _menuOpenStatus;
+      }
+      set
+      {
+        if (_menuOpenStatus != value)
+          _menuOpenStatus = value;
+
+        NotifyOfPropertyChange(() => MenuOpenStatus);
+      }
+    }
+        
+    public void OnMouseRightButtonDown(MouseButtonEventArgs e)
+    {
+
+    }
+
+   
   }
 }

@@ -19,7 +19,7 @@ namespace BioModule.ViewModels
 {
 
 
-  class ImageViewModel : PropertyChangedBase
+  public class ImageViewModel : PropertyChangedBase
   {
 
     double _width;
@@ -75,13 +75,17 @@ namespace BioModule.ViewModels
    
     public ImageViewModel()
     {
-      _currentImageControl = new System.Windows.Controls.Image();
-      _sliderControl = new System.Windows.Controls.Slider();
-      _toggleZoomToFit = new MahApps.Metro.Controls.ToggleSwitch();
+      //_currentImageControl = new System.Windows.Controls.Image();
+     // _sliderControl = new System.Windows.Controls.Slider();
+      //_toggleZoomToFit = new MahApps.Metro.Controls.ToggleSwitch();
+
+      IsCheckedValueControll = true;
+     
     }
 
     private BitmapSource _currentImage;
 
+    /*
     private System.Windows.Controls.ScrollViewer _currentImageScrollViewer;
 
     private System.Windows.Controls.ScrollViewer CurrentImageScrollViewer
@@ -98,7 +102,9 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => CurrentImageScrollViewer);
       }
     }
+    */
 
+    /*
     private System.Windows.Controls.Image _currentImageControl;  
     public System.Windows.Controls.Image CurrentImageControl
     {
@@ -114,7 +120,7 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => CurrentImageControl);
       }
     }
-
+    
     private System.Windows.Controls.Slider _sliderControl;
     public System.Windows.Controls.Slider Slider
     {
@@ -130,7 +136,8 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => Slider);
       }
     }
-    
+      */
+    /*
     private MahApps.Metro.Controls.ToggleSwitch _toggleZoomToFit;
     public MahApps.Metro.Controls.ToggleSwitch FitSwitchControll
     {
@@ -146,9 +153,9 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => FitSwitchControll);
       }
     }
-
-    bool _isCheckedValueControll;
-    private bool isCheckedValueControll
+    */
+    private bool _isCheckedValueControll;
+    public bool IsCheckedValueControll
     {
       get
       {
@@ -163,48 +170,54 @@ namespace BioModule.ViewModels
       }
     }
     public void ResizeOnSlider(double width, double height, int sliderValue)
-    {
-      int i = sliderValue;
-      double d = i / 100D;
-
-      if (UserDefaultImageIconSource != null)
+    { 
+      
+      if (IsCheckedValueControll == false)
       {
-        double aspect_ratio = d;
+        int i = sliderValue;
+        double d = i / 100D;
 
-        double ratio = Math.Min(_currentImage.Width, _currentImage.Height) / Math.Max(_currentImage.Width, _currentImage.Height);
+        if (UserDefaultImageIconSource != null)
+        {
+          double aspect_ratio = d;
 
-        CurrWidth = aspect_ratio * width * ratio;
-        CurrHeight = aspect_ratio * height * ratio;
+          double ratio = Math.Min(_currentImage.Width, _currentImage.Height) / Math.Max(_currentImage.Width, _currentImage.Height);
 
-        Scale = CurrWidth / _currentImage.Width;
+          CurrWidth = aspect_ratio * width * ratio;
+          CurrHeight = aspect_ratio * height * ratio;
+
+          Scale = CurrWidth / _currentImage.Width;
+        }        
       }
     }
-    public void Resize(double width, double height)
+    public void Resize(double width, double height, int sliderValue)
     {
-      bool val = FitSwitchControll.IsChecked.Value;
-      //string val2 = (string)FitSwitchControll.IsEnabled.ToString();
-     
-      ZoomToFit(width, height);
-      string val2 = isCheckedValueControll.ToString();
 
-      if (FitSwitchControll.IsChecked.Equals(true))
+      if (IsCheckedValueControll == true)
       {
         ZoomToFit(width, height);
-        
       }
-      Console.WriteLine(val2);
-/*
-      Console.WriteLine(val);
-      Console.WriteLine(val3);*/
-      Console.WriteLine(" ");
+      else
+      {
+        ResizeOnSlider(width, height, sliderValue);
+      }
+         
     }
 
-    public void UploadClick()
+    public void OnZoomToFit(double width, double height)
+    {
+      if (IsCheckedValueControll == true)
+      {
+        ZoomToFit(width, height);
+      }
+    }
+
+    public void UploadClick(double viewWidth, double viewHeight)
     {    
       
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = false;
-      openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+      openFileDialog.Filter = "All Images (*.jpeg; *.jpg; *.png; *.gif; *.bmp)|*.txt; *.jpeg; *.jpg; *.png; *.gif; *.bmp";
       openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
       
       
@@ -219,34 +232,19 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => UserDefaultImageIconSource);
         }
       }
+
+      ZoomToFit(viewWidth, viewHeight);
     }
 
-    public void CancelClick()
+    public void CancelClick(double viewWidth, double viewHeight)
     {
       _currentImage = ResourceLoader.UserDefaultImageIconSource;
       NotifyOfPropertyChange(() => UserDefaultImageIconSource);
+
+      ZoomToFit(viewWidth, viewHeight);
+
     }
 
-    public BitmapSource UploadIconSource
-    {
-      get { return ResourceLoader.UploadIconSource; }
-    }
-    
-    public BitmapSource CancelIconSource
-    {
-      get { return ResourceLoader.CancelIconSource; }
-    }
-
-    public BitmapSource UserDefaultImageIconSource
-    {
-      get {
-
-        if (_currentImage == null)
-          _currentImage = ResourceLoader.UserDefaultImageIconSource;
-        return _currentImage; 
-      
-      }      
-    }
 
     public void ZoomToFit( double viewWidth, double viewHeight )
     {
@@ -262,6 +260,34 @@ namespace BioModule.ViewModels
 
         Scale = CurrWidth / _currentImage.Width;
       }      
-    }    
+    } 
+   
+    //***********************************************************Icon Source************************************************
+
+    public BitmapSource UploadIconSource
+    {
+      get { return ResourceLoader.UploadIconSource; }
+    }
+
+    public BitmapSource CancelIconSource
+    {
+      get { return ResourceLoader.CancelIconSource; }
+    }
+
+    public BitmapSource UserDefaultImageIconSource
+    {
+      get
+      {
+
+        if (_currentImage == null)
+          _currentImage = ResourceLoader.UserDefaultImageIconSource;
+        return _currentImage;
+
+      }
+    }
+
+
+
+
   }
 }
