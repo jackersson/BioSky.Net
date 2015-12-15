@@ -80,35 +80,6 @@ namespace BioModule.ViewModels
       }
     }
 
-
-
-
-
-    private ImageViewModel _currentImageView;
-    public ImageViewModel CurrentImageView
-    {
-      get { return _currentImageView; }
-      set
-      {
-        if (_currentImageView == value)
-          return;
-        _currentImageView = value;
-        NotifyOfPropertyChange(() => CurrentImageView);
-       
-      }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
     //************************************ Resources ****************************************************
     public BitmapSource UserDefaultImageIconSource
     {

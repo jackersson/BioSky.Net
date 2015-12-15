@@ -31,7 +31,7 @@ namespace BioModule.ViewModels
 
     public void OpenTabAddNewLocation()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.LocationSettings);
+      _viewModelSelector.ShowFlyout(ViewModelsID.LocationSettings);
     }
 
     public void OpenTabVisitors()
