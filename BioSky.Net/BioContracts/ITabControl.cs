@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public interface IDatabaseEngine
+  public interface ITabControl
   {
+    ShellTabControl TabControl { get; }
+
+    void Init();
+
+    void OpenTab(Type tabType);
   }
 }

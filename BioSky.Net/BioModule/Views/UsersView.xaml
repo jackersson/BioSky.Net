@@ -10,7 +10,8 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
->
+            d:DataContext="{d:DesignInstance vm:UsersViewModel, IsDesignTimeCreatable=False}">
+
 
     
 
@@ -37,8 +38,13 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <DataGrid ItemsSource="{Binding Users}" AutoGenerateColumns="True" Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5" GridLinesVisibility="All">
-           
+        <DataGrid ItemsSource="{Binding Users}" AutoGenerateColumns="False" Grid.Column="0" Grid.Row="1" 
+                  BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  Margin="0,0,1,0" Grid.ColumnSpan="5" GridLinesVisibility="All">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding First_Name_}" Width="100" Header="First Name"/>
+                <DataGridTextColumn Binding="{Binding Last_Name_}" Width="100" Header="Last Name"/>               
+            </DataGrid.Columns>
         </DataGrid>
 
         <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">

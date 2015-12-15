@@ -10,5 +10,7 @@ namespace BioContracts
   {
     public string Caption { get; set; }
     public object ScreenViewModel { get; set; }
+
+    public bool CanClose { get; set; }
   }
 }

@@ -8,6 +8,20 @@ namespace BioAccessDevice
 {
   public class SerialPortUtils
   {
+
+    public bool Compare(byte[] command, byte[] response )
+    {
+      if (command.Length != response.Length)
+        return false;
+      for (int i = 0; i < command.Length; i++)
+      {
+        if (command[i] != response[i])
+          return false;
+      }
+
+      return true;
+    }
+
     public bool CheckResponseSum(byte[] response)
     {
       if (response.Length < 2)

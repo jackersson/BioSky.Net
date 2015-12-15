@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BioAccessDevice.Interfaces
+namespace BioContracts
 {
-  public interface IReceiver
+  public class ShellToolBar
   {
-    void Action();
+     
+    public object ScreenViewModel { get; set; }
   }
 }

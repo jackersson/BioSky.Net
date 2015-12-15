@@ -37,21 +37,8 @@ namespace BioModule.ViewModels
 
       NotifyOfPropertyChange(() => Users);     
     }
-
-    /*
-    public void Init(IBioEngine bioEngine)
-    {
-      _bioEngine = bioEngine;
-
-      List<User> users = (List<User>)_bioEngine.Database().getAllUsers();
-      foreach (User user in users)
-        _users.Add(user);
-      
-      NotifyOfPropertyChange(() => Users);
-    }
-    */
+  
     private ObservableCollection<User> _users;
-
     public ObservableCollection<User> Users
     {
       get { return _users; }

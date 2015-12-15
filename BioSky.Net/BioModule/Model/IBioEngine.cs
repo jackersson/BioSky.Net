@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 
 using BioData;
+using BioContracts;
+using BioAccessDevice.Interfaces;
 
 namespace BioModule.Model
 {
@@ -13,5 +15,9 @@ namespace BioModule.Model
   {
 
     IBioSkyNetRepository Database();
+
+    IAccessDeviceEngine AccessDeviceEngine();
+
+    ITrackLocationEngine TrackLocationEngine();
   }
 }

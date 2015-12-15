@@ -5,63 +5,201 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using BioContracts;
 
+using BioAccessDevice.Abstract;
 using BioAccessDevice.Interfaces;
+using BioAccessDevice.Commands;
 using System.Threading;
+using System.IO.Ports;
 
 namespace BioAccessDevice
 {
-  public class AccessDeviceListener
+  public class AccessDeviceListener : Threadable, IObservable<AccessDeviceActivity>
   {
 
-    public AccessDeviceListener()
+    public AccessDeviceListener( string portName ) : base()
     {
+      _serialPort          = new SerialPort();
+      _serialPort.PortName = portName;
+      _serialPort.BaudRate = ACCESS_DEVICE_BAUD_RATE;
+       
+      //_serialPort.ErrorReceived += new SerialErrorReceivedEventHandler(onSerialErrorReceived);
+      
+       _commandFactory = new AccessDeviceCommandFactory(); 
+      _commands       = new ConcurrentQueue<ICommand> ();
 
+      _observers      = new List<IObserver<AccessDeviceActivity>>();     
+    }   
+
+    /*
+    public void onSerialErrorReceived( object sender, SerialErrorReceivedEventArgs args )
+    {
+      Console.WriteLine(args.ToString());
     }
-
-
+    */
     public void Enqueque( ICommand command )
     {
+      if (command == null)
+        return;
       lock (_commands)      
         _commands.Enqueue(command);      
     }
 
-    public void Start ()
+    public void Enqueque(string commandName)
     {
-      _active = true;
+      string type = "BioAccessDevice.Commands." + commandName;      
+      Enqueque((AccessDeviceCommand)_commandFactory.GetCommand(type));      
     }
 
-    public void Stop()
+    public void Clear()
     {
-      _active = false;
-    }
-
-    public void Run()
-    {
-      while (_active)
+      lock (_commands)
       {
-        ICommand command;
-
-        if (Dequeue(out command))
+        while (!_commands.IsEmpty)
         {
-          Thread.Sleep(50);
-          command.Execute();
+          ICommand command;
+          Dequeue(out command);
         }
       }
+    }
+
+    public bool Open()
+    {
+
+      if (_serialPort.IsOpen)
+        return true;
+
+      try
+      {
+        _serialPort.Open();
+
+        AccessDeviceActivity notification = new AccessDeviceActivity();
+        Notify(new AccessDeviceActivity() { CommandID = AccessDeviceCommands.CommandReady });
+        return true;
+      }
+      catch (Exception exeption)
+      {
+        Notify(exeption);
+        return false;      
+      }
+
+    }
+
+    public override void Run()
+    {
+      Open();
+      Active = _serialPort.IsOpen;
+
+      while (Active)
+      {
+        ICommand command;       
+        if (Dequeue(out command))
+        {
+         
+          Thread.Sleep(1000);
+          if ( command.Execute(ref _serialPort) )
+          {        
+            AccessDeviceCommands commandID;
+            Enum.TryParse(command.GetType().Name, out commandID);
+
+            AccessDeviceActivity notification = new AccessDeviceActivity();
+            Notify(new AccessDeviceActivity() { CommandID = commandID, Data = command.Message() });
+          }
+          else
+          {
+            Notify(command.ErrorMessage());
+            Thread.Sleep(1000);
+            Open();
+          }
+        }
+
+        if ( CancellationTokenResult.IsCancellationRequested )
+        {
+          Console.WriteLine("Canselation requested");
+          break;          
+        }        
+      }
+
+      _serialPort.Close();
+      Clear();
+
     }
 
     private bool Dequeue( out ICommand command )
     {
       lock (_commands)
       {
-        while (_commands.IsEmpty)        
-          Monitor.Wait(_commands);
+        while (_commands.IsEmpty)
+        {
+          Thread.Sleep(100);
+          Enqueque(_commandFactory.GetCommand<CommandDallasKey>());
+        }     
         
         return _commands.TryDequeue(out command);
       }
     }
 
-    private ConcurrentQueue<ICommand> _commands;
-    private bool _active = false;
+    private void Notify(AccessDeviceActivity notification)
+    {
+      if (notification == null)
+        return;
+
+      foreach (var observer in _observers)
+      {
+        if (notification != null)        
+          observer.OnNext(notification);       
+      }
+    }
+
+    private void Notify( Exception exception )
+    {
+      if (exception == null)
+        return;
+
+      foreach (var observer in _observers)
+      {
+        if (exception != null)
+          observer.OnError(exception);     
+      }
+    }
+
+
+    //Method required by IObservable interface
+    public IDisposable Subscribe(IObserver<AccessDeviceActivity> observer)
+    {
+      if (!_observers.Contains(observer))
+        _observers.Add(observer);
+
+      return new Unsubscriber(_observers, observer);
+    }
+
+    private ICommandFactory           _commandFactory;
+    private SerialPort                _serialPort    ;   
+    private ConcurrentQueue<ICommand> _commands      ;  
+      
+
+    private const int ACCESS_DEVICE_BAUD_RATE = 4800;
+
+    //************************** For Observable Functions ***********************************
+    private List<IObserver<AccessDeviceActivity>> _observers;
+    private class Unsubscriber : IDisposable
+    {
+      private List<IObserver<AccessDeviceActivity>> _observers;
+      private IObserver<AccessDeviceActivity> _observer;
+
+      public Unsubscriber(List<IObserver<AccessDeviceActivity>> observers, IObserver<AccessDeviceActivity> observer)
+      {
+        this._observers = observers;
+        this._observer = observer;
+      }
+
+      public void Dispose()
+      {        
+        if (_observer != null && _observers.Contains(_observer))
+          _observers.Remove(_observer);
+      }
+    }
+
   }
 }

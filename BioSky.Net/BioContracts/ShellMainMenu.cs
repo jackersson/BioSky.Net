@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Caliburn.Micro;
-
-
-namespace BioModule.ViewModels
+namespace BioContracts
 {
-  class MainMenuModel : PropertyChangedBase
+  public class ShellMainMenu
   {
+    public object ScreenViewModel { get; set; }
   }
 }

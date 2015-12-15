@@ -22,8 +22,8 @@ namespace BioModule.ViewModels
 
       _tabPages.Add(new ShellTabPage() { Caption = "Information", ScreenViewModel = new UserInformationViewModel() });
       _tabPages.Add(new ShellTabPage() { Caption = "Cards", ScreenViewModel = new UserContactlessCardViewModel() });
-      
-      
+
+      CurrentImageView = new ImageViewModel();
     }
 
     private ObservableCollection<ShellTabPage> _tabPages;
@@ -64,7 +64,19 @@ namespace BioModule.ViewModels
 
 
 
-
+    private ImageViewModel _currentImageView;
+    public ImageViewModel CurrentImageView
+    {
+      get { return _currentImageView; }
+      set
+      {
+        if (_currentImageView == value)
+          return;
+        _currentImageView = value;
+        NotifyOfPropertyChange(() => CurrentImageView);
+       
+      }
+    }
 
 
 

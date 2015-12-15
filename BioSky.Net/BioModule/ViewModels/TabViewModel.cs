@@ -9,48 +9,56 @@ using System.Collections.ObjectModel;
 using BioContracts;
 using System.Windows;
 
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.Windsor;
+using System.Reflection;
+
 namespace BioModule.ViewModels
 {
-  public class TabViewModel : PropertyChangedBase
+  public class TabViewModel : PropertyChangedBase, ITabControl
   {
-
-    /*
-    private UsersViewModel _usersViewModel;
-
-    public UsersViewModel UserViewModel
+       
+    public TabViewModel( IWindsorContainer container, IBioShell shell)
     {
-      get { return _usersViewModel; }
-      private set
-      {
-        if (_usersViewModel != value)
-        {
-          _usersViewModel = value;
-          NotifyOfPropertyChange(() => UserViewModel);
-        }
-      }
+      _container  = container;
+      _tabControl = shell.TabControl;
+      
+      TabPages    = _tabControl.TabPages;
     }
-    */
-    private ObservableCollection<ShellTabPage> _tabPages;
-    ShellTabControl _tabControl;
-    public TabViewModel( )
+
+    public void Init()
     {
       
+      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Tracking"
+                                                  , ScreenViewModel = _container.Resolve<TrackControlViewModel>()
+                                                  , CanClose = false });
+                                                  
+      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Users"       
+                                                  , ScreenViewModel = _container.Resolve<UsersViewModel>()
+                                                  , CanClose = true});
+
+      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Visitors"    
+                                                  , ScreenViewModel = _container.Resolve<VisitorsViewModel>()
+                                                  , CanClose = true });
+
+      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Add New User"
+                                                  , ScreenViewModel = _container.Resolve<UserPageViewModel>()
+                                                  , CanClose = true });
     }
 
-    public void update(ShellTabControl tabcontrol/*, UsersViewModel usersViewModel*/)
-    {
-      _tabControl = tabcontrol;
-      TabPages = _tabControl.TabPages;
-
-      //_usersViewModel = usersViewModel;
-      //NotifyOfPropertyChange(() => UserViewModel);
-    }
-
-
-    public void AddTabPage()
+    public void OpenTab( Type tabType )
     {      
+      _tabControl.TabPages.Add(new ShellTabPage()
+      {
+          Caption = "New Tab"
+        , ScreenViewModel = _container.Resolve(tabType)                                               
+        , CanClose = true
+      });      
     }
 
+
+    private ObservableCollection<ShellTabPage> _tabPages;
     public ObservableCollection<ShellTabPage> TabPages
     {
       get { return _tabPages; }
@@ -74,13 +82,22 @@ namespace BioModule.ViewModels
           return;
         _selectedTabPage = value;
         NotifyOfPropertyChange(() => SelectedTabPage);
-        NotifyOfPropertyChange(() => CurrentViewTab);
+        NotifyOfPropertyChange(() => CurrentViewTab);        
       }
     }
-      
+       
     public object CurrentViewTab
     {
-      get { return _selectedTabPage == null ? null : _selectedTabPage.ScreenViewModel; }
+      get { return _selectedTabPage == null ? null : _selectedTabPage.ScreenViewModel; }    
     }
+
+    private ShellTabControl   _tabControl; 
+    
+    public ShellTabControl TabControl
+    {
+      get { return _tabControl; }  
+    }
+    
+    private IWindsorContainer _container ;
   }
 }

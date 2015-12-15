@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             
-             
+             xmlns:cal="http://www.caliburnproject.org"             
              xmlns:local="clr-namespace:BioModule.Views"
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="300">
@@ -69,7 +68,7 @@
             </StackPanel>
         </ScrollViewer>
 
-        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button cal:Message.Attach="[Event Checked] = [Action Resize()]" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding OkIconSource}" />
         </Button>
 

@@ -29,5 +29,10 @@ namespace BioModule.ViewModels
       get { return ResourceLoader.DeleteIconSource; }
     }
 
+    public void Resize()
+    {
+
+    }
+
   }
 }

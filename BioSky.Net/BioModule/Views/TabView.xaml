@@ -5,50 +5,67 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:ct="clr-namespace:ChromeTabs;assembly=ChromeTabs"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+             xmlns:contracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="400">
+             d:DesignHeight="400" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance vm:TabViewModel, IsDesignTimeCreatable=False}">
+
+      
+    
+    <UserControl.Resources>      
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis"></BooleanToVisibilityConverter>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
+            </ResourceDictionary.MergedDictionaries>        
+        </ResourceDictionary>        
+    </UserControl.Resources>   
 
     
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>             
-        </Grid.RowDefinitions>                
-                           
-       
+        </Grid.RowDefinitions>
 
-        <TabControl ItemsSource="{Binding TabPages}">
-            <TabControl.Resources>
+       
+         
+
+        <dragablz:TabablzControl Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                                 ItemsSource="{Binding TabPages}" 
+                                 ItemContainerStyle="{ StaticResource TrapezoidDragableTabItemStyle}"
+                                 SelectedIndex="0"                                  
+                                 AllowDrop="True" ShowDefaultCloseButton="True">
+            <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">
-                    <local:UsersView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}">                    
+                    <local:UsersView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}">
                     </local:UsersView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
                     <local:VisitorsView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:VisitorsView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPageViewModel}">
-                    <local:UserPageView x:Name="CurrentViewTab"></local:UserPageView>
+                    <local:UserPageView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:UserPageView>
                 </DataTemplate>
-
                 <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
                     <local:TrackControlView x:Name="CurrentViewTab"></local:TrackControlView>
                 </DataTemplate>
-            </TabControl.Resources>
-            <TabControl.ItemTemplate>                
+            </dragablz:TabablzControl.Resources>
+            <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
-                    <TextBlock
-        				Text="{Binding Caption}" />
+                    <Grid Background="Transparent">
+                        <TextBlock Text="{Binding Caption}" />                     
+                    </Grid>
                 </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>                
+            </dragablz:TabablzControl.CustomHeaderItemTemplate>
+            <dragablz:TabablzControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding ScreenViewModel}"></ContentControl>
+                    <ContentControl Margin="2,2,2,2" Content="{Binding ScreenViewModel}"></ContentControl>
                 </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
+            </dragablz:TabablzControl.ContentTemplate>
+        </dragablz:TabablzControl>
 
     </Grid>
 </UserControl>

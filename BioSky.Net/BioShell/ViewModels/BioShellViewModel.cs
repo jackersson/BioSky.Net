@@ -26,83 +26,54 @@ namespace BioShell.ViewModels
 
     public BioShellViewModel()
     {
-      _tabControl   = new ShellTabControl   ();
-      _flyouts      = new ShellFlyoutControl();
-      //_trackControl = new ShellTrackControl ();
-
-      IsSettingsOpen = false;
+      _tabControl    = new ShellTabControl   ();
+      _flyoutControl = new ShellFlyoutControl();
+      _toolBar       = new ShellToolBar      ();
+      _mainMenu      = new ShellMainMenu     ();   
     }
 
+    private ShellMainMenu _mainMenu;
+    public ShellMainMenu MainMenu
+    {
+      get { return _mainMenu; }
+    }
 
-    private ShellTabControl    _tabControl;
-    private ShellFlyoutControl _flyouts   ;
-   // private ShellTrackControl  _trackControl;
+    private ShellToolBar _toolBar;
+    public ShellToolBar ToolBar
+    {
+      get { return _toolBar; }  
+    }
 
+    private ShellTabControl    _tabControl;  
     public ShellTabControl TabControl
     {
       get { return _tabControl; }          
     }
 
-  
-
+    private ShellFlyoutControl _flyoutControl;
     public ShellFlyoutControl FlyoutControl
     {
-      get
-      {
-        return _flyouts;
-      }
-      set
-      {
-        if ( _flyouts == value )
-          return;
-
-        _flyouts = value;
-        NotifyOfPropertyChange(() => FlyoutControl);
-      }
+      get  { return _flyoutControl; }
     }
-
-    public ObservableCollection<ShellFlyoutPage> FlyoutPages
-    {
-      get
-      {        
-        return _flyouts.FlyoutPages;
-      }      
-    }
-   
+ 
     public object CurrentTabControl
     {
       get { return _tabControl.ScreenViewModel;  }     
     }
 
-    public object CurrentFlyout
+    public object CurrentToolBar
     {
-      get { return _flyouts.FlyoutPages[0].ScreenViewModel; }
+      get { return _toolBar.ScreenViewModel; }
     }
 
-    public object CurrentFlyoutCaption
+    public object CurrentFlyoutControl
     {
-      get { return _flyouts.FlyoutPages[0].Caption; }
+      get { return _flyoutControl.ScreenViewModel; }
     }
 
-
-    private bool _isSettingOpen;
-    public bool IsSettingsOpen
+    public object CurrentMainMenu
     {
-      get { return _isSettingOpen; }
-      set
-      {
-        _isSettingOpen = value;
-        NotifyOfPropertyChange(() => IsSettingsOpen);
-      }
+      get { return _mainMenu.ScreenViewModel; }
     }
-
-    public void ShowSettings()
-    {      
-      IsSettingsOpen = !IsSettingsOpen;      
-    }
-
-
-  
-
   }
 }

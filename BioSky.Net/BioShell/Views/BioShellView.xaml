@@ -19,22 +19,25 @@
                       Width="640"
                       Height="480"
                       d:DesignHeight="400" d:DesignWidth="400"
-                      Title="BioShellView">
+                      Title="BioSkyNet"
+                      d:DataContext="{d:DesignInstance localvm:BioShellViewModel,  IsDesignTimeCreatable=False}">
+
 
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="296*"/>
+            <ColumnDefinition Width="37*"/>
+            <ColumnDefinition Width="21*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="44"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
 
         <ContentControl Grid.Row="1" Grid.Column="1" x:Name="CurrentTabControl" Grid.ColumnSpan="2" />
 
-
+        <!--
         <Button Width="48" Grid.Row="0" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="1">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
@@ -42,14 +45,24 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-        
-        <y:MainMenu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"></y:MainMenu>
-        
-        <y:ToolBar Grid.Column="0" Grid.Row="1" Grid.RowSpan="2"></y:ToolBar>
+-->
+        <ContentControl Grid.Row="1" Grid.Column="0" x:Name="CurrentToolBar"  />
+
+        <ContentControl Grid.Row="1" Grid.Column="2" x:Name="CurrentFlyoutControl"  />
+
+        <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="CurrentMainMenu"></ContentControl>
+
+
+
     </Grid>
 
+    <!--
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl x:Name="CurrentFlyoutControl"/>
+    </Controls:MetroWindow.Flyouts>
+-->
 
-<!--
+    <!--
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl >
             <Controls:FlyoutsControl.Resources>

@@ -49,5 +49,20 @@ namespace BioData
       }
     }
 
+    public IList<Location> getAllLocations()
+    {
+      try
+      {
+        using (var dbContext = _entityFrameworkContextFactory.Create<BioSkyNetEntities>())
+        {
+          return dbContext.Locations.ToList();
+        }
+      }
+      catch (Exception e)
+      {
+        return new List<Location>();
+      }
+    }
+
   }
 }
