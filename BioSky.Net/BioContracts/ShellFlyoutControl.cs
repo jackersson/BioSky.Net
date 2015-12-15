@@ -16,7 +16,14 @@ namespace BioContracts
       _flyoutPages = new ObservableCollection<ShellFlyoutPage>();
     }
 
+    public ShellFlyoutPage Find( Type flyoutType )
+    {
+      return _flyoutPages.Where(x => x.ScreenViewModel.GetType() == flyoutType).FirstOrDefault();
+    }
+
     public ObservableCollection<ShellFlyoutPage> FlyoutPages { get { return _flyoutPages;  } }
-  
+
+    public object ScreenViewModel { get; set; }
+
   }
 }

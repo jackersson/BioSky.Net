@@ -29,13 +29,11 @@ namespace BioShell
       var dataloader = _container.Resolve<BioDataLoader>();
 
       var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-      var pattern = "BioData.dll";
-
-    
+                
       dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
+      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
 
-           pattern = "BioModule.dll";
+      var pattern = "BioModule.dll";
 
       Directory
           .GetFiles(exeDir, pattern)          

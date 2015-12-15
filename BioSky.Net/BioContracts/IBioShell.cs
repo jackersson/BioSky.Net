@@ -12,6 +12,9 @@ namespace BioContracts
     ShellFlyoutControl FlyoutControl { get; }
     ShellTabControl TabControl { get; }
 
+    ShellToolBar ToolBar { get; }
+
+    ShellMainMenu MainMenu { get; }
     
     IBioModule LoadModule(Assembly assembly);
   }

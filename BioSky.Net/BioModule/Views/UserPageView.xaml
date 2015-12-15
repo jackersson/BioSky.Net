@@ -6,7 +6,8 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:local="clr-namespace:BioModule.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="400">
+             d:DesignHeight="400" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance vm:UserPageViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -15,7 +16,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -31,7 +31,8 @@
             <RowDefinition Height="*"/>
 
         </Grid.RowDefinitions>
-        <TabControl Grid.Column="1" Grid.RowSpan="5" SelectedIndex="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding TabPages}">
+        <TabControl SelectedIndex="0" Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Stretch" ItemsSource="{Binding TabPages}">
             <TabControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
                     <local:UserInformationView x:Name="CurrentViewTab"></local:UserInformationView>
@@ -86,7 +87,14 @@
             </ListBoxItem>
         </ListView>
         -->
-        <local:ImageView x:Name="ImageViewModel" DataContext="{Binding Mode=OneWay}" Grid.Column="0" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Grid.RowSpan="5"/>
 
+        <local:ImageView  Content="{Binding CurrentImageView}" Grid.Column="0" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Grid.RowSpan="5">
+            <local:ImageView.Resources>
+                <DataTemplate DataType="{x:Type vm:ImageViewModel}">
+                    <local:ImageView Content="CurrentImageView" DataContext="{Binding Mode=OneWay}"/>
+                </DataTemplate>
+            </local:ImageView.Resources>          
+        </local:ImageView>
+      
     </Grid>
 </UserControl>

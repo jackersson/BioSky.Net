@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BioData;
+using BioContracts;
+using BioAccessDevice.Interfaces;
 
 namespace BioModule.Model
 {
   public class BioEngine : IBioEngine
   {
-    public BioEngine( IBioSkyNetRepository data )
+    public BioEngine( IBioSkyNetRepository data
+                    , IAccessDeviceEngine  accessDeviceEngine
+                    , ITrackLocationEngine trackLocationEngine )
     {
-      _data = data;
-      System.Console.WriteLine("Here");
-
-      foreach (User u in data.getAllUsers())
-      {
-        Console.WriteLine("{0}.{1} - {2}", u.UID, u.First_Name_, u.Last_Name_);
-      }
+      _data                = data;
+      _accessDeviceEngine  = accessDeviceEngine;
+      _trackLocationEngine = trackLocationEngine;
     }
 
     public IBioSkyNetRepository Database()
@@ -26,6 +26,18 @@ namespace BioModule.Model
       return _data;
     }
 
-    private readonly IBioSkyNetRepository _data;
+    public IAccessDeviceEngine AccessDeviceEngine()
+    {
+      return _accessDeviceEngine;
+    }
+
+    public ITrackLocationEngine TrackLocationEngine()
+    {
+      return _trackLocationEngine;
+    }
+
+    private readonly IBioSkyNetRepository _data              ;
+    private readonly IAccessDeviceEngine  _accessDeviceEngine;
+    private readonly ITrackLocationEngine _trackLocationEngine;
   }
 }

@@ -8,8 +8,11 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
+             x:Name="ImageViewModel"             
              d:DesignHeight="300" d:DesignWidth="300">
-  
+
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="106*"/>
@@ -23,39 +26,47 @@
         </Grid.RowDefinitions>
         <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
             <Grid >
-                <ScrollViewer Name="CurrentImageScrollViewer" cal:Message.Attach="[Event SizeChanged] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, Slider.Value)]"    HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
-                    <Image x:Name="CurrentImageControl" RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding UserDefaultImageIconSource}">
+                <ScrollViewer x:Name="CurrentImageScrollViewer" 
+                              cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
+                                                  [Event SizeChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"           
+                              
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
+                    <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding CurrentImageSource}">
                         <Image.LayoutTransform>
-                            <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}"></ScaleTransform>
+                            <ScaleTransform ScaleX="{Binding CalculatedImageScale}" ScaleY="{Binding CalculatedImageScale}">
+                                
+                            </ScaleTransform>
                         </Image.LayoutTransform>
                     </Image>
-               </ScrollViewer>
+                </ScrollViewer>
             </Grid>
         </Border>
 
-        <Slider Name="Slider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                cal:Message.Attach="[Event ValueChanged] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, Slider.Value)]"
+        <Slider x:Name="Slider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
                     Minimum="30"
                     Maximum="150"
-                    Value="50"
+                    Value="{Binding ZoomRate, Mode=TwoWay}"
                     LargeChange="20"
-                    SmallChange="10"                       
+                    SmallChange="10"                   
                     />
+       
 
-        <Controls:ToggleSwitch Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                cal:Message.Attach="[Event Checked] = [Action Resize(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, Slider.Value)]"                               
-                                   IsChecked="{Binding Path=IsCheckedValueControll, Mode=TwoWay}"                                
+        <Controls:ToggleSwitch x:Name="Switch" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                   cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"                               
+                                   IsChecked="{Binding ZoomToFitState, Mode=TwoWay}"                                
                                    OnLabel="Fit On"
-                                   OffLabel="Fit Off"                              
-                               
-                                    />
+                                   OffLabel="Fit Off"  >
+
+          
+        </Controls:ToggleSwitch>
 
         <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding CancelIconSource}" />
         </Button>
 
         <Button cal:Message.Attach="[Event Click] = [Action UploadClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}">
-            <Image Width="24" Height="24" Source="{Binding UploadIconSource}" />           
+            <Image Width="24" Height="24" Source="{Binding UploadIconSource}" />
         </Button>
     </Grid>
 </UserControl>

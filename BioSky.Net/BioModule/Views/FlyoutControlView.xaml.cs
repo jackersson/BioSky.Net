@@ -13,21 +13,18 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using MahApps.Metro.Controls;
+
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for TabView.xaml
+  /// Interaction logic for FlyoutControlView.xaml
   /// </summary>
-  public partial class TabView : UserControl
+  public partial class FlyoutControlView : FlyoutsControl
   {
-    public TabView()
+    public FlyoutControlView()
     {
       InitializeComponent();
-    }
-
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
-
     }
   }
 }

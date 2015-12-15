@@ -11,6 +11,7 @@ using Castle.Windsor;
 using BioContracts;
 using BioModule.ViewModels;
 using BioModule.Model;
+using BioModule.Utils;
 using BioData;
 using System.Collections;
 using Castle.Facilities.TypedFactory;
@@ -25,47 +26,33 @@ namespace BioModule
     {
       try
       {
-      
+        container.Register(Component.For<ITrackLocationEngine>()
+                 .ImplementedBy<TrackLocationEngine>());
 
-        /*
-        //string dbPath = @"F:\C#\BioSkyNetSuccess\BioSky.Net\BioSky.Net\database\BioSkyNet.mdf";
-        container.Register(Component.For<IEntityFrameworkConnectionBuilder>()
-                 .ImplementedBy<EntityFrameworkConnectionBuilder>()
-                 .DependsOn(new
-                 {
-                   dbConnectionstring = @"F:\C#\BioSkyNetSuccess\BioSky.Net\BioSky.Net\database\BioSkyNet.mdf"
-                 })
-                 .LifestyleSingleton());
 
-        container.AddFacility<TypedFactoryFacility>()
-                 .Register( Component.For<IEntityFrameworkContextFactory>().AsFactory() );
-
-        container.Register(Component.For<BioSkyNetEntities>()
-                 .DependsOn(new
-                 {
-                   modelName = "BioSkyNetDataModel"
-                 })
-                 .LifestyleTransient());
-                 */
         container.Register(Component.For<IBioEngine>()
                  .ImplementedBy<BioEngine>() );
 
-        //IBioSkyNetRepository repo = container.Resolve<IBioSkyNetRepository>();
-
         container
-            .Register(Component.For<UsersViewModel>())
-            .Register(Component.For<TabViewModel>())
+            .Register(Component.For<UsersViewModel>().LifeStyle.Singleton)
             .Register(Component.For<VisitorsViewModel>())
             .Register(Component.For<SettingsViewModel>())
             .Register(Component.For<UserPageViewModel>())
-            .Register(Component.For<TrackControlViewModel>())               
-            .Register(Component.For<IBioModule>().ImplementedBy<BioModuleImpl>());
+            .Register(Component.For<TrackControlViewModel>());
+        
 
-        System.Console.WriteLine("sdfsdf");
+        container.Register(Component.For<IWindsorContainer>().Instance(container));
+        container.Register(Component.For<ITabControl>().ImplementedBy<TabViewModel>());
+        container.Register(Component.For<IFlyoutControl>().ImplementedBy<FlyoutControlViewModel>());
+        container.Register(Component.For<ViewModelSelector>().LifeStyle.Singleton);
+        container.Register(Component.For<MainMenuViewModel>().LifeStyle.Singleton);
+        container.Register(Component.For<ToolBarViewModel>().LifeStyle.Singleton);
+
+        container.Register(Component.For<IBioModule>().ImplementedBy<BioModuleImpl>());
       }
       catch
       {
-        System.Console.Write("S");
+       
       }
     }
   }

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public class ShellTrackItem
+  public interface IFlyoutControl
   {
-    public string Caption { get; set; }
-    public object ScreenViewModel { get; set; }
+    ShellFlyoutControl FlyoutControl { get; }
+
+    void ShowPage(Type flyoutPage);
   }
 }

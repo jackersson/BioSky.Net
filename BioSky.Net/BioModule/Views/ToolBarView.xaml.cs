@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for MainMenu.xaml
+  /// Interaction logic for ToolBar.xaml
   /// </summary>
-  public partial class MainMenu : UserControl
+  public partial class ToolBarView : UserControl
   {
-    public MainMenu()
+    public ToolBarView()
     {
       InitializeComponent();
     }

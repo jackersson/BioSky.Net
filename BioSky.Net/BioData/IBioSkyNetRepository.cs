@@ -14,5 +14,7 @@ namespace BioData
 
     void saveUserChanges();
 
+    IList<Location> getAllLocations();
+
   }
 }
