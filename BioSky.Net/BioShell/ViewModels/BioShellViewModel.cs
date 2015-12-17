@@ -18,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Controls;
 
 using MahApps.Metro.Controls;
+using BioModule.ResourcesLoader;
+
 
 namespace BioShell.ViewModels
 {
@@ -74,6 +76,11 @@ namespace BioShell.ViewModels
     public object CurrentMainMenu
     {
       get { return _mainMenu.ScreenViewModel; }
+    }
+
+    public BitmapSource LogoIconSource
+    {
+      get { return ResourceLoader.LogoIconSource; }
     }
   }
 }

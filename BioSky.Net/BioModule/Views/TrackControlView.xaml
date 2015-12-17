@@ -13,15 +13,17 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance vm:TrackControlViewModel, IsDesignTimeCreatable=False}">
 
-    <UserControl.Resources>
+    <UserControl.Resources>       
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis"></BooleanToVisibilityConverter>
+            <vm:ComboBoxItemTemplateSelector x:Key="comboBoxItemTemplateSelector" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
         </ResourceDictionary>
     </UserControl.Resources>
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
@@ -31,7 +33,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="64"/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
@@ -60,10 +62,33 @@
             <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
         </Button>
 
-        <Controls:ToggleSwitch x:Name="Switch" Grid.Column="1" Grid.Row="0" 
-                               HorizontalAlignment="Right" VerticalAlignment="Bottom"                                                           
-                               OnLabel="All"
-                               OffLabel="Selected" TextOptions.TextHintingMode="Animated"  />
+
+            <ComboBox Grid.Column="1" Grid.Row="0" Width="60"  Margin="0,0,0,0" 
+                ItemsSource="{Binding ButtonItems}" 
+          SelectedItem="{Binding SelectedActor}">
+            <ComboBox.ItemTemplateSelector>
+                <vm:ComboBoxItemTemplateSelector>
+                    <vm:ComboBoxItemTemplateSelector.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"/>                                                                  
+                            </StackPanel>
+                        </DataTemplate>
+                    </vm:ComboBoxItemTemplateSelector.ItemTemplate>
+                    <vm:ComboBoxItemTemplateSelector.SelectedItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <CheckBox IsChecked="{Binding Value}" VerticalAlignment="Center" HorizontalAlignment="Center"></CheckBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </vm:ComboBoxItemTemplateSelector.SelectedItemTemplate>
+                </vm:ComboBoxItemTemplateSelector>
+            </ComboBox.ItemTemplateSelector>
+        </ComboBox>
+
+        
+
+
 
 
         <ComboBox  Margin="2,5,0,0" Grid.Row="0"  Grid.Column="0" BorderThickness="1"

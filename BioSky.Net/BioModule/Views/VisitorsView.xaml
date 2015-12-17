@@ -17,7 +17,12 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-            </ResourceDictionary.MergedDictionaries>            
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -34,8 +39,15 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <DataGrid x:Name="VisitorsList" ItemsSource="{Binding Visitors}"  Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5"
-                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+        <DataGrid x:Name="VisitorsList" ItemsSource="{Binding Visitors}"
+                  Style="{StaticResource MaterialDesignDataGrid}"           
+                  Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5"
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
+                  >
+            
+            
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonDown">
                     <cal:ActionMessage MethodName="OnMouseRightButtonDown">

@@ -43,6 +43,10 @@ namespace BioModule.ViewModels
     {
       _viewModelSelector.OpenTab(ViewModelsID.UsersPage);
     }
+    public void OpenTabTrack()
+    {
+      _viewModelSelector.OpenTab(ViewModelsID.TrackPage);
+    }
 
     public BitmapSource AddPersonIconSource
     {
@@ -62,6 +66,11 @@ namespace BioModule.ViewModels
     public BitmapSource UsersListIconSource
     {
       get { return ResourceLoader.UsersListIconSource; }
+    }
+
+    public BitmapSource TrackingIconSource
+    {
+      get { return ResourceLoader.TrackingIconSource; }
     }
 
     //private ITabControl    _tabControl   ;

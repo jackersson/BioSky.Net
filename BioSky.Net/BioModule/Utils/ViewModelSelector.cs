@@ -15,6 +15,7 @@ namespace BioModule.Utils
     , LocationSettings
     , VisitorsPage
     , UsersPage
+    , TrackPage
   }
 
   public class ViewModelSelector
@@ -26,10 +27,12 @@ namespace BioModule.Utils
 
       _viewModels = new Dictionary<ViewModelsID, Type>();
 
-      _viewModels.Add(ViewModelsID.UserPage         , Type.GetType("BioModule.ViewModels.UserPageViewModel"));
-      _viewModels.Add(ViewModelsID.LocationSettings , Type.GetType("BioModule.ViewModels.SettingsViewModel"));
-      _viewModels.Add(ViewModelsID.VisitorsPage     , Type.GetType("BioModule.ViewModels.VisitorsViewModel"));
-      _viewModels.Add(ViewModelsID.UsersPage        , Type.GetType("BioModule.ViewModels.UsersViewModel"   ));
+      _viewModels.Add(ViewModelsID.UserPage         , Type.GetType("BioModule.ViewModels.UserPageViewModel"    ));
+      _viewModels.Add(ViewModelsID.LocationSettings , Type.GetType("BioModule.ViewModels.SettingsViewModel"    ));
+      _viewModels.Add(ViewModelsID.VisitorsPage     , Type.GetType("BioModule.ViewModels.VisitorsViewModel"    ));
+      _viewModels.Add(ViewModelsID.UsersPage        , Type.GetType("BioModule.ViewModels.UsersViewModel"       ));
+      _viewModels.Add(ViewModelsID.TrackPage        , Type.GetType("BioModule.ViewModels.TrackControlViewModel"));
+
     }
 
     public void OpenTab(ViewModelsID pageID )

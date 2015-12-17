@@ -11,28 +11,29 @@
        
 
     <Grid>
-        <Menu Grid.Row="0"
+        <Menu Grid.Row="0" 
                   Margin="5"
                   VerticalAlignment="Stretch"
-                  HorizontalAlignment="Left">
-            
-            <MenuItem Header="File"
-                          ItemsSource="{Binding AppThemes, Mode=OneWay}">
-                <MenuItem Header="Add" >
-                    <MenuItem Header="User" 
-                              cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"
-                              />
-                 </MenuItem>
-                <MenuItem Header="Exit" />
-                
+                  HorizontalAlignment="Left">            
+            <MenuItem Header="File">                          
+                <MenuItem Header="Add">
+                    <MenuItem Header="User" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"/>
+                    <MenuItem Header="Location" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"/>
+                </MenuItem>
+                <MenuItem Header="Exit"/>                
             </MenuItem>
             <MenuItem Header="Edit"
-                          ItemsSource="{Binding AccentColors, Mode=OneWay}"/>
-            <MenuItem Header="View"
-                          ItemsSource="{Binding AccentColors, Mode=OneWay}">
-                <MenuItem Header="Settings" />
-                <MenuItem Header="Output window" />
-
+                          />
+            <MenuItem Header="View" 
+                          >
+                <MenuItem Header="Settings" 
+                          cal:Message.Attach="[Event Click] = [Action OpenFlayoutSettings]" />
+                <MenuItem Header="Tracking" 
+                          cal:Message.Attach="[Event Click] = [Action OpenTabTrack]"/>
+                <MenuItem Header="Users"
+                          cal:Message.Attach="[Event Click] = [Action OpenTabUsers]"/>
+                <MenuItem Header="Visitors" 
+                          cal:Message.Attach="[Event Click] = [Action OpenTabVisitors]"/>
             </MenuItem>            
             <MenuItem Header="Help"
                           ItemsSource="{Binding AccentColors, Mode=OneWay}">

@@ -19,6 +19,7 @@
                       Width="640"
                       Height="480"
                       d:DesignHeight="400" d:DesignWidth="400"
+                      Icon="{Binding LogoIconSource}"
                       Title="BioSkyNet"
                       d:DataContext="{d:DesignInstance localvm:BioShellViewModel,  IsDesignTimeCreatable=False}">
 

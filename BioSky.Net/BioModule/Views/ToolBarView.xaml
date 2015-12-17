@@ -17,22 +17,27 @@
         <ToolBarTray Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left"  VerticalAlignment="Top">
             <ToolBar>
                 <Separator></Separator>
-                <Button cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
+                <Button ToolTip="Add new Person" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
                     <Image Source="{Binding AddPersonIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
-                <Button cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]">
+                <Button ToolTip="Add new Location" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]">
                     <Image Source="{Binding AddLocationIconSource}" Width="32" Height="32"  />
                 </Button>                
                 <Separator></Separator>
-                <Button cal:Message.Attach="[Event Click]=[Action OpenTabVisitors]">
+                <Button ToolTip="Visitors" cal:Message.Attach="[Event Click]=[Action OpenTabVisitors]">
                     <Image Source="{Binding JournalListIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
-                <Button cal:Message.Attach="[Event Click]=[Action OpenTabUsers]">
+                <Button ToolTip="Users" cal:Message.Attach="[Event Click]=[Action OpenTabUsers]">
                     <Image Source="{Binding UsersListIconSource}" Width="32" Height="32"  />
+                </Button>
+                <Separator></Separator>
+
+                <Button ToolTip="Tracking" cal:Message.Attach="[Event Click]=[Action OpenTabTrack]">
+                    <Image Source="{Binding TrackingIconSource}" Width="32" Height="32"  />
                 </Button>
             </ToolBar>
         </ToolBarTray>

@@ -24,12 +24,27 @@ namespace BioModule.ViewModels
 
     public void OpenTabAddNewLocation()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.LocationSettings);
+      _viewModelSelector.ShowFlyout(ViewModelsID.LocationSettings);
     }
 
     public void OpenTabVisitors()
     {
       _viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
+    }
+
+    public void OpenFlayoutSettings()
+    {
+      _viewModelSelector.ShowFlyout(ViewModelsID.LocationSettings);
+    }
+
+    public void OpenTabUsers()
+    {
+      _viewModelSelector.OpenTab(ViewModelsID.UsersPage);
+    }
+
+    public void OpenTabTrack()
+    {
+      _viewModelSelector.OpenTab(ViewModelsID.TrackPage);
     }
 
     private ViewModelSelector _viewModelSelector;

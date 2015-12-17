@@ -12,9 +12,15 @@ using BioModule.Model;
 
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace BioModule.ViewModels
 {
+  public class ComboBoxitem 
+  {
+    public bool Value { get; set; }
+    public string Name {get; set;}
+  } 
   public class TrackControlViewModel : PropertyChangedBase
   {
     //private TrackControl _trackControl;
@@ -60,7 +66,14 @@ namespace BioModule.ViewModels
       _bioEngine = bioEngine;
 
       foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations() )      
-        location.ScreenViewModel = new TrackControlItemViewModel(location);      
+        location.ScreenViewModel = new TrackControlItemViewModel(location);
+
+      ButtonItems = new List<ComboBoxitem>() 
+      { 
+        new ComboBoxitem{Value = true, Name = "ALL"},
+        new ComboBoxitem{Value = false, Name = "Nothing"}       
+      };    
+
 
       //_trackControl = new TrackControl();
       //_trackControl.TrackItems.Add(new TrackItem(_bioEngine, "COM5") { Caption = "MainDoors", ScreenViewModel = new TrackControlItemViewModel() });
@@ -70,6 +83,23 @@ namespace BioModule.ViewModels
     }
 
     private readonly IBioEngine _bioEngine;
+
+
+    private List<ComboBoxitem> _bButtonItems;
+    public List<ComboBoxitem> ButtonItems
+    {
+      get
+      {
+        return _bButtonItems;
+      }
+      set
+      {
+        if (_bButtonItems != value)
+          _bButtonItems = value;
+
+        NotifyOfPropertyChange(() => ButtonItems);
+      }
+    }
 
 
     //**************************************** UI *******************************************
@@ -86,6 +116,36 @@ namespace BioModule.ViewModels
     public BitmapSource DeleteIconSource
     {
       get { return ResourceLoader.DeleteIconSource; }
+    }
+  }
+
+  public class ComboBoxItemTemplateSelector : DataTemplateSelector
+  {
+    // Can set both templates from XAML
+    public DataTemplate SelectedItemTemplate { get; set; }
+    public DataTemplate ItemTemplate { get; set; }
+
+    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    {
+      bool selected = false;
+
+      // container is the ContentPresenter
+      FrameworkElement fe = container as FrameworkElement;
+      if (fe != null)
+      {
+        DependencyObject parent = fe.TemplatedParent;
+        if (parent != null)
+        {
+          ComboBox cbo = parent as ComboBox;
+          if (cbo != null)
+            selected = true;
+        }
+      }
+
+      if (selected)
+        return SelectedItemTemplate;
+      else
+        return ItemTemplate;
     }
   }
 }
