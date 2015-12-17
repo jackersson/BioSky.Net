@@ -12,6 +12,6 @@ namespace BioContracts
 
     void Init();
 
-    void OpenTab(Type tabType);
+    void OpenTab(Type tabType, object[] args);
   }
 }

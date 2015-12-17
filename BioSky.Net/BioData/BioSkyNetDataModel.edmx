@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="bigint" Nullable="false" />
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Location Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Devices IN " Type="varchar(max)" />
           <Property Name="Devices OUT" Type="varchar(max)" />
@@ -45,10 +45,42 @@
           <Property Name="Locaion ID" Type="bigint" />
           <Property Name="Status" Type="char" MaxLength="10" />
         </EntityType>
+        <Association Name="FK_Visitor_ToLocation">
+          <End Role="Location" Type="Self.Location" Multiplicity="0..1" />
+          <End Role="Visitor" Type="Self.Visitor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Visitor">
+              <PropertyRef Name="Locaion ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Visitor_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Visitor" Type="Self.Visitor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Visitor">
+              <PropertyRef Name="User UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="BioSkyNetModelStoreContainer">
           <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Visitor" EntityType="Self.Visitor" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Visitor_ToLocation" Association="Self.FK_Visitor_ToLocation">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Visitor" EntitySet="Visitor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Visitor_ToUser" Association="Self.FK_Visitor_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="Visitor" EntitySet="Visitor" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -58,6 +90,14 @@
           <EntitySet Name="Location" EntityType="BioSkyNetModel.Location" />
           <EntitySet Name="User" EntityType="BioSkyNetModel.User" />
           <EntitySet Name="Visitor" EntityType="BioSkyNetModel.Visitor" />
+          <AssociationSet Name="FK_Visitor_ToLocation" Association="BioSkyNetModel.FK_Visitor_ToLocation">
+            <End Role="Location" EntitySet="Location" />
+            <End Role="Visitor" EntitySet="Visitor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Visitor_ToUser" Association="BioSkyNetModel.FK_Visitor_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="Visitor" EntitySet="Visitor" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Location">
           <Key>
@@ -68,6 +108,7 @@
           <Property Name="Devices_IN_" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Devices_OUT" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="User_Notification" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Visitor" Relationship="BioSkyNetModel.FK_Visitor_ToLocation" FromRole="Location" ToRole="Visitor" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -86,6 +127,7 @@
           <Property Name="Comments" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Rights" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Card_ID" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Visitor" Relationship="BioSkyNetModel.FK_Visitor_ToUser" FromRole="User" ToRole="Visitor" />
         </EntityType>
         <EntityType Name="Visitor">
           <Key>
@@ -98,7 +140,33 @@
           <Property Name="Detection_Time" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="Locaion_ID" Type="Int64" />
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Location" Relationship="BioSkyNetModel.FK_Visitor_ToLocation" FromRole="Visitor" ToRole="Location" />
+          <NavigationProperty Name="User" Relationship="BioSkyNetModel.FK_Visitor_ToUser" FromRole="Visitor" ToRole="User" />
         </EntityType>
+        <Association Name="FK_Visitor_ToLocation">
+          <End Type="BioSkyNetModel.Location" Role="Location" Multiplicity="0..1" />
+          <End Type="BioSkyNetModel.Visitor" Role="Visitor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Location">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Visitor">
+              <PropertyRef Name="Locaion_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Visitor_ToUser">
+          <End Type="BioSkyNetModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="BioSkyNetModel.Visitor" Role="Visitor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UID" />
+            </Principal>
+            <Dependent Role="Visitor">
+              <PropertyRef Name="User_UID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

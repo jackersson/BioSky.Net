@@ -27,28 +27,27 @@ namespace BioModule.Utils
 
       _viewModels = new Dictionary<ViewModelsID, Type>();
 
-      _viewModels.Add(ViewModelsID.UserPage         , Type.GetType("BioModule.ViewModels.UserPageViewModel"    ));
-      _viewModels.Add(ViewModelsID.LocationSettings , Type.GetType("BioModule.ViewModels.SettingsViewModel"    ));
-      _viewModels.Add(ViewModelsID.VisitorsPage     , Type.GetType("BioModule.ViewModels.VisitorsViewModel"    ));
-      _viewModels.Add(ViewModelsID.UsersPage        , Type.GetType("BioModule.ViewModels.UsersViewModel"       ));
+      _viewModels.Add(ViewModelsID.UserPage         , Type.GetType("BioModule.ViewModels.UserPageViewModel"));
+      _viewModels.Add(ViewModelsID.LocationSettings , Type.GetType("BioModule.ViewModels.SettingsViewModel"));
+      _viewModels.Add(ViewModelsID.VisitorsPage     , Type.GetType("BioModule.ViewModels.VisitorsViewModel"));
+      _viewModels.Add(ViewModelsID.UsersPage        , Type.GetType("BioModule.ViewModels.UsersViewModel"   ));
       _viewModels.Add(ViewModelsID.TrackPage        , Type.GetType("BioModule.ViewModels.TrackControlViewModel"));
-
     }
 
-    public void OpenTab(ViewModelsID pageID )
+    public void OpenTab(ViewModelsID pageID, object[] args = null)
     {
       Type pageType;
       bool flag = _viewModels.TryGetValue(pageID, out pageType);
       if (flag)
-        _tabControl.OpenTab(pageType);
+        _tabControl.OpenTab(pageType, args);
     }
 
-    public void ShowFlyout(ViewModelsID pageID)
+    public void ShowFlyout(ViewModelsID pageID, object[] args = null)
     {
       Type pageType;
       bool flag = _viewModels.TryGetValue(pageID, out pageType);
       if (flag)
-        _flyoutControl.ShowPage(pageType);
+        _flyoutControl.ShowPage(pageType, args);
     }
       
     private Dictionary<ViewModelsID, Type> _viewModels;

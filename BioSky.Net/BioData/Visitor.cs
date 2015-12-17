@@ -11,6 +11,12 @@ namespace BioData
 {
     using System;
     using System.Collections.Generic;
+
+  public enum VisitorStatus
+  {
+      VerificationSuccess
+    , VerificationFailed
+  }
     
     public partial class Visitor
     {
@@ -21,5 +27,8 @@ namespace BioData
         public byte[] Detection_Time { get; set; }
         public Nullable<long> Locaion_ID { get; set; }
         public string Status { get; set; }
+    
+        public virtual Location Location { get; set; }
+        public virtual User User { get; set; }
     }
 }

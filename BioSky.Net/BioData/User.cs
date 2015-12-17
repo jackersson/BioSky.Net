@@ -14,18 +14,25 @@ namespace BioData
 
   public enum Gender
   {
-    Male = 0,
-    Female
+      Male
+    , Female
   }
-
   public enum Rights
   {
-    Superviser = 0,
-    Manager,
-    Operator
+     Operator
+   , Manager
+   , Supervisor
   }
-    public partial class User
+
+
+  public partial class User
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public User()
+        {
+            this.Visitor = new HashSet<Visitor>();
+        }
+    
         public long UID { get; set; }
         public string First_Name_ { get; set; }
         public string Last_Name_ { get; set; }
@@ -39,5 +46,8 @@ namespace BioData
         public string Comments { get; set; }
         public string Rights { get; set; }
         public string Card_ID { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Visitor> Visitor { get; set; }
     }
 }

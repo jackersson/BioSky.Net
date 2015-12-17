@@ -20,7 +20,20 @@ using System.Windows.Media;
 namespace BioModule.ViewModels
 {
   public class VisitorsViewModel : PropertyChangedBase
-  {
+  {  
+    private readonly IBioEngine _bioEngine;
+    public VisitorsViewModel(IBioEngine bioEngine)
+    {
+      _bioEngine    = bioEngine;
+      _visitors     = new ObservableCollection<Visitor>();
+    
+      
+      List <Visitor> visitors = (List<Visitor>)_bioEngine.Database().getAllVisitors();
+      foreach (Visitor visitor in visitors)
+        _visitors.Add(visitor);
+
+      NotifyOfPropertyChange(() => Visitors);
+    }
 
     private ObservableCollection<Visitor> _visitors;
     public ObservableCollection<Visitor> Visitors
@@ -36,34 +49,12 @@ namespace BioModule.ViewModels
       }
     }
 
-    IBioEngine _bioEngine;
-    public VisitorsViewModel(IBioEngine bioEngine)
+    public string Caption()
     {
-      _bioEngine    = bioEngine;
-      _visitors     = new ObservableCollection<Visitor>();
-    
-      
-      List <Visitor> visitors = (List<Visitor>)_bioEngine.Database().getAllVisitors();
-      foreach (Visitor visitor in visitors)
-        _visitors.Add(visitor);
-
-      NotifyOfPropertyChange(() => Visitors);
+      return "Visitors";
     }
 
-    public BitmapSource AddIconSource
-    {
-      get { return ResourceLoader.AddIconSource; }
-    }
-
-    public BitmapSource RemoveIconSource
-    {
-      get { return ResourceLoader.RemoveIconSource; }
-    }
-
-    public BitmapSource DeleteIconSource
-    {
-      get { return ResourceLoader.DeleteIconSource; }
-    }
+  
 //**********************************************************Context Menu*****************************************************
     
   
@@ -104,6 +95,22 @@ namespace BioModule.ViewModels
 
     }
 
-   
+    //--------------------------------------------------- UI --------------------------------------
+    public BitmapSource AddIconSource
+    {
+      get { return ResourceLoader.AddIconSource; }
+    }
+
+    public BitmapSource RemoveIconSource
+    {
+      get { return ResourceLoader.RemoveIconSource; }
+    }
+
+    public BitmapSource DeleteIconSource
+    {
+      get { return ResourceLoader.DeleteIconSource; }
+    }
+
+
   }
 }

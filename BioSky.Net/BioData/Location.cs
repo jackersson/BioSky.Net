@@ -14,10 +14,19 @@ namespace BioData
     
     public partial class Location
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Location()
+        {
+            this.Visitor = new HashSet<Visitor>();
+        }
+    
         public long Id { get; set; }
         public string Location_Name { get; set; }
         public string Devices_IN_ { get; set; }
         public string Devices_OUT { get; set; }
         public string User_Notification { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Visitor> Visitor { get; set; }
     }
 }

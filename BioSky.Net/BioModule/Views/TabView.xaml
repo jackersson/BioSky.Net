@@ -72,7 +72,7 @@
 
         <dragablz:TabablzControl Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                                  ItemsSource="{Binding TabPages}"                                 
-                                 SelectedIndex="0"                                  
+                                 SelectedItem="{Binding SelectedTabPage}"                                  
                                  AllowDrop="True" ShowDefaultCloseButton="True">
             <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">

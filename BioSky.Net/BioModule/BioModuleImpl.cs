@@ -54,6 +54,11 @@ namespace BioModule
 
     public void Init()
     {
+      
+      _viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
+      _viewModelSelector.OpenTab(ViewModelsID.UsersPage);
+      _viewModelSelector.OpenTab(ViewModelsID.TrackPage);
+
       _tabControlViewModel.Init();
       _shell.TabControl.ScreenViewModel    = _tabControlViewModel;
       _shell.FlyoutControl.ScreenViewModel = _flyoutControlViewModel;

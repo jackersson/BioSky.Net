@@ -10,6 +10,6 @@ namespace BioContracts
   {
     ShellFlyoutControl FlyoutControl { get; }
 
-    void ShowPage(Type flyoutPage);
+    void ShowPage(Type flyoutPage, object[] args);
   }
 }

@@ -28,33 +28,32 @@ namespace BioModule.ViewModels
     }
 
     public void Init()
-    {
-      
-      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Tracking"
-                                                  , ScreenViewModel = _container.Resolve<TrackControlViewModel>()
-                                                  , CanClose = false });
-                                                  
-      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Users"       
-                                                  , ScreenViewModel = _container.Resolve<UsersViewModel>()
-                                                  , CanClose = true});
+    {    
 
-      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Visitors"    
-                                                  , ScreenViewModel = _container.Resolve<VisitorsViewModel>()
-                                                  , CanClose = true });
-
-      _tabControl.TabPages.Add(new ShellTabPage() { Caption = "Add New User"
-                                                  , ScreenViewModel = _container.Resolve<UserPageViewModel>()
-                                                  , CanClose = true });
     }
 
-    public void OpenTab( Type tabType )
-    {      
-      _tabControl.TabPages.Add(new ShellTabPage()
-      {
-          Caption = "New Tab"
-        , ScreenViewModel = _container.Resolve(tabType)                                               
-        , CanClose = true
-      });      
+    public void OpenTab( Type tabType, object[] args )
+    {
+      ShellTabPage newTabPage = new ShellTabPage() { ScreenViewModel = _container.Resolve(tabType) };
+      
+      InvokeMethod(tabType, "Update" , newTabPage.ScreenViewModel, args);
+
+      string caption = (string)InvokeMethod(tabType, "Caption", newTabPage.ScreenViewModel );
+
+      if (caption != null)
+        newTabPage.Caption = caption;
+
+      _tabControl.TabPages.Add(newTabPage);
+
+      SelectedTabPage = newTabPage;
+    }
+
+    private object InvokeMethod ( Type objectType, string methodName, object source, object[] args = null )
+    {
+      MethodInfo method = objectType.GetMethod(methodName);
+      if (method != null)
+        return method.Invoke(source, args);
+      return null;
     }
 
 
@@ -80,6 +79,7 @@ namespace BioModule.ViewModels
       {
         if (_selectedTabPage == value)
           return;
+
         _selectedTabPage = value;
         NotifyOfPropertyChange(() => SelectedTabPage);
         NotifyOfPropertyChange(() => CurrentViewTab);        

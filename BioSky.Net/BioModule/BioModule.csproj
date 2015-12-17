@@ -132,6 +132,7 @@
     <Compile Include="Model\BioEngine.cs" />
     <Compile Include="Model\IBioEngine.cs" />
     <Compile Include="Model\ITrackLocationEngine.cs" />
+    <Compile Include="Model\Notification.cs" />
     <Compile Include="Model\TrackControl.cs" />
     <Compile Include="Model\TrackItem.cs" />
     <Compile Include="Model\TrackLocation.cs" />
@@ -143,6 +144,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourcesLoader\ResourceLoader.cs" />
+    <Compile Include="Utils\BioStatusResource.cs" />
     <Compile Include="Utils\ViewModelSelector.cs" />
     <Compile Include="ViewModels\FlyoutControlViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
@@ -162,6 +164,9 @@
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NotificationDataGridView.xaml.cs">
+      <DependentUpon>NotificationDataGridView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolBarView.xaml.cs">
       <DependentUpon>ToolBarView.xaml</DependentUpon>
@@ -207,6 +212,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NotificationDataGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
