@@ -11,6 +11,7 @@ using Castle.Core.Internal;
 using Castle.Windsor;
 
 using BioShell.ViewModels;
+using System.Windows.Input;
 
 namespace BioShell
 {
@@ -29,7 +30,9 @@ namespace BioShell
       var dataloader = _container.Resolve<BioDataLoader>();
 
       var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                
+
+      
+
       dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
       dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
 
@@ -47,6 +50,20 @@ namespace BioShell
 
     protected override void Configure()
     {
+      MessageBinder.SpecialValues.Add("$mouseselecteditem", (context) =>
+      {
+        if (context.EventArgs is MouseButtonEventArgs)
+        {
+          var eventArg = context.EventArgs as MouseButtonEventArgs;
+          var frameworkElement = eventArg.OriginalSource as FrameworkElement;
+
+          if (frameworkElement != null)
+            return frameworkElement.DataContext;
+        }
+
+        return null;
+      });
+
       _container.Install(new BioShellInstaller());
     }
 

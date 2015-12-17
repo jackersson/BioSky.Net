@@ -17,12 +17,14 @@ namespace BioModule.ViewModels
 {
   public class TrackControlViewModel : PropertyChangedBase
   {
-    //private TrackControl _trackControl;
-    //public TrackControl TrackControl
-    //{
-      //get { return _trackControl; }
-   // }
-    //
+    public TrackControlViewModel(IBioEngine bioEngine)
+    {
+      _bioEngine = bioEngine;
+
+      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())
+        location.ScreenViewModel = new TrackControlItemViewModel(location);
+    }
+
     public ObservableCollection<TrackLocation> TrackControlItems
     {
       get {  return _bioEngine.TrackLocationEngine().TrackLocations();  }      
@@ -38,39 +40,16 @@ namespace BioModule.ViewModels
           return;
         _selectedTrackLocation = value;
         NotifyOfPropertyChange(() => SelectedTrackLocation);
-        NotifyOfPropertyChange(() => CurrentTrackLocation);
+       
       }
     }
-
-    public object CurrentTrackLocation
+    
+    public string Caption()
     {
-      get { return _bioEngine.TrackLocationEngine().TrackLocations()[0].ScreenViewModel; }
+      return "Tracking";
     }
-
-    //public object CurrentTabControl
-    //{
-     // get;// { return _trackControl.ScreenViewModel; }
-   // }
-
-
-
-    public TrackControlViewModel( IBioEngine bioEngine )
-    {
-
-      _bioEngine = bioEngine;
-
-      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations() )      
-        location.ScreenViewModel = new TrackControlItemViewModel(location);      
-
-      //_trackControl = new TrackControl();
-      //_trackControl.TrackItems.Add(new TrackItem(_bioEngine, "COM5") { Caption = "MainDoors", ScreenViewModel = new TrackControlItemViewModel() });
-
-      //NotifyOfPropertyChange(() => TrackControlItems);
-      //NotifyOfPropertyChange(() => CurrentViewTab);
-    }
-
+    
     private readonly IBioEngine _bioEngine;
-
 
     //**************************************** UI *******************************************
     public BitmapSource AddIconSource

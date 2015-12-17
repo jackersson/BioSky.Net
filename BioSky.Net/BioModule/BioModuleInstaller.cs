@@ -33,18 +33,20 @@ namespace BioModule
         container.Register(Component.For<IBioEngine>()
                  .ImplementedBy<BioEngine>() );
 
-        container
-            .Register(Component.For<UsersViewModel>().LifeStyle.Singleton)
+        container            
             .Register(Component.For<VisitorsViewModel>())
-            .Register(Component.For<SettingsViewModel>())
-            .Register(Component.For<UserPageViewModel>())
-            .Register(Component.For<TrackControlViewModel>());
-        
+            .Register(Component.For<SettingsViewModel>())           
+            .Register(Component.For<TrackControlViewModel>())
+            .Register(Component.For<UserPageViewModel>().LifestyleTransient());
+
 
         container.Register(Component.For<IWindsorContainer>().Instance(container));
         container.Register(Component.For<ITabControl>().ImplementedBy<TabViewModel>());
         container.Register(Component.For<IFlyoutControl>().ImplementedBy<FlyoutControlViewModel>());
-        container.Register(Component.For<ViewModelSelector>().LifeStyle.Singleton);
+        container.Register(Component.For<ViewModelSelector>().LifeStyle.Singleton);        
+
+        container.Register(Component.For<UsersViewModel>().LifeStyle.Singleton);
+
         container.Register(Component.For<MainMenuViewModel>().LifeStyle.Singleton);
         container.Register(Component.For<ToolBarViewModel>().LifeStyle.Singleton);
 

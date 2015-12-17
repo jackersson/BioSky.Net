@@ -6,8 +6,10 @@
     <edmx:Diagrams>
       <Diagram DiagramId="325dbde69c7e4ab686f2b6c37ffa215f" Name="Diagram1" >
         <EntityTypeShape EntityType="BioSkyNetModel.Location" Width="1.5" PointX="0.5" PointY="0.75" />
-        <EntityTypeShape EntityType="BioSkyNetModel.User" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="BioSkyNetModel.User" Width="1.5" PointX="2.5" PointY="3.25" />
         <EntityTypeShape EntityType="BioSkyNetModel.Visitor" Width="1.5" PointX="4.75" PointY="0.75" />
+        <AssociationConnector Association="BioSkyNetModel.FK_Visitor_ToLocation" />
+        <AssociationConnector Association="BioSkyNetModel.FK_Visitor_ToUser" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
+using BioData;
 
 namespace BioModule.ViewModels
 {
   public class UserContactlessCardViewModel : PropertyChangedBase
   {
+
+    public void Update(User user)
+    {
+      _user = user;
+    }
+
     public BitmapSource AddIconSource
     {
       get { return ResourceLoader.AddIconSource; }
@@ -31,5 +38,7 @@ namespace BioModule.ViewModels
     {
       get { return ResourceLoader.OkIconSource; }
     }
+
+    private User _user;
   }
 }

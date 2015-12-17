@@ -11,17 +11,62 @@ using System.Windows;
 
 using BioContracts;
 using BioModule.Model;
+using System.Collections.ObjectModel;
+using System.Windows.Data;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
+
   public class TrackControlItemViewModel : PropertyChangedBase, IObserver<AccessDeviceActivity>
-  {       
-   
+  {          
     public TrackControlItemViewModel( TrackLocation location )
     {
       _location = location;
+
+      UserVerified = true;
+      UserVerificationIconVisible = false;
+      CardDetectedIconVisible = false;
+
+      _notifications = new ObservableCollection<Notification>();
+
+      Notification n = new Notification()
+      {
+          Status = "Success"
+        , Detection_Time = "21.05.21"
+        , InfoMessage = "Message"
+        , LocationName = "Main Doors"
+        , AdditionalVisualInfo = "Photo"
+      };
+
+      _notifications.Add(n);
+      _notifications.Add(n);
+      _notifications.Add(n);
+      _notifications.Add(n);
+      _notifications.Add(n);
+      _notifications.Add(n);
+      _notifications.Add(n);
+      _notifications.Add(n);
+
+      NotifyOfPropertyChange(() => Notifications);
+
     }
 
+    private ObservableCollection<Notification> _notifications;
+    public ObservableCollection<Notification> Notifications
+    {
+      get { return _notifications; }
+      set
+      {
+        if ( _notifications != value)
+        {
+          _notifications = value;
+          NotifyOfPropertyChange(() => Notifications);
+        }
+      }
+    }
+
+    private bool _accessDeviceOK;
     public bool AccessDeviceOK
     {
       get { return _accessDeviceOK; }
@@ -33,6 +78,56 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => OkIconSource);         
         }
       }
+    }
+
+    private bool _userVerified;
+    public bool UserVerified
+    {
+      get { return _userVerified; }
+      set
+      {
+        if ( _userVerified != value)
+        {
+          _userVerified = value;
+
+          NotifyOfPropertyChange(() => VerificationIconSource);
+        }
+      }
+    }
+
+    private bool _userVerificationIconVisible;
+    public bool UserVerificationIconVisible
+    {
+      get { return _userVerificationIconVisible; }
+      set
+      {
+        if (_userVerificationIconVisible != value)
+        {
+          _userVerificationIconVisible = value;
+
+          NotifyOfPropertyChange(() => UserVerificationIconVisible);
+        }
+      }
+    }
+
+    private bool _cardDetectedIconVisible;
+    public bool CardDetectedIconVisible
+    {
+      get { return _cardDetectedIconVisible; }
+      set
+      {
+        if (_cardDetectedIconVisible != value)
+        {
+          _cardDetectedIconVisible = value;
+
+          NotifyOfPropertyChange(() => CardDetectedIconVisible);
+        }
+      }
+    }
+
+    public TrackLocation TrackLocation
+    {
+      get { return _location; }
     }
 
     public void OnNext(AccessDeviceActivity value)
@@ -48,28 +143,43 @@ namespace BioModule.ViewModels
     public void OnCompleted()
     {
       throw new NotImplementedException();
-    }
-
-
-
-    private bool _accessDeviceOK;
+    } 
 
     private TrackLocation _location;
 
     //**************************************************** UI **********************************************
     public BitmapSource OkIconSource
     {
-      get { return AccessDeviceOK ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource; }
+      get { return AccessDeviceOK ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
     }
 
     public BitmapSource VerificationIconSource
     {
-      get { return ResourceLoader.VerificationIconSource; }
+      get { return UserVerified ? ResourceLoader.VerificationIconSource 
+                                : ResourceLoader.VerificationFailedIconSource; }
     }
 
     public BitmapSource CardIconSource
     {
       get { return ResourceLoader.CardIconSource; }
     }       
+  }
+
+  public class ConvertStatusToImage : IValueConverter
+  {
+
+    private BioStatusResource _resource = new BioStatusResource();
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {      
+        return _resource.GetBitmapSource(value.ToString());
+      }
+      return null;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
   }
 }

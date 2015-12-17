@@ -11,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
 
 using BioModule.Model;
+using BioModule.Utils;
+using BioData;
+using System.Reflection;
 
 namespace BioModule.ViewModels
 {
   public class UserPageViewModel : PropertyChangedBase
   {
-
-    IBioEngine _bioEngine;
-
     public UserPageViewModel( IBioEngine bioEngine )
     {
       _bioEngine = bioEngine;
@@ -26,13 +26,29 @@ namespace BioModule.ViewModels
       _tabPages = new ObservableCollection<ShellTabPage>();
 
       _tabPages.Add(new ShellTabPage() { Caption = "Information", ScreenViewModel = new UserInformationViewModel(_bioEngine) });
-      _tabPages.Add(new ShellTabPage() { Caption = "Cards", ScreenViewModel = new UserContactlessCardViewModel() });
+      _tabPages.Add(new ShellTabPage() { Caption = "Cards"      , ScreenViewModel = new UserContactlessCardViewModel() });
 
       CurrentImageView = new ImageViewModel();
     }
 
-    private ObservableCollection<ShellTabPage> _tabPages;
+    public void Update(User user)
+    {
+      _user = user;
 
+      foreach (ShellTabPage tabPage in _tabPages )
+      {
+        MethodInfo method = tabPage.ScreenViewModel.GetType().GetMethod("Update");
+        if (method != null)
+          method.Invoke(tabPage.ScreenViewModel, new object[] { user } );        
+      }
+    }
+
+    public string Caption()
+    {
+      return (_user == null) ? "Add New User" : (_user.First_Name_ + " " + _user.Last_Name_);
+    }
+
+    private ObservableCollection<ShellTabPage> _tabPages;
     public ObservableCollection<ShellTabPage> TabPages
     {
       get { return _tabPages; }
@@ -66,7 +82,6 @@ namespace BioModule.ViewModels
     }
 
     private ImageViewModel _currentImageView;
-
     public ImageViewModel CurrentImageView
     {
       get { return _currentImageView; }
@@ -79,6 +94,9 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    private User _user;
+    private readonly IBioEngine _bioEngine;
 
     //************************************ Resources ****************************************************
     public BitmapSource UserDefaultImageIconSource

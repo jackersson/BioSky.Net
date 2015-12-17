@@ -29,7 +29,7 @@ namespace BioModule.ViewModels
     }
 
 
-    public void ShowPage(Type flyoutPage)
+    public void ShowPage(Type flyoutPage, object[] args = null)
     {  
       CurrentFlyoutPage = _flyoutControl.Find(flyoutPage);
       FlyoutOpenState = true;

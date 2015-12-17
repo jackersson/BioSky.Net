@@ -29,6 +29,8 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _deleteIconSource;
     private static BitmapSource _okIconSource    ;
     private static BitmapSource _cancelIconSource;
+    private static BitmapSource _errorIconSource ;
+   
 
 
     private static BitmapSource _userInformationIconSource      ;
@@ -40,6 +42,7 @@ namespace BioModule.ResourcesLoader
 
     private static BitmapSource _cardIconSource        ;
     private static BitmapSource _verificationIconSource;
+    private static BitmapSource _verificationFailedIconSource;
 
     private static BitmapSource _refreshIconSource;
 
@@ -102,6 +105,17 @@ namespace BioModule.ResourcesLoader
             return _okIconSource;
         }
     }
+
+    public static BitmapSource ErrorIconSource
+    {
+      get
+      {
+        if (_errorIconSource == null)
+          _errorIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.error);
+        return _errorIconSource;
+      }
+    }
+
     //************************************************Image View**********************************************
     public static BitmapSource UploadIconSource
     {
@@ -239,6 +253,16 @@ namespace BioModule.ResourcesLoader
         if (_verificationIconSource == null)
           _verificationIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.verified);
         return _verificationIconSource;
+      }
+    }
+
+    public static BitmapSource VerificationFailedIconSource
+    {
+      get
+      {
+        if (_verificationFailedIconSource == null)
+          _verificationFailedIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.not_verified);
+        return _verificationFailedIconSource;
       }
     }
 

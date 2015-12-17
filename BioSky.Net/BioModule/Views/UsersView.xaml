@@ -11,7 +11,9 @@
              xmlns:cal="http://www.caliburnproject.org"    
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"             
              mc:Ignorable="d" 
+             x:Name="UsersModel"
              d:DesignHeight="400" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance vm:UsersViewModel, IsDesignTimeCreatable=False}"
              >
     
     <UserControl.Resources>
@@ -39,8 +41,13 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <DataGrid x:Name="UsersList" ItemsSource="{Binding Users}" AutoGenerateColumns="False" Grid.Column="0" Grid.Row="1" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5" GridLinesVisibility="All" 
-                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" >
+        <DataGrid x:Name="UsersList" ItemsSource="{Binding FilteredUsers}"
+                  AutoGenerateColumns="False" Grid.Column="0" Grid.Row="1" 
+                  BorderThickness="1" HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5"
+                  GridLinesVisibility="All"                                  
+                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" >            
             
             <DataGrid.Columns>
                 <DataGridTextColumn Header="UID"           IsReadOnly="True" Binding="{Binding UID}"/>
@@ -57,22 +64,18 @@
                             <Image Width="64" Height="64" Source="{Binding Path=Photo, Converter={StaticResource ConvertTextToImage}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                
+                </DataGridTemplateColumn>               
             </DataGrid.Columns>
 
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseRightButtonDown">
-                    <cal:ActionMessage MethodName="OnMouseRightButtonDown">
-                        <cal:Parameter Value="$eventArgs"></cal:Parameter>
-                    </cal:ActionMessage>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <DataGrid.ContextMenu>
-                <ContextMenu x:Name="ContextMenu" IsEnabled="True">
-                    <MenuItem Header="Open in New Tab"  IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}" />
-                    <MenuItem Header="Add New"  />
+            <DataGrid.ContextMenu >
+                <ContextMenu x:Name="ContextMenu" IsEnabled="True" >
+                    <MenuItem Header="Open in New Tab"  
+                              IsEnabled="{Binding CanOpenInNewTab, Mode=TwoWay}"
+                              cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
+                              />
+                    <MenuItem Header="Add New User" 
+                              cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
+                              />
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
