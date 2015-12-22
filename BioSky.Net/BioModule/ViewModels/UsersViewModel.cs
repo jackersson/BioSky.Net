@@ -308,7 +308,7 @@ namespace BioModule.ViewModels
     {
       var tb = new TextBlock();
 
-      tb.Inlines.Add(new Run() { Text = (string)values, Background = System.Windows.Media.Brushes.Yellow });
+      //tb.Inlines.Add(new Run() { Text = (string)values, Background = System.Windows.Media.Brushes.Yellow });
 
       string searchText = "as";
 
