@@ -35,14 +35,7 @@
             <RowDefinition Height="28"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="24"/>
-        </Grid.RowDefinitions>
-
-        <TextBox x:Name="SearchBox" Margin="0, 0, 0, 1"  Grid.Column="2"  Grid.Row="0"   
-                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                         Controls:TextBoxHelper.Watermark="Search..."
-                         Controls:TextBoxHelper.ClearTextButton="True">
-            
-        </TextBox>
+        </Grid.RowDefinitions>      
 
         <Image HorizontalAlignment="Left"  Height="24" Grid.Row="2"
                VerticalAlignment="Top" Width="24" 
@@ -61,54 +54,15 @@
                Visibility="{Binding UserVerificationIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                Grid.Column="5" />
 
-        <DataGrid HorizontalAlignment="Stretch" 
-                  ItemsSource="{Binding Notifications}"
-                  Grid.Row="1" 
-                  BorderThickness="1"
-                  GridLinesVisibility="Horizontal"
-                  AutoGenerateColumns="False"
-                  CanUserSortColumns="True" CanUserAddRows="False"
-                  materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                  materialDesign:DataGridAssist.ColumnHeaderPadding="8"
-                  VerticalAlignment="Stretch" Grid.ColumnSpan="6"
-                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" >
-            
-            <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsSelected}" 
-                                        ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                                        EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
-                    <DataGridCheckBoxColumn.Header>                   
-                        <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
-                            <CheckBox HorizontalAlignment="Center"                                               
-                                      DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                      IsChecked="{Binding IsAllItems3Selected}" />
-                        </Border>
-                    </DataGridCheckBoxColumn.Header>
-                </DataGridCheckBoxColumn>
-                <DataGridTemplateColumn Header="Status" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Path=Status, Converter={StaticResource ConvertTextToImage}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Photo" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Path=Status, Converter={StaticResource ConvertTextToImage}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Info"     IsReadOnly="True" Binding="{Binding Message}"/>
-                <DataGridTextColumn Header="Time" IsReadOnly="True" Binding="{Binding Detection_Time}"/>              
-            </DataGrid.Columns>
-        </DataGrid>
+        <local:VisitorsView Grid.Column="0" Grid.Row="1" 
+                            Grid.ColumnSpan="6" Margin="0,2,5,0"
+                            DataContext="{Binding Notifications}">
+
+        </local:VisitorsView>
 
         <Label Content="{Binding TrackLocation.Caption}" HorizontalAlignment="Left" 
                VerticalAlignment="Top" Background="{x:Null}" 
                Foreground="#FF61792F" Grid.ColumnSpan="2">
-
-
         </Label>
 
         <Label Content="21/01/2015 15:15:18" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" Width="127" Foreground="#FF657E30" Grid.ColumnSpan="3" Grid.Column="3"/>

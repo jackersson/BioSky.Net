@@ -27,9 +27,6 @@ using System.Windows.Data;
 
 using BioModule.Utils;
 
-using System.Text.RegularExpressions;
-using System.Windows.Documents;
-
 
 namespace BioModule.ViewModels
 { 
@@ -39,29 +36,14 @@ namespace BioModule.ViewModels
     {
       _bioEngine = bioEngine;
       _selector  = selector;
-     
-      _users     = new ObservableCollection<User>();
+
+      _users = new ObservableCollection<User>();
 
       FilteredUsers = new ObservableCollection<User>(); 
 
-      List<User> users = (List<User>)_bioEngine.Database().getAllUsers();
-      foreach (User user in users)
-        _users.Add(user);
-
-
-      User user2 = new User { First_Name_ = "Sasha", Last_Name_ = "Iskra", Email = "adaman1991@mail.ru", Gender="Male" , Rights="Operator" };
-      _users.Add(user2);
-
-      User user3 = new User { First_Name_ = "Sasha", Last_Name_ = "Iskra", Email = "adaman1991@mail.ru", Gender = "Male", Rights = "Operator" };
-      _users.Add(user3);
-
-      User user4 = new User { First_Name_ = "Taras", Last_Name_ = "Iskra", Email = "adaman1991@mail.ru", Gender = "Male", Rights = "Operator" };
-      _users.Add(user4);
-
-      foreach (User user in _users)
-        FilteredUsers.Add(user);
-      
-    }
+      Users         = _bioEngine.Database().GetAllUsers();
+      FilteredUsers = _bioEngine.Database().GetAllUsers();       
+    } 
 
     private ObservableCollection<User> _users;
     public ObservableCollection<User> Users
@@ -95,6 +77,9 @@ namespace BioModule.ViewModels
     {
       return "Users";
     }
+
+    public void Update()
+    { }
      
         
     //*************************************************************Context Menu******************************************\
@@ -133,14 +118,14 @@ namespace BioModule.ViewModels
       SelectedItem = user;
     }
 
-    public void ShowUserPage()
-    {     
-      _selector.OpenTab(ViewModelsID.UserPage, new object[] { SelectedItem } );
+    public void ShowUserPage( bool isExistingUser )
+    {   
+      _selector.OpenTab(ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );
     }
 
     //************************************************************SearchBox***************************************************
 
-    public void OnSearchTextChanged(string s, Object UsersList)
+    public void OnSearchTextChanged(string s)
     {
       FilteredUsers.Clear();
       if (s == "")
@@ -155,117 +140,11 @@ namespace BioModule.ViewModels
         foreach (User user in filter)
           FilteredUsers.Add(user);
       }
-      NotifyOfPropertyChange(() => FilteredUsers);
-      TestBlockText = s;
-      NotifyOfPropertyChange(() => TestBlockText);
-/*
-      UIElementCollection gr = UsersList as UIElementCollection;
-
-      foreach (Control cl in gr)
-      {
-        if (cl is ListView || cl is DataGrid || cl is TreeView)
-        {
-          FindControlItem(cl, s);
-        }
-      }*/
-        
-        //HighlightText(UsersList, s);
-      
-     // TxtSearchText_TextChanged(s, UsersList);
-      Console.WriteLine(s);      
+      NotifyOfPropertyChange(() => FilteredUsers);          
     }
 
     private readonly ViewModelSelector _selector;
     private readonly IBioEngine        _bioEngine;
-
-    
-
-    Regex regex;
-    private void TxtSearchText_TextChanged(string searchText, DataGrid UsersList)
-    {
-      FindControlItem(UsersList, searchText);
-    }
-
-    public void FindControlItem(DependencyObject obj, string searchText)
-    {
-      for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-      {
-        ListViewItem lv = obj as ListViewItem;
-        Object dg = obj as DataGridCell;
-        TreeViewItem tv = obj as TreeViewItem;
-        if (lv != null)
-        {
-          HighlightText(lv, searchText);
-        }
-        if (dg != null)
-        {
-          HighlightText(dg, searchText);
-        }
-        if (tv != null)
-        {
-          HighlightText(tv, searchText);
-        }
-        FindControlItem(VisualTreeHelper.GetChild(obj as DependencyObject, i), searchText);
-      }
-    }
-
-    private void HighlightText(Object itx, string searchText)
-    {
-      if (itx != null)
-      {
-        if (itx is TextBlock)
-        {
-          regex = new Regex("(" + searchText + ")", RegexOptions.IgnoreCase);
-          TextBlock tb = itx as TextBlock;
-          if (searchText.Length == 0)
-          {
-            
-            string str = tb.Text;
-            tb.Inlines.Clear();
-            tb.Inlines.Add(str);
-            return;
-          }
-          string[] substrings = regex.Split(tb.Text);
-          tb.Inlines.Clear();
-          foreach (var item in substrings)
-          {
-            if (regex.Match(item).Success)
-            {
-              Run runx = new Run(item);
-              runx.Background = System.Windows.Media.Brushes.LightBlue;
-              tb.Inlines.Add(runx);
-            }
-            else
-            {
-              tb.Inlines.Add(item);
-            }
-          }
-          return;
-        }
-        else
-        {
-          for (int i = 0; i < VisualTreeHelper.GetChildrenCount(itx as DependencyObject); i++)
-          {
-            HighlightText(VisualTreeHelper.GetChild(itx as DependencyObject, i), searchText);
-          }
-        }
-      }
-    }
-
-    private string _testBlockText;
-    public string TestBlockText
-    {
-      get { return _testBlockText; }
-      set
-      {
-        if (_testBlockText != value)
-        {
-          _testBlockText = value;
-          NotifyOfPropertyChange(() => TestBlockText);
-        }
-      }
-    }
-
 
     //************************************************************** UI *****************************************8
     public BitmapSource AddIconSource
@@ -286,64 +165,25 @@ namespace BioModule.ViewModels
 
   //**********************************************************String to Image Converter****************************************
 
-  public class ConvertTextToImage : IValueConverter
+  public class ConvertPhotoPathToImage : IValueConverter
   {    
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
-        BitmapImage img = new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
-        return new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
+       
+        if (File.Exists(value.ToString()))
+        {
+          BitmapSource img = new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
+          return img;
+        }
+          
       }
-      return null;
+      return ResourceLoader.UserDefaultImageIconSource;
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       throw new NotImplementedException();
     }   
-  }
-  public class ConvertToFormatedRuns : IValueConverter
-  {
-    public object Convert(object values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      var tb = new TextBlock();
-
-      //tb.Inlines.Add(new Run() { Text = (string)values, Background = System.Windows.Media.Brushes.Yellow });
-
-      string searchText = "as";
-
-      Regex regex = new Regex("(" + searchText + ")", RegexOptions.IgnoreCase);
-      
-      if (searchText.Length == 0)
-      {
-
-        string str = (string)values;
-        tb.Inlines.Clear();
-        tb.Inlines.Add(str);
-        return tb;
-      }
-      string[] substrings = regex.Split((string)values);
-      tb.Inlines.Clear();
-      foreach (var item in substrings)
-      {
-        if (regex.Match(item).Success)
-        {
-          Run runx = new Run(item);
-          runx.Background = System.Windows.Media.Brushes.LightBlue;
-          tb.Inlines.Add(runx);
-        }
-        else
-        {
-          tb.Inlines.Add(item);
-        }
-      }
-
-      return tb;
-    }
-    
-    public object ConvertBack(object value, Type targetTypes, object parameter, System.Globalization.CultureInfo culture)
-    {
-      throw new NotImplementedException();
-    } 
   }
 }

@@ -17,32 +17,48 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
 
-using BioModule.Utils;
-
-
 namespace BioModule.ViewModels
 {
   public class VisitorsViewModel : PropertyChangedBase
   {  
-    public VisitorsViewModel(IBioEngine bioEngine, ViewModelSelector selector)
+    private readonly IBioEngine _bioEngine;
+    public VisitorsViewModel(IBioEngine bioEngine, string filter= "")
     {
-      _bioEngine    = bioEngine;
-      _visitors     = new ObservableCollection<Visitor>();
-      _selector     = selector;
-      
-      List <Visitor> visitors = (List<Visitor>)_bioEngine.Database().getAllVisitors();
-      foreach (Visitor visitor in visitors)
-        _visitors.Add(visitor);
+      _bioEngine = bioEngine;
+      _filter = filter;
 
-      Visitor visitor2 = new Visitor {  Status =  "allow" };
-      _visitors.Add(visitor2);
+      _visitors         = new ObservableCollection<Visitor>();
+      _filteredVisitors = new ObservableCollection<Visitor>();
 
-      Visitor visitor3 = new Visitor { Status = "allow2" };
-      _visitors.Add(visitor3);
+      Visitors = _bioEngine.Database().GetAllVisitors();
 
-      Visitor visitor5 = new Visitor { Status = "allow3" };
-      _visitors.Add(visitor5);
-      NotifyOfPropertyChange(() => Visitors);
+      if (filter == "")
+        FilteredVisitors = Visitors;      
+    }
+
+    public void Update()
+    {
+      NotifyOfPropertyChange(() => FilteredVisitors);
+    }
+
+    private IEnumerable<Visitor> _filteredVisitors;
+    public IEnumerable<Visitor> FilteredVisitors
+    {
+      get
+      {
+        if (_filter != "")
+          _filteredVisitors = _visitors.Where(x => x.Location != null && x.Location.Location_Name == _filter);
+       
+        return _filteredVisitors;
+      }
+      set
+      {
+        if (_filteredVisitors != value)
+        {
+          _filteredVisitors = value;
+          NotifyOfPropertyChange(() => FilteredVisitors);
+        }
+      }
     }
 
     private ObservableCollection<Visitor> _visitors;
@@ -64,10 +80,10 @@ namespace BioModule.ViewModels
       return "Visitors";
     }
 
+    private string _filter;
   
 //**********************************************************Context Menu*****************************************************
-    
-  
+      
     private Visitor _selectedItem;
     public Visitor SelectedItem
     {
@@ -84,37 +100,26 @@ namespace BioModule.ViewModels
       }
     }
 
-    private bool _canOpenInNewTab;
-    public bool CanOpenInNewTab
+    private bool _menuOpenStatus;
+    public bool MenuOpenStatus
     {
-      get { return _canOpenInNewTab; }
+      get
+      {
+        return _menuOpenStatus;
+      }
       set
       {
-        if (_canOpenInNewTab != value)
-        {
-          _canOpenInNewTab = value;
-          NotifyOfPropertyChange(() => CanOpenInNewTab);
-        }
+        if (_menuOpenStatus != value)
+          _menuOpenStatus = value;
+
+        NotifyOfPropertyChange(() => MenuOpenStatus);
       }
     }
-
-    public void OnMouseRightButtonDown(Visitor visitor)
+        
+    public void OnMouseRightButtonDown(MouseButtonEventArgs e)
     {
-      CanOpenInNewTab = (visitor != null);
-      SelectedItem = visitor;
-    }
 
-    public void ShowUserPage()
-    {
-      _selector.OpenTab(ViewModelsID.UserPage, new object[] { SelectedItem.User });
     }
-    public void RemoveVisitor()
-    {
-      _visitors.Remove(SelectedItem);
-    }
-
-    private readonly ViewModelSelector _selector;
-    private readonly IBioEngine _bioEngine;
 
     //--------------------------------------------------- UI --------------------------------------
     public BitmapSource AddIconSource

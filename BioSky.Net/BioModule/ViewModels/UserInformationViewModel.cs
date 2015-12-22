@@ -69,7 +69,7 @@ namespace BioModule.ViewModels
 
     public void SaveUserInfo()
     {      
-      _bioEngine.Database().saveUserChanges();       
+     // _bioEngine.Database().SaveChanges();       
     }       
  
     //*************************************************Icon Source**************************************************************

@@ -26,23 +26,34 @@ namespace BioModule.ViewModels
  
     public void UploadClick(double viewWidth, double viewHeight)
     {          
+
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = false;
       openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-      openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);      
+      openFileDialog.InitialDirectory = Environment.CurrentDirectory;      
       
       if (openFileDialog.ShowDialog() == true)
-      {
-        String filePath = openFileDialog.FileName;
-        if(File.Exists(filePath))
-        {
-          Bitmap bmp = (Bitmap)Image.FromFile(filePath);
-
-          CurrentImageSource = BitmapConversion.BitmapToBitmapSource(bmp);       
-
-          Zoom(viewWidth, viewHeight);
-        }
+      {        
+        Zoom(viewWidth, viewHeight);
+        SetImageFromFile(openFileDialog.FileName);
       }      
+    }
+
+    private void SetImageFromFile(string fileName)
+    {
+      if (File.Exists(fileName))
+      {
+        Bitmap bmp = (Bitmap)Image.FromFile(fileName);
+        CurrentImageSource = BitmapConversion.BitmapToBitmapSource(bmp);
+        ImageFileName = fileName;
+        Zoom(_imageViewWidth, _imageViewHeight);
+      }
+    }
+
+
+    public void Update( string fileName )
+    {
+      SetImageFromFile(fileName);
     }
 
     public void CancelClick(double viewWidth, double viewHeight)
@@ -53,6 +64,9 @@ namespace BioModule.ViewModels
 
     public void Zoom(double viewWidth, double viewHeight)
     {
+      _imageViewWidth  = viewWidth;
+      _imageViewHeight = viewHeight;
+
       double zoomRateToFitInView = ZoomRate / ZOOM_RATIO;
             
       double imageWidth  = CurrentImageSource.Width;
@@ -143,6 +157,22 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    private string _imageFileName;
+    public string ImageFileName
+    {
+      get { return _imageFileName;  }
+      set
+      {
+        if (_imageFileName == value)
+          return;
+
+        _imageFileName = value;
+      }
+    }
+
+    private double _imageViewWidth = 0;
+    private double _imageViewHeight = 0;
 
     private const double ZOOM_TO_FIT_RATE = 90  ;
     private const double ZOOM_RATIO       = 100D;

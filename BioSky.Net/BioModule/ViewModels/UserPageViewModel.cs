@@ -14,6 +14,7 @@ using BioModule.Model;
 using BioModule.Utils;
 using BioData;
 using System.Reflection;
+using System.Windows;
 
 namespace BioModule.ViewModels
 {
@@ -32,20 +33,31 @@ namespace BioModule.ViewModels
     }
 
     public void Update(User user)
-    {
-      _user = user;
+    {    
+     
+      _user = user == null ? 
+      new User()
+      {
+          First_Name_ = ""
+        , Last_Name_ = ""
+        , Gender = Gender.Male.ToString()
+        , Rights = Rights.Operator.ToString()
+      }
+      : user ;
+
+      CurrentImageView.Update(_user.Photo);
 
       foreach (ShellTabPage tabPage in _tabPages )
       {
         MethodInfo method = tabPage.ScreenViewModel.GetType().GetMethod("Update");
         if (method != null)
-          method.Invoke(tabPage.ScreenViewModel, new object[] { user } );        
+          method.Invoke(tabPage.ScreenViewModel, new object[] { _user } );        
       }
     }
 
     public string Caption()
     {
-      return (_user == null) ? "Add New User" : (_user.First_Name_ + " " + _user.Last_Name_);
+      return (_user.First_Name_ == "" ) ? "Add New User" : (_user.First_Name_ + " " + _user.Last_Name_);
     }
 
     private ObservableCollection<ShellTabPage> _tabPages;
@@ -94,6 +106,16 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    public void SaveChanges()
+    {
+      _user.Photo = CurrentImageView.ImageFileName;
+      _bioEngine.Database().AddUser(_user);
+      _bioEngine.Database().SaveChanges();
+
+      MessageBox.Show("User Successfully Added");
+    }
+
 
     private User _user;
     private readonly IBioEngine _bioEngine;

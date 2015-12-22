@@ -20,5 +20,6 @@ namespace BioModule.Model
     public string Detection_Time { get; set; }
     public string LocationName { get; set; }
     public string Status { get; set; } 
+
   }
 }

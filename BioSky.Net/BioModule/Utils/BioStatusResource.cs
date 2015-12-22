@@ -8,6 +8,7 @@ using BioModule.ResourcesLoader;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 
+using BioContracts;
 using BioData;
 using BioModule.Model;
 

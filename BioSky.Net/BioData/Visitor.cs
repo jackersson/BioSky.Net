@@ -14,11 +14,11 @@ namespace BioData
 
   public enum VisitorStatus
   {
-      VerificationSuccess
-    , VerificationFailed
+    VerificationSuccess
+   , VerificationFailed
   }
-    
-    public partial class Visitor
+
+  public partial class Visitor
     {
         public long UID { get; set; }
         public Nullable<long> User_UID { get; set; }

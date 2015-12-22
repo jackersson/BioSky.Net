@@ -26,7 +26,7 @@ namespace BioModule.ViewModels
 
     public void OpenTabAddNewPerson()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.UserPage);
+      _viewModelSelector.OpenTab(ViewModelsID.UserPage, new object[] { null });
     }
 
     public void OpenTabAddNewLocation()

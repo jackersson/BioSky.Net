@@ -12,29 +12,21 @@ using BioModule.Model;
 
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Controls;
+using BioData;
 
 namespace BioModule.ViewModels
 {
-  public class ComboBoxitem
-  {
-    public bool Value { get; set; }
-    public string Name { get; set; }
-  }
   public class TrackControlViewModel : PropertyChangedBase
   {
+
     public TrackControlViewModel(IBioEngine bioEngine)
     {
       _bioEngine = bioEngine;
 
-      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())
-        location.ScreenViewModel = new TrackControlItemViewModel(location);
+      _notifications = new VisitorsViewModel(bioEngine);
 
-      ButtonItems = new List<ComboBoxitem>() 
-      { 
-        new ComboBoxitem{Value = true, Name = "ALL"},
-        new ComboBoxitem{Value = false, Name = "Nothing"}       
-      }; 
+      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())
+        location.ScreenViewModel = new TrackControlItemViewModel(_bioEngine, location);      
     }
 
     public ObservableCollection<TrackLocation> TrackControlItems
@@ -54,29 +46,40 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => SelectedTrackLocation);
        
       }
-    }
+    }   
 
-    private List<ComboBoxitem> _bButtonItems;
-    public List<ComboBoxitem> ButtonItems
+    public void AddMenu()
     {
-      get
-      {
-        return _bButtonItems;
-      }
-      set
-      {
-        if (_bButtonItems != value)
-          _bButtonItems = value;
+      Visitor v = new Visitor()
+      {        
+         User_UID = 1       
+        , Locaion_ID = 2
+        , Status = "VerificationSuccess"         
+      };
 
-        NotifyOfPropertyChange(() => ButtonItems);
+      _bioEngine.Database().AddVisitor(v);
+      _bioEngine.Database().SaveChanges();
+
+      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())
+      {
+        TrackControlItemViewModel vm = (TrackControlItemViewModel)location.ScreenViewModel;
+        if (vm != null)
+          vm.Update();
       }
     }
+
+    public VisitorsViewModel Notifications
+    {
+      get { return _notifications; }
+    }
+
     
     public string Caption()
     {
       return "Tracking";
     }
-    
+
+    private readonly VisitorsViewModel _notifications;
     private readonly IBioEngine _bioEngine;
 
     //**************************************** UI *******************************************
@@ -93,36 +96,6 @@ namespace BioModule.ViewModels
     public BitmapSource DeleteIconSource
     {
       get { return ResourceLoader.DeleteIconSource; }
-    }
-  }
-
-  public class ComboBoxItemTemplateSelector : DataTemplateSelector
-  {
-    // Can set both templates from XAML
-    public DataTemplate SelectedItemTemplate { get; set; }
-    public DataTemplate ItemTemplate { get; set; }
-
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
-    {
-      bool selected = false;
-
-      // container is the ContentPresenter
-      FrameworkElement fe = container as FrameworkElement;
-      if (fe != null)
-      {
-        DependencyObject parent = fe.TemplatedParent;
-        if (parent != null)
-        {
-          ComboBox cbo = parent as ComboBox;
-          if (cbo != null)
-            selected = true;
-        }
-      }
-
-      if (selected)
-        return SelectedItemTemplate;
-      else
-        return ItemTemplate;
     }
   }
 }

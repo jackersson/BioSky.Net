@@ -20,50 +20,26 @@ namespace BioModule.ViewModels
 
   public class TrackControlItemViewModel : PropertyChangedBase, IObserver<AccessDeviceActivity>
   {          
-    public TrackControlItemViewModel( TrackLocation location )
+    public TrackControlItemViewModel( IBioEngine bioEngine, TrackLocation location )
     {
-      _location = location;
+      _location  = location ;
+      _bioEngine = bioEngine;
 
       UserVerified = true;
       UserVerificationIconVisible = false;
       CardDetectedIconVisible = false;
 
-      _notifications = new ObservableCollection<Notification>();
-
-      Notification n = new Notification()
-      {
-          Status = "Success"
-        , Detection_Time = "21.05.21"
-        , InfoMessage = "Message"
-        , LocationName = "Main Doors"
-        , AdditionalVisualInfo = "Photo"
-      };
-
-      _notifications.Add(n);
-      _notifications.Add(n);
-      _notifications.Add(n);
-      _notifications.Add(n);
-      _notifications.Add(n);
-      _notifications.Add(n);
-      _notifications.Add(n);
-      _notifications.Add(n);
-
-      NotifyOfPropertyChange(() => Notifications);
-
+      _notifications = new VisitorsViewModel(bioEngine, location.Caption );   
     }
 
-    private ObservableCollection<Notification> _notifications;
-    public ObservableCollection<Notification> Notifications
+    public void Update()
+    {
+      _notifications.Update();
+    }
+
+    public VisitorsViewModel Notifications
     {
       get { return _notifications; }
-      set
-      {
-        if ( _notifications != value)
-        {
-          _notifications = value;
-          NotifyOfPropertyChange(() => Notifications);
-        }
-      }
     }
 
     private bool _accessDeviceOK;
@@ -145,7 +121,9 @@ namespace BioModule.ViewModels
       throw new NotImplementedException();
     } 
 
-    private TrackLocation _location;
+    private TrackLocation     _location;
+    private VisitorsViewModel _notifications;
+    private readonly IBioEngine _bioEngine;
 
     //**************************************************** UI **********************************************
     public BitmapSource OkIconSource
@@ -165,21 +143,5 @@ namespace BioModule.ViewModels
     }       
   }
 
-  public class ConvertStatusToImage : IValueConverter
-  {
-
-    private BioStatusResource _resource = new BioStatusResource();
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      if (value != null)
-      {      
-        return _resource.GetBitmapSource(value.ToString());
-      }
-      return null;
-    }
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      throw new NotImplementedException();
-    }
-  }
+  
 }
