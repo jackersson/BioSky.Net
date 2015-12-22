@@ -25,10 +25,11 @@ namespace BioModule.Model
 
     public void Init()
     {      
-      List<Location> locations = (List<Location>)_database.getAllLocations();
-
-      foreach (Location location in locations)
-        _trackLocations.Add(new TrackLocation(_accessDeviceEngine, location));
+      foreach (Location location in _database.GetAllLocations())
+      {
+        TrackLocation trackLocation = new TrackLocation(_accessDeviceEngine, location);
+        _trackLocations.Add(trackLocation);
+      }     
     }  
 
     public ObservableCollection<TrackLocation> TrackLocations()
@@ -36,7 +37,7 @@ namespace BioModule.Model
       return _trackLocations;
     }
 
-    private ObservableCollection<TrackLocation> _trackLocations;
+    private ObservableCollection<TrackLocation> _trackLocations;   
 
     private readonly IBioSkyNetRepository _database;
     private readonly IAccessDeviceEngine  _accessDeviceEngine;

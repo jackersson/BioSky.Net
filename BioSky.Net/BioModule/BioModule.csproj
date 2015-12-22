@@ -132,7 +132,6 @@
     <Compile Include="Model\BioEngine.cs" />
     <Compile Include="Model\IBioEngine.cs" />
     <Compile Include="Model\ITrackLocationEngine.cs" />
-    <Compile Include="Model\Notification.cs" />
     <Compile Include="Model\TrackControl.cs" />
     <Compile Include="Model\TrackItem.cs" />
     <Compile Include="Model\TrackLocation.cs" />
@@ -149,6 +148,9 @@
     <Compile Include="ViewModels\FlyoutControlViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="Views\NotificationsView.xaml.cs">
+      <DependentUpon>NotificationsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="ViewModels\UserInformationViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
@@ -165,9 +167,7 @@
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NotificationDataGridView.xaml.cs">
-      <DependentUpon>NotificationDataGridView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModels\NotificationsViewModel.cs" />
     <Compile Include="Views\ToolBarView.xaml.cs">
       <DependentUpon>ToolBarView.xaml</DependentUpon>
     </Compile>
@@ -203,6 +203,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\NotificationsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FlyoutControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -212,10 +216,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainMenuView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\NotificationDataGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

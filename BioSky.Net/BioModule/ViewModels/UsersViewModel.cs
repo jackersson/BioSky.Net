@@ -41,14 +41,9 @@ namespace BioModule.ViewModels
 
       FilteredUsers = new ObservableCollection<User>(); 
 
-      List<User> users = (List<User>)_bioEngine.Database().getAllUsers();
-      foreach (User user in users)
-        _users.Add(user);
-
-      foreach (User user in _users)
-        FilteredUsers.Add(user);
-
-    }
+      Users         = _bioEngine.Database().GetAllUsers();
+      FilteredUsers = _bioEngine.Database().GetAllUsers();       
+    } 
 
     private ObservableCollection<User> _users;
     public ObservableCollection<User> Users
@@ -82,6 +77,9 @@ namespace BioModule.ViewModels
     {
       return "Users";
     }
+
+    public void Update()
+    { }
      
         
     //*************************************************************Context Menu******************************************\
@@ -120,9 +118,9 @@ namespace BioModule.ViewModels
       SelectedItem = user;
     }
 
-    public void ShowUserPage()
-    {     
-      _selector.OpenTab(ViewModelsID.UserPage, new object[] { SelectedItem } );
+    public void ShowUserPage( bool isExistingUser )
+    {   
+      _selector.OpenTab(ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );
     }
 
     //************************************************************SearchBox***************************************************
@@ -142,8 +140,7 @@ namespace BioModule.ViewModels
         foreach (User user in filter)
           FilteredUsers.Add(user);
       }
-      NotifyOfPropertyChange(() => FilteredUsers);
-      Console.WriteLine(s);      
+      NotifyOfPropertyChange(() => FilteredUsers);          
     }
 
     private readonly ViewModelSelector _selector;
@@ -168,16 +165,21 @@ namespace BioModule.ViewModels
 
   //**********************************************************String to Image Converter****************************************
 
-  public class ConvertTextToImage : IValueConverter
+  public class ConvertPhotoPathToImage : IValueConverter
   {    
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
-        BitmapImage img = new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
-        return new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
+       
+        if (File.Exists(value.ToString()))
+        {
+          BitmapSource img = new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
+          return img;
+        }
+          
       }
-      return null;
+      return ResourceLoader.UserDefaultImageIconSource;
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {

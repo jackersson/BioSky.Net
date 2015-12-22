@@ -139,7 +139,7 @@
           <Property Name="Full_Photo_ID" Type="Int64" />
           <Property Name="Detection_Time" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="Locaion_ID" Type="Int64" />
-          <Property Name="Status" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="Location" Relationship="BioSkyNetModel.FK_Visitor_ToLocation" FromRole="Visitor" ToRole="Location" />
           <NavigationProperty Name="User" Relationship="BioSkyNetModel.FK_Visitor_ToUser" FromRole="Visitor" ToRole="User" />
         </EntityType>

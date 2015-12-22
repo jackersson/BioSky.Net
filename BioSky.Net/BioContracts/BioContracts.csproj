@@ -48,6 +48,7 @@
     <Compile Include="IEntityFrameworkConnectionBuilder.cs" />
     <Compile Include="IFlyoutControl.cs" />
     <Compile Include="ITabControl.cs" />
+    <Compile Include="Notification.cs" />
     <Compile Include="ShellFlyoutControl.cs" />
     <Compile Include="ShellFlyoutPage.cs" />
     <Compile Include="ShellMainMenu.cs" />

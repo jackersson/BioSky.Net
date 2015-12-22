@@ -17,10 +17,10 @@ namespace BioModule
 {
   class BioModuleImpl : IBioModule
   {
-    private readonly IBioShell   _shell     ;
-    private readonly ITabControl _tabControlViewModel     ;
-    private readonly IFlyoutControl _flyoutControlViewModel  ;
-    private readonly ViewModelSelector _viewModelSelector;
+    private readonly IBioShell         _shell                 ;
+    private readonly ITabControl       _tabControlViewModel   ;
+    private readonly IFlyoutControl    _flyoutControlViewModel;
+    private readonly ViewModelSelector _viewModelSelector     ;
     //private readonly UsersViewModel        _usersViewModel          ;
     //private readonly VisitorsViewModel     _visitorsViewModel       ;
     //private readonly SettingsViewModel     _settingsViewModel       ;
@@ -55,8 +55,8 @@ namespace BioModule
     public void Init()
     {
       
-      _viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
-      _viewModelSelector.OpenTab(ViewModelsID.UsersPage);
+      //_viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
+      //_viewModelSelector.OpenTab(ViewModelsID.UserPage, new object[] { null });
       _viewModelSelector.OpenTab(ViewModelsID.TrackPage);
 
       _tabControlViewModel.Init();

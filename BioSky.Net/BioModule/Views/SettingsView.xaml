@@ -151,7 +151,7 @@
                     </i:Interaction.Triggers>
 
                     <ListBox.ContextMenu>
-                        <ContextMenu x:Name="ContextMenu" IsEnabled="True">                            
+                        <ContextMenu  IsEnabled="True">                            
                             <MenuItem Header="Add to In Devices"  IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}" 
                                       cal:Message.Attach="[Event Click] = [Action OnAddToInDevices]"/>
                             <MenuItem Header="Add to Out Devices"  IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"

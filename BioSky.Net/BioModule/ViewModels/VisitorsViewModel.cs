@@ -22,17 +22,43 @@ namespace BioModule.ViewModels
   public class VisitorsViewModel : PropertyChangedBase
   {  
     private readonly IBioEngine _bioEngine;
-    public VisitorsViewModel(IBioEngine bioEngine)
+    public VisitorsViewModel(IBioEngine bioEngine, string filter= "")
     {
-      _bioEngine    = bioEngine;
-      _visitors     = new ObservableCollection<Visitor>();
-    
-      
-      List <Visitor> visitors = (List<Visitor>)_bioEngine.Database().getAllVisitors();
-      foreach (Visitor visitor in visitors)
-        _visitors.Add(visitor);
+      _bioEngine = bioEngine;
+      _filter = filter;
 
-      NotifyOfPropertyChange(() => Visitors);
+      _visitors         = new ObservableCollection<Visitor>();
+      _filteredVisitors = new ObservableCollection<Visitor>();
+
+      Visitors = _bioEngine.Database().GetAllVisitors();
+
+      if (filter == "")
+        FilteredVisitors = Visitors;      
+    }
+
+    public void Update()
+    {
+      NotifyOfPropertyChange(() => FilteredVisitors);
+    }
+
+    private IEnumerable<Visitor> _filteredVisitors;
+    public IEnumerable<Visitor> FilteredVisitors
+    {
+      get
+      {
+        if (_filter != "")
+          _filteredVisitors = _visitors.Where(x => x.Location != null && x.Location.Location_Name == _filter);
+       
+        return _filteredVisitors;
+      }
+      set
+      {
+        if (_filteredVisitors != value)
+        {
+          _filteredVisitors = value;
+          NotifyOfPropertyChange(() => FilteredVisitors);
+        }
+      }
     }
 
     private ObservableCollection<Visitor> _visitors;
@@ -54,10 +80,10 @@ namespace BioModule.ViewModels
       return "Visitors";
     }
 
+    private string _filter;
   
 //**********************************************************Context Menu*****************************************************
-    
-  
+      
     private Visitor _selectedItem;
     public Visitor SelectedItem
     {

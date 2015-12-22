@@ -14,16 +14,15 @@ namespace BioData
 
   public enum Gender
   {
-      Male
+    Male
     , Female
   }
   public enum Rights
   {
-     Operator
+    Operator
    , Manager
    , Supervisor
   }
-
 
   public partial class User
     {
