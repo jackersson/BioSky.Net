@@ -146,8 +146,14 @@
     <Compile Include="ResourcesLoader\ResourceLoader.cs" />
     <Compile Include="Utils\BioStatusResource.cs" />
     <Compile Include="Utils\ViewModelSelector.cs" />
+    <Compile Include="ViewModels\Dialogs\AboutDialog.cs" />
+    <Compile Include="ViewModels\Dialogs\AreYouSureDialog.cs" />
+    <Compile Include="ViewModels\Dialogs\AuthenticationDialog.cs" />
+    <Compile Include="ViewModels\Dialogs\FlashLoadScreen.cs" />
+    <Compile Include="ViewModels\Dialogs\VerificationDialogViewModel.cs" />
     <Compile Include="ViewModels\FlyoutControlViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="ViewModels\UserInformationViewModel.cs" />
@@ -156,11 +162,17 @@
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
     <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
     <Compile Include="ViewModels\UserPageViewModel.cs" />
+    <Compile Include="Views\Dialogs\VerificationDialogView.xaml.cs">
+      <DependentUpon>VerificationDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginInformationView.xaml.cs">
+      <DependentUpon>LoginInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -203,11 +215,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\Dialogs\VerificationDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FlyoutControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoginInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

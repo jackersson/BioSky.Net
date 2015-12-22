@@ -27,6 +27,7 @@ namespace BioShell
     public ShellToolBar ToolBar   { get { return _shellViewModel.ToolBar;  }  }
 
     public ShellMainMenu MainMenu { get { return _shellViewModel.MainMenu; }  }
+    public ShellLoginInformation LoginInformation { get { return _shellViewModel.LoginInformation; } }
 
     public IBioModule LoadModule(Assembly assembly)
     {

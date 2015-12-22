@@ -15,6 +15,7 @@ namespace BioContracts
     ShellToolBar ToolBar { get; }
 
     ShellMainMenu MainMenu { get; }
+    ShellLoginInformation LoginInformation { get; }
     
     IBioModule LoadModule(Assembly assembly);
   }

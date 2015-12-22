@@ -8,7 +8,7 @@
              xmlns:cal="http://www.caliburnproject.org"            
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:uservm ="clr-namespace:BioData;assembly=BioData"
+             xmlns:uservm ="clr-namespace:BioData;assembly=BioData"             
              mc:Ignorable="d" 
              d:DesignHeight="320" d:DesignWidth="300">
     <UserControl.Resources>
@@ -29,6 +29,31 @@
         <vm:StringToGenderConverter x:Key="converterGender" />
         <vm:StringToRightsConverter x:Key="converterRights" />
 
+        <ResourceDictionary x:Key="MathDesign">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+            <Style TargetType="{x:Type Viewbox}">
+                <Setter Property="Width" Value="18" />
+                <Setter Property="Height" Value="18" />
+                <Setter Property="Margin" Value="0 0 8 0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MaterialDesignSlider}">
+                <Setter Property="Margin" Value="0 8 0 8" />
+            </Style>
+        </ResourceDictionary>
+
     </UserControl.Resources> 
 
     <Grid>
@@ -47,11 +72,13 @@
                                   VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-                <TextBox x:Name="FirstNameBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <TextBox x:Name="FirstNameBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                
                          Controls:TextBoxHelper.Watermark="First Name*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.First_Name_}"/>
+                         Text="{Binding User.First_Name_}"                         
+                         >
+                </TextBox>
 
                 <TextBox x:Name="LastNameBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Last Name*"

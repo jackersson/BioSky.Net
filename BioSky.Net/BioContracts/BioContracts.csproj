@@ -50,6 +50,7 @@
     <Compile Include="ITabControl.cs" />
     <Compile Include="ShellFlyoutControl.cs" />
     <Compile Include="ShellFlyoutPage.cs" />
+    <Compile Include="ShellLoginInformation.cs" />
     <Compile Include="ShellMainMenu.cs" />
     <Compile Include="ShellTabControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -20,15 +20,22 @@
         <ResourceDictionary>            
             <ResourceDictionary.MergedDictionaries>                
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <Thickness x:Key="ControlMargin">0 5 0 5</Thickness>
 
             <vm:ConvertTextToImage x:Key="ConvertTextToImage" />
+            <vm:ConvertToFormatedRuns x:Key="ConvertToFormatedRuns"/>
+            <!--<vm:ConvertToFormatedRuns x:Key="ConvertToFormatedRuns" />-->
         </ResourceDictionary>
     </UserControl.Resources>
 
 
-    <Grid>
+    <Grid x:Name="grid1">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*"/>           
@@ -42,16 +49,26 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid x:Name="UsersList" ItemsSource="{Binding FilteredUsers}"
-                  AutoGenerateColumns="False" Grid.Column="0" Grid.Row="1" 
+                  AutoGenerateColumns="False" Grid.Column="0" Grid.Row="1"                           
+                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"       
+
                   BorderThickness="1" HorizontalAlignment="Stretch" 
                   VerticalAlignment="Stretch" Margin="0,0,1,0" Grid.ColumnSpan="5"
                   GridLinesVisibility="All"                                  
                   cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"
-                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" >            
-            
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" >
+
             <DataGrid.Columns>
                 <DataGridTextColumn Header="UID"           IsReadOnly="True" Binding="{Binding UID}"/>
                 <DataGridTextColumn Header="First Name"    IsReadOnly="True" Binding="{Binding First_Name_}"/>
+                <DataGridTemplateColumn Header="First Name2"    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Path=First_Name_, Converter={StaticResource ConvertToFormatedRuns}}">
+                            </Label>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>                
                 <DataGridTextColumn Header="Last Name"     IsReadOnly="True" Binding="{Binding Last_Name_}"/>
                 <DataGridTextColumn Header="Date of Birth" IsReadOnly="True" Binding="{Binding Date_Of_Birth}"/>
                 <DataGridTextColumn Header="Gender"        IsReadOnly="True" Binding="{Binding Gender}"/>
@@ -96,7 +113,7 @@
                          Controls:TextBoxHelper.Watermark="Search..."
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"             
-                    cal:Message.Attach="[Event TextChanged] = [Action OnSearchTextChanged(SearchBox.Text)]"         
+                    cal:Message.Attach="[Event TextChanged] = [Action OnSearchTextChanged(SearchBox.Text, TestBlock)]"         
                   >
           
             <TextBox.Style>

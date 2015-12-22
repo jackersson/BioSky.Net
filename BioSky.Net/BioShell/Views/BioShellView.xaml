@@ -11,7 +11,7 @@
                       xmlns:z="clr-namespace:BioModule;assembly=BioModule" 
                       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"                     
                       xmlns:cal="http://www.caliburnproject.org"
-                      xmlns:tas="clr-namespace:BioContracts;assembly=BioContracts"                     
+                      xmlns:tas="clr-namespace:BioContracts;assembly=BioContracts"                       
                       mc:Ignorable="d"
                       BorderThickness="1"
                       WindowStartupLocation="CenterScreen"
@@ -36,6 +36,7 @@
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
 
+      
         <ContentControl Grid.Row="1" Grid.Column="1" x:Name="CurrentTabControl" Grid.ColumnSpan="2" />
 
         <!--
@@ -53,6 +54,7 @@
 
         <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="CurrentMainMenu"></ContentControl>
 
+        <ContentControl Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" x:Name="CurrentLoginInformation"></ContentControl>
 
 
     </Grid>

@@ -28,10 +28,17 @@ namespace BioShell.ViewModels
 
     public BioShellViewModel()
     {
-      _tabControl    = new ShellTabControl   ();
-      _flyoutControl = new ShellFlyoutControl();
-      _toolBar       = new ShellToolBar      ();
-      _mainMenu      = new ShellMainMenu     ();   
+      _tabControl       = new ShellTabControl      ();
+      _flyoutControl    = new ShellFlyoutControl   ();
+      _toolBar          = new ShellToolBar         ();
+      _mainMenu         = new ShellMainMenu        ();
+      _loginInformation = new ShellLoginInformation();
+    }
+
+    private ShellLoginInformation _loginInformation;
+    public ShellLoginInformation LoginInformation
+    {
+      get { return _loginInformation; }
     }
 
     private ShellMainMenu _mainMenu;
@@ -76,6 +83,11 @@ namespace BioShell.ViewModels
     public object CurrentMainMenu
     {
       get { return _mainMenu.ScreenViewModel; }
+    }
+
+    public object CurrentLoginInformation
+    {
+      get { return _loginInformation.ScreenViewModel; }
     }
 
     public BitmapSource LogoIconSource

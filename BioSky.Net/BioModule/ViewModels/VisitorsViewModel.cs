@@ -17,21 +17,31 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
 
+using BioModule.Utils;
+
+
 namespace BioModule.ViewModels
 {
   public class VisitorsViewModel : PropertyChangedBase
   {  
-    private readonly IBioEngine _bioEngine;
-    public VisitorsViewModel(IBioEngine bioEngine)
+    public VisitorsViewModel(IBioEngine bioEngine, ViewModelSelector selector)
     {
       _bioEngine    = bioEngine;
       _visitors     = new ObservableCollection<Visitor>();
-    
+      _selector     = selector;
       
       List <Visitor> visitors = (List<Visitor>)_bioEngine.Database().getAllVisitors();
       foreach (Visitor visitor in visitors)
         _visitors.Add(visitor);
 
+      Visitor visitor2 = new Visitor {  Status =  "allow" };
+      _visitors.Add(visitor2);
+
+      Visitor visitor3 = new Visitor { Status = "allow2" };
+      _visitors.Add(visitor3);
+
+      Visitor visitor5 = new Visitor { Status = "allow3" };
+      _visitors.Add(visitor5);
       NotifyOfPropertyChange(() => Visitors);
     }
 
@@ -74,26 +84,37 @@ namespace BioModule.ViewModels
       }
     }
 
-    private bool _menuOpenStatus;
-    public bool MenuOpenStatus
+    private bool _canOpenInNewTab;
+    public bool CanOpenInNewTab
     {
-      get
-      {
-        return _menuOpenStatus;
-      }
+      get { return _canOpenInNewTab; }
       set
       {
-        if (_menuOpenStatus != value)
-          _menuOpenStatus = value;
-
-        NotifyOfPropertyChange(() => MenuOpenStatus);
+        if (_canOpenInNewTab != value)
+        {
+          _canOpenInNewTab = value;
+          NotifyOfPropertyChange(() => CanOpenInNewTab);
+        }
       }
     }
-        
-    public void OnMouseRightButtonDown(MouseButtonEventArgs e)
-    {
 
+    public void OnMouseRightButtonDown(Visitor visitor)
+    {
+      CanOpenInNewTab = (visitor != null);
+      SelectedItem = visitor;
     }
+
+    public void ShowUserPage()
+    {
+      _selector.OpenTab(ViewModelsID.UserPage, new object[] { SelectedItem.User });
+    }
+    public void RemoveVisitor()
+    {
+      _visitors.Remove(SelectedItem);
+    }
+
+    private readonly ViewModelSelector _selector;
+    private readonly IBioEngine _bioEngine;
 
     //--------------------------------------------------- UI --------------------------------------
     public BitmapSource AddIconSource

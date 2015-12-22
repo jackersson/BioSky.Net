@@ -63,8 +63,10 @@ namespace BioModule
       _shell.TabControl.ScreenViewModel    = _tabControlViewModel;
       _shell.FlyoutControl.ScreenViewModel = _flyoutControlViewModel;
 
-      _shell.ToolBar.ScreenViewModel       = new ToolBarViewModel(_viewModelSelector);
-      _shell.MainMenu.ScreenViewModel      = new MainMenuViewModel(_viewModelSelector);      
+      _shell.ToolBar.ScreenViewModel          = new ToolBarViewModel(_viewModelSelector);
+      _shell.MainMenu.ScreenViewModel         = new MainMenuViewModel(_viewModelSelector);
+           
+      
     }
   }
 }
