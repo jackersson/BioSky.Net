@@ -20,12 +20,12 @@ namespace BioData
 
       //return;
 
-      
+     
       container.Register(Component.For<IEntityFrameworkConnectionBuilder>()
                .ImplementedBy<EntityFrameworkConnectionBuilder>()
                .DependsOn(new
                {
-                 dbConnectionstring = @"F:\C#\BioSkyNetSuccess\BioSky.Net\BioSky.Net\database\BioSkyNet.mdf"
+                 dbConnectionstring = @"C:\Users\Spark\Source\Repos\BioSky.Net\BioSky.Net\database\BioSkyNet.mdf"
                })
                  .LifestyleSingleton()
                );

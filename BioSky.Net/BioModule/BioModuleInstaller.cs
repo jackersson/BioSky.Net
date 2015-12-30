@@ -49,6 +49,8 @@ namespace BioModule
 
         container.Register(Component.For<MainMenuViewModel>().LifeStyle.Singleton);
         container.Register(Component.For<ToolBarViewModel>().LifeStyle.Singleton);
+        container.Register(Component.For<LoginInformationViewModel>().LifeStyle.Singleton);
+
 
         container.Register(Component.For<IBioModule>().ImplementedBy<BioModuleImpl>());
       }

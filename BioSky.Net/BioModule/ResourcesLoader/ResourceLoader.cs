@@ -52,9 +52,28 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _addLocationIconSource;
     private static BitmapSource _journalListIconSource;
     private static BitmapSource _usersListIconSource;
+    private static BitmapSource _logoListIconSource;
+    private static BitmapSource _trackingListIconSource;
 
-
-    
+    public static BitmapSource LogoIconSource
+    {
+      get
+      {
+        if (_logoListIconSource == null)
+          
+          _logoListIconSource = BitmapConversion.BitmapToBitmapSource((BioModule.Properties.Resources.logo).ToBitmap());
+        return _logoListIconSource;
+      }
+    }
+    public static BitmapSource TrackingIconSource
+    {
+      get
+      {
+        if (_trackingListIconSource == null)
+          _trackingListIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.tracking);
+        return _trackingListIconSource;
+      }
+    }
     public static BitmapSource CancelIconSource
     {
       get
