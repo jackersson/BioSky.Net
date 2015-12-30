@@ -159,6 +159,5 @@ namespace BioModule.ViewModels
     {
       get { return ResourceLoader.UserContactlessCardsIconSource; }
     }
-
   }
 }

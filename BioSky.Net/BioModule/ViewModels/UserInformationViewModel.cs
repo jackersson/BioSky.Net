@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Reflection;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace BioModule.ViewModels
 {
@@ -106,5 +107,5 @@ namespace BioModule.ViewModels
          NotifyOfPropertyChange(() => User);
        }
      } 
-  }
+  } 
 }

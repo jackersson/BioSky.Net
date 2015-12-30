@@ -147,13 +147,7 @@ namespace BioModule.ViewModels
             break;
           }
         }
-/*
-        var t = Locations.Where(x => x.Content == SelectedDeviceIn.Content);
-        
-        ListBoxItem li = (ListBoxItem)t;
-        li.IsEnabled = true;*/
-        LocationsIn.Remove(SelectedDeviceIn);
-        
+        LocationsIn.Remove(SelectedDeviceIn);        
       }
 
       public void OnAddToOutDevicesFromIn()
@@ -161,8 +155,7 @@ namespace BioModule.ViewModels
         ListBoxItem li = new ListBoxItem();
         li.Content = SelectedDeviceIn.Content;
         LocationsOut.Add(li);
-        LocationsIn.Remove(SelectedDeviceIn);  
-        
+        LocationsIn.Remove(SelectedDeviceIn);         
       }
 
       public void OnRemoveOut()

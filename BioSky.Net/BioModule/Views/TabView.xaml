@@ -80,13 +80,16 @@
                     </local:UsersView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
-                    <local:VisitorsView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:VisitorsView>
+                    <ContentControl x:Name="CurrentViewTab" 
+                        cal:View.Context="DetailedVisitors"                      
+                        cal:View.Model="{Binding}">
+                    </ContentControl>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPageViewModel}">
                     <local:UserPageView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:UserPageView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
-                    <local:TrackControlView x:Name="CurrentViewTab"></local:TrackControlView>
+                    <local:TrackControlView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:TrackControlView>
                 </DataTemplate>
             </dragablz:TabablzControl.Resources>
             <dragablz:TabablzControl.CustomHeaderItemTemplate>

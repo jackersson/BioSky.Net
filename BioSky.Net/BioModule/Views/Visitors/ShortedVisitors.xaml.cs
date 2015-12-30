@@ -13,17 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using MahApps.Metro.Controls.Dialogs;
-
-
-namespace BioModule.Views.Dialogs
+namespace BioModule.Views.Visitors
 {
   /// <summary>
-  /// Interaction logic for VerificationDialogView.xaml
+  /// Interaction logic for ShortedVisitors.xaml
   /// </summary>
-  public partial class VerificationDialogView : CustomDialog
+  public partial class ShortedVisitors : UserControl
   {
-    public VerificationDialogView()
+    public ShortedVisitors()
     {
       InitializeComponent();
     }

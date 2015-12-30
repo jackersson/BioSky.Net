@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using BioModule.Utils;
 using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 using System.Windows;
-using BioModule.ViewModels.Dialogs;
 
+using System.Threading;
+using System.Globalization;
+using BioModule.Resources.langs;
+using System.Collections.ObjectModel;
 
-
+using WPFLocalizeExtension.Engine;
 
 namespace BioModule.ViewModels
 {
@@ -21,7 +23,10 @@ namespace BioModule.ViewModels
 
     public MainMenuViewModel(ViewModelSelector viewModelSelector)
     {
-      _viewModelSelector = viewModelSelector;     
+      _viewModelSelector = viewModelSelector;
+      _languages = new ObservableCollection<string>();
+      _languages.Add("en");
+      _languages.Add("ru-RU");
     }
 
     public void OpenTabAddNewPerson()
@@ -55,66 +60,41 @@ namespace BioModule.ViewModels
     }
 
     private ViewModelSelector _viewModelSelector;
-
-    public async void OpenDialogAbout()
+    //****************************************************Language****************************************************
+    private ObservableCollection<string> _languages;
+    public ObservableCollection<string> Languages
     {
-      
-      var dialog = new CustomDialog();
-      dialog.DialogSettings.ColorScheme = MetroDialogColorScheme.Accented;
-      dialog.ShowDialogExternally();
-     // LoginDialogData result = await this.ShowLoginAsync("Authentication", "Enter your credentials", new LoginDialogSettings { ColorScheme = this.MetroDialogOptions.ColorScheme, InitialUsername = "MahApps", EnablePasswordPreview = true });
-    }
-
-
-    private VerificationDialogViewModel _verificationWindow;
-    private CustomDialog _customDialog;
-    public async void TestDialog()
-    {
-      var metroWindow = (Application.Current.MainWindow as MetroWindow);
-      _customDialog = new CustomDialog();
-      _customDialog.DialogSettings.ColorScheme = MetroDialogColorScheme.Accented;
-      
-      var mySettings = new MetroDialogSettings()
+      get { return _languages; }
+      set
       {
-        AffirmativeButtonText = "Yes",
-        AnimateShow = true,
-        NegativeButtonText = "No",
-        FirstAuxiliaryButtonText = "Cancel",
-      };
-      _verificationWindow = new VerificationDialogViewModel();
-      
-/*
-      _verificationWindow.ButtonCancel.Click += ButtonCancelOnClick;
-      _verificationWindow.ButtonLogin.Click += ButtonLoginOnClick;*/
-      _customDialog.Content = _verificationWindow;
-      _customDialog.ShowDialogExternally();
-
-      await metroWindow.ShowMetroDialogAsync(_customDialog);
+        if (_languages != value)
+        {
+          _languages = value;
+          NotifyOfPropertyChange(() => Languages);
+        }
+      }
+    }   
+    
+    private string _selectedLanguage;
+    public string SelectedLanguage
+    {
+      get { return _selectedLanguage; }
+      set
+      {
+        if (_selectedLanguage != value)
+        {
+          _selectedLanguage = value;
+          NotifyOfPropertyChange(() => SelectedLanguage);
+        }
+      }
     }
 
-    public void ShowAboutDialog()
+    public void LanguageChanged()
     {
-      new AboutDialog().ShowAboutDialog();
+      LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
+      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);
     }
-
-    public  void ShowCustomDialog()
-    {
-      new VerificationDialogViewModel().ShowVerificationDialog();
-    }
-
-    public void ShowLoginDialogPasswordPreview()
-    {
-      new AuthenticationDialog().ShowLoginDialogPasswordPreview();
-    }  
-    public void ShowAreYouSure()
-    {
-      new AreYouSureDialog().ShowMessageDialog();
-    }
-
-    public void ShowProgressDialog()
-    {
-      new FlashLoadScreen().ShowProgressDialog();
-    }
-   
+    
+    //**************************************************************************************************************** 
   }
 }

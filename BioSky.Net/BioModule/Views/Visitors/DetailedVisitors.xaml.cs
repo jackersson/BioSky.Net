@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BioModule.Views
+namespace BioModule.Views.Visitors
 {
   /// <summary>
-  /// Interaction logic for VisitorsView.xaml
+  /// Interaction logic for DetailedVisitors.xaml
   /// </summary>
-  public partial class VisitorsView : UserControl
+  public partial class DetailedVisitors : UserControl
   {
-    public VisitorsView()
+    public DetailedVisitors()
     {
       InitializeComponent();
     }

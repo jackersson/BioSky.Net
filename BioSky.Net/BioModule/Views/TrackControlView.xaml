@@ -9,8 +9,9 @@
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
              mc:Ignorable="d" 
+             Name="Test"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance vm:TrackControlViewModel, IsDesignTimeCreatable=False}">
 
@@ -37,7 +38,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
-            <ColumnDefinition Width="64"/>
+            <ColumnDefinition Width="56"/>
             <ColumnDefinition Width="6*"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
@@ -69,21 +70,50 @@
                 VerticalAlignment="Stretch">
             <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
         </Button>
-
-        <Controls:ToggleSwitch x:Name="Switch" Grid.Column="1" Grid.Row="0" 
-                               HorizontalAlignment="Right" VerticalAlignment="Bottom"                                                           
-                               OnLabel="All"
-                               OffLabel="Selected" TextOptions.TextHintingMode="Animated"  />
-
-
-        <ComboBox  Margin="2,5,0,0" Grid.Row="0"  Grid.Column="0" BorderThickness="1"
-                   ItemsSource="{Binding TrackControlItems}" Grid.ColumnSpan="1">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Caption}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
+        
+        <ComboBox x:Name="LocationItems"
+            Margin="2,5,0,0" Grid.Row="0"  Grid.Column="0" BorderThickness="1"
+                   ItemsSource="{Binding TrackControlItems}" Grid.ColumnSpan="1"   
+                  Controls:TextBoxHelper.Watermark="{Binding SelectedItems}"  
+                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                   >       
+            <ComboBox.ItemTemplateSelector>
+                <vm:ComboBoxItemTemplateSelector>
+                    <vm:ComboBoxItemTemplateSelector.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" >
+                                <CheckBox 
+                                    IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                    cal:Action.TargetWithoutContext="{Binding ElementName=Test, Path=DataContext}"
+                                    cal:Message.Attach="[Event Checked]=[Action OnChecked];
+                                                        [Event Unchecked]=[Action OnChecked]"                       
+                                                                    />
+                                <TextBlock Text="{Binding Caption}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </vm:ComboBoxItemTemplateSelector.ItemTemplate>
+                    <vm:ComboBoxItemTemplateSelector.SelectedItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                                <TextBlock  Text="{Binding ElementName=LocationItems, Path=DataContext.SelectedItems}"                                                                   
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center" ></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </vm:ComboBoxItemTemplateSelector.SelectedItemTemplate>
+                </vm:ComboBoxItemTemplateSelector>
+            </ComboBox.ItemTemplateSelector>
         </ComboBox>
+        
+        
+        <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0" 
+                  IsChecked="{Binding IsAllChecked}"
+                  Margin="10,0,0,0"/>
+
+        <TextBlock Text="All" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Column="1" Grid.Row="0"
+                   Margin="0,0,10,0"
+                   >            
+        </TextBlock>
 
         <TextBlock Grid.Column="0"  Grid.Row="1" 
                    Grid.ColumnSpan="2" Text="Notifications"
@@ -111,14 +141,11 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-
-        <local:VisitorsView Grid.Column="0" Grid.Row="2" 
+        
+       <ContentControl Grid.Column="0" Grid.Row="2" 
                             Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,2,5,0"
-                            DataContext="{Binding Notifications}">    
-
-        </local:VisitorsView>
-   
-
+                        cal:View.Context="ShortedVisitors"                      
+                        cal:View.Model="{Binding Notifications}">
+        </ContentControl>
     </Grid>
 </UserControl>

@@ -42,7 +42,9 @@ namespace BioModule.ViewModels
       FilteredUsers = new ObservableCollection<User>(); 
 
       Users         = _bioEngine.Database().GetAllUsers();
-      FilteredUsers = _bioEngine.Database().GetAllUsers();       
+      FilteredUsers = _bioEngine.Database().GetAllUsers();
+
+      IsDeleteButtonEnabled = false;
     } 
 
     private ObservableCollection<User> _users;
@@ -71,6 +73,44 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => FilteredUsers);
         }
       }
+    }
+
+    private bool _isSelected;
+    public bool IsSelected
+    {
+      get { return _isSelected; }
+      set
+      {
+        if (_isSelected != value)
+        {
+          _isSelected = value;
+          NotifyOfPropertyChange(() => IsSelected);
+        }
+      }
+    }
+
+    private bool _isDeleteButtonEnabled;
+    public bool IsDeleteButtonEnabled
+    {
+      get { return _isDeleteButtonEnabled; }
+      set
+      {
+        if (_isDeleteButtonEnabled != value)
+        {
+          _isDeleteButtonEnabled = value;
+          NotifyOfPropertyChange(() => IsDeleteButtonEnabled);
+        }
+      }
+    }
+
+    public void OnSelect()
+    {
+      IsDeleteButtonEnabled = true;
+    }
+
+    public void OnUnselect()
+    {
+      IsDeleteButtonEnabled = false;
     }
 
     public string Caption()

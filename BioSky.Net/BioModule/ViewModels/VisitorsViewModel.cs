@@ -17,23 +17,34 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
 
+using BioModule.Utils;
+
+
 namespace BioModule.ViewModels
 {
   public class VisitorsViewModel : PropertyChangedBase
-  {  
-    private readonly IBioEngine _bioEngine;
-    public VisitorsViewModel(IBioEngine bioEngine, string filter= "")
+  {
+    private readonly ViewModelSelector _selector ;
+    private readonly IBioEngine        _bioEngine;
+    public VisitorsViewModel(IBioEngine bioEngine, ViewModelSelector selector, string filter = "")
     {
       _bioEngine = bioEngine;
-      _filter = filter;
+      _filter    = filter;
+      _selector  = selector;
 
+      _selectedItems    = new ObservableCollection<bool>   ();
       _visitors         = new ObservableCollection<Visitor>();
       _filteredVisitors = new ObservableCollection<Visitor>();
 
       Visitors = _bioEngine.Database().GetAllVisitors();
 
       if (filter == "")
-        FilteredVisitors = Visitors;      
+        FilteredVisitors = Visitors;    
+     foreach(Visitor v in FilteredVisitors)
+     {
+       SelectedItems.Add(false);
+     }
+      
     }
 
     public void Update()
@@ -83,7 +94,42 @@ namespace BioModule.ViewModels
     private string _filter;
   
 //**********************************************************Context Menu*****************************************************
-      
+    private bool? _isAllItemsSelected;
+    public bool? IsAllItemsSelected
+    {
+      get { return _isAllItemsSelected; }
+      set
+      {
+        if (_isAllItemsSelected == value) return;
+
+        _isAllItemsSelected = value;
+
+        if (_isAllItemsSelected.HasValue)
+          SelectAll(_isAllItemsSelected.Value, FilteredVisitors);
+
+        NotifyOfPropertyChange(() => IsAllItemsSelected);
+      }
+    }
+
+    private bool _isSelected;
+    public bool IsSelected
+    {
+      get { return _isSelected; }
+      set
+      {
+        if (_isSelected == value) return;
+        _isSelected = value;
+        NotifyOfPropertyChange(() => IsSelected);
+      }
+    }
+
+    private void SelectAll(bool select, IEnumerable<Visitor> FilteredVisitors)
+    {
+      for (int i = 0; i != SelectedItems.Count; ++i)
+        SelectedItems[i] = select;
+    }
+ 
+
     private Visitor _selectedItem;
     public Visitor SelectedItem
     {
@@ -100,25 +146,67 @@ namespace BioModule.ViewModels
       }
     }
 
-    private bool _menuOpenStatus;
-    public bool MenuOpenStatus
+    private ObservableCollection<bool> _selectedItems;
+    public ObservableCollection<bool> SelectedItems
     {
       get
       {
-        return _menuOpenStatus;
+        return _selectedItems;
       }
       set
       {
-        if (_menuOpenStatus != value)
-          _menuOpenStatus = value;
+        if (_selectedItems != value)
+          _selectedItems = value;
 
-        NotifyOfPropertyChange(() => MenuOpenStatus);
+        NotifyOfPropertyChange(() => SelectedItems);
       }
     }
-        
-    public void OnMouseRightButtonDown(MouseButtonEventArgs e)
-    {
 
+    private bool _canOpenInNewTab;
+    public bool CanOpenInNewTab
+    {
+      get { return _canOpenInNewTab; }
+      set
+      {
+        if (_canOpenInNewTab != value)
+        {
+          _canOpenInNewTab = value;
+          NotifyOfPropertyChange(() => CanOpenInNewTab);
+        }
+      }
+    }
+    public void OnMouseRightButtonDown(Visitor visitor)
+    {
+      CanOpenInNewTab = (visitor != null);
+      SelectedItem = visitor;
+    }
+
+    public void ShowUserPage()
+    {
+      _selector.OpenTab(ViewModelsID.UserPage, new object[] { SelectedItem.User });
+    }
+    public void RemoveVisitor()
+    {
+      _visitors.Remove(SelectedItem);
+    }
+
+    public void OnSelect()
+    {
+    }
+
+    public void SelectedRowsChangeEvent(SelectionChangedEventArgs e)
+    {      
+      var selected = e.AddedItems;
+
+      for(int i=0; i != selected.Count; ++i)
+      {        
+        Console.WriteLine("Selected: " + selected[i]);
+      }
+      var unselected = e.RemovedItems;
+      for (int i = 0; i != unselected.Count; ++i)
+      {
+        Console.WriteLine("Unselected: " + unselected[i]);
+      }
     }
 
     //--------------------------------------------------- UI --------------------------------------
@@ -136,7 +224,5 @@ namespace BioModule.ViewModels
     {
       get { return ResourceLoader.DeleteIconSource; }
     }
-
-
   }
 }

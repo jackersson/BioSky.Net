@@ -1,21 +1,19 @@
-﻿<UserControl x:Class="BioModule.Views.UsersView"
+﻿<UserControl x:Class="BioModule.Views.Visitors.ShortedVisitors"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:data="clr-namespace:BioData;assembly=BioData"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:cal="http://www.caliburnproject.org"    
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"             
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
-             x:Name="UsersModel"
              d:DesignHeight="400" d:DesignWidth="400"
-             d:DataContext="{d:DesignInstance vm:UsersViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
              >
+
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -24,15 +22,15 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <vm:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
+            <vm:ConvertStatusToImage x:Key="ConvertTextToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </UserControl.Resources>
 
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
-            <RowDefinition Height="*"/>           
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -45,25 +43,24 @@
         <DataGrid 
             BorderThickness="1" 
                   Grid.Column="0" HorizontalAlignment="Stretch" 
-            Grid.ColumnSpan="5"
-                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
-                  ItemsSource="{Binding FilteredUsers}"                
+            Grid.ColumnSpan="5" 
+                  Margin="2,1,0,0" Grid.Row="0"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
+                  ItemsSource="{Binding FilteredVisitors}"                
                   GridLinesVisibility="All"
                   AutoGenerateColumns="False"
                   CanUserSortColumns="True" CanUserAddRows="False"
                   materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                  materialDesign:DataGridAssist.ColumnHeaderPadding="8"           
-            cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
-                                [Event SelectionChanged] = [Action OnSelect]"            
-                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"            
-                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}">
+                  materialDesign:DataGridAssist.ColumnHeaderPadding="8"              
+                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
+                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]">
 
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"
                                         RenderOptions.ClearTypeHint="Enabled"
-                                        TextOptions.TextFormattingMode="Display">
+                                        TextOptions.TextFormattingMode="Display"
+                                        >
                     <DataGridCheckBoxColumn.Header>
                         <!--padding to allow hit test to pass thru for sorting -->
                         <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
@@ -77,64 +74,36 @@
                 <DataGridTemplateColumn Header="Photo" IsReadOnly="True" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Photo, Converter={StaticResource ConvertPhotoPathToImage}}" />
+                            <Image Width="32" Height="32" Source="{Binding User.Photo, Converter={StaticResource ConvertPhotoPathToImage}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="First name" IsReadOnly="True" Binding="{Binding First_Name_}"/>
-                <DataGridTextColumn Header="Last  name" IsReadOnly="True" Binding="{Binding Last_Name_}"/>
-                <DataGridTextColumn Header="Gender"     IsReadOnly="True" Binding="{Binding Gender}"/>
-                <DataGridTextColumn Header="Rights"     IsReadOnly="True" Binding="{Binding Rights}"/>               
+                <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.First_Name_}"/>
+                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Location.Location_Name}"/>
+                <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Detection_Time}"/>
+
+                <DataGridTemplateColumn Header="Status" IsReadOnly="True" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="32" Height="32" Source="{Binding Path=Status, Converter={StaticResource ConvertTextToImage}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
 
             <DataGrid.ContextMenu >
                 <ContextMenu x:Name="ContextMenu" IsEnabled="True" >
                     <MenuItem Header="Open in New Tab"  
                               IsEnabled="{Binding CanOpenInNewTab, Mode=TwoWay}"
-                              cal:Message.Attach="[Event Click] = [Action ShowUserPage('true')]"
+                              cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
                               />
-                    <MenuItem Header="Add New User" 
-                              cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]"
+                    <MenuItem Header="Remove" 
+                              IsEnabled="{Binding CanOpenInNewTab, Mode=TwoWay}"                              
+                              cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
                               />
                 </ContextMenu>
             </DataGrid.ContextMenu>
-        </DataGrid>
-
-        <Button  Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="3" 
-                 Grid.Row="0" HorizontalAlignment="Stretch" 
-                 VerticalAlignment="Stretch" 
-                 ToolTip="Add User"
-                 cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]">
-            <Image Source="{Binding AddIconSource}" Width="32" Height="32" />
-        </Button>
-
-        <Button Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
-                IsEnabled="{Binding IsDeleteButtonEnabled}"
-                ToolTip="Delete"
-                >
-            <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
-        </Button>
-
-        <TextBox x:Name="SearchBox" Margin="0, 5, 0, 5"  Grid.Column="0"  Grid.Row="0"   
-                         Controls:TextBoxHelper.Watermark="Search..."
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"             
-                    cal:Message.Attach="[Event TextChanged] = [Action OnSearchTextChanged(SearchBox.Text)]"         
-                  >
-          
-            <TextBox.Style>
-                <Style TargetType="{x:Type TextBox}"
-                               BasedOn="{StaticResource SearchMetroTextBox}">
-                    <Style.Triggers>
-                        <Trigger Property="Controls:TextBoxHelper.HasText"
-                                         Value="True">
-                            <Setter Property="Controls:TextBoxHelper.ButtonTemplate"
-                                            Value="{DynamicResource ChromelessButtonTemplate}" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>      
+        </DataGrid>        
     </Grid>
 </UserControl>

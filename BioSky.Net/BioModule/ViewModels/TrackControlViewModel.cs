@@ -14,21 +14,27 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using BioData;
 
+using System.Windows.Data;
+using BioModule.Utils;
+using System.Windows.Controls;
+
+
 namespace BioModule.ViewModels
 {
   public class TrackControlViewModel : PropertyChangedBase
   {
-
-    public TrackControlViewModel(IBioEngine bioEngine)
+    public TrackControlViewModel(IBioEngine bioEngine, ViewModelSelector selector)
     {
       _bioEngine = bioEngine;
+      _selector = selector;
+      _notifications = new VisitorsViewModel(bioEngine, selector);
 
-      _notifications = new VisitorsViewModel(bioEngine);
 
-      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())
-        location.ScreenViewModel = new TrackControlItemViewModel(_bioEngine, location);      
+      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())      
+        location.ScreenViewModel = new TrackControlItemViewModel(_bioEngine, location, _selector);    
+
+      OnChecked();
     }
-
     public ObservableCollection<TrackLocation> TrackControlItems
     {
       get {  return _bioEngine.TrackLocationEngine().TrackLocations();  }      
@@ -43,11 +49,11 @@ namespace BioModule.ViewModels
         if (_selectedTrackLocation == value)
           return;
         _selectedTrackLocation = value;
-        NotifyOfPropertyChange(() => SelectedTrackLocation);
-       
+        NotifyOfPropertyChange(() => SelectedTrackLocation);       
       }
-    }   
+    }  
 
+   
     public void AddMenu()
     {
       Visitor v = new Visitor()
@@ -80,8 +86,48 @@ namespace BioModule.ViewModels
     }
 
     private readonly VisitorsViewModel _notifications;
-    private readonly IBioEngine _bioEngine;
+    private readonly IBioEngine        _bioEngine    ;
+    private readonly ViewModelSelector _selector     ;
 
+    //******************************************ComboBoxLocationCheck**************************
+
+    private string _selectedItems;
+    public string SelectedItems
+    {
+      get
+      {
+        return _selectedItems;
+      }
+      set
+      {
+        if (_selectedItems != value)
+          _selectedItems = value;
+
+        NotifyOfPropertyChange(() => SelectedItems);
+      }
+    }
+
+    public void OnChecked()
+    {
+      string caption = "";
+
+      int count = 0;
+      foreach (TrackLocation pair in _bioEngine.TrackLocationEngine().TrackLocations())
+      {
+        caption += pair.IsChecked ? (pair.Caption + ";") : "";
+        if (pair.IsChecked)
+          ++count;
+      }
+
+      if (count >= _bioEngine.TrackLocationEngine().TrackLocations().Count)
+        caption = "All";
+
+      if (count == 0)
+        caption = "None";
+
+      SelectedItems = caption;
+    }
+    
     //**************************************** UI *******************************************
     public BitmapSource AddIconSource
     {
@@ -96,6 +142,53 @@ namespace BioModule.ViewModels
     public BitmapSource DeleteIconSource
     {
       get { return ResourceLoader.DeleteIconSource; }
+    }
+  }
+
+  public class ConvertStatusToImage : IValueConverter
+  {
+    private BioStatusResource _resource = new BioStatusResource();
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        return _resource.GetBitmapSource(value.ToString());
+      }
+      return null;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+
+  public class ComboBoxItemTemplateSelector : DataTemplateSelector
+  {
+    // Can set both templates from XAML
+    public DataTemplate SelectedItemTemplate { get; set; }
+    public DataTemplate ItemTemplate { get; set; }
+
+    public override DataTemplate SelectTemplate(object item, DependencyObject container)
+    {
+      bool selected = false;
+
+      // container is the ContentPresenter
+      FrameworkElement fe = container as FrameworkElement;
+      if (fe != null)
+      {
+        DependencyObject parent = fe.TemplatedParent;
+        if (parent != null)
+        {
+          ComboBox cbo = parent as ComboBox;
+          if (cbo != null)
+            selected = true;
+        }
+      }
+
+      if (selected)
+        return SelectedItemTemplate;
+      else
+        return ItemTemplate;
     }
   }
 }

@@ -12,6 +12,12 @@
         <vm:UserContactlessCardViewModel/>
     </UserControl.DataContext>
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <vm:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="36"/>
@@ -28,7 +34,9 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.RowSpan="3">
+        <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.RowSpan="3"
+                ToolTip="Add Card"
+                >
             <Image Source="{Binding AddIconSource}" Height="32" Width="32" />
         </Button>
 
@@ -36,7 +44,9 @@
             <Image Source="{Binding RemoveIconSource}" Height="32" Width="32" />
         </Button>
 
-        <Button Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="Delete"
+                >
             <Image Source="{Binding DeleteIconSource}" Height="32" Width="32" />
         </Button>
 
@@ -47,6 +57,6 @@
 
         <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding OkIconSource}" />
 
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Card Number" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2"/>
+        <TextBox IsReadOnly="True" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Path=CardNumber, Converter={StaticResource ConvertToFormatedNumber}}" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2"/>
     </Grid>
 </UserControl>

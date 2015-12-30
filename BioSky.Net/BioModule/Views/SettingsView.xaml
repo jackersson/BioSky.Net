@@ -206,15 +206,21 @@
 
         </ScrollViewer>
         <!--                               Buttons                        -->
-        <Button Grid.Row="11" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button Grid.Row="11" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" 
+                ToolTip="Save"
+                >
             <Image Source="{Binding SaveIconSource}" Width="32" Height="32"  />
         </Button>
 
-        <Button  Grid.Row="11" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button  Grid.Row="11" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}"
+                 ToolTip="Revert changes"
+                 >
             <Image Source="{Binding RefreshIconSource}" Width="32" Height="32"  />
         </Button>
 
-        <Button Grid.Row="11" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button Grid.Row="11" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" 
+                ToolTip="Cancel"
+                >
             <Image Source="{Binding CancelIconSource}" Width="32" Height="32"  />
         </Button>
 

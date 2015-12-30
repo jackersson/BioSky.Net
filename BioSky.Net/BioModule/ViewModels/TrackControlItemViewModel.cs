@@ -19,17 +19,19 @@ namespace BioModule.ViewModels
 {
 
   public class TrackControlItemViewModel : PropertyChangedBase, IObserver<AccessDeviceActivity>
-  {          
-    public TrackControlItemViewModel( IBioEngine bioEngine, TrackLocation location )
+  {
+    private readonly ViewModelSelector _selector;
+    public TrackControlItemViewModel(IBioEngine bioEngine, TrackLocation location, ViewModelSelector selector)
     {
       _location  = location ;
       _bioEngine = bioEngine;
+      _selector = selector;
 
       UserVerified = true;
       UserVerificationIconVisible = false;
       CardDetectedIconVisible = false;
 
-      _notifications = new VisitorsViewModel(bioEngine, location.Caption );   
+      _notifications = new VisitorsViewModel(bioEngine, selector ,location.Caption );   
     }
 
     public void Update()
@@ -42,6 +44,10 @@ namespace BioModule.ViewModels
       get { return _notifications; }
     }
 
+    public void OnChecked(object name)
+    {
+      Console.WriteLine(name);
+    }
     private bool _accessDeviceOK;
     public bool AccessDeviceOK
     {
@@ -141,7 +147,5 @@ namespace BioModule.ViewModels
     {
       get { return ResourceLoader.CardIconSource; }
     }       
-  }
-
-  
+  }  
 }

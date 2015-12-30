@@ -13,6 +13,9 @@ using Castle.Windsor;
 using BioShell.ViewModels;
 using System.Windows.Input;
 
+using System.Threading;
+using System.Globalization;
+
 namespace BioShell
 {
   public class BioShellBootstrapper : BootstrapperBase
@@ -50,6 +53,10 @@ namespace BioShell
 
     protected override void Configure()
     {
+
+      Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU"); 
+
+
       MessageBinder.SpecialValues.Add("$mouseselecteditem", (context) =>
       {
         if (context.EventArgs is MouseButtonEventArgs)

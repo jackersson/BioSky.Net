@@ -55,6 +55,17 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _logoListIconSource;
     private static BitmapSource _trackingListIconSource;
 
+    private static BitmapSource _loaderIconSource;
+
+    public static BitmapSource LoaderIconSource
+    {
+      get
+      {
+        if (_loaderIconSource == null)
+          _loaderIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.loader);
+        return _loaderIconSource;
+      }
+    }
     public static BitmapSource LogoIconSource
     {
       get

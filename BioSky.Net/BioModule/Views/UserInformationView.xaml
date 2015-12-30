@@ -125,11 +125,5 @@
                          Controls:TextBoxHelper.UseFloatingWatermark="True"/>
             </StackPanel>
         </ScrollViewer>
-
-       
-
-
-
-
     </Grid>
 </UserControl>

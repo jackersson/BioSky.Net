@@ -16,12 +16,9 @@ namespace BioModule.ViewModels
 {
   public class ToolBarViewModel : PropertyChangedBase
   {
-    public ToolBarViewModel( ViewModelSelector viewModelSelector /*ITabControl tabControl, IFlyoutControl flyoutControl */)
+    public ToolBarViewModel( ViewModelSelector viewModelSelector)
     {
       _viewModelSelector = viewModelSelector;
-      //_tabControl    = tabControl   ;
-      //_flyoutControl = flyoutControl;
-      //Console.Write("Here");
     }
 
     public void OpenTabAddNewPerson()
@@ -73,8 +70,6 @@ namespace BioModule.ViewModels
       get { return ResourceLoader.TrackingIconSource; }
     }
 
-    //private ITabControl    _tabControl   ;
-    // private IFlyoutControl _flyoutControl;
     private readonly ViewModelSelector _viewModelSelector;
   }
 }

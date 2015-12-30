@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for NotificationDataGridView.xaml
+  /// Interaction logic for LoaderView.xaml
   /// </summary>
-  public partial class NotificationDataGridView : UserControl
+  public partial class LoaderView : UserControl
   {
-    public NotificationDataGridView()
+    public LoaderView()
     {
       InitializeComponent();
     }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BioModule.Views.VisitorsView"
+﻿<UserControl x:Class="BioModule.Views.Visitors.DetailedVisitors"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -25,7 +25,7 @@
             <vm:ConvertStatusToImage x:Key="ConvertTextToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
-    </UserControl.Resources>    
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -51,18 +51,24 @@
                   CanUserSortColumns="True" CanUserAddRows="False"
                   materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                   materialDesign:DataGridAssist.ColumnHeaderPadding="8"              
-                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}" >
-
+                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"              
+                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
+                                      [Event SelectionChanged] = [Action SelectedRowsChangeEvent($eventArgs)]">
+            
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{Binding IsSelected}" 
-                                                ElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnStyle}"
-                                                EditingElementStyle="{StaticResource MaterialDesignDataGridCheckBoxColumnEditingStyle}">
+                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"                                        
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"                                        
+                                        RenderOptions.ClearTypeHint="Enabled"
+                                        TextOptions.TextFormattingMode="Display"                                        
+                                        >
                     <DataGridCheckBoxColumn.Header>
                         <!--padding to allow hit test to pass thru for sorting -->
                         <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
                             <CheckBox HorizontalAlignment="Center"                                               
                                               DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                              IsChecked="{Binding IsAllItems3Selected}" />
+                                              IsChecked="{Binding IsAllItemsSelected}" />
                         </Border>
                     </DataGridCheckBoxColumn.Header>
                 </DataGridCheckBoxColumn>
@@ -75,10 +81,8 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Info" IsReadOnly="True" Binding="{Binding User.First_Name_}"/>               
-             
-              
-                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Location.Location_Name}"/>             
+                <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.First_Name_}"/>
+                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Location.Location_Name}"/>
                 <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Detection_Time}"/>
 
                 <DataGridTemplateColumn Header="Status" IsReadOnly="True" >
@@ -89,9 +93,25 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid>        
 
-        <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">
+            <DataGrid.ContextMenu >
+                <ContextMenu x:Name="ContextMenu" IsEnabled="True" >
+                    <MenuItem Header="Open in New Tab"  
+                              IsEnabled="{Binding CanOpenInNewTab, Mode=TwoWay}"
+                              cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
+                              />
+                    <MenuItem Header="Remove" 
+                              IsEnabled="{Binding CanRemove, Mode=TwoWay}"                              
+                              cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
+                              />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+
+        </DataGrid>
+
+        <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
+                ToolTip="Delete"
+                >
             <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
         </Button>
 

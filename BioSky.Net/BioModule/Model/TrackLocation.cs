@@ -16,6 +16,7 @@ namespace BioModule.Model
     {
       _accessDeviceEngine = accessDeviceEngine;
       Update(location);
+
     }
 
     public void Update( Location location )
@@ -49,6 +50,19 @@ namespace BioModule.Model
     public string Caption
     {
       get { return _location.Location_Name;  }
+    }
+
+    private bool _isChecked;
+
+    public bool IsChecked
+    {
+      get { return _isChecked;  }
+      set
+      {
+        if (_isChecked == value)
+          return;
+        _isChecked = value;
+      }
     }
 
     private Location _location;
