@@ -75,47 +75,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModels\AccessDevice.cs" />
     <Compile Include="BioDataImpl.cs" />
     <Compile Include="BioDataInstaller.cs" />
-    <Compile Include="BioSkyNetDataModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BioSkyNetDataModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BioSkyNetDataModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BioSkyNetDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BioSkyNetDataModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BioSkyNetDataModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="BioSkyNetDataset.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BioSkyNetDataset.xsd</DependentUpon>
-    </Compile>
+    <Compile Include="DataModels\BioSkyNetDataModel.cs" />
     <Compile Include="BioSkyNetRepository.cs" />
+    <Compile Include="DataModels\Card.cs" />
     <Compile Include="EntityFrameworkConnectionBuilder.cs" />
     <Compile Include="IBioSkyNetRepository.cs" />
     <Compile Include="IEntityFrameworkContextFactory.cs" />
-    <Compile Include="Location.cs">
-      <DependentUpon>BioSkyNetDataModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="DataModels\Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="User.cs">
-      <DependentUpon>BioSkyNetDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Visitor.cs">
-      <DependentUpon>BioSkyNetDataModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="DataModels\User.cs" />
+    <Compile Include="DataModels\Visitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -130,44 +107,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="BioSkyNetDataModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BioSkyNetDataModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.Config" />
-    <None Include="BioSkyNetDataModel.edmx.diagram">
-      <DependentUpon>BioSkyNetDataModel.edmx</DependentUpon>
-    </None>
-    <None Include="BioSkyNetDataset.xsc">
-      <DependentUpon>BioSkyNetDataset.xsd</DependentUpon>
-    </None>
-    <None Include="BioSkyNetDataset.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>BioSkyNetDataset.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="BioSkyNetDataset.xss">
-      <DependentUpon>BioSkyNetDataset.xsd</DependentUpon>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="BioSkyNetDataModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BioSkyNetDataModel.Context.cs</LastGenOutput>
-      <DependentUpon>BioSkyNetDataModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="BioSkyNetDataModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BioSkyNetDataModel.edmx</DependentUpon>
-      <LastGenOutput>BioSkyNetDataModel.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -177,6 +122,9 @@
       <Project>{fedd6c6d-6cd4-4d74-a19c-f2715b0d1f5b}</Project>
       <Name>BioContracts</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataContext\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

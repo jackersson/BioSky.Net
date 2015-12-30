@@ -17,28 +17,27 @@ namespace BioData
     {     
       _dbConnectionstring =  dbConnectionstring;
     }
-
-    public string createEntityFrameworkConnection(string dataModelName)
-    {
-      string metadata = string.Format(@"res://*/{0}.csdl|res://*/{0}.ssdl|res://*/{0}.msl", dataModelName);
-      metadata = "metadata=res://*/BioSkyNetDataModel.csdl|res://*/BioSkyNetDataModel.ssdl|res://*/BioSkyNetDataModel.msl;";
-      string provider = "provider=System.Data.SqlClient;";
+   //  <add name = "BioSkyNetDataModel" 
+   //   connectionString="data source=(LocalDB)\MSSQLLocalDB;attachdbfilename=F:\C#\BioSkyNetSuccess\BioSky.Net\BioSky.Net\database\BioSkyNet.mdf;integrated security=True;connect timeout=30;MultipleActiveResultSets=True;App=EntityFramework" 
+   //   providerName="System.Data.SqlClient" />
+    public string createEntityFrameworkConnection()
+    {    
       string datasource = @"data source=(LocalDB)\MSSQLLocalDB;";
 
       string attachDbFileName = "attachdbfilename=" + _dbConnectionstring + ";";
 
       string integratedSecurity = "integrated security=True;";
       string multipleActiveResultSets = "MultipleActiveResultSets=True;";
-      string app = "App=EntityFramework';";
+      string app = "App=EntityFramework";
 
-      string providerConnectionString = "provider connection string=';"
-                                      + datasource
+      string providerConnectionString = 
+                                        datasource
                                       + attachDbFileName
                                       + integratedSecurity
                                       + multipleActiveResultSets
                                       + app;
 
-      string connection_string = metadata + provider + providerConnectionString;
+      string connection_string = providerConnectionString;
 
       return connection_string;
     }

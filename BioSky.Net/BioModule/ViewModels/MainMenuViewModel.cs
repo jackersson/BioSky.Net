@@ -19,17 +19,17 @@ namespace BioModule.ViewModels
 
     public void OpenTabAddNewPerson()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.UserPage);
+      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.UserPage);
     }
 
     public void OpenTabAddNewLocation()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.LocationSettings);
+      _viewModelSelector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings);
     }
 
     public void OpenTabVisitors()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.VisitorsPage);
     }
 
     private ViewModelSelector _viewModelSelector;

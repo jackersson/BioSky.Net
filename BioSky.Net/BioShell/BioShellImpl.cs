@@ -20,13 +20,42 @@ namespace BioShell
       _loader = loader;
       _shellViewModel = shellViewModel;
     }    
-    public ShellTabControl TabControl       { get { return _shellViewModel.TabControl;  } }
+    public object TabControl
+    {
+      get { return _shellViewModel.TabControl;  }
+      set
+      {        
+         _shellViewModel.TabControl = value;        
+      }
+    }
 
-    public ShellFlyoutControl FlyoutControl { get { return _shellViewModel.FlyoutControl; } }   
+    public object FlyoutControl
+    {
+      get { return _shellViewModel.FlyoutControl; }
+      set
+      {
+        _shellViewModel.FlyoutControl = value;
+      }
+    }   
     
-    public ShellToolBar ToolBar   { get { return _shellViewModel.ToolBar;  }  }
+    public object ToolBar
+    {
+      get { return _shellViewModel.ToolBar;  }
+      set
+      {
+        _shellViewModel.ToolBar = value;
+      }
+    }
 
-    public ShellMainMenu MainMenu { get { return _shellViewModel.MainMenu; }  }
+    public object MainMenu
+    {
+      get { return _shellViewModel.MainMenu; }
+      set
+      {
+        _shellViewModel.MainMenu = value;
+      }
+    }
+    
 
     public IBioModule LoadModule(Assembly assembly)
     {

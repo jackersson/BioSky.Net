@@ -24,21 +24,19 @@ namespace BioAccessDevice.Commands
     public override bool Validate()
     {
       bool checkResponseSumValid =  _utils.CheckResponseSum(_actualResponse);
-      bool commandEquality       = !_utils.Compare(_noCardDetectedResponse, _actualResponse);
+      bool commandEquality       =  !_utils.Compare(_noCardDetectedResponse, _actualResponse);
 
 
       bool flag = commandEquality && checkResponseSumValid;
       if (flag)
       {
         byte[] dallasKey = GetDallayKey();
-
+        
         _response = dallasKey;
-
-       /* Console.WriteLine();
-        for (int i = 0; i < dallasKey.Length; ++i)
-          Console.Write(dallasKey[i] + " ");*/
+        //Console.WriteLine(_response != null ? "Set" : "Null");
+        //Console.WriteLine(_response != null ? _response.ToString() : "");
       }
-     
+     // Console.WriteLine("End validatin");
       return flag;
     }
 

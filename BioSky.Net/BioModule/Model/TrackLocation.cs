@@ -9,7 +9,7 @@ using BioContracts;
 
 namespace BioModule.Model
 {
-  public class TrackLocation 
+  public class TrackLocation : IObserver<AccessDeviceActivity>
   {
 
     public TrackLocation( IAccessDeviceEngine accessDeviceEngine, Location location)
@@ -25,12 +25,13 @@ namespace BioModule.Model
 
     public void Start()
     {
-      _accessDeviceEngine.Add(_location.Devices_IN_);
+      //_accessDeviceEngine.Add(_location.Devices_IN_);
+      Subscribe(this);
     }
 
     public void Subscribe( IObserver<AccessDeviceActivity> observer )
     {
-      _accessDeviceEngine.Subscribe(observer, _location.Devices_IN_);
+      //_accessDeviceEngine.Subscribe(observer, _location.Devices_IN_);
     }
 
     public void Unsubscribe(IObserver<AccessDeviceActivity> observer)
@@ -40,9 +41,23 @@ namespace BioModule.Model
 
     public void Stop()
     {
-      _accessDeviceEngine.Remove(_location.Devices_IN_);
+      //_accessDeviceEngine.Remove(_location.Devices_IN_);
     }
 
+    public void OnNext(AccessDeviceActivity value)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void OnError(Exception error)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void OnCompleted()
+    {
+      throw new NotImplementedException();
+    }
 
     public object ScreenViewModel  { get; set; }
   

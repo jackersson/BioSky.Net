@@ -9,13 +9,13 @@ namespace BioContracts
 {
   public interface IBioShell
   {
-    ShellFlyoutControl FlyoutControl { get; }
-    ShellTabControl TabControl { get; }
+    object FlyoutControl { get; set; }
+    object TabControl { get; set; }
 
-    ShellToolBar ToolBar { get; }
+    object ToolBar { get; set; }
 
-    ShellMainMenu MainMenu { get; }
-    
+    object MainMenu { get; set; }    
+
     IBioModule LoadModule(Assembly assembly);
   }
 }

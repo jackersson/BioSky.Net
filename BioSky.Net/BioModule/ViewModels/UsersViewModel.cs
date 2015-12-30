@@ -30,12 +30,14 @@ using BioModule.Utils;
 
 namespace BioModule.ViewModels
 { 
-  public class UsersViewModel : PropertyChangedBase
+  public class UsersViewModel : Screen
   {    
     public UsersViewModel(IBioEngine bioEngine, ViewModelSelector selector)
     {
       _bioEngine = bioEngine;
       _selector  = selector;
+
+      DisplayName = "Users";
 
       _users = new ObservableCollection<User>();
 
@@ -72,11 +74,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    public string Caption()
-    {
-      return "Users";
-    }
+      
 
     public void Update()
     { }
@@ -120,7 +118,8 @@ namespace BioModule.ViewModels
 
     public void ShowUserPage( bool isExistingUser )
     {   
-      _selector.OpenTab(ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );
+      _selector.ShowContent( ShowableContentControl.TabControlContent
+                           , ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );
     }
 
     //************************************************************SearchBox***************************************************
@@ -163,27 +162,5 @@ namespace BioModule.ViewModels
     }
   }
 
-  //**********************************************************String to Image Converter****************************************
-
-  public class ConvertPhotoPathToImage : IValueConverter
-  {    
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      if (value != null)
-      {
-       
-        if (File.Exists(value.ToString()))
-        {
-          BitmapSource img = new BitmapImage(new Uri(value.ToString(), UriKind.RelativeOrAbsolute));
-          return img;
-        }
-          
-      }
-      return ResourceLoader.UserDefaultImageIconSource;
-    }
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      throw new NotImplementedException();
-    }   
-  }
+ 
 }

@@ -19,7 +19,7 @@ using System.Windows.Media;
 
 namespace BioModule.ViewModels
 {
-  public class VisitorsViewModel : PropertyChangedBase
+  public class VisitorsViewModel : Screen
   {  
     private readonly IBioEngine _bioEngine;
     public VisitorsViewModel(IBioEngine bioEngine, string filter= "")

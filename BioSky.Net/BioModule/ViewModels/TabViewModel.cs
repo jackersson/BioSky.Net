@@ -16,36 +16,16 @@ using System.Reflection;
 
 namespace BioModule.ViewModels
 {
-  public class TabViewModel : PropertyChangedBase, ITabControl
-  {
-       
+  public class TabViewModel : Conductor<IScreen>.Collection.OneActive, IShowableContent
+  {       
     public TabViewModel( IWindsorContainer container, IBioShell shell)
     {
       _container  = container;
-      _tabControl = shell.TabControl;
-      
-      TabPages    = _tabControl.TabPages;
     }
 
     public void Init()
     {    
 
-    }
-
-    public void OpenTab( Type tabType, object[] args )
-    {
-      ShellTabPage newTabPage = new ShellTabPage() { ScreenViewModel = _container.Resolve(tabType) };
-      
-      InvokeMethod(tabType, "Update" , newTabPage.ScreenViewModel, args);
-
-      string caption = (string)InvokeMethod(tabType, "Caption", newTabPage.ScreenViewModel );
-
-      if (caption != null)
-        newTabPage.Caption = caption;
-
-      _tabControl.TabPages.Add(newTabPage);
-
-      SelectedTabPage = newTabPage;
     }
 
     private object InvokeMethod ( Type objectType, string methodName, object source, object[] args = null )
@@ -56,48 +36,17 @@ namespace BioModule.ViewModels
       return null;
     }
 
+    public void ShowContent(Type tabType, object[] args = null)
+    {
+      IScreen currentScreen = (IScreen)_container.Resolve(tabType);
+      Items.Add(currentScreen);
 
-    private ObservableCollection<ShellTabPage> _tabPages;
-    public ObservableCollection<ShellTabPage> TabPages
-    {
-      get { return _tabPages; }
-      private set
-      {
-        if (_tabPages!=value)
-        {
-          _tabPages = value;
-          NotifyOfPropertyChange(() => TabPages);
-        }        
-      }
-    }
-      
-    private ShellTabPage _selectedTabPage;
-    public ShellTabPage SelectedTabPage
-    {
-      get { return _selectedTabPage; }
-      set
-      {
-        if (_selectedTabPage == value)
-          return;
+      ActiveItem = currentScreen;
+      currentScreen.Activate();
 
-        _selectedTabPage = value;
-        NotifyOfPropertyChange(() => SelectedTabPage);
-        NotifyOfPropertyChange(() => CurrentViewTab);        
-      }
-    }
-       
-    public object CurrentViewTab
-    {
-      get { return _selectedTabPage == null ? null : _selectedTabPage.ScreenViewModel; }    
+      //InvokeMethod(tabType, "Update", newTabPage.ScreenViewModel, args);
     }
 
-    private ShellTabControl   _tabControl; 
-    
-    public ShellTabControl TabControl
-    {
-      get { return _tabControl; }  
-    }
-    
     private IWindsorContainer _container ;
   }
 }

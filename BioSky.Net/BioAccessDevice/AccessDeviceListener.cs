@@ -23,21 +23,17 @@ namespace BioAccessDevice
       _serialPort          = new SerialPort();
       _serialPort.PortName = portName;
       _serialPort.BaudRate = ACCESS_DEVICE_BAUD_RATE;
-       
-      //_serialPort.ErrorReceived += new SerialErrorReceivedEventHandler(onSerialErrorReceived);
-      
-       _commandFactory = new AccessDeviceCommandFactory(); 
+
+      _serialPort.ReadTimeout  = 1000;
+      _serialPort.WriteTimeout = 1000;
+
+
+      _commandFactory = new AccessDeviceCommandFactory(); 
       _commands       = new ConcurrentQueue<ICommand> ();
 
       _observers      = new List<IObserver<AccessDeviceActivity>>();     
     }   
-
-    /*
-    public void onSerialErrorReceived( object sender, SerialErrorReceivedEventArgs args )
-    {
-      Console.WriteLine(args.ToString());
-    }
-    */
+       
     public void Enqueque( ICommand command )
     {
       if (command == null)
@@ -62,6 +58,11 @@ namespace BioAccessDevice
           Dequeue(out command);
         }
       }
+    }
+
+    public bool IsActive()
+    {
+      return _serialPort.IsOpen && Active;
     }
 
     public bool Open()
@@ -89,7 +90,7 @@ namespace BioAccessDevice
     public override void Run()
     {
       Open();
-      Active = _serialPort.IsOpen;
+      Active = true; // _serialPort.IsOpen;
 
       while (Active)
       {
@@ -98,19 +99,27 @@ namespace BioAccessDevice
         {
          
           Thread.Sleep(1000);
+
+          //Console.WriteLine("Command Execution");
           if ( command.Execute(ref _serialPort) )
-          {        
+          {
+            //Console.WriteLine("Start Command Notifying");
             AccessDeviceCommands commandID;
             Enum.TryParse(command.GetType().Name, out commandID);
 
             AccessDeviceActivity notification = new AccessDeviceActivity();
             Notify(new AccessDeviceActivity() { CommandID = commandID, Data = command.Message() });
+            //Console.WriteLine(notification.Data == null ? "Get data null" : "Get Data ok");
+            //Console.WriteLine("Finish Command Notifying");
           }
           else
           {
-            Notify(command.ErrorMessage());
-            Thread.Sleep(1000);
-            Open();
+            if ( !IsActive() )
+            {
+              Notify(command.ErrorMessage());
+              Thread.Sleep(1000);
+              Open();
+            }            
           }
         }
 
@@ -168,10 +177,15 @@ namespace BioAccessDevice
     //Method required by IObservable interface
     public IDisposable Subscribe(IObserver<AccessDeviceActivity> observer)
     {
-      if (!_observers.Contains(observer))
+      if (!HasObserver(observer))
         _observers.Add(observer);
 
       return new Unsubscriber(_observers, observer);
+    }
+
+    public bool HasObserver(IObserver<AccessDeviceActivity> observer)
+    {
+      return _observers.Contains(observer);
     }
 
     private ICommandFactory           _commandFactory;

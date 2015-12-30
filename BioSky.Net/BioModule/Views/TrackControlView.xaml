@@ -9,6 +9,8 @@
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:langs="clr-namespace:BioModule.ResourcesLoader"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
@@ -17,7 +19,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-            <vm:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
@@ -70,21 +72,11 @@
             <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
         </Button>
 
-        <Controls:ToggleSwitch x:Name="Switch" Grid.Column="1" Grid.Row="0" 
-                               HorizontalAlignment="Right" VerticalAlignment="Bottom"                                                           
-                               OnLabel="All"
-                               OffLabel="Selected" TextOptions.TextHintingMode="Animated"  />
-
-
-        <ComboBox  Margin="2,5,0,0" Grid.Row="0"  Grid.Column="0" BorderThickness="1"
-                   ItemsSource="{Binding TrackControlItems}" Grid.ColumnSpan="1">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Caption}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-
+        <Label Grid.Column="1" Grid.Row="0" 
+                               HorizontalAlignment="Right" VerticalAlignment="Bottom"   
+               Content="{x:Static langs:lang.AddPerson}"
+                               />
+       
         <TextBlock Grid.Column="0"  Grid.Row="1" 
                    Grid.ColumnSpan="2" Text="Notifications"
                    VerticalAlignment="Bottom"></TextBlock>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using BioContracts;
 using BioAccessDevice.Interfaces;
+using System.Collections.ObjectModel;
 
 namespace BioAccessDevice
 {
@@ -15,7 +16,10 @@ namespace BioAccessDevice
   {
     public AccessDevicesEngine()
     {
-      _accessDevices = new Dictionary<string, AccessDeviceListener>();     
+      _accessDevices = new Dictionary<string, AccessDeviceListener>();
+
+      _accessDeviceEnumerator = new AccessDevicesEnumerator();
+      _accessDeviceEnumerator.Start();
     }
 
     public void Add( string portName)
@@ -36,10 +40,22 @@ namespace BioAccessDevice
         _accessDevices.Remove(portName);      
     }
 
+    
     public string[] GetPortNames()
     {
       return SerialPort.GetPortNames();
     }
+        
+
+    public bool AccessDeviceActive(string portName)
+    {
+      AccessDeviceListener listener;
+      if (_accessDevices.TryGetValue(portName, out listener))
+        return listener.IsActive() ;
+      return false;
+    }
+    
+  
 
 
     public void Execute(AccessDeviceCommands command, string portName)
@@ -58,6 +74,23 @@ namespace BioAccessDevice
       {
         listener.Subscribe(observer);
       }
+    }
+
+    public bool HasObserver(IObserver<AccessDeviceActivity> observer, string portName)
+    {
+      AccessDeviceListener listener;
+      if (_accessDevices.TryGetValue(portName, out listener))      
+        return listener.HasObserver(observer);
+      
+      return false;
+    }
+
+    private AccessDevicesEnumerator _accessDeviceEnumerator;
+
+
+    public AsyncObservableCollection<string> GetAccessDevicesNames()
+    {
+      return _accessDeviceEnumerator.AccessDevicesNames;
     }
 
     private Dictionary<string, AccessDeviceListener> _accessDevices;    

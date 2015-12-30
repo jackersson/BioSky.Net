@@ -5,11 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:cal="http://www.caliburnproject.org"            
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:uservm ="clr-namespace:BioData;assembly=BioData"
              mc:Ignorable="d" 
+             
+             BorderThickness="2"
              d:DesignHeight="320" d:DesignWidth="300">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="dataFromEnumGender" MethodName="GetValues"
@@ -26,8 +29,8 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
-        <vm:StringToGenderConverter x:Key="converterGender" />
-        <vm:StringToRightsConverter x:Key="converterRights" />
+        <utils:StringToGenderConverter x:Key="converterGender" />
+        <utils:StringToRightsConverter x:Key="converterRights" />
 
     </UserControl.Resources> 
 

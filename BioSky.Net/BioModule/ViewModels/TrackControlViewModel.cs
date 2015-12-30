@@ -13,15 +13,19 @@ using BioModule.Model;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using BioData;
+using System.Globalization;
+using System.Threading;
 
 namespace BioModule.ViewModels
 {
-  public class TrackControlViewModel : PropertyChangedBase
+  public class TrackControlViewModel : Screen
   {
 
     public TrackControlViewModel(IBioEngine bioEngine)
     {
       _bioEngine = bioEngine;
+
+      DisplayName = "Tracking";
 
       _notifications = new VisitorsViewModel(bioEngine);
 
@@ -47,7 +51,7 @@ namespace BioModule.ViewModels
        
       }
     }   
-
+    
     public void AddMenu()
     {
       Visitor v = new Visitor()
@@ -71,13 +75,7 @@ namespace BioModule.ViewModels
     public VisitorsViewModel Notifications
     {
       get { return _notifications; }
-    }
-
-    
-    public string Caption()
-    {
-      return "Tracking";
-    }
+    }    
 
     private readonly VisitorsViewModel _notifications;
     private readonly IBioEngine _bioEngine;

@@ -7,8 +7,12 @@ using System.Threading.Tasks;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+
+using Caliburn.Micro;
+
 using BioContracts;
 using BioShell.ViewModels;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace BioShell
 {
@@ -16,13 +20,16 @@ namespace BioShell
   {
     public void Install(IWindsorContainer container, IConfigurationStore store)
     {
+      container        
+          .Register(Component.For<IWindowManager>().Instance(new WindowManager()))
+          .Register(Component.For<IWindsorContainer>().Instance(container));
+
+
       container
-          .Register(Component.For<IWindsorContainer>().Instance(container))
-          .Register(Component.For<ShellTabControl>())
-          .Register(Component.For<BioShellViewModel>() /*.LifeStyle.Singleton*/)
-          .Register(Component.For<BioModuleLoader>())
-          .Register(Component.For<BioDataLoader>())
-          .Register(Component.For<IBioShell>().ImplementedBy<BioShellImpl>());
+               .Register(Component.For<BioShellViewModel>())
+               .Register(Component.For<BioModuleLoader>())
+               .Register(Component.For<BioDataLoader>())
+               .Register(Component.For<IBioShell>().ImplementedBy<BioShellImpl>());
 
     }
   }

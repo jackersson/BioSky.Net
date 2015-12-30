@@ -54,6 +54,7 @@
     <Compile Include="AccessDeviceCommandFactory.cs" />
     <Compile Include="AccessDeviceListener.cs" />
     <Compile Include="AccessDevicesEngine.cs" />
+    <Compile Include="AccessDevicesEnumerator.cs" />
     <Compile Include="BioAccessDeviceInstaller.cs" />
     <Compile Include="Commands\CommandAccess.cs" />
     <Compile Include="Commands\CommandDallasKey.cs" />

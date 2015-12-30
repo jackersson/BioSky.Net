@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BioContracts
+using Caliburn.Micro;
+
+namespace BioModule.ViewModels
 {
-  public class ShellMainMenu
+  public class CustomDialogViewModel : PropertyChangedBase
   {
-    public object ScreenViewModel { get; set; }
   }
 }

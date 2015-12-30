@@ -16,33 +16,38 @@ namespace BioModule.ViewModels
 {
   public class ToolBarViewModel : PropertyChangedBase
   {
-    public ToolBarViewModel( ViewModelSelector viewModelSelector /*ITabControl tabControl, IFlyoutControl flyoutControl */)
+    public ToolBarViewModel( ViewModelSelector viewModelSelector )
     {
       _viewModelSelector = viewModelSelector;
-      //_tabControl    = tabControl   ;
-      //_flyoutControl = flyoutControl;
-      //Console.Write("Here");
     }
 
     public void OpenTabAddNewPerson()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.UserPage, new object[] { null });
+      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent
+                                    , ViewModelsID.UserPage, new object[] { null });
     }
 
     public void OpenTabAddNewLocation()
     {
-      _viewModelSelector.ShowFlyout(ViewModelsID.LocationSettings);
+      _viewModelSelector.ShowContent( ShowableContentControl.FlyoutControlContent
+                                   , ViewModelsID.LocationSettings);
     }
 
     public void OpenTabVisitors()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
+      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent 
+                                    , ViewModelsID.VisitorsPage);
     }
 
     public void OpenTabUsers()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.UsersPage);
+      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent 
+                                    , ViewModelsID.UsersPage);
     }
+
+    private readonly ViewModelSelector _viewModelSelector;
+
+    //******************************************** UI ***************************************************** 
 
     public BitmapSource AddPersonIconSource
     {
@@ -63,9 +68,7 @@ namespace BioModule.ViewModels
     {
       get { return ResourceLoader.UsersListIconSource; }
     }
-
-    //private ITabControl    _tabControl   ;
-    // private IFlyoutControl _flyoutControl;
-    private readonly ViewModelSelector _viewModelSelector;
+    
+    
   }
 }

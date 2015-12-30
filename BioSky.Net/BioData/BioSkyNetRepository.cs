@@ -16,8 +16,8 @@ namespace BioData
   {
 
     private readonly IEntityFrameworkContextFactory _entityFrameworkContextFactory;
-    private BioSkyNetEntities _bioSkyNetContext;
-    private ObservableCollection<Notification> _notifications;
+    private BioSkyNetDataModel _bioSkyNetContext;
+    
 
     public BioSkyNetRepository(IEntityFrameworkContextFactory entityFrameworkContextFactory)
     {
@@ -25,8 +25,6 @@ namespace BioData
         throw new ArgumentNullException("entityFrameworkContextFactory");
 
       _entityFrameworkContextFactory = entityFrameworkContextFactory;
-
-      _notifications = new ObservableCollection<Notification>();
 
       InitializeContext();
       
@@ -36,13 +34,14 @@ namespace BioData
     {
       try
       {
-        _bioSkyNetContext = _entityFrameworkContextFactory.Create<BioSkyNetEntities>();
+        _bioSkyNetContext = _entityFrameworkContextFactory.Create<BioSkyNetDataModel>();
 
         _bioSkyNetContext.Configuration.AutoDetectChangesEnabled = true;
 
         _bioSkyNetContext.Users.ToList();
         _bioSkyNetContext.Visitors.ToList();
         _bioSkyNetContext.Locations.ToList();
+        _bioSkyNetContext.Cards.ToList();
 
         return true;
       }
@@ -63,13 +62,44 @@ namespace BioData
       }
     }
 
-    public void AddUser( User user )
+     
+
+    public bool AddUser( User user )
     {
+      if (user == null)
+        return false;
+
       try
       {
-        _bioSkyNetContext.Users.Add(user);
+
+       User existingUser =  _bioSkyNetContext.Users.Where(x => x.First_Name_ == user.First_Name_
+                                                            && x.Last_Name_  == user.Last_Name_).FirstOrDefault();
+
+        if (existingUser != null )
+          return false;
+
+        _bioSkyNetContext.Users.Add(user);    
+
+        return SaveChanges();
       }
       catch {}
+
+      return false;
+    }
+
+    public bool UpdateUser(User user)
+    {
+      if (user == null)
+        return false;
+
+      try
+      {
+        _bioSkyNetContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
+        return SaveChanges();
+      }
+      catch { }
+
+      return false;
     }
 
     public ObservableCollection<Visitor> GetAllVisitors()
@@ -118,15 +148,72 @@ namespace BioData
       {
         return new ObservableCollection<Location>();
       }
-    }    
+    }
+
+    public ObservableCollection<Card> GetCards()
+    {
+      try
+      {
+        return _bioSkyNetContext.Cards.Local;
+      }
+      catch
+      {
+        return new ObservableCollection<Card>();
+      }
+    }
+
+    public void UpdateCards(ObservableCollection<Card> cards, User user)
+    {
+      if (user == null || cards.Count <= 0)
+        return;
 
 
-   
-    public void SaveChanges()
+      try
+      {
+
+        User existingUser = _bioSkyNetContext.Users.Where(x => x.First_Name_ == user.First_Name_
+                                                         && x.Last_Name_ == user.Last_Name_).FirstOrDefault();
+
+        if (existingUser == null)
+          return;
+
+        foreach (Card card in cards)
+        {
+          Card existingCard = _bioSkyNetContext.Cards.Where(x => x.CardID == card.CardID).FirstOrDefault();
+          if ( existingCard != null && existingCard.UserID != existingUser.UID)
+          {
+            existingCard.UserID = existingUser.UID;
+            _bioSkyNetContext.Entry(existingCard).State = System.Data.Entity.EntityState.Modified;
+          }
+
+          if (existingCard == null)
+            _bioSkyNetContext.Cards.Add(card);
+          
+        }
+
+        IEnumerable<Card> existingCards = _bioSkyNetContext.Cards.Where(x => x.UserID == existingUser.UID);
+        foreach (Card card in existingCards)
+        {
+          if (!cards.Contains(card))
+            _bioSkyNetContext.Cards.Remove(card);
+        }
+
+        SaveChanges();
+      }
+      catch
+      {
+       
+      }
+    }
+
+
+
+    public bool SaveChanges()
     {
       try
       {       
-        _bioSkyNetContext.SaveChanges();      
+        _bioSkyNetContext.SaveChanges();
+        return true;     
       }
       catch (DbEntityValidationException e)
       {
@@ -140,6 +227,8 @@ namespace BioData
           }
         }
       }
+
+      return false;
     }
 
   }

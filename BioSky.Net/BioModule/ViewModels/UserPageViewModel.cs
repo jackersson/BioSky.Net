@@ -15,82 +15,72 @@ using BioModule.Utils;
 using BioData;
 using System.Reflection;
 using System.Windows;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace BioModule.ViewModels
 {
-  public class UserPageViewModel : PropertyChangedBase
+
+  enum UserPageMode
   {
-    public UserPageViewModel( IBioEngine bioEngine )
+     NewUser
+   , ExistingUser
+  }
+  public class UserPageViewModel : Conductor<IScreen>.Collection.OneActive
+  {   
+    public UserPageViewModel(IBioEngine bioEngine, IWindowManager windowManager) : base()
     {
       _bioEngine = bioEngine;
 
-      _tabPages = new ObservableCollection<ShellTabPage>();
+      Items.Add(new UserInformationViewModel    (_bioEngine));
+      Items.Add(new UserContactlessCardViewModel(_bioEngine));
 
-      _tabPages.Add(new ShellTabPage() { Caption = "Information", ScreenViewModel = new UserInformationViewModel(_bioEngine) });
-      _tabPages.Add(new ShellTabPage() { Caption = "Cards"      , ScreenViewModel = new UserContactlessCardViewModel() });
+      _windowManager = windowManager;
+
+      ActiveItem = Items[0];
+      OpenTab();
 
       CurrentImageView = new ImageViewModel();
+
+      DisplayName = "Add New User";
     }
 
     public void Update(User user)
-    {    
-     
-      _user = user == null ? 
-      new User()
+    {
+      if (user != null)
       {
-          First_Name_ = ""
-        , Last_Name_ = ""
-        , Gender = Gender.Male.ToString()
-        , Rights = Rights.Operator.ToString()
+        _user = user;
+        _userPageMode = UserPageMode.ExistingUser;
+
+        DisplayName = (_user.First_Name_ + " " + _user.Last_Name_);
       }
-      : user ;
+      else
+      {
+        _user = new User()
+        {
+            First_Name_ = ""
+          , Last_Name_ = ""
+          , Gender = Gender.Male.ToString()
+          , Rights = Rights.Operator.ToString()
+        };
+
+        _userPageMode = UserPageMode.NewUser;
+        DisplayName = "Add New User";
+      }      
 
       CurrentImageView.Update(_user.Photo);
-
-      foreach (ShellTabPage tabPage in _tabPages )
+      
+      foreach (IScreen scrn in Items)
       {
-        MethodInfo method = tabPage.ScreenViewModel.GetType().GetMethod("Update");
+        MethodInfo method = scrn.GetType().GetMethod("Update");
         if (method != null)
-          method.Invoke(tabPage.ScreenViewModel, new object[] { _user } );        
+          method.Invoke(scrn, new object[] { _user } );        
       }
+      
     }
-
-    public string Caption()
+            
+    public void OpenTab()
     {
-      return (_user.First_Name_ == "" ) ? "Add New User" : (_user.First_Name_ + " " + _user.Last_Name_);
-    }
-
-    private ObservableCollection<ShellTabPage> _tabPages;
-    public ObservableCollection<ShellTabPage> TabPages
-    {
-      get { return _tabPages; }
-      private set
-      {
-        if (_tabPages != value)
-        {
-          _tabPages = value;
-          NotifyOfPropertyChange(() => TabPages);
-        }
-      }
-    }
-
-    private ShellTabPage _selectedTabPage;
-    public ShellTabPage SelectedTabPage
-    {
-      get { return _selectedTabPage; }
-      set
-      {
-        if (_selectedTabPage == value)
-          return;
-        _selectedTabPage = value;
-        NotifyOfPropertyChange(() => SelectedTabPage);
-        NotifyOfPropertyChange(() => CurrentViewTab);
-      }
-    }
-
-    public object CurrentViewTab
-    {
-      get { return _selectedTabPage == null ? null : _selectedTabPage.ScreenViewModel; }
+      ActiveItem.Activate();     
     }
 
     private ImageViewModel _currentImageView;
@@ -107,18 +97,35 @@ namespace BioModule.ViewModels
       }
     }
 
-    public void SaveChanges()
+    public void Apply()
     {
-      _user.Photo = CurrentImageView.ImageFileName;
-      _bioEngine.Database().AddUser(_user);
-      _bioEngine.Database().SaveChanges();
 
-      MessageBox.Show("User Successfully Added");
+      //_windowManager.ShowWindow(new CustomDialogViewModel());    
+     
+      _user.Photo = CurrentImageView.ImageFileName;
+
+      if (_userPageMode == UserPageMode.NewUser)
+        _bioEngine.Database().AddUser(_user);
+      else
+        _bioEngine.Database().UpdateUser(_user);
+
+      MessageBox.Show(_userPageMode == UserPageMode.NewUser
+                      ? "User Successfully Added"
+                      : "Successfully updated");
+
+      foreach (IScreen scrn in Items)
+      {
+        MethodInfo method = scrn.GetType().GetMethod("Apply");
+        if (method != null)
+          method.Invoke(scrn, null);
+      }      
     }
 
 
-    private User _user;
-    private readonly IBioEngine _bioEngine;
+    private User                _user         ;
+    private UserPageMode        _userPageMode ;
+    private IWindowManager      _windowManager;
+    private readonly IBioEngine _bioEngine    ;
 
     //************************************ Resources ****************************************************
     public BitmapSource UserDefaultImageIconSource
