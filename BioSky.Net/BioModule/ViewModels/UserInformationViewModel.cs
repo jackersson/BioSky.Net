@@ -16,81 +16,34 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Reflection;
 using System.Globalization;
-using System.ComponentModel;
 
 namespace BioModule.ViewModels
 {
  
-  public class StringToGenderConverter : IValueConverter
-  {
-    public object Convert(object value, Type targetType,
-        object parameter, CultureInfo culture)
-    {
-      Gender gender;
-      Enum.TryParse(value.ToString(), out gender);
-      return gender;
-    }
-
-    public object ConvertBack(object value, Type targetType,
-        object parameter, CultureInfo culture)
-    {
-      return Enum.GetName(value.GetType(), value);       
-    }
-  }
-
-  public class StringToRightsConverter : IValueConverter
-  {
-    public object Convert(object value, Type targetType,
-        object parameter, CultureInfo culture)
-    {
-      Rights right;
-      Enum.TryParse(value.ToString(), out right);
-      return right;
-    }
-
-    public object ConvertBack(object value, Type targetType,
-            object parameter, CultureInfo culture)
-    {
-      return Enum.GetName(value.GetType(), value); ;
-    }
-  }
-
-  public class UserInformationViewModel : PropertyChangedBase
+  public class UserInformationViewModel : Screen
   {
     IBioEngine _bioEngine;
     public UserInformationViewModel(IBioEngine bioEngine)
     {     
-      _bioEngine = bioEngine;   
-    }
-
+      _bioEngine = bioEngine;
+      DisplayName = "Information";
+    }    
     public void Update(User user)
     {
       User = user;      
+    }    
+    
+    override protected void OnActivate() 
+    {
+      Console.WriteLine("Activated " + DisplayName);
     }
 
-    public void SaveUserInfo()
-    {      
-     // _bioEngine.Database().SaveChanges();       
-    }       
- 
-    //*************************************************Icon Source**************************************************************
+    override protected void OnDeactivate(bool canClose)
+    {
+      
+    }   
 
-     public BitmapSource OkIconSource
-     {
-       get { return ResourceLoader.OkIconSource; }
-     }
-
-     public BitmapSource CancelIconSource
-     {
-       get { return ResourceLoader.CancelIconSource; }
-     }
-
-     public BitmapSource DeleteIconSource
-     {
-       get { return ResourceLoader.DeleteIconSource; }
-     }
-
-    //**************************************************Propertyes************************************************************
+    //**************************************************Properties************************************************************
 
      private User _user;
      public User User
@@ -106,6 +59,23 @@ namespace BioModule.ViewModels
 
          NotifyOfPropertyChange(() => User);
        }
-     } 
-  } 
+     }
+
+    //*************************************************Icon Source**************************************************************
+
+    public BitmapSource OkIconSource
+    {
+      get { return ResourceLoader.OkIconSource; }
+    }
+
+    public BitmapSource CancelIconSource
+    {
+      get { return ResourceLoader.CancelIconSource; }
+    }
+
+    public BitmapSource DeleteIconSource
+    {
+      get { return ResourceLoader.DeleteIconSource; }
+    }
+  }
 }

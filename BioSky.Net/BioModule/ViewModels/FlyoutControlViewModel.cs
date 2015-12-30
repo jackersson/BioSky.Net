@@ -11,33 +11,22 @@ using Castle.Windsor;
 
 namespace BioModule.ViewModels
 {
-  public class FlyoutControlViewModel : PropertyChangedBase, IFlyoutControl
+  public class FlyoutControlViewModel : Conductor<IScreen>.Collection.OneActive, IShowableContent
   {
-
-    public FlyoutControlViewModel(IWindsorContainer container, IBioShell shell)
+    public FlyoutControlViewModel(IWindsorContainer container)
     {
       _container     = container;
-      _flyoutControl = shell.FlyoutControl;
 
-      _flyoutControl.FlyoutPages.Add(new ShellFlyoutPage()
-      {
-          Caption = "Settings"
-        , ScreenViewModel = _container.Resolve<SettingsViewModel>()
-      });
-
+      Items.Add(_container.Resolve<SettingsViewModel>());
+  
       FlyoutOpenState = false;
     }
-
-
-    public void ShowPage(Type flyoutPage, object[] args = null)
-    {  
-      CurrentFlyoutPage = _flyoutControl.Find(flyoutPage);
-      FlyoutOpenState = true;
-    }
-
-    public ObservableCollection<ShellFlyoutPage> FlyoutPages
+  
+    public void ShowContent(Type flyoutPage, object[] args = null)
     {
-      get { return _flyoutControl.FlyoutPages; }
+      ActiveItem = Items.Where(x => x.GetType() == flyoutPage).FirstOrDefault();
+      ActiveItem.Activate();
+      FlyoutOpenState = true;
     }
 
     private bool _flyoutOpenState;
@@ -53,36 +42,7 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => FlyoutOpenState);
       }
     }
-
-    private ShellFlyoutPage _currentFlyoutPage;
-    public ShellFlyoutPage CurrentFlyoutPage
-    {
-      get { return _currentFlyoutPage; }
-      set
-      {
-        if (_currentFlyoutPage == value)
-          return;
-
-        _currentFlyoutPage = value;
-        NotifyOfPropertyChange(() => CurrentFlyoutPage);
-      }
-    }
-
-    private ShellFlyoutControl _flyoutControl;
-    public ShellFlyoutControl FlyoutControl
-    {
-      get { return _flyoutControl; }
-      set
-      {
-        if (_flyoutControl == value)
-          return;
-
-        _flyoutControl = value;
-        NotifyOfPropertyChange(() => FlyoutControl);
-        NotifyOfPropertyChange(() => FlyoutPages  );
-      }
-    }
-
+   
     private IWindsorContainer _container;
   }
 }

@@ -41,8 +41,8 @@ namespace BioModule
 
 
         container.Register(Component.For<IWindsorContainer>().Instance(container));
-        container.Register(Component.For<ITabControl>().ImplementedBy<TabViewModel>());
-        container.Register(Component.For<IFlyoutControl>().ImplementedBy<FlyoutControlViewModel>());
+        container.Register(Component.For<TabViewModel>());
+        container.Register(Component.For<FlyoutControlViewModel>());
         container.Register(Component.For<ViewModelSelector>().LifeStyle.Singleton);        
 
         container.Register(Component.For<UsersViewModel>().LifeStyle.Singleton);

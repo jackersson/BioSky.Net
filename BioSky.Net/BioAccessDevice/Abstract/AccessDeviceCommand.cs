@@ -46,10 +46,11 @@ namespace BioAccessDevice.Abstract
         return false;
       }
 
-      _response = null;
+      //_response = null;
 
       try
       {
+               
         serialPort.Write(_command, 0, _command.Length);
 
         Thread.Sleep(100);
@@ -71,13 +72,8 @@ namespace BioAccessDevice.Abstract
           }
            
           timeout++;
-        }        
-
-        for (int i = 0; i < _actualResponse.Length; ++i)
-        {
-          Console.Write(_actualResponse[i] + " ");
         }
-        Console.WriteLine();
+        //Console.WriteLine("Before validatin");
         return Validate();
       }
       catch (Exception exception)
@@ -94,6 +90,7 @@ namespace BioAccessDevice.Abstract
 
     public byte[] Message()
     {
+      //Console.WriteLine(_response != null ? "Get" : "Null");
       return _response;
     }
 

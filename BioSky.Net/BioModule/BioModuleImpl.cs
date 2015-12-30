@@ -12,61 +12,46 @@ using BioContracts;
 using BioModule.ViewModels;
 using BioModule.Model;
 using BioModule.Utils;
+using System.Globalization;
+using System.Threading;
+using BioModule.ResourcesLoader;
 
 namespace BioModule
 {
   class BioModuleImpl : IBioModule
   {
-    private readonly IBioShell         _shell                 ;
-    private readonly ITabControl       _tabControlViewModel   ;
-    private readonly IFlyoutControl    _flyoutControlViewModel;
-    private readonly ViewModelSelector _viewModelSelector     ;
-    //private readonly UsersViewModel        _usersViewModel          ;
-    //private readonly VisitorsViewModel     _visitorsViewModel       ;
-    //private readonly SettingsViewModel     _settingsViewModel       ;
-    //private readonly UserPageViewModel     _userPageViewModel       ;
-    //private readonly TrackControlViewModel _trackingControlViewModel;
+    private readonly IBioShell              _shell                 ;
+    private readonly TabViewModel           _tabControlViewModel   ;
+    private readonly FlyoutControlViewModel _flyoutControlViewModel;
+    private readonly ViewModelSelector      _viewModelSelector     ;
 
     private readonly IBioEngine _bioEngine;
 
     public BioModuleImpl( IBioShell shell                   
                         , IBioEngine bioEngine
-                        , ITabControl tabControlViewModel
-                        , IFlyoutControl flyoutControlViewModel
+                        , TabViewModel tabControlViewModel
+                        , FlyoutControlViewModel flyoutControlViewModel
                         , ViewModelSelector viewModelSelector )
     {
       _shell = shell;
-      _flyoutControlViewModel = flyoutControlViewModel;
-      _viewModelSelector = viewModelSelector;
-      /*
-      _tabControlViewModel      = tabControlViewModel;
-      _usersViewModel           = usersViewModel;
-      _visitorsViewModel        = visitorsViewModel;
-      _settingsViewModel        = settingsViewModel;
-      _userPageViewModel        = userPageViewModel;
-      _trackingControlViewModel = trackingControlViewModel;
-      */
       _bioEngine = bioEngine;
 
-      _tabControlViewModel = tabControlViewModel;
+      _flyoutControlViewModel = flyoutControlViewModel;
+      _viewModelSelector      = viewModelSelector;      
 
+      _tabControlViewModel = tabControlViewModel;
     }
 
     public void Init()
-    {
-      
-      //_viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
-      //_viewModelSelector.OpenTab(ViewModelsID.UserPage, new object[] { null });
-      _viewModelSelector.OpenTab(ViewModelsID.TrackPage);
+    {      
+      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);
 
       _tabControlViewModel.Init();
-      _shell.TabControl.ScreenViewModel    = _tabControlViewModel;
-      _shell.FlyoutControl.ScreenViewModel = _flyoutControlViewModel;
+      _shell.TabControl    = _tabControlViewModel;
+      _shell.FlyoutControl = _flyoutControlViewModel;
 
-      _shell.ToolBar.ScreenViewModel          = new ToolBarViewModel(_viewModelSelector);
-      _shell.MainMenu.ScreenViewModel         = new MainMenuViewModel(_viewModelSelector);
-           
-      
+      _shell.ToolBar       = new ToolBarViewModel(_viewModelSelector);
+      _shell.MainMenu      = new MainMenuViewModel(_viewModelSelector);      
     }
   }
 }

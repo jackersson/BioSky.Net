@@ -42,21 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessDeviceActivity.cs" />
+    <Compile Include="AsyncObservableCollection.cs" />
     <Compile Include="IAccessDeviceEngine.cs" />
     <Compile Include="IBioShell.cs" />
     <Compile Include="IBioModule.cs" />
     <Compile Include="IEntityFrameworkConnectionBuilder.cs" />
-    <Compile Include="IFlyoutControl.cs" />
-    <Compile Include="ITabControl.cs" />
-    <Compile Include="Notification.cs" />
-    <Compile Include="ShellFlyoutControl.cs" />
-    <Compile Include="ShellFlyoutPage.cs" />
-    <Compile Include="ShellLoginInformation.cs" />
-    <Compile Include="ShellMainMenu.cs" />
-    <Compile Include="ShellTabControl.cs" />
+    <Compile Include="IShowableContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShellTabPage.cs" />
-    <Compile Include="ShellToolBar.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

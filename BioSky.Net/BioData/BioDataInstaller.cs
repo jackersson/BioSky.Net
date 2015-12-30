@@ -33,7 +33,7 @@ namespace BioData
       container.AddFacility<TypedFactoryFacility>()
                .Register(Component.For<IEntityFrameworkContextFactory>().AsFactory());
 
-      container.Register(Component.For<BioSkyNetEntities>()
+      container.Register(Component.For<BioSkyNetDataModel>()
                .DependsOn(new
                {
                  modelName = "BioSkyNetDataModel"

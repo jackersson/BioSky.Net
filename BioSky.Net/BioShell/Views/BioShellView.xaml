@@ -11,7 +11,7 @@
                       xmlns:z="clr-namespace:BioModule;assembly=BioModule" 
                       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"                     
                       xmlns:cal="http://www.caliburnproject.org"
-                      xmlns:tas="clr-namespace:BioContracts;assembly=BioContracts"                       
+                      xmlns:tas="clr-namespace:BioContracts;assembly=BioContracts"                     
                       mc:Ignorable="d"
                       BorderThickness="1"
                       WindowStartupLocation="CenterScreen"
@@ -19,10 +19,8 @@
                       Width="640"
                       Height="480"
                       d:DesignHeight="400" d:DesignWidth="400"
-                      Icon="{Binding LogoIconSource}"
-                      Title="BioSkyNet"
+                      Title="{Binding DisplayName}"
                       d:DataContext="{d:DesignInstance localvm:BioShellViewModel,  IsDesignTimeCreatable=False}">
-
 
 
     <Grid>
@@ -35,49 +33,14 @@
             <RowDefinition Height="44"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
+        
+        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="TabControl" Grid.ColumnSpan="2" /> 
+               
+        <ContentControl Grid.Row="1" Grid.Column="0" x:Name="ToolBar"  />
 
-      
-        <ContentControl Grid.Row="1" Grid.Column="1" x:Name="CurrentTabControl" Grid.ColumnSpan="2" />
+        <ContentControl Grid.Row="1" Grid.Column="2" x:Name="FlyoutControl"  />
 
-        <!--
-        <Button Width="48" Grid.Row="0" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="1">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <cal:ActionMessage MethodName="ShowSettings" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </Button>
--->
-        <ContentControl Grid.Row="1" Grid.Column="0" x:Name="CurrentToolBar"  />
+        <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="MainMenu"></ContentControl>
 
-        <ContentControl Grid.Row="1" Grid.Column="2" x:Name="CurrentFlyoutControl"  />
-
-        <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="CurrentMainMenu"></ContentControl>
-
-        <ContentControl Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="3" x:Name="CurrentLoginInformation"></ContentControl>
-
-
-    </Grid>
-
-    <!--
-    <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl x:Name="CurrentFlyoutControl"/>
-    </Controls:MetroWindow.Flyouts>
--->
-
-    <!--
-    <Controls:MetroWindow.Flyouts>
-        <Controls:FlyoutsControl >
-            <Controls:FlyoutsControl.Resources>
-                <DataTemplate DataType="{x:Type ky:SettingsViewModel}">
-                    <y:SettingsView x:Name="CurrentFlyout"></y:SettingsView>
-                </DataTemplate>
-            </Controls:FlyoutsControl.Resources>
-            <Controls:Flyout Header="{Binding CurrentFlyoutCaption}" Theme="Dark" Position="Right" IsOpen="{Binding IsSettingsOpen}"  Width="200" >
-                <Grid>
-                    <ContentControl Content="{Binding CurrentFlyout}"></ContentControl>
-                </Grid>
-            </Controls:Flyout>
-        </Controls:FlyoutsControl>
-    </Controls:MetroWindow.Flyouts> -->
+    </Grid>    
 </Controls:MetroWindow>

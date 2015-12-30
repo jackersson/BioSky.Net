@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BioModule.ViewModels"
+              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:cal="http://www.caliburnproject.org"             
              mc:Ignorable="d" 
@@ -17,7 +18,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <vm:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </UserControl.Resources>

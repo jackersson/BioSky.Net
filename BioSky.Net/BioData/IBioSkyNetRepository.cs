@@ -14,11 +14,15 @@ namespace BioData
     ObservableCollection<Visitor> GetAllVisitors();
     ObservableCollection<Location> GetAllLocations();
 
+    ObservableCollection<Card> GetCards();
+
     IEnumerable<Visitor> GetVisitorsByLocation(string locationName);
 
-    void AddUser(User user);
+    bool AddUser(User user);
+    void UpdateCards(ObservableCollection<Card> cards, User user);
+    bool UpdateUser(User user);
     void AddVisitor(Visitor visitor);
-    void SaveChanges();
+    bool SaveChanges();
 
   
 

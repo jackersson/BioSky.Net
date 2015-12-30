@@ -6,93 +6,69 @@ using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 
-using BioContracts;
-using System.Drawing;
-
-using System.Windows.Media.Imaging;
-
-using System.IO;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Controls;
-
-using MahApps.Metro.Controls;
-using BioModule.ResourcesLoader;
-
-
 namespace BioShell.ViewModels
 {
-  public class BioShellViewModel : PropertyChangedBase
+  public class BioShellViewModel : Screen
   {
-
     public BioShellViewModel()
     {
-      _tabControl       = new ShellTabControl      ();
-      _flyoutControl    = new ShellFlyoutControl   ();
-      _toolBar          = new ShellToolBar         ();
-      _mainMenu         = new ShellMainMenu        ();
-      _loginInformation = new ShellLoginInformation();
-    }
+      DisplayName = "BioSkyNet";     
+    }  
 
-    private ShellLoginInformation _loginInformation;
-    public ShellLoginInformation LoginInformation
-    {
-      get { return _loginInformation; }
-    }
-
-    private ShellMainMenu _mainMenu;
-    public ShellMainMenu MainMenu
+    private object _mainMenu;
+    public object MainMenu
     {
       get { return _mainMenu; }
+      set
+      {
+        if (_mainMenu != value)
+        {
+          _mainMenu = value;
+          NotifyOfPropertyChange(() => MainMenu);
+        }
+      }
     }
 
-    private ShellToolBar _toolBar;
-    public ShellToolBar ToolBar
+    private object _toolBar;
+    public object ToolBar
     {
-      get { return _toolBar; }  
+      get { return _toolBar; }
+      set
+      {
+        if (_toolBar != value)
+        {
+          _toolBar = value;
+          NotifyOfPropertyChange(() => ToolBar);
+        }
+      }
     }
 
-    private ShellTabControl    _tabControl;  
-    public ShellTabControl TabControl
+    private object _tabControl;  
+    public object TabControl
     {
-      get { return _tabControl; }          
+      get { return _tabControl; }
+      set
+      {
+        if (_tabControl != value)
+        {
+          _tabControl = value;
+          NotifyOfPropertyChange(() => TabControl);
+        }
+      }
     }
 
-    private ShellFlyoutControl _flyoutControl;
-    public ShellFlyoutControl FlyoutControl
+    private object _flyoutControl;
+    public object FlyoutControl
     {
       get  { return _flyoutControl; }
-    }
- 
-    public object CurrentTabControl
-    {
-      get { return _tabControl.ScreenViewModel;  }     
-    }
-
-    public object CurrentToolBar
-    {
-      get { return _toolBar.ScreenViewModel; }
-    }
-
-    public object CurrentFlyoutControl
-    {
-      get { return _flyoutControl.ScreenViewModel; }
-    }
-
-    public object CurrentMainMenu
-    {
-      get { return _mainMenu.ScreenViewModel; }
-    }
-
-    public object CurrentLoginInformation
-    {
-      get { return _loginInformation.ScreenViewModel; }
-    }
-
-    public BitmapSource LogoIconSource
-    {
-      get { return ResourceLoader.LogoIconSource; }
-    }
+      set
+      {
+        if (_flyoutControl != value)
+        {
+          _flyoutControl = value;
+          NotifyOfPropertyChange(() => FlyoutControl);
+        }
+      }
+    }    
   }
 }

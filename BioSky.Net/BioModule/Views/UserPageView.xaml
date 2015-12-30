@@ -8,7 +8,8 @@
              xmlns:cal="http://www.caliburnproject.org"   
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
-             d:DataContext="{d:DesignInstance vm:UserPageViewModel, IsDesignTimeCreatable=False}">
+             d:DataContext="{d:DesignInstance vm:UserPageViewModel, IsDesignTimeCreatable=False}"
+             >
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -20,8 +21,8 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="133*"/>
-            <ColumnDefinition Width="117*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
@@ -32,29 +33,33 @@
             <RowDefinition Height="48"/>
             <RowDefinition Height="48"/>
             <RowDefinition Height="48"/>
-            <RowDefinition Height="19*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="48"/>
 
         </Grid.RowDefinitions>
-        <TabControl SelectedIndex="0" Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
-                    VerticalAlignment="Stretch" ItemsSource="{Binding TabPages}" Grid.ColumnSpan="4">
+        
+        <TabControl Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Stretch" ItemsSource="{Binding Items}" Grid.ColumnSpan="4"                
+                    SelectedItem="{Binding ActiveItem}"
+                    cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"
+                    >
             <TabControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
-                    <local:UserInformationView x:Name="CurrentViewTab"></local:UserInformationView>
+                    <local:UserInformationView x:Name="ActiveItem"></local:UserInformationView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserContactlessCardViewModel}">
-                    <local:UserContactlessCardView x:Name="CurrentViewTab"></local:UserContactlessCardView>
+                    <local:UserContactlessCardView x:Name="ActiveItem"></local:UserContactlessCardView>
                 </DataTemplate>
-            </TabControl.Resources>
+            </TabControl.Resources> 
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock
-        				Text="{Binding Caption}" />
+        				Text="{Binding DisplayName}" />
                 </DataTemplate>
-            </TabControl.ItemTemplate>
+            </TabControl.ItemTemplate> 
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding ScreenViewModel}" ></ContentControl>
+                    <ContentControl Content="{Binding }" ></ContentControl>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
@@ -63,25 +68,23 @@
         <Button  Grid.Row="5" Grid.Column="2" 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 ToolTip="Save"
-                 cal:Message.Attach="[Event Click]=[Action SaveChanges]"
+                 cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding OkIconSource}" />
         </Button>
 
-        <Button Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="Cancel"
-                >
+        <Button Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding CancelIconSource}" />
         </Button>
 
-        <Button Grid.Row="5" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="Delete User"
-                >
+        <Button Grid.Row="5" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding DeleteIconSource}" />
         </Button>
        
-        <local:ImageView  Content="{Binding CurrentImageView}" Grid.Column="0" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Grid.RowSpan="6">
+        <local:ImageView  Content="{Binding CurrentImageView}" Grid.Column="0"
+                          HorizontalAlignment="Stretch"  
+                          VerticalAlignment="Stretch"                     
+                          Grid.RowSpan="6">
             <local:ImageView.Resources>
                 <DataTemplate DataType="{x:Type vm:ImageViewModel}">
                     <local:ImageView Content="CurrentImageView" DataContext="{Binding Mode=OneWay}"/>

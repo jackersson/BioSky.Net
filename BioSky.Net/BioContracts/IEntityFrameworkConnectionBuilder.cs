@@ -8,6 +8,6 @@ namespace BioContracts
 {
   public interface IEntityFrameworkConnectionBuilder
   {
-    string createEntityFrameworkConnection(string dataModelName);
+    string createEntityFrameworkConnection();
   }
 }

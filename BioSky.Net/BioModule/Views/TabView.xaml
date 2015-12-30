@@ -64,46 +64,44 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>             
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-       
-         
 
-        <dragablz:TabablzControl Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                 ItemsSource="{Binding TabPages}"                                 
-                                 SelectedItem="{Binding SelectedTabPage}"                                  
+
+
+        <dragablz:TabablzControl Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
+                                 SelectedItem="{Binding ActiveItem}"    
+                                 ItemsSource="{Binding Items}"
                                  AllowDrop="True" ShowDefaultCloseButton="True">
             <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">
-                    <local:UsersView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}">
+                    <local:UsersView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}">
                     </local:UsersView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
-                    <ContentControl x:Name="CurrentViewTab" 
-                        cal:View.Context="DetailedVisitors"                      
-                        cal:View.Model="{Binding}">
-                    </ContentControl>
+                    <local:VisitorsView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:VisitorsView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPageViewModel}">
-                    <local:UserPageView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:UserPageView>
+                    <local:UserPageView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:UserPageView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
-                    <local:TrackControlView x:Name="CurrentViewTab" DataContext="{Binding Mode=OneWay}"></local:TrackControlView>
+                    <local:TrackControlView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:TrackControlView>
                 </DataTemplate>
             </dragablz:TabablzControl.Resources>
             <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
-                        <TextBlock Text="{Binding Caption}" />                     
+                        <TextBlock Text="{Binding DisplayName}" />
                     </Grid>
                 </DataTemplate>
             </dragablz:TabablzControl.CustomHeaderItemTemplate>
             <dragablz:TabablzControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl Margin="2,2,2,2" Content="{Binding ScreenViewModel}"></ContentControl>
+                    <ContentControl Margin="2,2,2,2" Content="{Binding}"></ContentControl>
                 </DataTemplate>
             </dragablz:TabablzControl.ContentTemplate>
+           
         </dragablz:TabablzControl>
 
     </Grid>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BioContracts;
+using BioModule.ViewModels;
 
 namespace BioModule.Utils
 {
@@ -18,13 +19,17 @@ namespace BioModule.Utils
     , TrackPage
   }
 
+  public enum ShowableContentControl
+  {
+     TabControlContent
+   , FlyoutControlContent
+  }
+
   public class ViewModelSelector
   {
-    public ViewModelSelector( ITabControl tabControl, IFlyoutControl flyoutControl )
+    public ViewModelSelector( TabViewModel tabControl, FlyoutControlViewModel flyoutControl )
     {
-      _tabControl    = tabControl   ;
-      _flyoutControl = flyoutControl;
-
+    
       _viewModels = new Dictionary<ViewModelsID, Type>();
 
       _viewModels.Add(ViewModelsID.UserPage         , Type.GetType("BioModule.ViewModels.UserPageViewModel"));
@@ -32,27 +37,39 @@ namespace BioModule.Utils
       _viewModels.Add(ViewModelsID.VisitorsPage     , Type.GetType("BioModule.ViewModels.VisitorsViewModel"));
       _viewModels.Add(ViewModelsID.UsersPage        , Type.GetType("BioModule.ViewModels.UsersViewModel"   ));
       _viewModels.Add(ViewModelsID.TrackPage        , Type.GetType("BioModule.ViewModels.TrackControlViewModel"));
+
+
+      _showableControls = new Dictionary<ShowableContentControl, IShowableContent>();
+      _showableControls.Add(ShowableContentControl.TabControlContent   , tabControl   );
+      _showableControls.Add(ShowableContentControl.FlyoutControlContent, flyoutControl);
     }
 
-    public void OpenTab(ViewModelsID pageID, object[] args = null)
+    public void ShowContent(ShowableContentControl contentControl, ViewModelsID pageID, object[] args = null)
     {
       Type pageType;
       bool flag = _viewModels.TryGetValue(pageID, out pageType);
       if (flag)
-        _tabControl.OpenTab(pageType, args);
+      {
+        IShowableContent showableControl;
+        flag = _showableControls.TryGetValue(contentControl, out showableControl);
+        if ( flag )
+          showableControl.ShowContent(pageType, args);
+      }
+        //_tabControl.OpenTab(pageType, args);
     }
 
+    /*
     public void ShowFlyout(ViewModelsID pageID, object[] args = null)
     {
       Type pageType;
       bool flag = _viewModels.TryGetValue(pageID, out pageType);
       if (flag)
-        _flyoutControl.ShowPage(pageType, args);
+        _flyoutControl.ShowContent(pageType, args);
     }
-      
+      */
     private Dictionary<ViewModelsID, Type> _viewModels;
+    private Dictionary<ShowableContentControl, IShowableContent> _showableControls;
 
-    private ITabControl    _tabControl   ;
-    private IFlyoutControl _flyoutControl;
+    
   }
 }

@@ -4,19 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"             
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             
+             >
 
-    <UserControl.DataContext>
-        <vm:UserContactlessCardViewModel/>
-    </UserControl.DataContext>
-
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <vm:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
-        </ResourceDictionary>
-    </UserControl.Resources>
+   
 
     <Grid>
         <Grid.RowDefinitions>
@@ -34,29 +30,53 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="2" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.RowSpan="3"
-                ToolTip="Add Card"
+        <Button Width="48" Height="48" Grid.Column="3" 
+                Style="{DynamicResource MetroCircleButtonStyle}" 
+                Grid.Row="1" Grid.RowSpan="3"
+                IsEnabled="{Binding AnyCardDetected}"
+                cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
                 >
             <Image Source="{Binding AddIconSource}" Height="32" Width="32" />
         </Button>
 
-        <Button Grid.Column="3" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
-            <Image Source="{Binding RemoveIconSource}" Height="32" Width="32" />
-        </Button>
-
-        <Button Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="Delete"
-                >
+        <Button Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
             <Image Source="{Binding DeleteIconSource}" Height="32" Width="32" />
         </Button>
 
-        <ListBox BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="5" Grid.Row="5" Margin="0, 5, 0, 0"/>
+        <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
+                 VerticalAlignment="Stretch" Grid.ColumnSpan="5"
+                 Grid.Row="5" Margin="0, 5, 0, 0"
+                 ItemsSource="{Binding UserCards}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl Margin="2,2,2,2" Content="{Binding CardID}"></ContentControl>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
 
 
-        <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Grid.Row="0" Grid.Column="1"/>
+        <ComboBox ItemsSource="{Binding AccessDevicesNames}"
+                  SelectedItem="{Binding SelectedAccessDevice, Mode=TwoWay}" 
+                  Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch" 
+                  Grid.Row="0" 
+                  Grid.Column="1"/>
 
-        <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding OkIconSource}" />
+        <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" 
+               VerticalAlignment="Stretch" 
+               Source="{Binding AccessDeviceConnectedIcon}" />
 
-        <TextBox IsReadOnly="True" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Path=CardNumber, Converter={StaticResource ConvertToFormatedNumber}}" VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2"/>
+        <TextBox Text="{Binding DetectedCard.CardID}"
+                 Grid.ColumnSpan="2" HorizontalAlignment="Stretch" 
+                 TextWrapping="Wrap" 
+                 Controls:TextBoxHelper.Watermark="{Binding CardState}"
+                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                 Controls:TextBoxHelper.ClearTextButton="True"  
+                 VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2">
+            
+
+        </TextBox>
     </Grid>
 </UserControl>

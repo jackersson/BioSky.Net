@@ -16,10 +16,10 @@
          </DataTemplate>
       </Controls:FlyoutsControl.Resources>
     
-      <Controls:Flyout Header="{Binding CurrentFlyoutPage.Caption}" Theme="Dark" Position="Right"
+      <Controls:Flyout Header="{Binding ActiveItem.DisplayName}" Theme="Dark" Position="Right"
                        IsOpen="{Binding FlyoutOpenState}"  Width="200" >
           <Grid>
-            <ContentControl Content="{Binding CurrentFlyoutPage.ScreenViewModel}"></ContentControl>
+            <ContentControl Content="{Binding ActiveItem}"></ContentControl>
           </Grid>
        </Controls:Flyout>
     

@@ -10,6 +10,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
+             xmlns:utils="clr-namespace:BioModule.Utils"
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
              >
@@ -21,8 +22,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <vm:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
-            <vm:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
+            <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </UserControl.Resources>
