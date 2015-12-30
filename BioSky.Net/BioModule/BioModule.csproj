@@ -142,11 +142,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ResourcesLoader\lang.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>lang.resx</DependentUpon>
-    </Compile>
     <Compile Include="ResourcesLoader\ResourceLoader.cs" />
     <Compile Include="Utils\BioConverters.cs" />
     <Compile Include="Utils\BioStatusResource.cs" />
@@ -204,9 +199,6 @@
     <Compile Include="Views\UsersView.xaml.cs">
       <DependentUpon>UsersView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VisitorsView.xaml.cs">
-      <DependentUpon>VisitorsView.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\CustomDialogView.xaml">
@@ -261,18 +253,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VisitorsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ResourcesLoader\lang.en.resx" />
-    <EmbeddedResource Include="ResourcesLoader\lang.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>lang.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ResourcesLoader\lang.ru-RU.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
