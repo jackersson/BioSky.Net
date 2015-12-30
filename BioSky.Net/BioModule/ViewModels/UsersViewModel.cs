@@ -30,7 +30,7 @@ using BioModule.Utils;
 
 namespace BioModule.ViewModels
 { 
-  public class UsersViewModel : PropertyChangedBase
+  public class UsersViewModel : Screen
   {    
     public UsersViewModel(IBioEngine bioEngine, ViewModelSelector selector)
     {
@@ -160,7 +160,8 @@ namespace BioModule.ViewModels
 
     public void ShowUserPage( bool isExistingUser )
     {   
-      _selector.OpenTab(ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );
+      _selector.ShowContent( ShowableContentControl.TabControlContent
+                           , ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );
     }
 
     //************************************************************SearchBox***************************************************

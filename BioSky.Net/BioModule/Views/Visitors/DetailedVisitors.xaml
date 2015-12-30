@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:cal="http://www.caliburnproject.org"    
+             xmlns:cal="http://www.caliburnproject.org"   
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              mc:Ignorable="d" 
-             xmlns:utils="clr-namespace:BioModule.Utils"
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
              >
@@ -56,7 +56,7 @@
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"              
                   cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                       [Event SelectionChanged] = [Action SelectedRowsChangeEvent($eventArgs)]">
-            
+
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"                                        

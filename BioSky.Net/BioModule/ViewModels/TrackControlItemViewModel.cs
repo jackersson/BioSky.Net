@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using BioModule.Utils;
 
+
 namespace BioModule.ViewModels
 {
 
@@ -31,7 +32,7 @@ namespace BioModule.ViewModels
       UserVerificationIconVisible = false;
       CardDetectedIconVisible = false;
 
-      _notifications = new VisitorsViewModel(bioEngine, selector ,location.Caption );   
+      _notifications = new VisitorsViewModel(bioEngine, selector);   
     }
 
     public void Update()

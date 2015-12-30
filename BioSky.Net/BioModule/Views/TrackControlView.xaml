@@ -9,6 +9,7 @@
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
              mc:Ignorable="d" 
              Name="Test"
@@ -18,7 +19,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-            <vm:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />

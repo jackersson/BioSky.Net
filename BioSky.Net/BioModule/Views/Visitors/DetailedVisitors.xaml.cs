@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace BioModule.Views.Visitors
 {
   /// <summary>
-  /// Interaction logic for DetailedVisitors.xaml
+  /// Interaction logic for DetailedVisitorsView.xaml
   /// </summary>
   public partial class DetailedVisitors : UserControl
   {

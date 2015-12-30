@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using BioModule.ResourcesLoader;
+using System.Windows.Media.Imaging;
 
 namespace BioShell.ViewModels
 {
@@ -55,6 +57,11 @@ namespace BioShell.ViewModels
           NotifyOfPropertyChange(() => TabControl);
         }
       }
+    }
+
+    public BitmapSource LogoIconSource
+    {
+      get { return ResourceLoader.LogoIconSource; }
     }
 
     private object _flyoutControl;

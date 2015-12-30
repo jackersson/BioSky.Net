@@ -17,22 +17,26 @@ using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Media;
 
+using BioModule.Utils;
+
 namespace BioModule.ViewModels
 {
   public class VisitorsViewModel : Screen
   {  
     private readonly IBioEngine _bioEngine;
-    public VisitorsViewModel(IBioEngine bioEngine, string filter= "")
+    public VisitorsViewModel(IBioEngine bioEngine, ViewModelSelector viewModelsSelector )
     {
       _bioEngine = bioEngine;
-      _filter = filter;
+      _filter = "";
+
+      _viewModelsSelector = viewModelsSelector;
 
       _visitors         = new ObservableCollection<Visitor>();
       _filteredVisitors = new ObservableCollection<Visitor>();
 
       Visitors = _bioEngine.Database().GetAllVisitors();
 
-      if (filter == "")
+      if (_filter == "")
         FilteredVisitors = Visitors;      
     }
 
@@ -120,6 +124,8 @@ namespace BioModule.ViewModels
     {
 
     }
+
+    ViewModelSelector _viewModelsSelector;
 
     //--------------------------------------------------- UI --------------------------------------
     public BitmapSource AddIconSource

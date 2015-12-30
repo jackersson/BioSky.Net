@@ -23,26 +23,26 @@ namespace BioModule.ViewModels
 
     public void OpenTabAddNewPerson()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.UserPage, new object[] { null });
+      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.UserPage, new object[] { null });
     }
 
     public void OpenTabAddNewLocation()
     {
-      _viewModelSelector.ShowFlyout(ViewModelsID.LocationSettings);
+      _viewModelSelector.ShowContent(ShowableContentControl.FlyoutControlContent,  ViewModelsID.LocationSettings);
     }
 
     public void OpenTabVisitors()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.VisitorsPage);
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.VisitorsPage);
     }
 
     public void OpenTabUsers()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.UsersPage);
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UsersPage);
     }
     public void OpenTabTrack()
     {
-      _viewModelSelector.OpenTab(ViewModelsID.TrackPage);
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.TrackPage);
     }
 
     public BitmapSource AddPersonIconSource

@@ -21,7 +21,7 @@ using System.Windows.Controls;
 
 namespace BioModule.ViewModels
 {
-  public class TrackControlViewModel : PropertyChangedBase
+  public class TrackControlViewModel : Screen
   {
     public TrackControlViewModel(IBioEngine bioEngine, ViewModelSelector selector)
     {
@@ -29,6 +29,7 @@ namespace BioModule.ViewModels
       _selector = selector;
       _notifications = new VisitorsViewModel(bioEngine, selector);
 
+      DisplayName = "Tracking";
 
       foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())      
         location.ScreenViewModel = new TrackControlItemViewModel(_bioEngine, location, _selector);    
@@ -144,24 +145,7 @@ namespace BioModule.ViewModels
       get { return ResourceLoader.DeleteIconSource; }
     }
   }
-
-  public class ConvertStatusToImage : IValueConverter
-  {
-    private BioStatusResource _resource = new BioStatusResource();
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      if (value != null)
-      {
-        return _resource.GetBitmapSource(value.ToString());
-      }
-      return null;
-    }
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      throw new NotImplementedException();
-    }
-  }
-
+  
   public class ComboBoxItemTemplateSelector : DataTemplateSelector
   {
     // Can set both templates from XAML

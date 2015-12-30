@@ -80,7 +80,11 @@
                     </local:UsersView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
-                    <local:VisitorsView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:VisitorsView>
+                    <ContentControl x:Name="ActiveItem" 
+                              cal:View.Context="DetailedVisitors" 
+                              cal:View.Model="{Binding}"                              
+                                 >
+                    </ContentControl>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPageViewModel}">
                     <local:UserPageView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:UserPageView>

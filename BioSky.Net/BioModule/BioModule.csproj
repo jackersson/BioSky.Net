@@ -143,12 +143,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourcesLoader\ResourceLoader.cs" />
+    <Compile Include="Resources\langs\lang.Designer.cs" />
+    <Compile Include="Resources\langs\lang.en.Designer.cs" />
+    <Compile Include="Resources\langs\lang.ru-RU.Designer.cs" />
     <Compile Include="Utils\BioConverters.cs" />
     <Compile Include="Utils\BioStatusResource.cs" />
     <Compile Include="Utils\ViewModelSelector.cs" />
     <Compile Include="ViewModels\CustomDialogViewModel.cs" />
     <Compile Include="ViewModels\FlyoutControlViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\LoaderViewModel.cs" />
+    <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="Views\CustomDialogView.xaml.cs">
       <DependentUpon>CustomDialogView.xaml</DependentUpon>
@@ -165,6 +170,12 @@
     </Compile>
     <Compile Include="Views\ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoaderView.xaml.cs">
+      <DependentUpon>LoaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginInformationView.xaml.cs">
+      <DependentUpon>LoginInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -199,6 +210,12 @@
     <Compile Include="Views\UsersView.xaml.cs">
       <DependentUpon>UsersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Visitors\DetailedVisitors.xaml.cs">
+      <DependentUpon>DetailedVisitors.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Visitors\ShortedVisitors.xaml.cs">
+      <DependentUpon>ShortedVisitors.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\CustomDialogView.xaml">
@@ -212,6 +229,14 @@
     <Page Include="Views\ImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoaderView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginInformationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MainMenuView.xaml">
       <SubType>Designer</SubType>
@@ -253,6 +278,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Visitors\DetailedVisitors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Visitors\ShortedVisitors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -260,6 +293,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\langs\lang.en.resx" />
+    <EmbeddedResource Include="Resources\langs\lang.resx" />
+    <EmbeddedResource Include="Resources\langs\lang.ru-RU.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -327,7 +363,10 @@
   <ItemGroup>
     <None Include="Resources\verified.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\loader.PNG" />
+    <Content Include="Resources\tracking.png" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\refresh.png" />
   </ItemGroup>

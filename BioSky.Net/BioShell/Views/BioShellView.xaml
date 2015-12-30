@@ -20,6 +20,7 @@
                       Height="480"
                       d:DesignHeight="400" d:DesignWidth="400"
                       Title="{Binding DisplayName}"
+                      Icon="{Binding LogoIconSource}"
                       d:DataContext="{d:DesignInstance localvm:BioShellViewModel,  IsDesignTimeCreatable=False}">
 
 

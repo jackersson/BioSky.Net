@@ -6,9 +6,7 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"      
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"   
-             lex:LocalizeDictionary.DesignCulture="ru-RU"
-             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
-             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="100"
              d:DataContext="{d:DesignInstance vm:ToolBarViewModel, IsDesignTimeCreatable=False}">
@@ -17,7 +15,7 @@
         <ToolBarTray Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left"  VerticalAlignment="Top">
             <ToolBar>
                 <Separator></Separator>
-                <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
+                <Button ToolTip="AddPerson" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
                     <Image Source="{Binding AddPersonIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
