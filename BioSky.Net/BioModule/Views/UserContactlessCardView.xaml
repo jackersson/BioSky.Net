@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"             
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:cal="http://www.caliburnproject.org"
@@ -12,7 +13,9 @@
              
              >
 
-   
+    <UserControl.Resources>        
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>           
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -36,11 +39,11 @@
                 IsEnabled="{Binding AnyCardDetected}"
                 cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
                 >
-            <Image Source="{Binding AddIconSource}" Height="32" Width="32" />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Height="32" Width="32" />
         </Button>
 
         <Button Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
-            <Image Source="{Binding DeleteIconSource}" Height="32" Width="32" />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" />
         </Button>
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 

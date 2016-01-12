@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="BioModule.Views.LocationAccessDevicesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:BioModule.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <ScrollViewer  Grid.Column="1" Grid.Row="0"  CanContentScroll="True"
+                                  VerticalScrollBarVisibility="Visible" Grid.ColumnSpan="4">
+
+            <Grid>
+                <Grid.ColumnDefinitions>                    
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>                   
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="128"/>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="128"/>                    
+                </Grid.RowDefinitions>
+                
+                <Label Grid.Row="0" Grid.Column="0" Content="In" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+
+                <ListBox x:Name="DevicesIn" Grid.Row="1" Grid.Column="0" 
+                         Style="{StaticResource VirtualisedMetroListBox}" 
+                         ItemsSource="{Binding Path=LocationsIn}"
+                         BorderThickness="1"                      
+                         AllowDrop="True"                               
+                         SelectedIndex="0"  
+                         SelectedItem="{Binding SelectedDeviceIn, Mode=TwoWay}"
+                             >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewDrop">
+                            <cal:ActionMessage MethodName="OnDragDropIn">
+                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseRightButtonDown">
+                            <cal:ActionMessage MethodName="OnMouseRightButtonDown">
+                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
+                            </cal:ActionMessage>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListBox.ContextMenu>
+                        <ContextMenu x:Name="ContextMenuIn" IsEnabled="True">
+                            <MenuItem Header="Remove"  IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}" 
+                                      cal:Message.Attach="[Event Click] = [Action OnRemoveIn]"/>
+                            <MenuItem Header="Add to Out Devices"  IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
+                                      cal:Message.Attach="[Event Click] = [Action OnAddToOutDevicesFromIn]"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Out" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+
+                <ListBox x:Name="DevicesOut" Grid.Row="3" Grid.Column="0" 
+                         Style="{StaticResource VirtualisedMetroListBox}"                         
+                         BorderThickness="1"                         
+                         SelectedIndex="0" 
+                         ItemsSource="{Binding AccessDevicesIn}"
+                         AllowDrop="True"  
+                         SelectedItem="{Binding SelectedItemIn, Mode=TwoWay}"
+                         cal:Message.Attach="[Event PreviewDrop]=[Action OnDrop($eventArgs)]"
+                             >            
+                    
+                </ListBox>
+
+                <Label Grid.Row="0" Grid.Column="2" Content="All" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+
+                <ListBox x:Name="Devices" Grid.Row="1" Grid.Column="2" 
+                         Style="{StaticResource VirtualisedMetroListBox}"                         
+                         BorderThickness="1"
+                         Margin="1"
+                         AllowDrop="True"
+                         SelectedIndex="0" Grid.RowSpan="3" 
+                         ItemsSource="{Binding AccessDevices}"
+                         SelectedItem="{Binding SelectedItem, Mode=TwoWay}"      
+                         cal:Message.Attach="[Event SelectionChanged]=[Action OnMouseDown($this)]"
+                           >                 
+                </ListBox>
+            
+                
+            </Grid>
+
+        </ScrollViewer>
+    </Grid>
+</UserControl>

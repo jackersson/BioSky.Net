@@ -13,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BioModule.Views
+namespace BioUITest.Views
 {
-    /// <summary>
-    /// Interaction logic for SettingsView.xaml
-    /// </summary>
-    public partial class SettingsView : UserControl
+  /// <summary>
+  /// Interaction logic for BioVideoPlayerView.xaml
+  /// </summary>
+  public partial class BioVideoPlayerView : UserControl
   {
-        public SettingsView()
-        {
-            InitializeComponent();
-        }
-
-
+    public BioVideoPlayerView()
+    {
+      InitializeComponent();
     }
+  }
 }

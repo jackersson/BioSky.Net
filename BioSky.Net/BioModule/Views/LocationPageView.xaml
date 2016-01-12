@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="BioModule.Views.LocationPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+                 mc:Ignorable="d"                  
+                 d:DesignHeight="600" d:DesignWidth="360" >
+
+    <UserControl.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="48"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56"/>
+            <RowDefinition Height="*"/>          
+            <RowDefinition Height="48"/>
+
+        </Grid.RowDefinitions>
+
+        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2,0,2,0"
+                 Grid.Column="0" Grid.ColumnSpan="5"
+                 Grid.Row="0"
+                 Controls:TextBoxHelper.Watermark="Location Name*"
+                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                 Controls:TextBoxHelper.ClearTextButton="True">
+        </TextBox>
+
+        <TabControl Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" 
+                    Grid.Row="1" Grid.RowSpan="1"
+                    VerticalAlignment="Stretch" ItemsSource="{Binding Items}"               
+                    SelectedItem="{Binding ActiveItem}"
+                    cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"                    
+                    BorderThickness="2"
+                    >
+            <TabControl.Resources>
+                <DataTemplate DataType="{x:Type vm:LocationAccessDevicesViewModel}">
+                    <local:LocationAccessDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationAccessDevicesView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:LocationUsersNotifyViewModel}">
+                    <local:LocationUsersNotifyView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationUsersNotifyView>
+                </DataTemplate>
+            </TabControl.Resources>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+        				Text="{Binding DisplayName}" FontSize="14" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding}" ></ContentControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+
+
+        <Button Grid.Row="3" Grid.Column="1" 
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" 
+                Style="{DynamicResource MetroCircleButtonStyle}" >
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
+        </Button>
+
+        <Button  Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" 
+                 VerticalAlignment="Stretch" 
+                 Style="{DynamicResource MetroCircleButtonStyle}">
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Width="32" Height="32"  />
+        </Button>
+
+        <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" Width="32" Height="32"  />
+        </Button>
+    </Grid>
+</UserControl>

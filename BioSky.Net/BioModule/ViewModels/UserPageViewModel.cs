@@ -30,12 +30,11 @@ namespace BioModule.ViewModels
     public UserPageViewModel(IBioEngine bioEngine, IWindowManager windowManager) : base()
     {
       _bioEngine = bioEngine;
-
-      Items.Add(new UserInformationViewModel    (_bioEngine));
-      Items.Add(new UserContactlessCardViewModel(_bioEngine));
-
       _windowManager = windowManager;
 
+      Items.Add(new UserInformationViewModel    ());
+      Items.Add(new UserContactlessCardViewModel(_bioEngine));
+     
       ActiveItem = Items[0];
       OpenTab();
 
@@ -59,6 +58,7 @@ namespace BioModule.ViewModels
         {
             First_Name_ = ""
           , Last_Name_ = ""
+          , Photo = ""
           , Gender = Gender.Male.ToString()
           , Rights = Rights.Operator.ToString()
         };
@@ -67,7 +67,7 @@ namespace BioModule.ViewModels
         DisplayName = "Add New User";
       }      
 
-      CurrentImageView.Update(_user.Photo);
+      CurrentImageView.Update( _user);
       
       foreach (IScreen scrn in Items)
       {
@@ -77,9 +77,10 @@ namespace BioModule.ViewModels
       }
       
     }
-            
+      
+
     public void OpenTab()
-    {
+    {      
       ActiveItem.Activate();     
     }
 
@@ -98,12 +99,7 @@ namespace BioModule.ViewModels
     }
 
     public void Apply()
-    {
-
-      //_windowManager.ShowWindow(new CustomDialogViewModel());    
-     
-      _user.Photo = CurrentImageView.ImageFileName;
-
+    {     
       if (_userPageMode == UserPageMode.NewUser)
         _bioEngine.Database().AddUser(_user);
       else
@@ -126,45 +122,6 @@ namespace BioModule.ViewModels
     private UserPageMode        _userPageMode ;
     private IWindowManager      _windowManager;
     private readonly IBioEngine _bioEngine    ;
-
-    //************************************ Resources ****************************************************
-    public BitmapSource UserDefaultImageIconSource
-    {
-      get { return ResourceLoader.UserDefaultImageIconSource; }
-    }
-    public BitmapSource DeleteIconSource
-    {
-      get { return ResourceLoader.DeleteIconSource; }
-    }
-    public BitmapSource OkIconSource
-    {
-      get { return ResourceLoader.OkIconSource; }
-    }
-
-    public BitmapSource CancelIconSource
-    {
-      get { return ResourceLoader.CancelIconSource; }
-    }
-
-    public BitmapSource UserInformationIconSource
-    {
-      get { return ResourceLoader.UserInformationIconSource; }
-    }
-    public BitmapSource UserFacesIconSource
-    {
-      get { return ResourceLoader.UserFacesIconSource; }
-    }
-    public BitmapSource UserFingerprintIconSource
-    {
-      get { return ResourceLoader.UserFingerprintIconSource; }
-    }
-    public BitmapSource UserIricesIconSource
-    {
-      get { return ResourceLoader.UserIricesIconSource; }
-    }
-    public BitmapSource UserContactlessCardsIconSource
-    {
-      get { return ResourceLoader.UserContactlessCardsIconSource; }
-    }
+    
   }
 }

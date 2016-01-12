@@ -161,14 +161,18 @@
     <Compile Include="ViewModels\FlyoutControlViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\LoaderViewModel.cs" />
+    <Compile Include="ViewModels\LocationAccessDevicesViewModel.cs" />
+    <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
+    <Compile Include="ViewModels\LocationUsersNotifyViewModel.cs" />
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\YesNoDialogViewModel.cs" />
     <Compile Include="Views\CustomDialogView.xaml.cs">
       <DependentUpon>CustomDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="ViewModels\UserInformationViewModel.cs" />
-    <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\LocationPageViewModel.cs" />
     <Compile Include="ViewModels\TrackControlItemViewModel.cs" />
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
     <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
@@ -181,6 +185,15 @@
     </Compile>
     <Compile Include="Views\LoaderView.xaml.cs">
       <DependentUpon>LoaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LocationAccessDevicesView.xaml.cs">
+      <DependentUpon>LocationAccessDevicesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LocationCaptureDevicesView.xaml.cs">
+      <DependentUpon>LocationCaptureDevicesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LocationUsersNotifyView.xaml.cs">
+      <DependentUpon>LocationUsersNotifyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginInformationView.xaml.cs">
       <DependentUpon>LoginInformationView.xaml</DependentUpon>
@@ -209,8 +222,8 @@
     <Compile Include="ViewModels\UsersViewModel.cs" />
     <Compile Include="ViewModels\TabViewModel.cs" />
     <Compile Include="ViewModels\VisitorsViewModel.cs" />
-    <Compile Include="Views\SettingsView.xaml.cs">
-      <DependentUpon>SettingsView.xaml</DependentUpon>
+    <Compile Include="Views\LocationPageView.xaml.cs">
+      <DependentUpon>LocationPageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TabView.xaml.cs">
       <DependentUpon>TabView.xaml</DependentUpon>
@@ -223,6 +236,9 @@
     </Compile>
     <Compile Include="Views\Visitors\Shorted.xaml.cs">
       <DependentUpon>Shorted.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\YesNoDialogView.xaml.cs">
+      <DependentUpon>YesNoDialogView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +257,18 @@
     <Page Include="Views\LoaderView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LocationAccessDevicesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LocationCaptureDevicesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LocationUsersNotifyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginInformationView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -274,7 +302,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsView.xaml">
+    <Page Include="Views\LocationPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -291,6 +319,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Visitors\Shorted.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\YesNoDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -396,6 +428,7 @@
   <ItemGroup>
     <None Include="Resources\logo.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

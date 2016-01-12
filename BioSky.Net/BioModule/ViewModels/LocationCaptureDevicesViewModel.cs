@@ -1,0 +1,17 @@
+﻿using Caliburn.Micro;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BioModule.ViewModels
+{
+  public class LocationCaptureDevicesViewModel : Screen
+  {
+    public LocationCaptureDevicesViewModel()
+    {
+      DisplayName = "Capture Devices";
+    }
+  }
+}

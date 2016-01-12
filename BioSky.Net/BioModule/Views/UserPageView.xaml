@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:cal="http://www.caliburnproject.org"   
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
@@ -12,8 +13,9 @@
              >
 
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>            
+                <resloader:ResourceLoader x:Key="ResourceLoader"/>                
+                <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -70,15 +72,15 @@
                  VerticalAlignment="Stretch"
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" >
-            <Image Width="24" Height="24" Source="{Binding OkIconSource}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
         </Button>
 
         <Button Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
-            <Image Width="24" Height="24" Source="{Binding CancelIconSource}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
         <Button Grid.Row="5" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
-            <Image Width="24" Height="24" Source="{Binding DeleteIconSource}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" />
         </Button>
        
         <local:ImageView  Content="{Binding CurrentImageView}" Grid.Column="0"

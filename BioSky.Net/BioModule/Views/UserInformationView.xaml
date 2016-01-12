@@ -79,51 +79,56 @@
                          Controls:TextBoxHelper.Watermark="First Name*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.First_Name_}"                         
-                         >
-                </TextBox>
+                         
+                         Text="{Binding User.First_Name_, UpdateSourceTrigger=PropertyChanged }" >                  
+                </TextBox>                  
+                         
 
                 <TextBox x:Name="LastNameBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Last Name*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Last_Name_}"/>
+                         Text="{Binding User.Last_Name_, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DatePicker x:Name="DateOfBirthBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                     
                          Controls:TextBoxHelper.Watermark="Date of Birth"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Text="{Binding User.Date_Of_Birth}"/>
 
-                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumGender}}" SelectedItem="{Binding User.Gender, Converter={StaticResource converterGender}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
-                         Controls:TextBoxHelper.Watermark="Gender*"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumGender}}" 
+                          SelectedItem="{Binding User.Gender, Converter={StaticResource converterGender}, UpdateSourceTrigger=PropertyChanged}"
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                          Controls:TextBoxHelper.Watermark="Gender*"
+                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                            />
 
                 <TextBox x:Name="CountryBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Country"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Country}"/>
+                         Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBox x:Name="CityBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="City"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.City}"/>
+                         Text="{Binding User.City, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBox x:Name="EmailBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Email"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Email}"/>
+                         Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBox x:Name="CommentsBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Comments"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Comments}"/>
+                         Text="{Binding User.Comments, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumRights}}" SelectedItem="{Binding User.Rights, Converter={StaticResource converterRights}}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumRights}}"
+                          SelectedItem="{Binding User.Rights, Converter={StaticResource converterRights}, UpdateSourceTrigger=PropertyChanged}" 
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="Rights*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"/>
             </StackPanel>

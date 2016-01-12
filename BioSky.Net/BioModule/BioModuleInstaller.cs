@@ -35,7 +35,7 @@ namespace BioModule
 
         container            
             .Register(Component.For<VisitorsViewModel>())
-            .Register(Component.For<SettingsViewModel>())           
+            .Register(Component.For<LocationPageViewModel>())           
             .Register(Component.For<TrackControlViewModel>())
             .Register(Component.For<UserPageViewModel>().LifestyleTransient());
 
