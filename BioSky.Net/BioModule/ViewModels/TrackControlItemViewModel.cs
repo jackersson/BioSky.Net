@@ -19,7 +19,7 @@ using BioModule.Utils;
 namespace BioModule.ViewModels
 {
 
-  public class TrackControlItemViewModel : PropertyChangedBase, IObserver<AccessDeviceActivity>
+  public class TrackControlItemViewModel : Screen, IObserver<AccessDeviceActivity>
   {
     private readonly ViewModelSelector _selector;
     public TrackControlItemViewModel(IBioEngine bioEngine, TrackLocation location, ViewModelSelector selector)

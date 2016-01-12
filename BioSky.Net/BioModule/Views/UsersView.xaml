@@ -49,20 +49,22 @@
             Grid.ColumnSpan="5"
                   Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
                   ItemsSource="{Binding FilteredUsers}"                
-                  GridLinesVisibility="All"
+                  GridLinesVisibility="All"            
                   AutoGenerateColumns="False"
                   CanUserSortColumns="True" CanUserAddRows="False"
                   materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                   materialDesign:DataGridAssist.ColumnHeaderPadding="8"           
             cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
-                                [Event SelectionChanged] = [Action OnSelect]"            
-                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"            
-                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                [Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"            
+                              
+                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
+            
+            >
 
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=TwoWay}"                                        
                                         RenderOptions.ClearTypeHint="Enabled"
                                         TextOptions.TextFormattingMode="Display">
                     <DataGridCheckBoxColumn.Header>
@@ -70,7 +72,7 @@
                         <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
                             <CheckBox HorizontalAlignment="Center"                                               
                                               DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                              IsChecked="{Binding IsAllItems3Selected}" />
+                                              IsChecked="{Binding IsAllItemsSelected}" />
                         </Border>
                     </DataGridCheckBoxColumn.Header>
                 </DataGridCheckBoxColumn>

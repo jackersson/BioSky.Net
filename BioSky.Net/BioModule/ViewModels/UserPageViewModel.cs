@@ -17,9 +17,9 @@ using System.Reflection;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 
+
 namespace BioModule.ViewModels
 {
-
   enum UserPageMode
   {
      NewUser

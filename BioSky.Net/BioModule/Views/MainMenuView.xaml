@@ -6,16 +6,13 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"    
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:langs="clr-namespace:BioModule.Resources.langs"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"             
-   
+             xmlns:lex="http://wpflocalizeextension.codeplex.com" 
+             lex:LocalizeDictionary.DesignCulture="ru-RU"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="250"
              d:DataContext="{d:DesignInstance vm:MainMenuViewModel, IsDesignTimeCreatable=False}">
-
-    <!--      lex:LocalizeDictionary.DesignCulture="ru-RU"
-             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
-             lex:ResxLocalizationProvider.DefaultDictionary="lang" -->
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -27,7 +24,7 @@
                   Margin="5,5,0,5"
                   VerticalAlignment="Stretch"
                   HorizontalAlignment="Left">
-            <MenuItem Header="File">
+            <MenuItem Header="{lex:Loc File}">
                 <MenuItem Header="Add">
                     <MenuItem Header="User" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"/>
                     <MenuItem Header="Location" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"/>
@@ -38,9 +35,9 @@
                 <Separator></Separator>
                 <MenuItem Header="Exit"/>
             </MenuItem>
-            <MenuItem Header="Edit"
+            <MenuItem Header="{lex:Loc Edit}"
                           />
-            <MenuItem Header="View" 
+            <MenuItem Header="{lex:Loc View}" 
                           >
                 <MenuItem Header="Settings" 
                           cal:Message.Attach="[Event Click] = [Action OpenFlayoutSettings]" />
@@ -51,7 +48,7 @@
                 <MenuItem Header="Visitors" 
                           cal:Message.Attach="[Event Click] = [Action OpenTabVisitors]"/>
             </MenuItem>
-            <MenuItem Header="Help">
+            <MenuItem Header="{lex:Loc Help}">
                 <MenuItem Header="About"
                           cal:Message.Attach="[Event Click] = [Action ShowAboutDialog]"/>
                 <MenuItem Header="AreYouSure"
@@ -74,6 +71,6 @@
         <TextBlock 
                 x:Name="CultureTextBlock"
                 Grid.Column="4"
-                Text="Test" />
+                Text="{lex:Loc Test}" />
     </Grid>
 </UserControl>

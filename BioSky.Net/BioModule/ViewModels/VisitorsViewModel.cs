@@ -37,7 +37,9 @@ namespace BioModule.ViewModels
       Visitors = _bioEngine.Database().GetAllVisitors();
 
       if (_filter == "")
-        FilteredVisitors = Visitors;      
+        FilteredVisitors = Visitors;
+
+      DisplayName = "Visitors";
     }
 
     public void Update()

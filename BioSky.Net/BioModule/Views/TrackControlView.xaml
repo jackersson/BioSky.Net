@@ -145,7 +145,7 @@
         
        <ContentControl Grid.Column="0" Grid.Row="2" 
                             Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,2,5,0"
-                        cal:View.Context="ShortedVisitors"                      
+                        cal:View.Context="Shorted"                      
                         cal:View.Model="{Binding Notifications}">
         </ContentControl>
     </Grid>

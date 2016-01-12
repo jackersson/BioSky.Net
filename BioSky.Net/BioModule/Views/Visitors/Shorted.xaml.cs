@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace BioModule.Views.Visitors
 {
   /// <summary>
-  /// Interaction logic for DetailedVisitorsView.xaml
+  /// Interaction logic for ShortedVisitors.xaml
   /// </summary>
-  public partial class DetailedVisitors : UserControl
+  public partial class Shorted : UserControl
   {
-    public DetailedVisitors()
+    public Shorted()
     {
       InitializeComponent();
     }

@@ -37,14 +37,17 @@ namespace BioModule.ViewModels
       _bioEngine = bioEngine;
       _selector  = selector;
 
-      _users = new ObservableCollection<User>();
+      _users           = new ObservableCollection<User>();
+      _selectedItemIds = new ObservableCollection<long>();
 
-      FilteredUsers = new ObservableCollection<User>(); 
+      FilteredUsers = new ObservableCollection<User>();
 
       Users         = _bioEngine.Database().GetAllUsers();
       FilteredUsers = _bioEngine.Database().GetAllUsers();
 
       IsDeleteButtonEnabled = false;
+
+      DisplayName = "Users";
     } 
 
     private ObservableCollection<User> _users;
@@ -102,25 +105,70 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    public void OnSelect()
-    {
-      IsDeleteButtonEnabled = true;
-    }
-
-    public void OnUnselect()
-    {
-      IsDeleteButtonEnabled = false;
-    }
-
-    public string Caption()
-    {
-      return "Users";
-    }
-
     public void Update()
     { }
-     
+
+    private bool? _isAllItemsSelected;
+    public bool? IsAllItemsSelected
+    {
+      get { return _isAllItemsSelected; }
+      set
+      {
+        if (_isAllItemsSelected == value) return;
+
+        _isAllItemsSelected = value;
+
+        if (_isAllItemsSelected.HasValue)
+          //SelectAll(_isAllItemsSelected.Value, FilteredVisitors);
+
+        NotifyOfPropertyChange(() => IsAllItemsSelected);
+      }
+    }
+
+    private ObservableCollection<long> _selectedItemIds;
+    public ObservableCollection<long> SelectedItemIds
+    {
+      get { return _selectedItemIds; }
+      set
+      {
+        if (_selectedItemIds != value)
+        {
+          _selectedItemIds = value;
+          NotifyOfPropertyChange(() => SelectedItemIds);
+        }
+      }
+    }
+
+    public void OnSelectionChanged(SelectionChangedEventArgs e)
+    {      
+      IList selectedRecords = e.AddedItems as IList;
+      IList unselectedRecords = e.RemovedItems as IList;
+      
+      foreach (User currentUser in selectedRecords)
+      {
+        SelectedItemIds.Add(currentUser.UID);    
+      }
+
+      foreach (User currentUser in unselectedRecords)
+      {        
+        SelectedItemIds.Remove(currentUser.UID);
+      }
+
+      if (SelectedItemIds.Count >= 1)
+      {
+        Console.WriteLine("Delete Records (" + SelectedItemIds.Count + ")");        
+        IsDeleteButtonEnabled = true;
+      }
+      else
+      {
+        Console.WriteLine("Delete Record");
+        IsDeleteButtonEnabled = false;
+      }
+      foreach (long item in SelectedItemIds)
+      {
+        Console.WriteLine(item);
+      }
+    }     
         
     //*************************************************************Context Menu******************************************\
    
@@ -160,8 +208,13 @@ namespace BioModule.ViewModels
 
     public void ShowUserPage( bool isExistingUser )
     {   
+/*
       _selector.ShowContent( ShowableContentControl.TabControlContent
-                           , ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );
+                           , ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );*/
+      foreach(long item in SelectedItemIds)
+      {
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users[(int)item] });
+      }
     }
 
     //************************************************************SearchBox***************************************************
