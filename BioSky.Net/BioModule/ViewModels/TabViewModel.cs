@@ -44,7 +44,7 @@ namespace BioModule.ViewModels
       ActiveItem = currentScreen;
       currentScreen.Activate();
 
-      //InvokeMethod(tabType, "Update", newTabPage.ScreenViewModel, args);
+      InvokeMethod(tabType, "Update", ActiveItem, args);
     }
 
     private IWindsorContainer _container ;

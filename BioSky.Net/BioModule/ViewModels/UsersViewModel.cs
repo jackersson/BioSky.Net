@@ -37,9 +37,7 @@ namespace BioModule.ViewModels
       _bioEngine = bioEngine;
       _selector  = selector;
 
-      _users = new ObservableCollection<User>();
-
-      FilteredUsers = new ObservableCollection<User>(); 
+      DisplayName = "Users";
 
       Users         = _bioEngine.Database().GetAllUsers();
       FilteredUsers = _bioEngine.Database().GetAllUsers();

@@ -18,64 +18,32 @@ using System.Reflection;
 using System.Globalization;
 
 namespace BioModule.ViewModels
-{
- 
+{ 
   public class UserInformationViewModel : Screen
-  {
-    IBioEngine _bioEngine;
-    public UserInformationViewModel(IBioEngine bioEngine)
-    {     
-      _bioEngine = bioEngine;
-      DisplayName = "Information";
+  {    
+    public UserInformationViewModel()
+    {           
+      DisplayName = "Information";     
     }    
-    public void Update(User user)
+
+    public void Update(ref User user)
     {
       User = user;      
     }    
     
-    override protected void OnActivate() 
+    private User _user;
+    public User User
     {
-      Console.WriteLine("Activated " + DisplayName);
-    }
-
-    override protected void OnDeactivate(bool canClose)
-    {
-      
-    }   
-
-    //**************************************************Properties************************************************************
-
-     private User _user;
-     public User User
-     {
-       get
+      get { return _user; }
+      set
+      {
+       if (_user != value)
        {
-         return _user;
+         _user = value;
+          NotifyOfPropertyChange(() => User);
        }
-       set
-       {
-         if (_user != value)
-           _user = value;
+      }
+    } 
 
-         NotifyOfPropertyChange(() => User);
-       }
-     }
-
-    //*************************************************Icon Source**************************************************************
-
-    public BitmapSource OkIconSource
-    {
-      get { return ResourceLoader.OkIconSource; }
-    }
-
-    public BitmapSource CancelIconSource
-    {
-      get { return ResourceLoader.CancelIconSource; }
-    }
-
-    public BitmapSource DeleteIconSource
-    {
-      get { return ResourceLoader.DeleteIconSource; }
-    }
   }
 }

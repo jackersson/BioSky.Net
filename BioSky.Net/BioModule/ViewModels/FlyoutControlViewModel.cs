@@ -17,7 +17,7 @@ namespace BioModule.ViewModels
     {
       _container     = container;
 
-      Items.Add(_container.Resolve<SettingsViewModel>());
+      Items.Add(_container.Resolve<LocationPageViewModel>());
   
       FlyoutOpenState = false;
     }

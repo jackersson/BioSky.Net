@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstracts\Threadable.cs" />
     <Compile Include="AccessDeviceActivity.cs" />
     <Compile Include="AsyncObservableCollection.cs" />
     <Compile Include="IAccessDeviceEngine.cs" />

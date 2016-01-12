@@ -14,10 +14,11 @@ using Microsoft.Win32;
 using System.IO;
 using System.Drawing;
 using MahApps.Metro.Controls;
+using BioData;
 
 namespace BioModule.ViewModels
 {
-  public class ImageViewModel : PropertyChangedBase
+  public class ImageViewModel : Screen
   {
     public ImageViewModel()
     {
@@ -45,15 +46,16 @@ namespace BioModule.ViewModels
       {
         Bitmap bmp = (Bitmap)Image.FromFile(fileName);
         CurrentImageSource = BitmapConversion.BitmapToBitmapSource(bmp);
-        ImageFileName = fileName;
+        User.Photo = fileName;
         Zoom(_imageViewWidth, _imageViewHeight);
       }
     }
 
 
-    public void Update( string fileName )
+    public void Update( User user )
     {
-      SetImageFromFile(fileName);
+      User = user;
+      SetImageFromFile(User.Photo);
     }
 
     public void CancelClick(double viewWidth, double viewHeight)
@@ -158,6 +160,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    /*
     private string _imageFileName;
     public string ImageFileName
     {
@@ -170,22 +173,26 @@ namespace BioModule.ViewModels
         _imageFileName = value;
       }
     }
-
+    */
     private double _imageViewWidth = 0;
     private double _imageViewHeight = 0;
 
     private const double ZOOM_TO_FIT_RATE = 90  ;
     private const double ZOOM_RATIO       = 100D;
 
-    //--------------------------------------------------------- UI ------------------------------------
-    public BitmapSource UploadIconSource
+
+    private User _user;
+    public User User
     {
-      get { return ResourceLoader.UploadIconSource; }
-    }
-    
-    public BitmapSource CancelIconSource
-    {
-      get { return ResourceLoader.CancelIconSource; }
+      get { return _user; }
+      set
+      {
+        if (_user != value)
+        {
+          _user = value;
+          NotifyOfPropertyChange(() => User);
+        }
+      }
     }
 
 

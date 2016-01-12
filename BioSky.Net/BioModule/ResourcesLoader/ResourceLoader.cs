@@ -15,6 +15,7 @@ namespace BioModule.ResourcesLoader
   {
     public static BitmapSource BitmapToBitmapSource(Bitmap source)
     {
+     
       return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
                     source.GetHbitmap(),
                     IntPtr.Zero,
@@ -22,7 +23,8 @@ namespace BioModule.ResourcesLoader
                     BitmapSizeOptions.FromEmptyOptions());
     }
   }
-  public static class ResourceLoader
+    
+  public class ResourceLoader
   {
     private static BitmapSource _addIconSource   ;
     private static BitmapSource _removeIconSource;
