@@ -14,37 +14,57 @@
              Height="300"
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <UserControl.DataContext>
-        <vm:VideoStreamViewModel></vm:VideoStreamViewModel>
-    </UserControl.DataContext>
-
-    <UserControl.Resources>
-        <x:Array x:Key="myArray" Type="{x:Type draw:Point}">
-            <draw:Point X="10" Y="20"/>
-            <draw:Point X="50" Y="10"/>
-            <draw:Point X="60" Y="50"/>
-        </x:Array>
-    </UserControl.Resources>
-
-
-
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="11*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="29*"/>
-            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!--
+        <local:BioVideoPlayerView DataContext="{Binding ItemTest}" Grid.ColumnSpan="4" Grid.RowSpan="4" ></local:BioVideoPlayerView>
+
+        <Button x:Name="button" Content="Button"
+                HorizontalAlignment="Left" Margin="180,105,0,0"
+                cal:Message.Attach="[Event Click]=[Action EnableItem]" VerticalAlignment="Top" Width="75"/> -->
+
+        <!--
+        <ListView x:Name="listView" HorizontalAlignment="Left"
+                  Height="180" Margin="10,0,0,0" 
+                  Grid.Row="1" VerticalAlignment="Top" Width="130"
+                  ItemsSource="{Binding ItemTest}"
+                  >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ItemText}"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+            
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="IsEnabled" Value="{Binding ItemEnabled}"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            
+        </ListView>
+        <Button x:Name="button" Content="Button" Grid.Column="1"
+                HorizontalAlignment="Left" Margin="10,10,0,0"
+                cal:Message.Attach="[Event Click]=[Action EnableItem]"
+                Grid.Row="1" VerticalAlignment="Top" Width="75"/>
+
+
+ -->
 
         <ListBox  ItemsSource="{Binding DevicesNames}"
                   SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
             HorizontalAlignment="Left"
                 
-                  Height="75" Margin="10,0,0,0"
-                  VerticalAlignment="Top" Width="145" Grid.Column="1">
+                  Height="10" Margin="105,0,0,0"
+                  VerticalAlignment="Top" Width="35" Grid.Column="1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
@@ -53,23 +73,32 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Border Grid.Column="0" 
+                Grid.ColumnSpan="2"
+                Grid.Row="1"
+                BorderThickness="1"
+                BorderBrush="#FF000000">
+            <Image              
+               Stretch="Fill"                
+               Source="{Binding NewFrame}"
+               >
 
-        <Image Grid.Row="1"
-               Grid.Column="0" 
-               Grid.ColumnSpan="2"
-               
-               Source="{Binding NewFrame}"></Image>
-       <!-- ItemsSource="{Binding Source={StaticResource myArray}, Path=.}" -->
+            </Image>
+        </Border>
+
         <ItemsControl Grid.Row="1"
                       Grid.Column="0" 
                       Grid.ColumnSpan="2"
-                      ItemsSource="{Binding Faces}">
+                      BorderThickness="2"
+                      BorderBrush="AliceBlue"
+                      ItemsSource="{Binding Faces, Mode=OneWay}"
+                      >
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Rectangle Stroke="Green"
-                               Fill="Transparent"  Width="{Binding Width}" Height="{Binding Height}">                        
-                        <Rectangle.RenderTransform>                      
-                            <TranslateTransform X="{Binding XPos}" Y="{Binding YPos}"/>
+                               Fill="Transparent"  Width="{Binding Width}" Height="{Binding Height}">
+                        <Rectangle.RenderTransform>
+                            <TranslateTransform X="{Binding FacePos.XPos}" Y="{Binding FacePos.YPos}"/>
                         </Rectangle.RenderTransform>
                     </Rectangle>
                 </DataTemplate>
@@ -81,26 +110,64 @@
             </ItemsControl.ItemsPanel>
         </ItemsControl>
 
+        <Grid Grid.Row="1"
+                    Grid.Column="0" 
+                    Grid.ColumnSpan="2"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center"
+                    >
+
+            <ProgressBar Value="{Binding Progress}" Width="200" Height="20" Margin="0,0,0,3" Foreground="#FFA1FDB2">
+
+            </ProgressBar>
+
+            <TextBlock  Text="{Binding ProgressInfo}" Foreground="#FF030713"/>
+        </Grid>
 
 
 
-        <Button Content="Send Image" 
+
+        <Button Content="Enroll" 
                 HorizontalAlignment="Left" 
                 Margin="10,10,0,0" 
                 VerticalAlignment="Top" 
                 Width="105" Height="25"
-                cal:Message.Attach="[Event Click]=[Action SendImage]"
+                cal:Message.Attach="[Event Click]=[Action Enroll]"
                 />
 
-        <Button Content="Close Socket" 
+        <Button Content="Verify" 
                 HorizontalAlignment="Left" 
-                Margin="10,50,0,0" 
+                Margin="10,40,0,0" 
                 VerticalAlignment="Top" 
                 Width="105" Height="25"
-                cal:Message.Attach="[Event Click]=[Action CloseSocket]"
+                cal:Message.Attach="[Event Click]=[Action Verify]"
                 />
 
-        <!--
+        <Button Content="Identify" 
+                HorizontalAlignment="Left" 
+                Margin="10,70,0,0" 
+                VerticalAlignment="Top" 
+                Width="105" Height="25"
+                cal:Message.Attach="[Event Click]=[Action Identify]"
+                />
+
+        <Button Content="Person" 
+                HorizontalAlignment="Left" 
+                Margin="10,10,0,0" 
+                VerticalAlignment="Top" 
+                Width="105" Height="25"
+                cal:Message.Attach="[Event Click]=[Action PersonRequest]" Grid.Column="1"
+                />
+
+        <Button Content="Visitor" 
+                HorizontalAlignment="Left" 
+                Margin="10,53,0,0" 
+                VerticalAlignment="Top" 
+                Width="105" Height="25"
+                cal:Message.Attach="[Event Click]=[Action VisitorRequest]" Grid.Column="1"
+                />
+
+
         <video:VideoPlayer Grid.Row="1"
                            Grid.Column="0" 
                            Grid.ColumnSpan="2"
@@ -109,7 +176,7 @@
                            VideoPreviewWidth="Auto"
                            VideoPreviewHeight="Auto"
                            VideoSource="{Binding SelectedDevice.MonikerString, Mode=OneWay}"
-                           /> -->
+                           />
 
 
     </Grid>

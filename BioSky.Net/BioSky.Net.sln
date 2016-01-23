@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioAccessDevice", "BioAcces
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioUITest", "BioUITest\BioUITest.csproj", "{65B5DC58-F1A1-40A9-BB95-1A19690B4E13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioSocket", "BioSocket\BioSocket.csproj", "{F3A331B0-E146-4940-A37B-3A16B1D33E35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioGRPC", "BioGRPC\BioGRPC.csproj", "{CD53527F-3158-4898-8E39-12C3531CF05C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{65B5DC58-F1A1-40A9-BB95-1A19690B4E13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65B5DC58-F1A1-40A9-BB95-1A19690B4E13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65B5DC58-F1A1-40A9-BB95-1A19690B4E13}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3A331B0-E146-4940-A37B-3A16B1D33E35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3A331B0-E146-4940-A37B-3A16B1D33E35}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3A331B0-E146-4940-A37B-3A16B1D33E35}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3A331B0-E146-4940-A37B-3A16B1D33E35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD53527F-3158-4898-8E39-12C3531CF05C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD53527F-3158-4898-8E39-12C3531CF05C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD53527F-3158-4898-8E39-12C3531CF05C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD53527F-3158-4898-8E39-12C3531CF05C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

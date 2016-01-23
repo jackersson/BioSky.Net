@@ -38,6 +38,9 @@ namespace BioShell
 
       dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
       dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
+     // dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
+
+
 
       var pattern = "BioModule.dll";
 
