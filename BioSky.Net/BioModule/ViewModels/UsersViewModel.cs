@@ -208,9 +208,6 @@ namespace BioModule.ViewModels
 
     public void ShowUserPage( bool isExistingUser )
     {   
-/*
-      _selector.ShowContent( ShowableContentControl.TabControlContent
-                           , ViewModelsID.UserPage, new object[] { isExistingUser ? SelectedItem : null } );*/
       foreach(long item in SelectedItemIds)
       {
         _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users[(int)item] });
@@ -239,22 +236,6 @@ namespace BioModule.ViewModels
 
     private readonly ViewModelSelector _selector;
     private readonly IBioEngine        _bioEngine;
-
-    //************************************************************** UI *****************************************8
-    public BitmapSource AddIconSource
-    {
-      get { return ResourceLoader.AddIconSource; }
-    }
-
-    public BitmapSource RemoveIconSource
-    {
-      get { return ResourceLoader.RemoveIconSource; }
-    }
-
-    public BitmapSource DeleteIconSource
-    {
-      get { return ResourceLoader.DeleteIconSource; }
-    }
   }
 
   //**********************************************************String to Image Converter****************************************

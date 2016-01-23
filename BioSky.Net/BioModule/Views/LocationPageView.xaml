@@ -25,21 +25,28 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="56"/>
-            <RowDefinition Height="*"/>          
+            <RowDefinition Height="56"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="48"/>
 
         </Grid.RowDefinitions>
 
-        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2,0,2,0"
-                 Grid.Column="0" Grid.ColumnSpan="5"
-                 Grid.Row="0"
+        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
+                 Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0"
                  Controls:TextBoxHelper.Watermark="Location Name*"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                  Controls:TextBoxHelper.ClearTextButton="True">
         </TextBox>
 
+        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
+                 Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
+                 Controls:TextBoxHelper.Watermark="Description"
+                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                 >
+        </TextBox>
+
         <TabControl Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" 
-                    Grid.Row="1" Grid.RowSpan="1"
+                    Grid.Row="2" 
                     VerticalAlignment="Stretch" ItemsSource="{Binding Items}"               
                     SelectedItem="{Binding ActiveItem}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"                    
@@ -48,6 +55,9 @@
             <TabControl.Resources>
                 <DataTemplate DataType="{x:Type vm:LocationAccessDevicesViewModel}">
                     <local:LocationAccessDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationAccessDevicesView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:LocationCaptureDevicesViewModel}">
+                    <local:LocationCaptureDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationCaptureDevicesView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:LocationUsersNotifyViewModel}">
                     <local:LocationUsersNotifyView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationUsersNotifyView>
@@ -67,7 +77,7 @@
         </TabControl>
 
 
-        <Button Grid.Row="3" Grid.Column="1" 
+        <Button Grid.Row="4" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}" >

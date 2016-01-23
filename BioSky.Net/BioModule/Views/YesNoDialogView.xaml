@@ -8,6 +8,10 @@
                    xmlns:cal="http://www.caliburnproject.org" 
                    xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
                    mc:Ignorable="d" 
+                   WindowStartupLocation="CenterOwner"
+                   ShowMaxRestoreButton="False" 
+                   ResizeMode="NoResize"
+                   ShowCloseButton="False"
                    Width="250"
                    Height="150"
                    Title="{Binding DisplayName}"
@@ -27,6 +31,7 @@
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
+        
         <Button 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
@@ -37,14 +42,14 @@
 
         <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
-                Grid.Column="2" Grid.Row="1" >
-
+                Grid.Column="2" Grid.Row="1" 
+                cal:Message.Attach="[Event Click]=[Action Cancel]">
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
         <Label  Content="{Binding DialogMessage}" HorizontalAlignment="Left" 
-                VerticalAlignment="Top" 
-                Width="150" Grid.ColumnSpan="3"/>
+                VerticalAlignment="Top" FontSize="20"
+                Width="150" Grid.ColumnSpan="2" Height="74"/>
 
     </Grid>
 </metro:MetroWindow>

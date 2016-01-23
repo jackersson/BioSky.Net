@@ -11,15 +11,18 @@ using WPFLocalizeExtension.Engine;
 using BioModule.Resources.langs;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Windows;
+
 
 namespace BioModule.ViewModels
 {
   public class MainMenuViewModel : Screen
   {
 
-    public MainMenuViewModel(ViewModelSelector viewModelSelector)
+    public MainMenuViewModel(ViewModelSelector viewModelSelector, IWindowManager windowManager)
     {
       _viewModelSelector = viewModelSelector;
+      _windowManager     = windowManager;
       _languages = new ObservableCollection<string>();
       _languages.Add("en");
       _languages.Add("ru-RU");
@@ -78,5 +81,18 @@ namespace BioModule.ViewModels
     }
 
     //****************************************************************************************************************
+
+    
+    private IWindowManager _windowManager;
+    public void ShowAboutDialog()
+    {
+      _windowManager.ShowDialog(new AboutDialogViewModel());      
+    }
+    public void ShowLogInDialog()
+    {
+      LoginDialogViewModel loginDialog = new LoginDialogViewModel();
+      var result = _windowManager.ShowDialog(loginDialog);
+      Console.WriteLine(loginDialog.UserPassword + " " + loginDialog.UserName);
+    }
   }
 }

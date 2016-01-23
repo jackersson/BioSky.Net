@@ -7,6 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using BioModule.ViewModels;
+using System.Windows.Input;
+using BioModule.DragDrop;
+
+using System.Windows.Data;
+using System.Windows.Controls;
+using System.Windows.Media;
+
+
 
 namespace BioModule.ViewModels
 {
@@ -16,93 +25,75 @@ namespace BioModule.ViewModels
     {
       DisplayName = "Access Devices";
 
-      AccessDevices = new ObservableCollection<string>();
+      DragableWithDisabledItem disabledDragable = new DragableWithDisabledItem();
+      DragableWithRemoveItem removeDragable = new DragableWithRemoveItem();
 
-      AccessDevices.Add("COM1");
-      AccessDevices.Add("COM2");
-      AccessDevices.Add("COM3");
+      DevicesList = new DragablListBoxViewModel(disabledDragable);
+
+      DevicesInList = new DragablListBoxViewModel(removeDragable);
+      DevicesInList.ItemRemoved += DevicesList.ItemDropped;
+
+      DevicesOutList = new DragablListBoxViewModel(removeDragable);
+      DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
+
+      AccessDevice num22 = new AccessDevice() { PortName = ("COM" + 5) };
+      DragableItem num222 = new DragableItem() { ItemContext = num22, ItemEnabled = false, DisplayName = num22.PortName };
+
+      for (int i = 0; i != 20; i++)
+      {
+        AccessDevice num = new AccessDevice() { PortName = ("COM" + i) };
+        DragableItem num2 = new DragableItem() { ItemContext = num, ItemEnabled = true, DisplayName = num.PortName };
+        DevicesList.Add(num2);
+      }
+
+      DevicesList.Add(num222);
     }
 
-    public void Update( Location location)
+    private DragablListBoxViewModel _devicesList;
+    public DragablListBoxViewModel DevicesList
     {
-
-    }
-
-    public void OnMouseDown(DependencyObject e )
-    {
-      Console.WriteLine("Here");
-      DragDrop.DoDragDrop(e, SelectedItem, DragDropEffects.Move);
-    }
-
-    private ObservableCollection<string> _accessDevicesIn;
-    public ObservableCollection<string> AccessDevicesIn
-    {
-      get { return _accessDevicesIn; }
+      get { return _devicesList; }
       set
       {
-        if (_accessDevicesIn != value)
+        if (_devicesList != value)
         {
-          _accessDevicesIn = value;
-          NotifyOfPropertyChange(() => AccessDevicesIn);
+          _devicesList = value;
+          NotifyOfPropertyChange(() => DevicesList);
         }
       }
     }
 
-    private string _selectedItemIn;
-    public string SelectedItemIn
+    private DragablListBoxViewModel _devicesInList;
+    public DragablListBoxViewModel DevicesInList
     {
-      get { return _selectedItemIn; }
+      get { return _devicesInList; }
       set
       {
-        if (_selectedItemIn != value)
+        if (_devicesInList != value)
         {
-          _selectedItemIn = value;
-          NotifyOfPropertyChange(() => SelectedItemIn);
+          _devicesInList = value;
+          NotifyOfPropertyChange(() => DevicesInList);
         }
       }
     }
 
-    private ObservableCollection<string> _accessDevices;
-    public ObservableCollection<string> AccessDevices
+    private DragablListBoxViewModel _devicesOutList;
+    public DragablListBoxViewModel DevicesOutList
     {
-     get { return _accessDevices; }
+      get { return _devicesOutList; }
       set
       {
-        if ( _accessDevices != value )
+        if (_devicesOutList != value)
         {
-          _accessDevices = value;
-          NotifyOfPropertyChange(() => AccessDevices);
+          _devicesOutList = value;
+          NotifyOfPropertyChange(() => DevicesOutList);
         }
       }
     }
 
-    private string _selectedItem;
-    public string SelectedItem
+    public void Update(Location location)
     {
-      get { return _selectedItem; }
-      set
-      {
-        if (_selectedItem != value)
-        {
-          _selectedItem = value;
-          NotifyOfPropertyChange(() => SelectedItem);
-        }
-      }
-    }
 
-    private Location _currentLocation;
-    public Location CurrentLocation
-    {
-      get { return _currentLocation; }
-      set
-      {
-        if ( _currentLocation != value )
-        {
-          _currentLocation = value;
-          NotifyOfPropertyChange(() => CurrentLocation);
-        }
-      }
     }
-
-  }
+  }   
 }

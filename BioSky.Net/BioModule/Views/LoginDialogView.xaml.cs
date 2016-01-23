@@ -1,6 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,15 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for CustomDialogView.xaml
+  /// Interaction logic for LoginDialogView.xaml
   /// </summary>
-  public partial class CustomDialogView : MetroWindow
+  public partial class LoginDialogView : MetroWindow
   {
-    public CustomDialogView()
+    public LoginDialogView()
     {
       InitializeComponent();
     }

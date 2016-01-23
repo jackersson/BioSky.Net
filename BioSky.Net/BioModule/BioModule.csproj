@@ -137,6 +137,15 @@
     <Compile Include="BioDataLoader.cs" />
     <Compile Include="BioModuleImpl.cs" />
     <Compile Include="BioModuleInstaller.cs" />
+    <Compile Include="DragDrop\DragableItem.cs" />
+    <Compile Include="DragDrop\DragDrop.cs" />
+    <Compile Include="DragDrop\DragDropEventArgs.cs" />
+    <Compile Include="DragDrop\DragDropPreviewBase.cs" />
+    <Compile Include="DragDrop\DropState.cs" />
+    <Compile Include="DragDrop\IDragable.cs" />
+    <Compile Include="DragDrop\IDragablePerformer.cs" />
+    <Compile Include="DragDrop\IDragablePreview.cs" />
+    <Compile Include="DragDrop\RelayCommand.cs" />
     <Compile Include="Model\BioEngine.cs" />
     <Compile Include="Model\IBioEngine.cs" />
     <Compile Include="Model\ITrackLocationEngine.cs" />
@@ -157,18 +166,22 @@
     <Compile Include="Utils\BioConverters.cs" />
     <Compile Include="Utils\BioStatusResource.cs" />
     <Compile Include="Utils\ViewModelSelector.cs" />
-    <Compile Include="ViewModels\CustomDialogViewModel.cs" />
+    <Compile Include="ViewModels\AboutDialogViewModel.cs" />
+    <Compile Include="ViewModels\DragablListBoxViewModel.cs" />
+    <Compile Include="ViewModels\DragPreviewViewModel.cs" />
     <Compile Include="ViewModels\FlyoutControlViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\LoaderViewModel.cs" />
     <Compile Include="ViewModels\LocationAccessDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationUsersNotifyViewModel.cs" />
+    <Compile Include="ViewModels\LoginDialogViewModel.cs" />
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\UserPhotoViewModel.cs" />
     <Compile Include="ViewModels\YesNoDialogViewModel.cs" />
-    <Compile Include="Views\CustomDialogView.xaml.cs">
-      <DependentUpon>CustomDialogView.xaml</DependentUpon>
+    <Compile Include="Views\AboutDialogView.xaml.cs">
+      <DependentUpon>AboutDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ToolBarViewModel.cs" />
     <Compile Include="ViewModels\UserInformationViewModel.cs" />
@@ -177,6 +190,12 @@
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
     <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
     <Compile Include="ViewModels\UserPageViewModel.cs" />
+    <Compile Include="Views\DragablListBoxView.xaml.cs">
+      <DependentUpon>DragablListBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DragPreviewView.xaml.cs">
+      <DependentUpon>DragPreviewView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
     </Compile>
@@ -194,6 +213,9 @@
     </Compile>
     <Compile Include="Views\LocationUsersNotifyView.xaml.cs">
       <DependentUpon>LocationUsersNotifyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginDialogView.xaml.cs">
+      <DependentUpon>LoginDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginInformationView.xaml.cs">
       <DependentUpon>LoginInformationView.xaml</DependentUpon>
@@ -228,6 +250,9 @@
     <Compile Include="Views\TabView.xaml.cs">
       <DependentUpon>TabView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserPhotoView.xaml.cs">
+      <DependentUpon>UserPhotoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UsersView.xaml.cs">
       <DependentUpon>UsersView.xaml</DependentUpon>
     </Compile>
@@ -242,7 +267,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\CustomDialogView.xaml">
+    <Page Include="Views\AboutDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DragablListBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DragPreviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -267,6 +300,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LocationUsersNotifyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoginDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -307,6 +344,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TabView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserPhotoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

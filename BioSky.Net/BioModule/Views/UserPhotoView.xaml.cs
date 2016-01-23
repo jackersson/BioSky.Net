@@ -16,15 +16,14 @@ using System.Windows.Shapes;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for UserPageView.xaml
+  /// Interaction logic for UserPhotoView.xaml
   /// </summary>
-  public partial class UserPageView : UserControl
+  public partial class UserPhotoView : UserControl
   {
-    public UserPageView()
+    public UserPhotoView()
     {
       InitializeComponent();
     }
-
-
+     
   }
 }

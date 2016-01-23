@@ -13,6 +13,7 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"             
              mc:Ignorable="d" 
              xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              x:Name="UsersModel"
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:UsersViewModel, IsDesignTimeCreatable=False}"
@@ -26,6 +27,7 @@
             </ResourceDictionary.MergedDictionaries>
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -109,14 +111,14 @@
                  VerticalAlignment="Stretch" 
                  ToolTip="Add User"
                  cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]">
-            <Image Source="{Binding AddIconSource}" Width="32" Height="32" />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
         </Button>
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
                 IsEnabled="{Binding IsDeleteButtonEnabled}"
                 ToolTip="Delete"
                 >
-            <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>
 
         <TextBox x:Name="SearchBox" Margin="0, 5, 0, 5"  Grid.Column="0"  Grid.Row="0"   

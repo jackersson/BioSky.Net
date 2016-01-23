@@ -16,11 +16,15 @@ using System.Globalization;
 using System.Threading;
 using BioModule.ResourcesLoader;
 
+using Caliburn.Micro;
+
+
 namespace BioModule
 {
   class BioModuleImpl : IBioModule
   {
     private readonly IBioShell              _shell                 ;
+    private readonly IWindsorContainer      _container             ;
     private readonly TabViewModel           _tabControlViewModel   ;
     private readonly FlyoutControlViewModel _flyoutControlViewModel;
     private readonly ViewModelSelector      _viewModelSelector     ;
@@ -29,12 +33,14 @@ namespace BioModule
 
     public BioModuleImpl( IBioShell shell                   
                         , IBioEngine bioEngine
+                        , IWindsorContainer container
                         , TabViewModel tabControlViewModel
                         , FlyoutControlViewModel flyoutControlViewModel
                         , ViewModelSelector viewModelSelector )
     {
       _shell = shell;
       _bioEngine = bioEngine;
+      _container = container;
 
       _flyoutControlViewModel = flyoutControlViewModel;
       _viewModelSelector      = viewModelSelector;      
@@ -51,7 +57,7 @@ namespace BioModule
       _shell.FlyoutControl = _flyoutControlViewModel;
 
       _shell.ToolBar       = new ToolBarViewModel(_viewModelSelector);
-      _shell.MainMenu      = new MainMenuViewModel(_viewModelSelector);      
+      _shell.MainMenu = new MainMenuViewModel(_viewModelSelector, _container.Resolve<IWindowManager>());      
     }
   }
 }

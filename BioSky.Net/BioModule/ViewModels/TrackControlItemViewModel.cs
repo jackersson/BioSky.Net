@@ -142,11 +142,6 @@ namespace BioModule.ViewModels
     {
       get { return UserVerified ? ResourceLoader.VerificationIconSource 
                                 : ResourceLoader.VerificationFailedIconSource; }
-    }
-
-    public BitmapSource CardIconSource
-    {
-      get { return ResourceLoader.CardIconSource; }
-    }       
+    }      
   }  
 }

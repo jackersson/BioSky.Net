@@ -45,31 +45,6 @@ namespace BioModule.ViewModels
       _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.TrackPage);
     }
 
-    public BitmapSource AddPersonIconSource
-    {
-      get { return ResourceLoader.AddUserIconSource; }
-    }
-
-    public BitmapSource AddLocationIconSource
-    {
-      get { return ResourceLoader.AddLocationIconSource; }
-    }
-
-    public BitmapSource JournalListIconSource
-    {
-      get { return ResourceLoader.JournalListIconSource; }
-    }
-
-    public BitmapSource UsersListIconSource
-    {
-      get { return ResourceLoader.UsersListIconSource; }
-    }
-
-    public BitmapSource TrackingIconSource
-    {
-      get { return ResourceLoader.TrackingIconSource; }
-    }
-
     private readonly ViewModelSelector _viewModelSelector;
   }
 }

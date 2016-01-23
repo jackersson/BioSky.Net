@@ -10,6 +10,7 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
@@ -25,6 +26,7 @@
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
             <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -113,7 +115,7 @@
         <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
                 ToolTip="Delete"
                 >
-            <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>
 
         <TextBox  Margin="0, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   

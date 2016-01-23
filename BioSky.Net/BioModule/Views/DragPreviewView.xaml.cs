@@ -13,18 +13,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for UserPageView.xaml
+  /// Interaction logic for DragPreview.xaml
   /// </summary>
-  public partial class UserPageView : UserControl
+  public partial class DragPreviewView : UserControl
   {
-    public UserPageView()
+    public DragPreviewView()
     {
       InitializeComponent();
     }
-
-
   }
 }

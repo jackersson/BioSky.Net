@@ -14,13 +14,24 @@ namespace BioModule.ViewModels
   {
     public YesNoDialogViewModel( string title = "Custom Dialog", string dialogMessage = "Are you sure?" )
     {
-      Update(title, dialogMessage);
+      Update(title, dialogMessage);      
     }
 
     public void Update(string title = "Custom Dialog", string dialogMessage = "Are you sure?")
     {
       DisplayName = title;
       DialogMessage = dialogMessage;
+    }
+
+    public void Apply()
+    {
+      DialogResult = true;
+      this.TryClose(DialogResult);
+    }
+    public void Cancel()
+    {
+      DialogResult = false;
+      this.TryClose(DialogResult);
     }
 
     private string _dialogMessage;
@@ -35,6 +46,20 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => DialogMessage);
         }
       }
-    }    
+    }
+
+    private bool _dialogResult;
+    public bool DialogResult
+    {
+      get { return _dialogResult; }
+      set
+      {
+        if (_dialogResult != value)
+        {
+          _dialogResult = value;
+          NotifyOfPropertyChange(() => DialogResult);
+        }
+      }
+    }
   }
 }

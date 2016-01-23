@@ -12,19 +12,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for UserPageView.xaml
+  /// Interaction logic for AboutDialog.xaml
   /// </summary>
-  public partial class UserPageView : UserControl
+  public partial class AboutDialogView : MetroWindow
   {
-    public UserPageView()
+    public AboutDialogView()
     {
       InitializeComponent();
     }
-
-
   }
 }

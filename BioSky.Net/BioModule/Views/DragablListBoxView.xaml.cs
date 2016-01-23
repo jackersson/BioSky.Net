@@ -16,15 +16,18 @@ using System.Windows.Shapes;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for UserPageView.xaml
+  /// Interaction logic for DragablListBoxView.xaml
   /// </summary>
-  public partial class UserPageView : UserControl
+  public partial class DragablListBoxView : UserControl
   {
-    public UserPageView()
+    public DragablListBoxView()
     {
       InitializeComponent();
     }
 
+    private void MenuItem_Click(object sender, RoutedEventArgs e)
+    {
 
+    }
   }
 }

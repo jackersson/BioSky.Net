@@ -4,59 +4,49 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org" 
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:dd="clr-namespace:BioModule.DragDrop" 
              xmlns:local="clr-namespace:BioModule.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="300">
-    <Grid>
+             d:DesignHeight="300" d:DesignWidth="300">
 
-        <ScrollViewer Grid.RowSpan="3">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:DragPreviewView x:Key="DragPreviewControl" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Canvas  ZIndex="5" x:Name="OverlayCanvas"></Canvas>
+        <ScrollViewer>
             <Grid>
-                <Grid.ColumnDefinitions>
-                   
+                <Grid.ColumnDefinitions>                   
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="10"/>
                     <ColumnDefinition Width="*"/>
-
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32"/>
-                    <RowDefinition Height="*"/>
-
+                    <RowDefinition Height="288"/>
                 </Grid.RowDefinitions>
 
-                <ListBox Grid.Column="0"   Style="{StaticResource VirtualisedMetroListBox}"                         
-                         BorderThickness="1"
-                         VerticalAlignment="Stretch"
-                         HorizontalAlignment="Stretch"
-                         ItemsSource="{Binding Path=Email}"                         
-                         SelectedIndex="0" 
-                         AllowDrop="True" Grid.Row="1" >
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewDrop">
-                            <cal:ActionMessage MethodName="OnDragDropEmail">
-                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
-                            </cal:ActionMessage>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </ListBox>
+                <local:DragablListBoxView x:Name="NotifyList"  
+                         Grid.Column="0" Grid.Row="1" 
+                         DataContext="{Binding UsersNotifyList}"
+                         dd:DragDrop.IsDropTarget="True"
+                         BorderThickness="1"                                                    
+                         dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}"
+                         dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}"
+                    >
+                </local:DragablListBoxView>    
 
-                <Label Grid.Row="1" Grid.Column="3" Content="Users" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-
-
-                <ListBox Grid.Column="3" Style="{StaticResource VirtualisedMetroListBox}"                         
-                         BorderThickness="1"
-                         Margin="1"
-                         SelectedIndex="0" 
-                         ItemsSource="{Binding Path=Users}" Grid.Row="1">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseDown">
-                            <cal:ActionMessage MethodName="OnMouseDown">
-                                <cal:Parameter Value="$eventArgs"></cal:Parameter>
-                            </cal:ActionMessage>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </ListBox>
+                <local:DragablListBoxView  
+                         Grid.Column="3" Grid.Row="1"
+                         DataContext="{Binding UsersList}"
+                         BorderThickness="1"                        
+                         dd:DragDrop.DropTargets="{Binding ElementName=NotifyList}"
+                         dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}"
+                         dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">              
+                </local:DragablListBoxView>
                 
                 <Label  Content="Users to Notify" Grid.Column="0" Grid.Row="0"
                         HorizontalAlignment="Left" VerticalAlignment="Bottom"/>

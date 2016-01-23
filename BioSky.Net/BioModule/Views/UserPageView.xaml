@@ -52,6 +52,9 @@
                 <DataTemplate DataType="{x:Type vm:UserContactlessCardViewModel}">
                     <local:UserContactlessCardView x:Name="ActiveItem"></local:UserContactlessCardView>
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:UserPhotoViewModel}">
+                    <local:UserPhotoView x:Name="ActiveItem"></local:UserPhotoView>
+                </DataTemplate>
             </TabControl.Resources> 
             <TabControl.ItemTemplate>
                 <DataTemplate>
@@ -70,16 +73,17 @@
         <Button  Grid.Row="5" Grid.Column="2" 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
+                 ToolTip="Save"
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
         </Button>
 
-        <Button Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button ToolTip="Cancel" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
-        <Button Grid.Row="5" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button ToolTip="Delete User" Grid.Row="5" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" />
         </Button>
        

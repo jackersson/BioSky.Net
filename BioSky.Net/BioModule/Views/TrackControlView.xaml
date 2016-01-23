@@ -10,7 +10,8 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:utils="clr-namespace:BioModule.Utils"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"  
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              mc:Ignorable="d" 
              Name="Test"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -20,6 +21,7 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
@@ -52,7 +54,7 @@
     
 
         <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">
-            <Image Source="{Binding AddIconSource}" Width="32" Height="32" />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <cal:ActionMessage MethodName="AddMenu" />
@@ -63,13 +65,13 @@
         <Button Style="{DynamicResource MetroCircleButtonStyle}"
                 Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                 Grid.Column="4">
-            <Image Source="{Binding RemoveIconSource}" Width="32" Height="32"  />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RemoveIconSource}" Width="32" Height="32"  />
         </Button>
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Column="5" Grid.Row="0" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch">
-            <Image Source="{Binding DeleteIconSource}" Width="32" Height="32"  />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>
         
         <ComboBox x:Name="LocationItems"

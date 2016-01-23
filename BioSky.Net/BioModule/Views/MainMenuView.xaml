@@ -18,14 +18,10 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.Column="0" 
                   Margin="5,5,0,5"
-                  VerticalAlignment="Stretch"
+                  VerticalAlignment="Stretch"            
                   HorizontalAlignment="Left">
             <MenuItem Header="File">
                 <MenuItem Header="Add">
@@ -33,13 +29,15 @@
                     <MenuItem Header="Location" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"/>
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Log In"></MenuItem>
-                <MenuItem Header="Log Out"></MenuItem>
+                <MenuItem Header="Log In"
+                          cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">                    
+                </MenuItem>
+                <MenuItem Header="Log Out">                    
+                </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit"/>
             </MenuItem>
-            <MenuItem Header="Edit"
-                          />
+            <MenuItem Header="Edit"/>
             <MenuItem Header="View" 
                           >
                 <MenuItem Header="Settings" 
@@ -54,15 +52,6 @@
             <MenuItem Header="Help">
                 <MenuItem Header="About"
                           cal:Message.Attach="[Event Click] = [Action ShowAboutDialog]"/>
-                <MenuItem Header="AreYouSure"
-                          cal:Message.Attach="[Event Click] = [Action ShowAreYouSure]"/>
-                <MenuItem Header="CustomDialog"
-                          cal:Message.Attach="[Event Click] = [Action ShowCustomDialog]"/>
-                <MenuItem Header="Password"
-                          cal:Message.Attach="[Event Click] = [Action ShowLoginDialogPasswordPreview]"/>
-                <MenuItem Header="ProgressDialog"
-                          cal:Message.Attach="[Event Click] = [Action ShowProgressDialog]"/>
-
             </MenuItem>
         </Menu>
        
