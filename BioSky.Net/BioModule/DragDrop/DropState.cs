@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Caliburn.Micro;
-
-namespace BioModule.ViewModels
+namespace BioModule.DragDrop
 {
-  public class CustomDialogViewModel : PropertyChangedBase
-  {
-  }
+    public enum DropState
+    {
+        CanDrop,
+        CannotDrop
+    }
 }

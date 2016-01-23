@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BioModule.ViewModels"
-              xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:cal="http://www.caliburnproject.org"             
+             xmlns:cal="http://www.caliburnproject.org"   
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -19,6 +20,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -45,7 +47,7 @@
 
         <Image HorizontalAlignment="Right" Height="24" Grid.Row="2" 
                VerticalAlignment="Top" Width="24" 
-               Source="{Binding CardIconSource}" 
+               Source="{Binding Source={StaticResource ResourceLoader}, Path=CardIconSource}" 
                Visibility="{Binding CardDetectedIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                Grid.Column="4" />
 
@@ -57,7 +59,7 @@
 
         <ContentControl Grid.Column="0" Grid.Row="1" 
                         Grid.ColumnSpan="6" Margin="0,2,5,0"
-                        cal:View.Context="ShortedVisitors"                      
+                        cal:View.Context="Shorted"                      
                         cal:View.Model="{Binding Notifications}">
         </ContentControl>
 

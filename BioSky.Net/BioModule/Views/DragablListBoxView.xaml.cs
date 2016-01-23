@@ -1,6 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,13 +16,18 @@ using System.Windows.Shapes;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for CustomDialogView.xaml
+  /// Interaction logic for DragablListBoxView.xaml
   /// </summary>
-  public partial class CustomDialogView : MetroWindow
+  public partial class DragablListBoxView : UserControl
   {
-    public CustomDialogView()
+    public DragablListBoxView()
     {
       InitializeComponent();
+    }
+
+    private void MenuItem_Click(object sender, RoutedEventArgs e)
+    {
+
     }
   }
 }

@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 
+
 namespace BioModule.ViewModels
 {
   enum UserPageMode
@@ -33,6 +34,7 @@ namespace BioModule.ViewModels
 
       Items.Add(new UserInformationViewModel    ());
       Items.Add(new UserContactlessCardViewModel(_bioEngine));
+      Items.Add(new UserPhotoViewModel(_bioEngine));
      
       ActiveItem = Items[0];
       OpenTab();
@@ -98,22 +100,31 @@ namespace BioModule.ViewModels
     }
 
     public void Apply()
-    {     
-      if (_userPageMode == UserPageMode.NewUser)
-        _bioEngine.Database().AddUser(_user);
-      else
-        _bioEngine.Database().UpdateUser(_user);
-
-      MessageBox.Show(_userPageMode == UserPageMode.NewUser
-                      ? "User Successfully Added"
-                      : "Successfully updated");
-
-      foreach (IScreen scrn in Items)
+    {      
+      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      //Console.WriteLine(result);
+      //var result = _windowManager.ShowDialog(new AboutDialogViewModel());
+      //var result = _windowManager.ShowDialog(new LoginDialogViewModel());
+      
+/*
+      if (result == true)
       {
-        MethodInfo method = scrn.GetType().GetMethod("Apply");
-        if (method != null)
-          method.Invoke(scrn, null);
-      }      
+        if (_userPageMode == UserPageMode.NewUser)
+          _bioEngine.Database().AddUser(_user);
+        else
+          _bioEngine.Database().UpdateUser(_user);
+
+        MessageBox.Show(_userPageMode == UserPageMode.NewUser
+                        ? "User Successfully Added"
+                        : "Successfully updated");
+
+        foreach (IScreen scrn in Items)
+        {
+          MethodInfo method = scrn.GetType().GetMethod("Apply");
+          if (method != null)
+            method.Invoke(scrn, null);
+        } 
+      } */    
     }
 
 

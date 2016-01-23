@@ -5,12 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:vm="clr-namespace:BioModule.ViewModels" 
-             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"              
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"    
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="300">
-    <UserControl.DataContext>
-        <vm:LoaderViewModel></vm:LoaderViewModel>
-    </UserControl.DataContext>
+             d:DesignHeight="200" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance vm:LoaderViewModel, IsDesignTimeCreatable=False}"
+             >
+    
+    <UserControl.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -23,7 +28,8 @@
             <RowDefinition Height="20*"/>
             <RowDefinition Height="20*"/>
         </Grid.RowDefinitions>
-        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding LoaderIconSource}" Grid.RowSpan="5" Grid.ColumnSpan="2"></Image>
+        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+               Source="{Binding Source={StaticResource ResourceLoader}, Path=LoaderIconSource}" Grid.RowSpan="5" Grid.ColumnSpan="2"></Image>
         <TextBlock Text="Loading. Please Wait ..."  Foreground="LightSkyBlue" Grid.Column="0" Grid.Row="1"></TextBlock>
         <TextBlock Text="...BioShellViewModel.cs"  Foreground="LightSkyBlue" Grid.Column="0" Grid.Row="2"></TextBlock>
         <Controls:MetroProgressBar Value="{Binding ElementName=horizSlider, Path=Value}"

@@ -13,9 +13,6 @@ namespace BioModule.ViewModels
 {
   public class LoaderViewModel : PropertyChangedBase
   {
-    public BitmapSource LoaderIconSource
-    {
-      get { return ResourceLoader.LoaderIconSource; }
-    }
+
   }
 }

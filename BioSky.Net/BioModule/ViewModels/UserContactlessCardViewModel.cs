@@ -280,33 +280,6 @@ namespace BioModule.ViewModels
       throw new NotImplementedException();
     }
 
-    //********************************* UI ******************************************
-
-    public BitmapSource AddIconSource
-    {
-      get { return ResourceLoader.AddIconSource; }
-    }
-
-    public BitmapSource RemoveIconSource
-    {
-      get { return ResourceLoader.RemoveIconSource; }
-    }
-
-    public BitmapSource DeleteIconSource
-    {
-      get { return ResourceLoader.DeleteIconSource; }
-    }
-
-    public BitmapSource OkIconSource
-    {
-      get { return ResourceLoader.OkIconSource; }
-    }
-
-    public BitmapSource ErrorIconSource
-    {
-      get { return ResourceLoader.ErrorIconSource; }
-    }
-
     private User _user;
     private readonly IBioEngine _bioEngine;
   }

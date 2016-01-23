@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="BioModule.Views.DragablListBoxView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:dd="clr-namespace:BioModule.DragDrop" 
+             xmlns:utils="clr-namespace:BioModule.Utils"             
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d"              
+             d:DataContext="{d:DesignInstance vm:DragablListBoxViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="300" d:DesignWidth="300">    
+    <Grid>
+        <DataGrid x:Name="Devices" Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Margin="1" BorderThickness="1"
+                         AutoGenerateColumns="False"                       
+                         SelectedIndex="0"                           
+                         ItemsSource="{Binding DragableItems}"
+                         SelectedItem="{Binding SelectedItem, Mode=TwoWay}"                     
+                         ScrollViewer.CanContentScroll="False"
+                         SelectionMode="Single"
+                         HeadersVisibility="None"
+                         AllowDrop="True"
+                  
+                         DataContext="{Binding Mode=OneWay}"
+                         cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]" CanUserAddRows="False" CanUserDeleteRows="False"
+                    
+                       >
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Binding="{Binding DisplayName}"/>
+            </DataGrid.Columns>
+
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Setters>
+                        <Setter Property="dd:DragDrop.IsDragSource" Value="True"/>
+                        <Setter Property="IsEnabled" Value="{Binding ItemEnabled}" />
+                        <Setter Property="IsHitTestVisible" Value="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled}"/>
+                    </Style.Setters>
+                </Style>
+            </DataGrid.RowStyle>
+            
+            <DataGrid.ContextMenu>
+                <ContextMenu IsEnabled="True">
+                    <MenuItem Header="Remove"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                    
+                                          cal:Message.Attach="[Event Click] = [Action OnRemove()]"
+                                          
+                                          />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+
+
+           <!-- <DataGrid.ItemContainerStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Setter Property="dd:DragDrop.IsDragSource" Value="True"/>
+                    <Setter Property="IsEnabled" Value="{Binding ItemEnabled}"/>
+                </Style>
+            </DataGrid.ItemContainerStyle>-->
+        </DataGrid>
+
+        <!--
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding DisplayName}" IsEnabled="False" IsHitTestVisible="False"
+                               
+                               >
+                        <TextBlock.ContextMenu>
+                            <ContextMenu IsEnabled="True">
+                                <MenuItem Header="Remove"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}" 
+                                          cal:Action.Target="{Binding DataContext, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"                                         
+                                          cal:Message.Attach="[Event Click] = [Action OnRemove()]"
+                                          
+                                          />
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            
+            
+            <DataGrid.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="dd:DragDrop.IsDragSource" Value="True"/>
+                    <Setter Property="IsEnabled" Value="{Binding ItemEnabled}"/>
+                    <Setter Property="Content" Value="{Binding DisplayName}"/>
+                    <EventSetter Event="MouseRightButtonDown" Handler="OnMouseRightButtonDown"></EventSetter>
+                </Style>
+            </DataGrid.ItemContainerStyle>-->
+    </Grid>
+</UserControl>
+
+       
+                
+

@@ -4,9 +4,54 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:dd="clr-namespace:BioModule.DragDrop"              
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:DragPreviewView x:Key="DragPreviewControl" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid>
-            
+        <Canvas  ZIndex="5" x:Name="OverlayCanvas"></Canvas>
+
+        <ScrollViewer CanContentScroll="True" 
+                      VerticalScrollBarVisibility="Visible"
+                      HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="288"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="In" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                <Label Grid.Row="0" Grid.Column="2" Content="All" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+
+                <local:DragablListBoxView 
+                    DataContext="{Binding DevicesList}" Grid.Row="1"
+                    Grid.Column="2" Margin="1"                    
+                    dd:DragDrop.DropTargets="{Binding ElementName=DevicesIn}"
+                    dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}"
+                    dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">
+                </local:DragablListBoxView>
+
+                <local:DragablListBoxView 
+                    x:Name="DevicesIn" Grid.Row="1" Margin="1" VerticalAlignment="Stretch"
+                   DataContext="{Binding DevicesInList}"
+                   dd:DragDrop.IsDropTarget="true"                       
+                   dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}" 
+                   dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">
+                </local:DragablListBoxView>
+                
+            </Grid>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

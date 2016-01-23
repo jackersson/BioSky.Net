@@ -12,15 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
-namespace BioModule.Views.Visitors
+namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for ShortedVisitors.xaml
+  /// Interaction logic for LoginDialogView.xaml
   /// </summary>
-  public partial class ShortedVisitors : UserControl
+  public partial class LoginDialogView : MetroWindow
   {
-    public ShortedVisitors()
+    public LoginDialogView()
     {
       InitializeComponent();
     }

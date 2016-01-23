@@ -13,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BioModule.Views
+namespace BioModule.Views.Visitors
 {
   /// <summary>
-  /// Interaction logic for UserPageView.xaml
+  /// Interaction logic for ShortedVisitors.xaml
   /// </summary>
-  public partial class UserPageView : UserControl
+  public partial class Shorted : UserControl
   {
-    public UserPageView()
+    public Shorted()
     {
       InitializeComponent();
     }
-
-
   }
 }

@@ -17,10 +17,5 @@ namespace BioModule.ViewModels
     {
 
     }
-
-    public BitmapSource LoginImageSource
-    {
-      get { return ResourceLoader.UserDefaultImageIconSource; }
-    }
   }
 }

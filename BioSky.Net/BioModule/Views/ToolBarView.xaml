@@ -6,36 +6,40 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"      
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"   
-             
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"             
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="100"
              d:DataContext="{d:DesignInstance vm:ToolBarViewModel, IsDesignTimeCreatable=False}">
 
+    <UserControl.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+    
     <Grid>
         <ToolBarTray Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left"  VerticalAlignment="Top">
             <ToolBar>
                 <Separator></Separator>
                 <Button ToolTip="AddPerson" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
-                    <Image Source="{Binding AddPersonIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
                 <Button ToolTip="Add new Location" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]">
-                    <Image Source="{Binding AddLocationIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}" Width="32" Height="32"  />
                 </Button>                
                 <Separator></Separator>
                 <Button ToolTip="Visitors" cal:Message.Attach="[Event Click]=[Action OpenTabVisitors]">
-                    <Image Source="{Binding JournalListIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=JournalListIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
                 <Button ToolTip="Users" cal:Message.Attach="[Event Click]=[Action OpenTabUsers]">
-                    <Image Source="{Binding UsersListIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UsersListIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
                 <Button ToolTip="Tracking" cal:Message.Attach="[Event Click]=[Action OpenTabTrack]">
-                    <Image Source="{Binding TrackingIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=TrackingIconSource}" Width="32" Height="32"  />
                 </Button>
             </ToolBar>
         </ToolBarTray>

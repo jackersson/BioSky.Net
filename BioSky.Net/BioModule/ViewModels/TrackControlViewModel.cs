@@ -128,22 +128,6 @@ namespace BioModule.ViewModels
 
       SelectedItems = caption;
     }
-    
-    //**************************************** UI *******************************************
-    public BitmapSource AddIconSource
-    {
-      get { return ResourceLoader.AddIconSource; }
-    }
-
-    public BitmapSource RemoveIconSource
-    {
-      get { return ResourceLoader.RemoveIconSource; }
-    }
-
-    public BitmapSource DeleteIconSource
-    {
-      get { return ResourceLoader.DeleteIconSource; }
-    }
   }
   
   public class ComboBoxItemTemplateSelector : DataTemplateSelector

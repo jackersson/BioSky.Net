@@ -5,11 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"     
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:vm="clr-namespace:BioModule.ViewModels"             
+             xmlns:vm="clr-namespace:BioModule.ViewModels"    
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="200"
              >
-             
+
+    <UserControl.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="73"/>
@@ -20,6 +25,6 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Height="48" Text="Sign In" TextDecorations="Underline" TextAlignment="Center">            
         </TextBlock>
-        <Image Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="48" Height="48" Source="{Binding LoginImageSource}"></Image>
+        <Image Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="48" Height="48" Source="{Binding Source={StaticResource ResourceLoader}, Path=UserDefaultImageIconSource}"></Image>
     </Grid>
 </UserControl>

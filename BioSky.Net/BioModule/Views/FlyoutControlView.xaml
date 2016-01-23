@@ -10,11 +10,12 @@
                          d:DesignHeight="300" d:DesignWidth="300"
                          d:DataContext="{d:DesignInstance vm:FlyoutControlViewModel, IsDesignTimeCreatable=False}">
    
-      <Controls:FlyoutsControl.Resources>
-        <DataTemplate DataType="{x:Type vm:LocationPageViewModel}">
+      <Controls:FlyoutsControl.Resources>          
+        <DataTemplate DataType="{x:Type vm:LocationPageViewModel}">            
             <local:LocationPageView x:Name="CurrentFlyoutPage"></local:LocationPageView>
          </DataTemplate>
-      </Controls:FlyoutsControl.Resources>
+      
+    </Controls:FlyoutsControl.Resources>
     
       <Controls:Flyout HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                        Header="{Binding ActiveItem.DisplayName}" Theme="Dark" Position="Right"

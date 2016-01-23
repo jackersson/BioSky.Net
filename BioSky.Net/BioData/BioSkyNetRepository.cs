@@ -26,7 +26,7 @@ namespace BioData
 
       _entityFrameworkContextFactory = entityFrameworkContextFactory;
 
-      InitializeContext();
+      //InitializeContext();
       
     }
 

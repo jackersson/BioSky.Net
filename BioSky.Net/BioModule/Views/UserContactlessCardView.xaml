@@ -14,7 +14,8 @@
              >
 
     <UserControl.Resources>        
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>           
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <vm:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
     </UserControl.Resources>
 
     <Grid>
@@ -37,12 +38,13 @@
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Row="1" Grid.RowSpan="3"
                 IsEnabled="{Binding AnyCardDetected}"
+                ToolTip="Add Card"
                 cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Height="32" Width="32" />
         </Button>
 
-        <Button Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" />
         </Button>
 
