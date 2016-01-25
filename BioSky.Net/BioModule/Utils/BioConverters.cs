@@ -10,10 +10,13 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
+using static BioFaceService.Person.Types;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace BioModule.Utils
 {
-    public class ConvertPhotoPathToImage : IValueConverter
+  public class ConvertPhotoPathToImage : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
@@ -35,38 +38,25 @@ namespace BioModule.Utils
     }
   }
 
-  public class StringToGenderConverter : IValueConverter
-  {
-    public object Convert(object value, Type targetType,
-        object parameter, CultureInfo culture)
-    {
-      Gender gender;
-      Enum.TryParse(value.ToString(), out gender);
-      return gender;
-    }
+  public class StringToGenderConverter : StringToEnumConverter<Gender>
+  { }
 
+  public class StringToRightsConverter : StringToEnumConverter<Rights>
+  { }
+
+  public class StringToEnumConverter<TEnum> : IValueConverter
+  {
+    public object Convert( object value, Type targetType,
+                           object parameter, CultureInfo culture)
+    {
+      return Enum.Parse(typeof(TEnum), value.ToString());
+    }    
     public object ConvertBack(object value, Type targetType,
         object parameter, CultureInfo culture)
     {
-      return Enum.GetName(value.GetType(), value);
+      return Enum.Parse(targetType, value.ToString());
     }
-  }
-
-  public class StringToRightsConverter : IValueConverter
-  {
-    public object Convert(object value, Type targetType,
-        object parameter, CultureInfo culture)
-    {
-      Rights right;
-      Enum.TryParse(value.ToString(), out right);
-      return right;
-    }
-
-    public object ConvertBack(object value, Type targetType,
-            object parameter, CultureInfo culture)
-    {
-      return Enum.GetName(value.GetType(), value); ;
-    }
+    
   }
 
 
@@ -97,6 +87,34 @@ namespace BioModule.Utils
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+
+  public class ConvertToFormatedNumber : IValueConverter
+  {
+    public object Convert(object values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      var tb = new TextBlock();
+
+      tb.Inlines.Add(new Run() { Text = (string)values, Background = System.Windows.Media.Brushes.Yellow });
+
+      int chunkSize = 4;
+      string number = (string)(values);
+      string result = "";
+      int stringLength = number.Length;
+      for (int i = 0; i < stringLength; i += chunkSize)
+      {
+        if (i + chunkSize > stringLength) chunkSize = stringLength - i;
+
+        result += number.Substring(i, chunkSize) + " ";
+      }
+
+      return result;
+    }
+
+    public object ConvertBack(object value, Type targetTypes, object parameter, System.Globalization.CultureInfo culture)
     {
       throw new NotImplementedException();
     }

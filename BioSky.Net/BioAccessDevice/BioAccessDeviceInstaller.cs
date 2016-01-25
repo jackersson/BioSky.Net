@@ -20,20 +20,14 @@ namespace BioAccessDevice
   {
     public void Install(IWindsorContainer container, IConfigurationStore store)
     {
-
-      //return;
-
-    
-      container.Register(Component.For<IAccessDeviceEngine>()
-               .ImplementedBy<AccessDevicesEngine>() );
-
-     
-
-      //container.Register(Component.For<IBioModule>().ImplementedBy<BioDataImpl>());
-      //container.Resolve<EntityFrameworkConnectionBuilder>();
-
-      //System.Console.WriteLine("et");
-
+      try
+      {
+        container.Register(Component.For<IAccessDeviceEngine>().ImplementedBy<AccessDevicesEngine>());
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("BioAccessDevice.dll" + ex.Message);
+      }
     }
   }
 }

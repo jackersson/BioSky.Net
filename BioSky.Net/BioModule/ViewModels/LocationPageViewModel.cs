@@ -14,12 +14,12 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using BioData;
+using BioFaceService;
 
 namespace BioModule.ViewModels
 {
   public class LocationPageViewModel : Conductor<IScreen>.Collection.OneActive
-  {
-       
+  {       
     public LocationPageViewModel()
     {
       Items.Add(new LocationAccessDevicesViewModel ());

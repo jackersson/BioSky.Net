@@ -98,7 +98,7 @@
             </DataGrid.Columns>
 
             <DataGrid.ContextMenu >
-                <ContextMenu x:Name="ContextMenu" IsEnabled="True" >
+                <ContextMenu x:Name="VisitorContextMenu" IsEnabled="True" >
                     <MenuItem Header="Open in New Tab"  
                               IsEnabled="{Binding CanOpenInNewTab, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage]"

@@ -8,17 +8,16 @@ using BioData;
 using BioContracts;
 using BioAccessDevice.Interfaces;
 
-namespace BioModule.Model
+namespace BioEngine
 {
-  public class BioEngine : IBioEngine
+  public class BioSkyEngine : IBioEngine
   {
-    public BioEngine( IBioSkyNetRepository data
-                    , IAccessDeviceEngine  accessDeviceEngine
-                    , ITrackLocationEngine trackLocationEngine )
-    {
-      _data                = data;
-      _accessDeviceEngine  = accessDeviceEngine;
-      _trackLocationEngine = trackLocationEngine;
+    public BioSkyEngine( IProcessorLocator locator )      
+    {      
+      _data                = locator.GetProcessor<IBioSkyNetRepository>();
+      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
+      _trackLocationEngine = locator.GetProcessor<ITrackLocationEngine>();
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
     }
 
     public IBioSkyNetRepository Database()
@@ -36,7 +35,13 @@ namespace BioModule.Model
       return _trackLocationEngine;
     }
 
+    public ICaptureDeviceEngine CaptureDeviceEngine()
+    {
+      return _captureDeviceEngine;
+    }
+    
     private readonly IBioSkyNetRepository _data              ;
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IAccessDeviceEngine  _accessDeviceEngine;
     private readonly ITrackLocationEngine _trackLocationEngine;
   }

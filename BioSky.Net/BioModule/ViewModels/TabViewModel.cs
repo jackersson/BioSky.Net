@@ -13,40 +13,35 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using System.Reflection;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
   public class TabViewModel : Conductor<IScreen>.Collection.OneActive, IShowableContent
   {       
-    public TabViewModel( IWindsorContainer container, IBioShell shell)
+    public TabViewModel(IProcessorLocator locator )
     {
-      _container  = container;
-    }
+      _locator = locator;
 
-    public void Init()
-    {    
-
-    }
-
-    private object InvokeMethod ( Type objectType, string methodName, object source, object[] args = null )
-    {
-      MethodInfo method = objectType.GetMethod(methodName);
-      if (method != null)
-        return method.Invoke(source, args);
-      return null;
-    }
+      _methodInvoker = new FastMethodInvoker();
+    }      
 
     public void ShowContent(Type tabType, object[] args = null)
     {
-      IScreen currentScreen = (IScreen)_container.Resolve(tabType);
+      object scr = _locator.GetProcessor(tabType);
+      if (!(scr is IScreen))
+        return;
+
+      IScreen currentScreen = (IScreen)scr;
       Items.Add(currentScreen);
 
       ActiveItem = currentScreen;
       currentScreen.Activate();
 
-      InvokeMethod(tabType, "Update", ActiveItem, args);
+      _methodInvoker.InvokeMethod(tabType, "Update", ActiveItem, args);      
     }
 
-    private IWindsorContainer _container ;
+    private FastMethodInvoker _methodInvoker;
+    private IProcessorLocator _locator ;
   }
 }

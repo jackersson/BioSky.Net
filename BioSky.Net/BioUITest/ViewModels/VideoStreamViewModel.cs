@@ -75,13 +75,14 @@ namespace BioUITest.ViewModels
 
     private AForge.Video.IVideoSource videoSource;
 
-    private BioFaceServiceManager _bioFaceServiceManager;
+    private BioServiceManager _bioFaceServiceManager;
 
     public VideoStreamViewModel()
     {
+      /*
       DevicesNames = new FilterInfoCollection(FilterCategory.VideoInputDevice);
 
-      _bioFaceServiceManager = new BioFaceServiceManager();
+      _bioFaceServiceManager = new BioServiceManager();
       _bioFaceServiceManager.Start();
 
       _bioFaceServiceManager.FaceClient.FaceDetected += FaceClient_FaceDetected;
@@ -100,6 +101,7 @@ namespace BioUITest.ViewModels
 
       ItemTest.ItemTest.Add(new ItemType() { ItemEnabled = false });
       ItemTest.ItemTest.Add(new ItemType() { ItemEnabled = true });
+      */
     }
 
     public BioVideoPlayerViewModel _itemTest;
@@ -142,6 +144,7 @@ namespace BioUITest.ViewModels
 
     private void FaceClient_EnrollFeedback(object sender, BioFaceService.EnrollmentFeedback feedback)
     {
+      /*
       Progress = feedback.Progress;
       if (Progress == 0)
         ProgressInfo = "Enrollmment beginnig";
@@ -149,11 +152,12 @@ namespace BioUITest.ViewModels
         ProgressInfo = "Enrollment " + (feedback.Success ? "Success" : "Failed");
       else
         ProgressInfo = "Enrollment procesing... " + (feedback.Eyesfound ? "Eyes found" : "");
-
+        */
     }
 
     private void FaceClient_FaceDetected(object sender, BioFaceService.DetectedObjectsInfo objectsInfo)
     {
+      /*
       _faces.Clear();
       foreach (BioFaceService.ObjectInfo oi in objectsInfo.Objects)
       {
@@ -163,7 +167,7 @@ namespace BioUITest.ViewModels
       }
 
       Faces = _faces;
-
+      */
       //NotifyOfPropertyChange(() => Faces);
     }
 
@@ -322,13 +326,15 @@ namespace BioUITest.ViewModels
 
     private void OpenVideoSource()
     {
-      videoSource = new VideoCaptureDevice(SelectedDevice.MonikerString);
-      videoSource.Start();
-      videoSource.NewFrame += VideoSource_NewFrame;
+      //videoSource = new VideoCaptureDevice(SelectedDevice.MonikerString);
+      //videoSource.Start();
+      //videoSource.NewFrame += VideoSource_NewFrame;
     }
 
+    /*
     private async void VideoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
     {
+      /*
       Bitmap newFrame = (Bitmap)eventArgs.Frame.Clone();
       if (newFrame != null)
       {
@@ -350,10 +356,12 @@ namespace BioUITest.ViewModels
         }
 
       }
-    }
-
+      */
+   // }
+    /*
     public async void CloseSocket()
     {
+      /*
       Image newFrame = Bitmap.FromFile("F:\\C#\\BioSkyNetSuccess\\BioSky.Net\\BioSky.Net\\BioUITest\\1.jpg");
       byte[] bytes = ImageToByte2(newFrame);
 
@@ -369,7 +377,8 @@ namespace BioUITest.ViewModels
 
       // await _bioFaceServiceManager.FaceClient.Identify(imageList);
       await _bioFaceServiceManager.FaceClient.Identify(imageList);
-    }
+      */
+    //}
 
 
     private AsyncObservableCollection<BioFaceService.Rectangle> _faces;
@@ -386,21 +395,23 @@ namespace BioUITest.ViewModels
       }
     }
 
+    /*
     public async void Enroll()
     {
-      _processingImages.Images.Clear();
-      _enroll = true;
-
+     // _processingImages.Images.Clear();
+     // _enroll = true;
+//
     }
 
     public async void PersonRequest()
     {
-      BioFaceService.CommandPerson cmd = new BioFaceService.CommandPerson();
-      await _bioFaceServiceManager.FaceClient.PersonRequest(cmd);
+      //BioFaceService.CommandPerson cmd = new BioFaceService.CommandPerson();
+      //await _bioFaceServiceManager.FaceClient.PersonRequest(cmd);
     }
 
     public async void VisitorRequest()
     {
+      /*
       BioFaceService.CommandPerson cmd1 = new BioFaceService.CommandPerson();
       await _bioFaceServiceManager.FaceClient.PersonRequest(cmd1);
 
@@ -421,14 +432,17 @@ namespace BioUITest.ViewModels
 
       BioFaceService.CommandPhoto cmd7 = new BioFaceService.CommandPhoto();
       await _bioFaceServiceManager.FaceClient.PhotoRequest(cmd7);
-    }
+      */
+    //}
 
-    private bool _enroll = false;
-    private BioFaceService.BioImagesList _processingImages = new BioFaceService.BioImagesList();
+    //private bool _enroll = false;
+   // private BioFaceService.BioImagesList _processingImages = new BioFaceService.BioImagesList();
 
 
+      /*
     public async void SendImage()
     {
+      /*
       Image newFrame = Bitmap.FromFile("F:\\C#\\BioSkyNetSuccess\\BioSky.Net\\BioSky.Net\\BioUITest\\1.jpg");
       byte[] bytes = ImageToByte2(newFrame);
 
@@ -459,8 +473,8 @@ namespace BioUITest.ViewModels
       bytes = bs.ToByteArray();
       LoadImage(bytes);
       */
-      try
-      {
+      //try
+      //{
         //await _bioFaceServiceManager.FaceClient.DetectFace(bytes);
         /*
         int i = 0;
@@ -505,14 +519,14 @@ namespace BioUITest.ViewModels
 
           //_client.Close();
           */
-
+/*
       }
       catch (Exception ex)
       {
         MessageBox.Show(ex.Message);
       }
     }
-
+*/
 
   }
 }

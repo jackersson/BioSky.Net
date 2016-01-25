@@ -18,18 +18,12 @@ namespace BioModule.ViewModels
       DisplayName = "Capture Devices";
 
       DragableWithDisabledItem disabledDragable = new DragableWithDisabledItem();
-      DragableWithRemoveItem removeDragable = new DragableWithRemoveItem();
+      DragableWithRemoveItem   removeDragable   = new DragableWithRemoveItem  ();
 
-      DevicesList = new DragablListBoxViewModel(disabledDragable);
+      DevicesList   = new DragablListBoxViewModel(disabledDragable);
       DevicesInList = new DragablListBoxViewModel(removeDragable);
       DevicesInList.ItemRemoved += DevicesList.ItemDropped;
-
-      for (int i = 0; i != 20; i++)
-      {
-        AccessDevice num = new AccessDevice() { PortName = ("COM" + i) };
-        DragableItem num2 = new DragableItem() { ItemContext = num, ItemEnabled = true, DisplayName = num.PortName };
-        DevicesList.Add(num2);
-      }
+          
     }
 
     private DragablListBoxViewModel _devicesList;

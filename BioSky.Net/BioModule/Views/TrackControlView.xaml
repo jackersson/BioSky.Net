@@ -81,8 +81,8 @@
                   Controls:TextBoxHelper.UseFloatingWatermark="True"
                    >       
             <ComboBox.ItemTemplateSelector>
-                <vm:ComboBoxItemTemplateSelector>
-                    <vm:ComboBoxItemTemplateSelector.ItemTemplate>
+                <utils:ComboBoxItemTemplateSelector>
+                    <utils:ComboBoxItemTemplateSelector.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" >
                                 <CheckBox 
@@ -94,8 +94,8 @@
                                 <TextBlock Text="{Binding Caption}"></TextBlock>
                             </StackPanel>
                         </DataTemplate>
-                    </vm:ComboBoxItemTemplateSelector.ItemTemplate>
-                    <vm:ComboBoxItemTemplateSelector.SelectedItemTemplate>
+                    </utils:ComboBoxItemTemplateSelector.ItemTemplate>
+                    <utils:ComboBoxItemTemplateSelector.SelectedItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
                                 <TextBlock  Text="{Binding ElementName=LocationItems, Path=DataContext.SelectedItems}"                                                                   
@@ -103,8 +103,8 @@
                                             HorizontalAlignment="Center" ></TextBlock>
                             </StackPanel>
                         </DataTemplate>
-                    </vm:ComboBoxItemTemplateSelector.SelectedItemTemplate>
-                </vm:ComboBoxItemTemplateSelector>
+                    </utils:ComboBoxItemTemplateSelector.SelectedItemTemplate>
+                </utils:ComboBoxItemTemplateSelector>
             </ComboBox.ItemTemplateSelector>
         </ComboBox>
         

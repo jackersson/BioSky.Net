@@ -10,7 +10,6 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 
 using BioContracts;
-using BioModule.Model;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using BioModule.Utils;
@@ -20,29 +19,27 @@ namespace BioModule.ViewModels
 {
 
   public class TrackControlItemViewModel : Screen, IObserver<AccessDeviceActivity>
-  {
-    private readonly ViewModelSelector _selector;
-    public TrackControlItemViewModel(IBioEngine bioEngine, TrackLocation location, ViewModelSelector selector)
+  {   
+    public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
     {
-      _location  = location ;
-      _bioEngine = bioEngine;
-      _selector = selector;
+      _location  = location;   
 
       UserVerified = true;
       UserVerificationIconVisible = false;
-      CardDetectedIconVisible = false;
+      CardDetectedIconVisible = false;      
 
-      _notifications = new VisitorsViewModel(bioEngine, selector);   
+      _visitorsView = new VisitorsViewModel(locator);   
     }
 
     public void Update()
     {
-      _notifications.Update();
+      _visitorsView.Update();
     }
 
-    public VisitorsViewModel Notifications
+    private VisitorsViewModel _visitorsView;
+    public VisitorsViewModel VisitorsView
     {
-      get { return _notifications; }
+      get { return _visitorsView; }
     }
 
     public void OnChecked(object name)
@@ -108,6 +105,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    private TrackLocation _location;
     public TrackLocation TrackLocation
     {
       get { return _location; }
@@ -126,11 +124,7 @@ namespace BioModule.ViewModels
     public void OnCompleted()
     {
       throw new NotImplementedException();
-    } 
-
-    private TrackLocation     _location;
-    private VisitorsViewModel _notifications;
-    private readonly IBioEngine _bioEngine;
+    }     
 
     //**************************************************** UI **********************************************
     public BitmapSource OkIconSource

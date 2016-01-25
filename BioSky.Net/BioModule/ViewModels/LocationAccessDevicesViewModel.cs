@@ -14,8 +14,7 @@ using BioModule.DragDrop;
 using System.Windows.Data;
 using System.Windows.Controls;
 using System.Windows.Media;
-
-
+using BioFaceService;
 
 namespace BioModule.ViewModels
 {
@@ -34,19 +33,7 @@ namespace BioModule.ViewModels
       DevicesInList.ItemRemoved += DevicesList.ItemDropped;
 
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
-      DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
-
-      AccessDevice num22 = new AccessDevice() { PortName = ("COM" + 5) };
-      DragableItem num222 = new DragableItem() { ItemContext = num22, ItemEnabled = false, DisplayName = num22.PortName };
-
-      for (int i = 0; i != 20; i++)
-      {
-        AccessDevice num = new AccessDevice() { PortName = ("COM" + i) };
-        DragableItem num2 = new DragableItem() { ItemContext = num, ItemEnabled = true, DisplayName = num.PortName };
-        DevicesList.Add(num2);
-      }
-
-      DevicesList.Add(num222);
+      DevicesOutList.ItemRemoved += DevicesList.ItemDropped;    
     }
 
     private DragablListBoxViewModel _devicesList;

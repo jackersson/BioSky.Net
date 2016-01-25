@@ -4,19 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-using BioData;
-using BioContracts;
-using BioAccessDevice.Interfaces;
-
-namespace BioModule.Model
+namespace BioContracts
 {
   public interface IBioEngine
   {
-
     IBioSkyNetRepository Database();
 
     IAccessDeviceEngine AccessDeviceEngine();
+
+    ICaptureDeviceEngine CaptureDeviceEngine();
 
     ITrackLocationEngine TrackLocationEngine();
   }

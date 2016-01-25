@@ -10,7 +10,7 @@ using Castle.Windsor;
 
 using BioContracts;
 using BioModule.ViewModels;
-using BioModule.Model;
+//using BioModule.Model;
 using BioModule.Utils;
 using BioData;
 using System.Collections;
@@ -26,12 +26,17 @@ namespace BioModule
     {
       try
       {
+        /*
         container.Register(Component.For<ITrackLocationEngine>()
                  .ImplementedBy<TrackLocationEngine>());
 
 
         container.Register(Component.For<IBioEngine>()
                  .ImplementedBy<BioEngine>() );
+         
+        */
+
+        //container.Resolve();
 
         container            
             .Register(Component.For<VisitorsViewModel>())
@@ -40,7 +45,7 @@ namespace BioModule
             .Register(Component.For<UserPageViewModel>().LifestyleTransient());
 
 
-        container.Register(Component.For<IWindsorContainer>().Instance(container));
+        //container.Register(Component.For<IWindsorContainer>().Instance(container));
         container.Register(Component.For<TabViewModel>());
         container.Register(Component.For<FlyoutControlViewModel>());
         container.Register(Component.For<ViewModelSelector>().LifeStyle.Singleton);        
@@ -51,12 +56,22 @@ namespace BioModule
         container.Register(Component.For<ToolBarViewModel>().LifeStyle.Singleton);
         container.Register(Component.For<LoginInformationViewModel>().LifeStyle.Singleton);
 
+       
+        
+
+        container.Resolve<IProcessorLocator>().Init(container);
+
+        var test =  container.Resolve<IBioEngine>();
+        //container.Register(Component.For<IWindsorContainer>().Instance(container));
+       // container.Register(Component.For<IProcessorLocator>().ImplementedBy<ProcessorLocator>());
+
+
 
         container.Register(Component.For<IBioModule>().ImplementedBy<BioModuleImpl>());
       }
-      catch
+      catch ( Exception ex )
       {
-       
+        Console.WriteLine("BioGrpc.dll" + ex.Message);
       }
     }
   }

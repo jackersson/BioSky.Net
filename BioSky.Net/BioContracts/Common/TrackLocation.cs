@@ -1,25 +1,23 @@
-﻿using System;
+﻿using BioFaceService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using BioData;
-using BioContracts;
-
-namespace BioModule.Model
+namespace BioContracts
 {
   public class TrackLocation : IObserver<AccessDeviceActivity>
   {
 
-    public TrackLocation( IAccessDeviceEngine accessDeviceEngine, Location location)
+    public TrackLocation(IAccessDeviceEngine accessDeviceEngine, Location location)
     {
       _accessDeviceEngine = accessDeviceEngine;
       Update(location);
 
     }
 
-    public void Update( Location location )
+    public void Update(Location location)
     {
       _location = location;
     }
@@ -30,7 +28,7 @@ namespace BioModule.Model
       Subscribe(this);
     }
 
-    public void Subscribe( IObserver<AccessDeviceActivity> observer )
+    public void Subscribe(IObserver<AccessDeviceActivity> observer)
     {
       //_accessDeviceEngine.Subscribe(observer, _location.Devices_IN_);
     }
@@ -60,18 +58,18 @@ namespace BioModule.Model
       throw new NotImplementedException();
     }
 
-    public object ScreenViewModel  { get; set; }
-  
+    public object ScreenViewModel { get; set; }
+
     public string Caption
     {
-      get { return _location.Location_Name;  }
+      get { return _location.LocationName; }
     }
 
     private bool _isChecked;
 
     public bool IsChecked
     {
-      get { return _isChecked;  }
+      get { return _isChecked; }
       set
       {
         if (_isChecked == value)

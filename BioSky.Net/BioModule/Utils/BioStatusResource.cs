@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 using BioContracts;
 using BioData;
-using BioModule.Model;
+using static BioFaceService.Visitor.Types;
 
 namespace BioModule.Utils
 {
@@ -20,8 +20,8 @@ namespace BioModule.Utils
     {
       _resource = new Dictionary<string, BitmapSource>();
 
-      _resource.Add( VisitorStatus.VerificationSuccess.ToString(), ResourceLoader.VerificationIconSource);
-      _resource.Add( VisitorStatus.VerificationFailed.ToString() , ResourceLoader.VerificationFailedIconSource);
+      _resource.Add( VisitorStatus.Success.ToString(), ResourceLoader.VerificationIconSource);
+      _resource.Add( VisitorStatus.Failed.ToString() , ResourceLoader.VerificationFailedIconSource);
       //_resource.Add( NotificationStatus.Success.ToString()       , ResourceLoader.OkIconSource);
       //_resource.Add( NotificationStatus.Failure.ToString()       , ResourceLoader.CancelIconSource);
       //_resource.Add( NotificationStatus.Warning.ToString()       , ResourceLoader.ErrorIconSource);

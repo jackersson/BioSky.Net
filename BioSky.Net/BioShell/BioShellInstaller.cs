@@ -22,8 +22,8 @@ namespace BioShell
     {
       container        
           .Register(Component.For<IWindowManager>().Instance(new WindowManager()))
-          .Register(Component.For<IWindsorContainer>().Instance(container));
-
+          .Register(Component.For<IWindsorContainer>().Instance(container))
+          .Register(Component.For<IProcessorLocator>().ImplementedBy<ProcessorLocator>());
 
       container
                .Register(Component.For<BioShellViewModel>())

@@ -28,14 +28,14 @@ namespace BioModule.DragDrop
     }
     public DragableItem Clone()
     {
-      return new DragableItem() { ItemContext = this.ItemContext, ItemEnabled = this.ItemEnabled, DisplayName = this.DisplayName };
+      return new DragableItem() { ItemContext = this.ItemContext
+                                , ItemEnabled = this.ItemEnabled
+                                , DisplayName = this.DisplayName };
     }
 
-    public string _displayName;
     public string DisplayName
     {
-      get;
-      set;
+      get;  set;
     }
   }
 }
