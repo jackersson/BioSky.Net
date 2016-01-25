@@ -12,24 +12,16 @@ namespace BioModule.ViewModels
 {
   public class LocationUsersNotifyViewModel : Screen
   {
-
     public LocationUsersNotifyViewModel()
     {
       DisplayName = "Users Notification";
 
       DragableWithDisabledItem disabledDragable = new DragableWithDisabledItem();
-      DragableWithRemoveItem removeDragable = new DragableWithRemoveItem();
+      DragableWithRemoveItem   removeDragable   = new DragableWithRemoveItem();
 
-      UsersList = new DragablListBoxViewModel(disabledDragable);
+      UsersList       = new DragablListBoxViewModel(disabledDragable);
       UsersNotifyList = new DragablListBoxViewModel(removeDragable);
-      UsersNotifyList.ItemRemoved += UsersList.ItemDropped;
-
-      for (int i = 0; i != 20; i++)
-      {
-        AccessDevice num = new AccessDevice() { PortName = ("COM" + i) };
-        DragableItem num2 = new DragableItem() { ItemContext = num, ItemEnabled = true, DisplayName = num.PortName };
-        UsersList.Add(num2);
-      }
+      UsersNotifyList.ItemRemoved += UsersList.ItemDropped;      
     }
 
     private DragablListBoxViewModel _usersList;

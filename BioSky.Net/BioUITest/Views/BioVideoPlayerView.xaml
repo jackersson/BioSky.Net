@@ -4,9 +4,65 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BioUITest.Views"
+             xmlns:vm="clr-namespace:BioUITest.ViewModels"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance vm:BioVideoPlayerViewModel, IsDesignTimeCreatable=False}"
+             >
     <Grid>
+
+
+
+        <DataGrid x:Name="listView" HorizontalAlignment="Left"
+                  Height="95" Margin="10,25,0,0" VerticalAlignment="Top" Width="100"
+                  AutoGenerateColumns="False"
+                  GridLinesVisibility="None"
+                  HeadersVisibility="None"
+                  cal:Message.Attach="[Event MouseRightButtonDown]=[RemoveItem($eventArgs)]"
+                  ItemsSource="{Binding ItemTest}"
+                  SelectedItem="{Binding SelectedItemTest, Mode=TwoWay}"
+                  >
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Binding="{Binding ItemText}"/>
+            </DataGrid.Columns>
             
+           
+            <!--
+            <DataGrid.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ItemText}"
+                               DataContext="{Binding Mode=OneWay}"
+                               cal:Action.TargetWithoutContext="{Binding DataContext, RelativeSource={RelativeSource Self}}"
+                               cal:Message.Attach="[Event MouseRightButtonDown]=[onMouseDown($eventArgs)]"
+                               
+                               ></TextBlock>
+
+                </DataTemplate>
+            </DataGrid.ItemTemplate> -->
+
+            <!-- <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                <Setter Property="Tag" Value="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"/>
+                <Setter Property="Content" Value="{Binding ItemText}"/>
+                <Setter Property="cal:Action.Target" Value="{Binding Path=PlacementTarget,RelativeSource={x:Static RelativeSource.Self}}"/>
+                        
+                 <Setter Property="cal:Message.Attach" Value="onMouseDown($eventArgs)">
+               
+                </Setter>
+            </Style>
+            </ListBox.ItemContainerStyle> -->
+            <!--
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="IsEnabled" Value="{Binding ItemEnabled}"/>
+                    
+                </Style>
+            </ListView.ItemContainerStyle>
+-->
+        </DataGrid>
+        <Button x:Name="button" Content="Button"
+                HorizontalAlignment="Left" Margin="205,15,0,0"
+                cal:Message.Attach="[Event Click]=[Action EnableItem]" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </UserControl>

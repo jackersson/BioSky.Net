@@ -50,7 +50,7 @@
                   Grid.Column="0" HorizontalAlignment="Stretch" 
             Grid.ColumnSpan="5"
                   Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
-                  ItemsSource="{Binding FilteredUsers}"                
+                  ItemsSource="{Binding Users}"                
                   GridLinesVisibility="All"            
                   AutoGenerateColumns="False"
                   CanUserSortColumns="True" CanUserAddRows="False"
@@ -87,8 +87,8 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="First name" IsReadOnly="True" Binding="{Binding First_Name_}"/>
-                <DataGridTextColumn Header="Last  name" IsReadOnly="True" Binding="{Binding Last_Name_}"/>
+                <DataGridTextColumn Header="First name" IsReadOnly="True" Binding="{Binding Firstname}"/>
+                <DataGridTextColumn Header="Last  name" IsReadOnly="True" Binding="{Binding Lastname}"/>
                 <DataGridTextColumn Header="Gender"     IsReadOnly="True" Binding="{Binding Gender}"/>
                 <DataGridTextColumn Header="Rights"     IsReadOnly="True" Binding="{Binding Rights}"/>               
             </DataGrid.Columns>

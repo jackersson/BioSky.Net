@@ -12,19 +12,19 @@ using BioModule.Resources.langs;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
+using BioContracts;
 
 namespace BioModule.ViewModels
 {
   public class MainMenuViewModel : Screen
   {
-
-    public MainMenuViewModel(ViewModelSelector viewModelSelector, IWindowManager windowManager)
-    {
-      _viewModelSelector = viewModelSelector;
-      _windowManager     = windowManager;
-      _languages = new ObservableCollection<string>();
-      _languages.Add("en");
-      _languages.Add("ru-RU");
+    public MainMenuViewModel( IProcessorLocator locator)
+    {   
+      _viewModelSelector = locator.GetProcessor<ViewModelSelector>();
+      _windowManager     = locator.GetProcessor<IWindowManager>();
+      //_languages = new ObservableCollection<string>();
+      //_languages.Add("en");
+      //_languages.Add("ru-RU");
     }
 
     public void OpenTabAddNewPerson()
@@ -41,8 +41,7 @@ namespace BioModule.ViewModels
     {
       _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.VisitorsPage);
     }
-
-    private ViewModelSelector _viewModelSelector;
+       
 
     //****************************************************Language****************************************************
     private ObservableCollection<string> _languages;
@@ -79,24 +78,20 @@ namespace BioModule.ViewModels
       LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);
     }
 
-    //****************************************************************************************************************
-
-    public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
-    {
-      Console.WriteLine(register + " " + name + " " + password);
-
-    }
-
-    private IWindowManager _windowManager;
+    //***************************************************************************************************************
+      
     public void ShowAboutDialog()
     {
       _windowManager.ShowDialog(new AboutDialogViewModel());      
     }
     public void ShowLogInDialog()
     {
-      LoginDialogViewModel loginDialog = new LoginDialogViewModel(this);
+      LoginDialogViewModel loginDialog = new LoginDialogViewModel();
       var result = _windowManager.ShowDialog(loginDialog);
       Console.WriteLine(loginDialog.UserPassword + " " + loginDialog.UserName);
     }
+
+    private ViewModelSelector          _viewModelSelector;
+    private readonly IWindowManager    _windowManager;
   }
 }

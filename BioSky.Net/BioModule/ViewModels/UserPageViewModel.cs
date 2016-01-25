@@ -10,13 +10,13 @@ using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
 
-using BioModule.Model;
 using BioModule.Utils;
 using BioData;
 using System.Reflection;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
-
+using BioFaceService;
+using static BioFaceService.Person.Types;
 
 namespace BioModule.ViewModels
 {
@@ -27,42 +27,43 @@ namespace BioModule.ViewModels
   }
   public class UserPageViewModel : Conductor<IScreen>.Collection.OneActive
   {   
-    public UserPageViewModel(IBioEngine bioEngine, IWindowManager windowManager) : base()
+    public UserPageViewModel(IProcessorLocator locator) : base()
     {
-      _bioEngine = bioEngine;
-      _windowManager = windowManager;
+      _locator = locator;
 
-      CurrentImageView = new ImageViewModel();
+      IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
 
       Items.Add(new UserInformationViewModel    ());
-      Items.Add(new UserContactlessCardViewModel(_bioEngine));
-      Items.Add(new UserPhotoViewModel(_bioEngine, CurrentImageView));
+      Items.Add(new UserContactlessCardViewModel(bioEngine));
+      Items.Add(new UserPhotoViewModel(bioEngine));
      
       ActiveItem = Items[0];
       OpenTab();
 
+      CurrentImageView = new ImageViewModel();
+      _methodInvoker = new FastMethodInvoker();
 
       DisplayName = "Add New User";
     }
 
-    public void Update(User user)
+    public void Update(Person user)
     {
       if (user != null)
       {
         _user = user;
         _userPageMode = UserPageMode.ExistingUser;
 
-        DisplayName = (_user.First_Name_ + " " + _user.Last_Name_);
+        DisplayName = (_user.Firstname + " " + _user.Lastname);
       }
       else
       {
-        _user = new User()
+        _user = new Person()
         {
-            First_Name_ = ""
-          , Last_Name_ = ""
-          , Photo = ""
-          , Gender = Gender.Male.ToString()
-          , Rights = Rights.Operator.ToString()
+            Firstname = ""
+          , Lastname = ""
+          , Thumbnail = 0
+          , Gender = Gender.Male
+          , Rights = Rights.Operator
         };
 
         _userPageMode = UserPageMode.NewUser;
@@ -72,14 +73,8 @@ namespace BioModule.ViewModels
       CurrentImageView.Update( _user);
       
       foreach (IScreen scrn in Items)
-      {
-        MethodInfo method = scrn.GetType().GetMethod("Update");
-        if (method != null)
-          method.Invoke(scrn, new object[] { _user } );        
-      }
-      
-    }
-      
+        _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });     
+    }      
 
     public void OpenTab()
     {      
@@ -99,10 +94,11 @@ namespace BioModule.ViewModels
         }
       }
     }
+     
 
     public void Apply()
     {      
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      //var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
       //Console.WriteLine(result);
       //var result = _windowManager.ShowDialog(new AboutDialogViewModel());
       //var result = _windowManager.ShowDialog(new LoginDialogViewModel());
@@ -128,11 +124,14 @@ namespace BioModule.ViewModels
       } */    
     }
 
+   
+    private Person _user;
 
-    private User                _user         ;
-    private UserPageMode        _userPageMode ;
-    private IWindowManager      _windowManager;
-    private readonly IBioEngine _bioEngine    ;
+    private readonly FastMethodInvoker _methodInvoker;
+
+    private readonly IProcessorLocator _locator;
+
+    private UserPageMode  _userPageMode ; 
     
   }
 }

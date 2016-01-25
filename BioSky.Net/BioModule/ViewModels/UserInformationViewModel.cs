@@ -10,12 +10,13 @@ using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
 
 using BioData;
-using BioModule.Model;
 using System.Collections.ObjectModel;
 
 using System.Windows.Data;
 using System.Reflection;
 using System.Globalization;
+using BioFaceService;
+using static BioFaceService.Person.Types;
 
 namespace BioModule.ViewModels
 { 
@@ -26,13 +27,23 @@ namespace BioModule.ViewModels
       DisplayName = "Information";     
     }    
 
-    public void Update(ref User user)
+    public void Update( Person user)
     {
       User = user;      
-    }    
-    
-    private User _user;
-    public User User
+    }
+
+    public List<string> GenderSources
+    {
+      get { return Enum.GetNames(typeof(Gender)).ToList(); }
+    }
+
+    public List<string> RightsSources
+    {
+      get { return Enum.GetNames(typeof(Rights)).ToList(); }
+    }
+
+    private Person _user;
+    public Person User
     {
       get { return _user; }
       set

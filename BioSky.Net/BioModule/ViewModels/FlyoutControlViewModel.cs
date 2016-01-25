@@ -13,11 +13,11 @@ namespace BioModule.ViewModels
 {
   public class FlyoutControlViewModel : Conductor<IScreen>.Collection.OneActive, IShowableContent
   {
-    public FlyoutControlViewModel(IWindsorContainer container)
+    public FlyoutControlViewModel( IProcessorLocator locator)
     {
-      _container     = container;
+      _locator = locator;
 
-      Items.Add(_container.Resolve<LocationPageViewModel>());
+      Items.Add(_locator.GetProcessor<LocationPageViewModel>());
   
       FlyoutOpenState = false;
     }
@@ -43,6 +43,6 @@ namespace BioModule.ViewModels
       }
     }
    
-    private IWindsorContainer _container;
+    private readonly IProcessorLocator _locator;
   }
 }

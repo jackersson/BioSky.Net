@@ -12,6 +12,7 @@ using BioAccessDevice.Interfaces;
 using BioAccessDevice.Commands;
 using System.Threading;
 using System.IO.Ports;
+using BioContracts.Abstract;
 
 namespace BioAccessDevice
 {

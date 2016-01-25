@@ -15,6 +15,7 @@ using System.IO;
 using System.Drawing;
 using MahApps.Metro.Controls;
 using BioData;
+using BioFaceService;
 
 namespace BioModule.ViewModels
 {
@@ -46,16 +47,18 @@ namespace BioModule.ViewModels
       {
         Bitmap bmp = (Bitmap)Image.FromFile(fileName);
         CurrentImageSource = BitmapConversion.BitmapToBitmapSource(bmp);
-        User.Photo = fileName;
+        //TODO User photo
+        //User. = fileName;
         Zoom(_imageViewWidth, _imageViewHeight);
       }
     }
 
 
-    public void Update( User user )
+    public void Update(Person user )
     {
       User = user;
-      SetImageFromFile(User.Photo);
+      //TODO User photo
+      //SetImageFromFile(User.Photo);
     }
 
     public void UpdatePhoto(Uri uriSource)
@@ -164,21 +167,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    /*
-    private string _imageFileName;
-    public string ImageFileName
-    {
-      get { return _imageFileName;  }
-      set
-      {
-        if (_imageFileName == value)
-          return;
-
-        _imageFileName = value;
-      }
-    }
-    */
+    
     private double _imageViewWidth = 0;
     private double _imageViewHeight = 0;
 
@@ -186,8 +175,8 @@ namespace BioModule.ViewModels
     private const double ZOOM_RATIO       = 100D;
 
 
-    private User _user;
-    public User User
+    private Person _user;
+    public Person User
     {
       get { return _user; }
       set

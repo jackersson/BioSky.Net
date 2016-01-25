@@ -10,226 +10,115 @@ using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
+using BioFaceService;
+using Caliburn.Micro;
+
 namespace BioData
 {
-  public class BioSkyNetRepository : IBioSkyNetRepository
-  {
+  public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
+  {    
+    public BioSkyNetRepository()
+    {           
+    }    
 
-    private readonly IEntityFrameworkContextFactory _entityFrameworkContextFactory;
-    private BioSkyNetDataModel _bioSkyNetContext;
-    
-
-    public BioSkyNetRepository(IEntityFrameworkContextFactory entityFrameworkContextFactory)
+    public PersonList _persons;
+    public PersonList Persons
     {
-      if (entityFrameworkContextFactory == null)
-        throw new ArgumentNullException("entityFrameworkContextFactory");
-
-      _entityFrameworkContextFactory = entityFrameworkContextFactory;
-
-      //InitializeContext();
-      
-    }
-
-    public bool InitializeContext()
-    {
-      try
+      get { return _persons;  }
+      set
       {
-        _bioSkyNetContext = _entityFrameworkContextFactory.Create<BioSkyNetDataModel>();
-
-        _bioSkyNetContext.Configuration.AutoDetectChangesEnabled = true;
-
-        _bioSkyNetContext.Users.ToList();
-        _bioSkyNetContext.Visitors.ToList();
-        _bioSkyNetContext.Locations.ToList();
-        _bioSkyNetContext.Cards.ToList();
-
-        return true;
-      }
-      catch {}
-
-      return false;
-    }
-
-    public ObservableCollection<User> GetAllUsers()
-    {
-      try
-      {      
-        return _bioSkyNetContext.Users.Local;       
-      }
-      catch 
-      {
-        return new ObservableCollection<User>();
-      }
-    }
-
-     
-
-    public bool AddUser( User user )
-    {
-      if (user == null)
-        return false;
-
-      try
-      {
-
-       User existingUser =  _bioSkyNetContext.Users.Where(x => x.First_Name_ == user.First_Name_
-                                                            && x.Last_Name_  == user.Last_Name_).FirstOrDefault();
-
-        if (existingUser != null )
-          return false;
-
-        _bioSkyNetContext.Users.Add(user);    
-
-        return SaveChanges();
-      }
-      catch {}
-
-      return false;
-    }
-
-    public bool UpdateUser(User user)
-    {
-      if (user == null)
-        return false;
-
-      try
-      {
-        _bioSkyNetContext.Entry(user).State = System.Data.Entity.EntityState.Modified;
-        return SaveChanges();
-      }
-      catch { }
-
-      return false;
-    }
-
-    public ObservableCollection<Visitor> GetAllVisitors()
-    {
-      try
-      {              
-        return _bioSkyNetContext.Visitors.Local;        
-      }
-      catch 
-      {
-        return new ObservableCollection<Visitor>();
-      }
-    }
-
-    public IEnumerable<Visitor> GetVisitorsByLocation(string locationName)
-    {
-      try
-      {
-        return _bioSkyNetContext.Visitors.Local.Where(x => x.Location != null && x.Location.Location_Name == locationName);
-      }
-      catch
-      {
-        return new ObservableCollection<Visitor>();
-      }
-    }
-
-    public void AddVisitor(Visitor visitor)
-    {
-      try
-      {
-        _bioSkyNetContext.Visitors.Add(visitor);
-      }
-      catch
-      {
-    
-      }
-    }
-
-    public ObservableCollection<Location> GetAllLocations()
-    {
-      try
-      {
-        return _bioSkyNetContext.Locations.Local;         
-      }
-      catch
-      {
-        return new ObservableCollection<Location>();
-      }
-    }
-
-    public ObservableCollection<Card> GetCards()
-    {
-      try
-      {
-        return _bioSkyNetContext.Cards.Local;
-      }
-      catch
-      {
-        return new ObservableCollection<Card>();
-      }
-    }
-
-    public void UpdateCards(ObservableCollection<Card> cards, User user)
-    {
-      if (user == null || cards.Count <= 0)
-        return;
-
-
-      try
-      {
-
-        User existingUser = _bioSkyNetContext.Users.Where(x => x.First_Name_ == user.First_Name_
-                                                         && x.Last_Name_ == user.Last_Name_).FirstOrDefault();
-
-        if (existingUser == null)
-          return;
-
-        foreach (Card card in cards)
+        if ( _persons != value )
         {
-          Card existingCard = _bioSkyNetContext.Cards.Where(x => x.CardID == card.CardID).FirstOrDefault();
-          if ( existingCard != null && existingCard.UserID != existingUser.UID)
-          {
-            existingCard.UserID = existingUser.UID;
-            _bioSkyNetContext.Entry(existingCard).State = System.Data.Entity.EntityState.Modified;
-          }
-
-          if (existingCard == null)
-            _bioSkyNetContext.Cards.Add(card);
-          
+          _persons = value;
+          NotifyOfPropertyChange(() => Persons);
         }
-
-        IEnumerable<Card> existingCards = _bioSkyNetContext.Cards.Where(x => x.UserID == existingUser.UID);
-        foreach (Card card in existingCards)
-        {
-          if (!cards.Contains(card))
-            _bioSkyNetContext.Cards.Remove(card);
-        }
-
-        SaveChanges();
-      }
-      catch
-      {
-       
-      }
+      }      
     }
 
-
-
-    public bool SaveChanges()
+    public VisitorList _visitors;
+    public VisitorList Visitors
     {
-      try
-      {       
-        _bioSkyNetContext.SaveChanges();
-        return true;     
-      }
-      catch (DbEntityValidationException e)
+      get { return _visitors; }
+      set
       {
-        foreach (var validationErrors in e.EntityValidationErrors)
+        if (_visitors != value)
         {
-          foreach (var validationError in validationErrors.ValidationErrors)
-          {
-            Trace.TraceInformation("Property: {0} Error: {1}",
-                                    validationError.PropertyName,
-                                    validationError.ErrorMessage);
-          }
+          _visitors = value;
+          NotifyOfPropertyChange(() => Visitors);
         }
       }
-
-      return false;
     }
+
+    public AccessDeviceList _access_devices;
+    public AccessDeviceList AccessDevices
+    {
+      get { return _access_devices; }
+      set
+      {
+        if (_access_devices != value)
+        {
+          _access_devices = value;
+          NotifyOfPropertyChange(() => AccessDevices);
+        }
+      }
+    }
+
+    public CaptureDeviceList _capture_devices;
+    public CaptureDeviceList CaptureDevices
+    {
+      get { return _capture_devices; }
+      set
+      {
+        if (_capture_devices != value)
+        {
+          _capture_devices = value;
+          NotifyOfPropertyChange(() => CaptureDevices);
+        }
+      }
+    }
+
+    public CardList _cards;
+    public CardList Cards
+    {
+      get { return _cards; }
+      set
+      {
+        if (_cards != value)
+        {
+          _cards = value;
+          NotifyOfPropertyChange(() => Cards);
+        }
+      }
+    }
+
+    public LocationList _locations;
+    public LocationList Locations
+    {
+      get { return _locations; }
+      set
+      {
+        if (_locations != value)
+        {
+          _locations = value;
+          NotifyOfPropertyChange(() => Locations);
+        }
+      }
+    }
+
+    public PhotoList _photos;
+    public PhotoList Photos
+    {
+      get { return _photos; }
+      set
+      {
+        if (_photos != value)
+        {
+          _photos = value;
+          NotifyOfPropertyChange(() => Photos);
+        }
+      }
+    }
+
 
   }
 }

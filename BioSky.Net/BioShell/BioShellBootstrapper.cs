@@ -34,10 +34,15 @@ namespace BioShell
 
       var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-      
+      //TODO handle exceptions
 
       dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
       dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
+      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
+      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioEngine.dll"));
+      // dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
+
+
 
       var pattern = "BioModule.dll";
 

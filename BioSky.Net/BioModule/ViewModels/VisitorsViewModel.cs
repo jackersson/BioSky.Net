@@ -10,7 +10,6 @@ using System.Windows.Media.Imaging;
 
 using BioData;
 using System.Collections.ObjectModel;
-using BioModule.Model;
 
 using System.Windows.Input;
 using System.Windows.Controls;
@@ -18,57 +17,43 @@ using System.Windows;
 using System.Windows.Media;
 
 using BioModule.Utils;
+using BioContracts;
+using BioFaceService;
+using Google.Protobuf.Collections;
 
 namespace BioModule.ViewModels
 {
   public class VisitorsViewModel : Screen
-  {  
-    private readonly IBioEngine _bioEngine;
-    public VisitorsViewModel(IBioEngine bioEngine, ViewModelSelector viewModelsSelector )
+  {      
+    public VisitorsViewModel(IProcessorLocator locator )
     {
-      _bioEngine = bioEngine;
-      _filter = "";
+      _locator = locator;     
 
-      _viewModelsSelector = viewModelsSelector;
+      //_visitors         = new RepeatedField<Visitor>();      
 
-      _visitors         = new ObservableCollection<Visitor>();
-      _filteredVisitors = new ObservableCollection<Visitor>();
-
-      Visitors = _bioEngine.Database().GetAllVisitors();
-
-      if (_filter == "")
-        FilteredVisitors = Visitors;
+      //IBioEngine bioEngine = locator.GetProcessor<IBioEngine>();
+     // Visitors = bioEngine.Database().Visitors.Visitors;
+      
 
       DisplayName = "Visitors";
     }
 
+
+    //TODO only when data comes
+    public void Init()
+    {
+      IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
+      Visitors = bioEngine.Database().Visitors.Visitors;
+    }
+
+
     public void Update()
     {
-      NotifyOfPropertyChange(() => FilteredVisitors);
+      NotifyOfPropertyChange(() => Visitors);
     }
-
-    private IEnumerable<Visitor> _filteredVisitors;
-    public IEnumerable<Visitor> FilteredVisitors
-    {
-      get
-      {
-        if (_filter != "")
-          _filteredVisitors = _visitors.Where(x => x.Location != null && x.Location.Location_Name == _filter);
-       
-        return _filteredVisitors;
-      }
-      set
-      {
-        if (_filteredVisitors != value)
-        {
-          _filteredVisitors = value;
-          NotifyOfPropertyChange(() => FilteredVisitors);
-        }
-      }
-    }
-
-    private ObservableCollection<Visitor> _visitors;
-    public ObservableCollection<Visitor> Visitors
+    
+    private RepeatedField<Visitor> _visitors;
+    public RepeatedField<Visitor> Visitors
     {
       get { return _visitors; }
       set
@@ -80,16 +65,11 @@ namespace BioModule.ViewModels
         }
       }
     }
+    
+    private readonly IProcessorLocator _locator;
 
-    public string Caption()
-    {
-      return "Visitors";
-    }
+    //**********************************************************Context Menu*****************************************************
 
-    private string _filter;
-  
-//**********************************************************Context Menu*****************************************************
-      
     private Visitor _selectedItem;
     public Visitor SelectedItem
     {
@@ -120,13 +100,6 @@ namespace BioModule.ViewModels
 
         NotifyOfPropertyChange(() => MenuOpenStatus);
       }
-    }
-        
-    public void OnMouseRightButtonDown(MouseButtonEventArgs e)
-    {
-
-    }
-
-    ViewModelSelector _viewModelsSelector;
+    }        
   }
 }

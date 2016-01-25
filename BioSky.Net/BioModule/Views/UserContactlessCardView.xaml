@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"             
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
@@ -15,7 +16,7 @@
 
     <UserControl.Resources>        
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
-        <vm:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
+        <utils:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" /> 
     </UserControl.Resources>
 
     <Grid>
@@ -73,7 +74,7 @@
                VerticalAlignment="Stretch" 
                Source="{Binding AccessDeviceConnectedIcon}" />
 
-        <TextBox Text="{Binding DetectedCard.CardID}"
+        <TextBox Text="{Binding DetectedCard.UniqueNumber}"
                  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" 
                  TextWrapping="Wrap" 
                  Controls:TextBoxHelper.Watermark="{Binding CardState}"

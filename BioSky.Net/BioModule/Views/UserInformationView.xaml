@@ -8,55 +8,16 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:cal="http://www.caliburnproject.org"            
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:uservm ="clr-namespace:BioData;assembly=BioData"             
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"                      
              mc:Ignorable="d" 
-             
+             d:DataContext="{d:DesignInstance vm:UserInformationViewModel, IsDesignTimeCreatable=False}"
              BorderThickness="2"
-             d:DesignHeight="320" d:DesignWidth="300">
-    <UserControl.Resources>
-        <ObjectDataProvider x:Key="dataFromEnumGender" MethodName="GetValues"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="uservm:Gender"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-
-        <ObjectDataProvider x:Key="dataFromEnumRights" MethodName="GetValues"
-                            ObjectType="{x:Type sys:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="uservm:Rights"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-
+             d:DesignHeight="320" d:DesignWidth="300"
+             
+             >
+    <UserControl.Resources>          
         <utils:StringToGenderConverter x:Key="converterGender" />
-        <utils:StringToRightsConverter x:Key="converterRights" />
-
-        <ResourceDictionary x:Key="MathDesign">
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ComboBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="Margin" Value="0 8 0 8" />
-            </Style>
-            <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MaterialDesignComboBox}">
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="Margin" Value="0 8 0 8" />
-            </Style>
-            <Style TargetType="{x:Type Viewbox}">
-                <Setter Property="Width" Value="18" />
-                <Setter Property="Height" Value="18" />
-                <Setter Property="Margin" Value="0 0 8 0" />
-                <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
-            <Style TargetType="{x:Type Slider}" BasedOn="{StaticResource MaterialDesignSlider}">
-                <Setter Property="Margin" Value="0 8 0 8" />
-            </Style>
-        </ResourceDictionary>
-
+        <utils:StringToRightsConverter x:Key="converterRights" /> 
     </UserControl.Resources> 
 
     <Grid>
@@ -80,7 +41,7 @@
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
                          
-                         Text="{Binding User.First_Name_, UpdateSourceTrigger=PropertyChanged }" >                  
+                         Text="{Binding User.Firstname, UpdateSourceTrigger=PropertyChanged }" >                  
                 </TextBox>                  
                          
 
@@ -88,14 +49,14 @@
                          Controls:TextBoxHelper.Watermark="Last Name*"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Last_Name_, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding User.Lastname, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DatePicker x:Name="DateOfBirthBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                     
                          Controls:TextBoxHelper.Watermark="Date of Birth"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Text="{Binding User.Date_Of_Birth}"/>
+                         Text="{Binding User.Dateofbirth}"/>
 
-                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumGender}}" 
+                <ComboBox ItemsSource="{Binding GenderSources}"
                           SelectedItem="{Binding User.Gender, Converter={StaticResource converterGender}, UpdateSourceTrigger=PropertyChanged}"
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                           Controls:TextBoxHelper.Watermark="Gender*"
@@ -126,11 +87,11 @@
                          Controls:TextBoxHelper.ClearTextButton="True"
                          Text="{Binding User.Comments, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnumRights}}"
+                <ComboBox ItemsSource="{Binding RightsSources}" 
                           SelectedItem="{Binding User.Rights, Converter={StaticResource converterRights}, UpdateSourceTrigger=PropertyChanged}" 
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
-                         Controls:TextBoxHelper.Watermark="Rights*"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"/>
+                          Controls:TextBoxHelper.Watermark="Rights*"
+                          Controls:TextBoxHelper.UseFloatingWatermark="True"/> 
             </StackPanel>
         </ScrollViewer>
     </Grid>

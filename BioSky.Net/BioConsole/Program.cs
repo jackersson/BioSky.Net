@@ -1,27 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using System;
+using Grpc.Core;
+using BioFaceService;
 using System.Threading.Tasks;
+using System.Text;
+using System.Drawing;
+using System.IO;
+using System.Collections.Generic;
 
-using BioData;
-using System.Data.Entity.Validation;
-using System.IO.Ports;
-using System.Threading;
-
-using BioContracts;
-using BioAccessDevice;
-using BioAccessDevice.Commands;
-using BioAccessDevice.Abstract;
-
-namespace BioConsole
-{
-  
+namespace GreeterClient
+{  
   class Program
   {
-    static void Main(string[] args)
-    {      
-     
-    }
+
+    public static void Main(string[] args)
+    {
+      
+    }      
   }
 }

@@ -17,39 +17,14 @@ namespace BioData
   {
     public void Install(IWindsorContainer container, IConfigurationStore store)
     {
-
-      //return;
-
-     
-      container.Register(Component.For<IEntityFrameworkConnectionBuilder>()
-               .ImplementedBy<EntityFrameworkConnectionBuilder>()
-               .DependsOn(new
-               {
-                 dbConnectionstring = @"C:\Users\Spark\Source\Repos\BioSky.Net\BioSky.Net\database\BioSkyNet.mdf"
-               })
-                 .LifestyleSingleton()
-               );
-
-      container.AddFacility<TypedFactoryFacility>()
-               .Register(Component.For<IEntityFrameworkContextFactory>().AsFactory());
-
-      container.Register(Component.For<BioSkyNetDataModel>()
-               .DependsOn(new
-               {
-                 modelName = "BioSkyNetDataModel"
-               })
-               .LifestyleTransient());
-
-
-      container.Register(Component.For<IBioSkyNetRepository>()
-                        .ImplementedBy<BioSkyNetRepository>());
-
-
-      //container.Register(Component.For<IBioModule>().ImplementedBy<BioDataImpl>());
-      //container.Resolve<EntityFrameworkConnectionBuilder>();
-
-      //System.Console.WriteLine("et");
-  
-    }
+      try
+      {     
+        container.Register(Component.For<IBioSkyNetRepository>().ImplementedBy<BioSkyNetRepository>());        
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("BioDataInstaller.dll" + ex.Message);
+      }
+}
   }
 }

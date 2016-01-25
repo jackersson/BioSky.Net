@@ -7,14 +7,14 @@
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
-             xmlns:cal="http://www.caliburnproject.org"
              xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:UserPhotoViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
+    
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
-        <utils:NullImageConverter x:Key="NullImageConverter"/>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>          
     </UserControl.Resources>
 
     <Grid>
@@ -33,8 +33,7 @@
 
         <Button Width="48" Height="48" Grid.Column="3" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
-                Grid.Row="0" 
-                IsEnabled="{Binding AnyCardDetected}"
+                Grid.Row="0"               
                 ToolTip="Add Photo"
                 cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
                 >
@@ -47,38 +46,29 @@
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
-                 Grid.Row="5" Margin="0, 5, 0, 0"                
-                 SelectedItem="{Binding SelectedItem}"
-                 ItemsSource="{Binding RobotImages}"  
-                 ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
-                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChange]"
-                 >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="4" CornerRadius="5" Margin="6">
-                        <Image Source="{Binding Mode=OneWay, Converter={StaticResource NullImageConverter}}" Stretch="Fill" Width="100" Height="120">
-                        </Image>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>            
+                 Grid.Row="5" Margin="0, 5, 0, 0">        
+           
         </ListBox>
 
 
-        <ComboBox ItemsSource="{Binding AccessDevicesNames}"
-                  SelectedItem="{Binding SelectedAccessDevice, Mode=TwoWay}" 
+        <ComboBox ItemsSource="{Binding CaptureDevicesNames}"
+                  SelectedItem="{Binding SelectedCaptureDevice, Mode=TwoWay}" 
                   Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" 
                   Grid.Row="0" 
-                  Grid.Column="1"/>
+                  Grid.Column="1">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Background="Transparent">
+                        <TextBlock Text="{Binding Name, Mode=OneWay}" />
+                    </Grid>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
         <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" 
                VerticalAlignment="Stretch" 
-               Source="{Binding AccessDeviceConnectedIcon}" />
+               Source="{Binding CaptureDeviceConnectedIcon}" />
     </Grid>
 </UserControl>

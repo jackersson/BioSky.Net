@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using System.Threading.Tasks;
 
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
@@ -10,7 +9,7 @@ using Castle.Windsor;
 
 using BioContracts;
 using BioModule.ViewModels;
-using BioModule.Model;
+
 using BioModule.Utils;
 using System.Globalization;
 using System.Threading;
@@ -21,43 +20,26 @@ using Caliburn.Micro;
 
 namespace BioModule
 {
-  class BioModuleImpl : IBioModule
+  public class BioModuleImpl : IBioModule
   {
-    private readonly IBioShell              _shell                 ;
-    private readonly IWindsorContainer      _container             ;
-    private readonly TabViewModel           _tabControlViewModel   ;
-    private readonly FlyoutControlViewModel _flyoutControlViewModel;
-    private readonly ViewModelSelector      _viewModelSelector     ;
+    private readonly IProcessorLocator _locator;
 
-    private readonly IBioEngine _bioEngine;
-
-    public BioModuleImpl( IBioShell shell                   
-                        , IBioEngine bioEngine
-                        , IWindsorContainer container
-                        , TabViewModel tabControlViewModel
-                        , FlyoutControlViewModel flyoutControlViewModel
-                        , ViewModelSelector viewModelSelector )
+    public BioModuleImpl( IProcessorLocator locator )     
     {
-      _shell = shell;
-      _bioEngine = bioEngine;
-      _container = container;
-
-      _flyoutControlViewModel = flyoutControlViewModel;
-      _viewModelSelector      = viewModelSelector;      
-
-      _tabControlViewModel = tabControlViewModel;
+      _locator = locator;     
     }
 
     public void Init()
     {      
-      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);
+      ViewModelSelector selector = _locator.GetProcessor<ViewModelSelector>();
+      selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);
 
-      _tabControlViewModel.Init();
-      _shell.TabControl    = _tabControlViewModel;
-      _shell.FlyoutControl = _flyoutControlViewModel;
+      IBioShell bioShell = _locator.GetProcessor<IBioShell>();
 
-      _shell.ToolBar       = new ToolBarViewModel(_viewModelSelector);
-      _shell.MainMenu = new MainMenuViewModel(_viewModelSelector, _container.Resolve<IWindowManager>());      
+      bioShell.TabControl    = _locator.GetProcessor<TabViewModel>();
+      bioShell.FlyoutControl = _locator.GetProcessor<FlyoutControlViewModel>();
+      bioShell.ToolBar       = _locator.GetProcessor<ToolBarViewModel>();
+      bioShell.MainMenu      = _locator.GetProcessor<MainMenuViewModel>();    
     }
   }
 }

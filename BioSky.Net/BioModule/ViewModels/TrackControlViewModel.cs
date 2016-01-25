@@ -8,37 +8,38 @@ using BioContracts;
 using Caliburn.Micro;
 using System.Collections.ObjectModel;
 using BioModule.ResourcesLoader;
-using BioModule.Model;
+//using BioModule.Model;
 
 using System.Windows;
 using System.Windows.Media.Imaging;
-using BioData;
 
 using System.Windows.Data;
 using BioModule.Utils;
 using System.Windows.Controls;
-
+using Google.Protobuf.Collections;
 
 namespace BioModule.ViewModels
 {
   public class TrackControlViewModel : Screen
   {
-    public TrackControlViewModel(IBioEngine bioEngine, ViewModelSelector selector)
+    public TrackControlViewModel( IProcessorLocator locator)
     {
-      _bioEngine = bioEngine;
-      _selector = selector;
-      _notifications = new VisitorsViewModel(bioEngine, selector);
+      _locator = locator;
+
+      _bioEngine = locator.GetProcessor<IBioEngine>();
+     
+      _visitorsView = new VisitorsViewModel(locator);
 
       DisplayName = "Tracking";
 
-      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())      
-        location.ScreenViewModel = new TrackControlItemViewModel(_bioEngine, location, _selector);    
+      foreach (TrackLocation location in TrackControlItems)      
+        location.ScreenViewModel = new TrackControlItemViewModel(locator, location);    
 
-      OnChecked();
+      //OnChecked();
     }
     public ObservableCollection<TrackLocation> TrackControlItems
     {
-      get {  return _bioEngine.TrackLocationEngine().TrackLocations();  }      
+      get {  return _bioEngine.TrackLocationEngine().TrackLocations;  }      
     }
 
     private TrackLocation _selectedTrackLocation;
@@ -53,42 +54,17 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => SelectedTrackLocation);       
       }
     }  
-
-   
-    public void AddMenu()
+    
+    private readonly VisitorsViewModel _visitorsView;
+    public VisitorsViewModel VisitorsView
     {
-      Visitor v = new Visitor()
-      {        
-         User_UID = 1       
-        , Locaion_ID = 2
-        , Status = "VerificationSuccess"         
-      };
-
-      _bioEngine.Database().AddVisitor(v);
-      _bioEngine.Database().SaveChanges();
-
-      foreach (TrackLocation location in _bioEngine.TrackLocationEngine().TrackLocations())
-      {
-        TrackControlItemViewModel vm = (TrackControlItemViewModel)location.ScreenViewModel;
-        if (vm != null)
-          vm.Update();
-      }
-    }
-
-    public VisitorsViewModel Notifications
-    {
-      get { return _notifications; }
+      get { return _visitorsView; }
     }
 
     
-    public string Caption()
-    {
-      return "Tracking";
-    }
 
-    private readonly VisitorsViewModel _notifications;
-    private readonly IBioEngine        _bioEngine    ;
-    private readonly ViewModelSelector _selector     ;
+    private readonly IProcessorLocator _locator  ;    
+    private readonly IBioEngine        _bioEngine;   
 
     //******************************************ComboBoxLocationCheck**************************
 
@@ -108,6 +84,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    /*
     public void OnChecked()
     {
       string caption = "";
@@ -128,35 +105,7 @@ namespace BioModule.ViewModels
 
       SelectedItems = caption;
     }
-  }
+    */
+  } 
   
-  public class ComboBoxItemTemplateSelector : DataTemplateSelector
-  {
-    // Can set both templates from XAML
-    public DataTemplate SelectedItemTemplate { get; set; }
-    public DataTemplate ItemTemplate { get; set; }
-
-    public override DataTemplate SelectTemplate(object item, DependencyObject container)
-    {
-      bool selected = false;
-
-      // container is the ContentPresenter
-      FrameworkElement fe = container as FrameworkElement;
-      if (fe != null)
-      {
-        DependencyObject parent = fe.TemplatedParent;
-        if (parent != null)
-        {
-          ComboBox cbo = parent as ComboBox;
-          if (cbo != null)
-            selected = true;
-        }
-      }
-
-      if (selected)
-        return SelectedItemTemplate;
-      else
-        return ItemTemplate;
-    }
-  }
 }

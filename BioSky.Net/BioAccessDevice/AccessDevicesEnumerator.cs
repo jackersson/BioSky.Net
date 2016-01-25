@@ -1,5 +1,6 @@
 ﻿using BioAccessDevice.Abstract;
 using BioContracts;
+using BioContracts.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
