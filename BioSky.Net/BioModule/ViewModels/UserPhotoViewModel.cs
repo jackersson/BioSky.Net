@@ -11,29 +11,18 @@ using BioModule.Model;
 using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
 using System.IO;
+using System.Collections.ObjectModel;
+using System.Reflection;
+
 
 namespace BioModule.ViewModels
 {
-  public static class RobotImageLoader
-  {
-    public static List<BitmapImage> LoadImages()
-    {
-      List<BitmapImage> robotImages = new List<BitmapImage>();
-      DirectoryInfo robotImageDir = new DirectoryInfo(@"C:\Users\Spark\Downloads\CustomItemsPanel\CustomItemsPanel\CustomItemsPanel\Robots");
-      foreach (FileInfo robotImageFile in robotImageDir.GetFiles("*.jpg"))
-      {
-        Uri uri = new Uri(robotImageFile.FullName);
-        robotImages.Add(new BitmapImage(uri));
-      }
-      return robotImages;
-    }
-  }
   public class UserPhotoViewModel : Screen, IObserver<AccessDeviceActivity>
   {
-    public UserPhotoViewModel(IBioEngine bioEngine)
+    public UserPhotoViewModel(IBioEngine bioEngine, IScreen screen)
     {
       _bioEngine = bioEngine;
-
+      _screen = screen;
       DisplayName = "Photo";
 
       AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
@@ -43,28 +32,35 @@ namespace BioModule.ViewModels
       AccessDeviceConnected = false;
 
 
-      List<BitmapImage> _robotImages = new List<BitmapImage>();
+      _robotImages = new ObservableCollection<Uri>();
       DirectoryInfo robotImageDir = new DirectoryInfo(@"C:\Users\Spark\Downloads\CustomItemsPanel\CustomItemsPanel\CustomItemsPanel\Robots");
       foreach (FileInfo robotImageFile in robotImageDir.GetFiles("*.jpg"))
       {
-        Uri uri = new Uri(robotImageFile.FullName);
-        _robotImages.Add(new BitmapImage(uri));
+        Uri uri = new Uri(robotImageFile.FullName);    
+
+        RobotImages.Add(uri);
       }
-    }
-    public static List<BitmapImage> LoadImages()
-    {
-      List<BitmapImage> robotImages = new List<BitmapImage>();
-      DirectoryInfo robotImageDir = new DirectoryInfo(@"C:\Users\Spark\Downloads\CustomItemsPanel\CustomItemsPanel\CustomItemsPanel\Robots");
-      foreach (FileInfo robotImageFile in robotImageDir.GetFiles("*.jpg"))
-      {
-        Uri uri = new Uri(robotImageFile.FullName);
-        robotImages.Add(new BitmapImage(uri));
-      }
-      return robotImages;
+             // BitmapSource _logoListIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.tracking);
+              //BitmapSource _logoListIconSource2 = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.add_user);
+
+        //RobotImages.Add(_logoListIconSource);
+        //RobotImages.Add(_logoListIconSource2);
+
+      
     }
 
-    private List<BitmapImage> _robotImages;
-    public List<BitmapImage> RobotImages
+    public void OnSelectionChange()
+    {
+      if(SelectedItem != null)
+      {
+        MethodInfo method = _screen.GetType().GetMethod("UpdatePhoto");
+        if (method != null)
+          method.Invoke(_screen, new object[] { SelectedItem });
+      }
+    }
+
+    private ObservableCollection<Uri> _robotImages;
+    public ObservableCollection<Uri> RobotImages
     {
       get { return _robotImages; }
       set
@@ -78,8 +74,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private BitmapImage _selectedItem;
-    public BitmapImage SelectedItem
+    private Uri _selectedItem;
+    public Uri SelectedItem
     {
       get { return _selectedItem; }
       set
@@ -198,5 +194,8 @@ namespace BioModule.ViewModels
     }
 
     private readonly IBioEngine _bioEngine;
+    private readonly IScreen _screen;
   }
+
+  
 }

@@ -32,14 +32,15 @@ namespace BioModule.ViewModels
       _bioEngine = bioEngine;
       _windowManager = windowManager;
 
+      CurrentImageView = new ImageViewModel();
+
       Items.Add(new UserInformationViewModel    ());
       Items.Add(new UserContactlessCardViewModel(_bioEngine));
-      Items.Add(new UserPhotoViewModel(_bioEngine));
+      Items.Add(new UserPhotoViewModel(_bioEngine, CurrentImageView));
      
       ActiveItem = Items[0];
       OpenTab();
 
-      CurrentImageView = new ImageViewModel();
 
       DisplayName = "Add New User";
     }

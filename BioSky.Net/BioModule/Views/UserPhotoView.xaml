@@ -8,12 +8,13 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:UserPhotoViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
-        <vm:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />        
+        <utils:NullImageConverter x:Key="NullImageConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -46,45 +47,25 @@
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
-                 Grid.Row="5" Margin="0, 5, 0, 0"
+                 Grid.Row="5" Margin="0, 5, 0, 0"                
                  SelectedItem="{Binding SelectedItem}"
-                 ItemsSource="{Binding}">
-            <ListBox.DataContext>
-                <ObjectDataProvider ObjectType="{x:Type vm:UserPhotoViewModel}" 
-                                    MethodName="LoadImages"/>
-            </ListBox.DataContext>
-            <ListBox.Resources>
-                <Style TargetType="{x:Type ListBox}">
-                    <!-- Set the ItemTemplate of the ListBox to a DataTemplate 
-           which explains how to display an object of type BitmapImage. -->
-                    <Setter Property="ItemTemplate">
-                        <Setter.Value>
-                            <DataTemplate>
-                                <Border BorderBrush="Black" BorderThickness="4" CornerRadius="5" Margin="6">
-                                    <Image Source="{Binding UriSource}" Stretch="Fill" Width="100" Height="120" 
-                                  />
-                                </Border>
-                            </DataTemplate>
-                        </Setter.Value>
-                    </Setter>
-
-                    <!-- Swap out the default items panel with a WrapPanel so that
-           the images will be arranged with a different layout. -->
-                    <Setter Property="ItemsPanel">
-                        <Setter.Value>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    
-                    <!-- Set this attached property to 'Disabled' so that the 
-           ScrollViewer in the ListBox will never show a horizontal 
-           scrollbar, and the WrapPanel it contains will be constrained 
-           to the width of the ScrollViewer's viewable surface. -->
-                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-                </Style>
-            </ListBox.Resources>
+                 ItemsSource="{Binding RobotImages}"  
+                 ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
+                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChange]"
+                 >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Black" BorderThickness="4" CornerRadius="5" Margin="6">
+                        <Image Source="{Binding Mode=OneWay, Converter={StaticResource NullImageConverter}}" Stretch="Fill" Width="100" Height="120">
+                        </Image>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>            
         </ListBox>
 
 

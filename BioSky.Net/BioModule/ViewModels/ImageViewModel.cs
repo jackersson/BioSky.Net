@@ -58,6 +58,11 @@ namespace BioModule.ViewModels
       SetImageFromFile(User.Photo);
     }
 
+    public void UpdatePhoto(Uri uriSource)
+    {
+      SetImageFromFile(uriSource.OriginalString);
+    }
+
     public void CancelClick(double viewWidth, double viewHeight)
     {
       CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;

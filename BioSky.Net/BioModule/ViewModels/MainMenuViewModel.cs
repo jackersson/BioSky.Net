@@ -13,7 +13,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 
-
 namespace BioModule.ViewModels
 {
   public class MainMenuViewModel : Screen
@@ -82,7 +81,12 @@ namespace BioModule.ViewModels
 
     //****************************************************************************************************************
 
-    
+    public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
+    {
+      Console.WriteLine(register + " " + name + " " + password);
+
+    }
+
     private IWindowManager _windowManager;
     public void ShowAboutDialog()
     {
@@ -90,7 +94,7 @@ namespace BioModule.ViewModels
     }
     public void ShowLogInDialog()
     {
-      LoginDialogViewModel loginDialog = new LoginDialogViewModel();
+      LoginDialogViewModel loginDialog = new LoginDialogViewModel(this);
       var result = _windowManager.ShowDialog(loginDialog);
       Console.WriteLine(loginDialog.UserPassword + " " + loginDialog.UserName);
     }
