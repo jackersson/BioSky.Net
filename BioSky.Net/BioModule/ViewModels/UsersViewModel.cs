@@ -186,18 +186,18 @@ namespace BioModule.ViewModels
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)
     {
-      /*
+      
       IList selectedRecords = e.AddedItems as IList;
       IList unselectedRecords = e.RemovedItems as IList;
 
-      foreach (User currentUser in selectedRecords)
+      foreach (Person currentUser in selectedRecords)
       {
-        SelectedItemIds.Add(currentUser.UID);
+        SelectedItemIds.Add(currentUser.Id);
       }
 
-      foreach (User currentUser in unselectedRecords)
+      foreach (Person currentUser in unselectedRecords)
       {
-        SelectedItemIds.Remove(currentUser.UID);
+        SelectedItemIds.Remove(currentUser.Id);
       }
 
       if (SelectedItemIds.Count >= 1)
@@ -214,7 +214,7 @@ namespace BioModule.ViewModels
       {
         Console.WriteLine(item);
       }
-      */
+      
     }
 
     //*************************************************************Context Menu******************************************\
@@ -257,7 +257,7 @@ namespace BioModule.ViewModels
     {
       foreach (long item in SelectedItemIds)
       {
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users[(int)item] });
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users.Where( x => x.Id == (long)item).FirstOrDefault() });
       }
     }
 
