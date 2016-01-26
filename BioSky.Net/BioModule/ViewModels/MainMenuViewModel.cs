@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Windows;
 using BioContracts;
 
+
 namespace BioModule.ViewModels
 {
   public class MainMenuViewModel : Screen
@@ -79,16 +80,19 @@ namespace BioModule.ViewModels
     }
 
     //***************************************************************************************************************
-      
-    public void ShowAboutDialog()
+    public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
     {
+      Console.WriteLine(register + " " + name + " " + password);
+
+    } 
+    public async void ShowAboutDialog()
+    {
+      
       _windowManager.ShowDialog(new AboutDialogViewModel());      
     }
     public void ShowLogInDialog()
-    {
-      LoginDialogViewModel loginDialog = new LoginDialogViewModel();
-      var result = _windowManager.ShowDialog(loginDialog);
-      Console.WriteLine(loginDialog.UserPassword + " " + loginDialog.UserName);
+    {      
+      var result = _windowManager.ShowDialog(new LoginDialogViewModel(this));      
     }
 
     private ViewModelSelector          _viewModelSelector;

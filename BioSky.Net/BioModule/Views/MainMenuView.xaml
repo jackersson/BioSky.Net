@@ -30,9 +30,9 @@
                 </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Log In"
-                          cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">                    
+                          cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">
                 </MenuItem>
-                <MenuItem Header="Log Out">                    
+                <MenuItem Header="Log Out">
                 </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit"/>
@@ -54,6 +54,6 @@
                           cal:Message.Attach="[Event Click] = [Action ShowAboutDialog]"/>
             </MenuItem>
         </Menu>
-       
+
     </Grid>
 </UserControl>

@@ -48,7 +48,7 @@
                   Grid.Column="0" HorizontalAlignment="Stretch" 
             Grid.ColumnSpan="5"
                   Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
-                  ItemsSource="{Binding FilteredVisitors}"                
+                  ItemsSource="{Binding Visitors}"                
                   GridLinesVisibility="All"
                   AutoGenerateColumns="False"
                   CanUserSortColumns="True" CanUserAddRows="False"
@@ -84,9 +84,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.First_Name_}"/>
-                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Location.Location_Name}"/>
-                <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Detection_Time}"/>
+                <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.Firstname}"/>
+                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Locationid}"/>
+                <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Time}"/>
 
                 <DataGridTemplateColumn Header="Status" IsReadOnly="True" >
                     <DataGridTemplateColumn.CellTemplate>

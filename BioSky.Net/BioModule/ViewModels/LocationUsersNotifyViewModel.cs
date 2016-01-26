@@ -7,21 +7,62 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BioModule.DragDrop;
+using BioContracts;
+using BioFaceService;
 
 namespace BioModule.ViewModels
 {
   public class LocationUsersNotifyViewModel : Screen
   {
-    public LocationUsersNotifyViewModel()
+    public LocationUsersNotifyViewModel(IProcessorLocator locator)
     {
       DisplayName = "Users Notification";
+
+      _locator = locator;
+      _bioService = _locator.GetProcessor<IServiceManager>();
+      _bioEngine = _locator.GetProcessor<IBioEngine>();
 
       DragableWithDisabledItem disabledDragable = new DragableWithDisabledItem();
       DragableWithRemoveItem   removeDragable   = new DragableWithRemoveItem();
 
       UsersList       = new DragablListBoxViewModel(disabledDragable);
       UsersNotifyList = new DragablListBoxViewModel(removeDragable);
-      UsersNotifyList.ItemRemoved += UsersList.ItemDropped;      
+      UsersNotifyList.ItemRemoved += UsersList.ItemDropped;
+
+      _bioEngine.Database().DataChanged += LocationUsersNotifyViewModel_DataChanged; 
+    }
+
+    protected async override void OnActivate()
+    {
+      await _bioService.DatabaseService.PersonRequest(new CommandPerson());
+    }
+
+    public void LocationUsersNotifyViewModel_DataChanged(object sender, EventArgs args)
+    {
+      OnPersonsChanged(_bioEngine.Database().Persons);
+    }
+    public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)
+    {
+      if (item == null)
+        return;
+
+      DragableItem newItem = item.Clone();
+      newItem.ItemEnabled = isEnabled;
+      UsersList.Add(newItem);
+    }
+    private void OnPersonsChanged(PersonList Persons)
+    {
+      foreach (Person item in Persons.Persons)
+      {
+        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Firstname + " " + item.Lastname};
+
+        if (UsersList.ContainsItem(dragableItem))
+        {
+          return;
+        }
+
+        AddToGeneralDeviceList(dragableItem);
+      }
     }
 
     private DragablListBoxViewModel _usersList;
@@ -51,5 +92,9 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    private readonly IProcessorLocator _locator   ;
+    private readonly IBioEngine        _bioEngine ;
+    private readonly IServiceManager   _bioService;
   }
 }

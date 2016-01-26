@@ -10,12 +10,47 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
-using static BioFaceService.Person.Types;
+//using static BioFaceService.Person.Types;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows;
+using BioContracts;
+using BioFaceService;
 
 namespace BioModule.Utils
 {
+  public class ConvertPhotoIdToImage : IValueConverter
+  {
+    public ConvertPhotoIdToImage( IBioSkyNetRepository database )
+    {
+      _database = database;
+    }
+
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        Photo photo = _database.GetPhotoByID((long)value);
+
+        string addr = Directory.GetCurrentDirectory();
+
+        if (photo != null && File.Exists(photo.FileLocation))
+        {
+          BitmapSource img = new BitmapImage(new Uri(addr + "\\" + photo.FileLocation, UriKind.RelativeOrAbsolute));
+          return img;
+        }
+
+      }
+      return ResourceLoader.UserDefaultImageIconSource;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+
+    private readonly IBioSkyNetRepository _database;
+  }
+
   public class ConvertPhotoPathToImage : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -38,10 +73,10 @@ namespace BioModule.Utils
     }
   }
 
-  public class StringToGenderConverter : StringToEnumConverter<Gender>
+  public class StringToGenderConverter : StringToEnumConverter<BioFaceService.Person.Types.Gender>
   { }
 
-  public class StringToRightsConverter : StringToEnumConverter<Rights>
+  public class StringToRightsConverter : StringToEnumConverter<BioFaceService.Person.Types.Rights>
   { }
 
   public class StringToEnumConverter<TEnum> : IValueConverter
@@ -96,10 +131,6 @@ namespace BioModule.Utils
   {
     public object Convert(object values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-      var tb = new TextBlock();
-
-      tb.Inlines.Add(new Run() { Text = (string)values, Background = System.Windows.Media.Brushes.Yellow });
-
       int chunkSize = 4;
       string number = (string)(values);
       string result = "";
@@ -115,6 +146,20 @@ namespace BioModule.Utils
     }
 
     public object ConvertBack(object value, Type targetTypes, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+  public class NullImageConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+      if (value == null)
+        return DependencyProperty.UnsetValue;
+      return value;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
       throw new NotImplementedException();
     }

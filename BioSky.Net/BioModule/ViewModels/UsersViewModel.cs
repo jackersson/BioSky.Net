@@ -34,23 +34,64 @@ namespace BioModule.ViewModels
 {
   public class UsersViewModel : Screen
   {
+
+    private static ConvertPhotoIdToImage _photoIDConverter;
+    public static ConvertPhotoIdToImage PhotoIDConverter
+    {
+      get  { return _photoIDConverter; }
+      set
+      {
+        if (_photoIDConverter != value)
+        {
+          _photoIDConverter = value;         
+        }
+      }
+    }
+
     public UsersViewModel(IProcessorLocator locator)
     {
-      _locator   = locator;
-      _bioEngine = locator.GetProcessor<IBioEngine>();
-      _selector  = locator.GetProcessor<ViewModelSelector>();
+      DisplayName = "Users";
 
-      _users = new RepeatedField<Person>();
+      _locator    = locator;
+      _bioEngine  = locator.GetProcessor<IBioEngine>();
+      _selector   = locator.GetProcessor<ViewModelSelector>();
+      _bioService = _locator.GetProcessor<IServiceManager>();
+
+      _users           = new RepeatedField<Person>();
       _selectedItemIds = new ObservableCollection<long>();
 
       //FilteredUsers = new RepeatedField<Person>();
 
-      Users = _bioEngine.Database().Persons.Persons;
       //FilteredUsers = _bioEngine.Database().GetAllUsers();
 
       IsDeleteButtonEnabled = false;
+      PhotoIDConverter = new ConvertPhotoIdToImage(_bioEngine.Database());
 
-      DisplayName = "Users";
+
+      _bioEngine.Database().DataChanged += UsersViewModel_DataChanged;     
+
+    }
+
+    protected async override void OnActivate()
+    {
+      await _bioService.DatabaseService.PhotoRequest(new CommandPhoto());
+      await _bioService.DatabaseService.PersonRequest(new CommandPerson());
+    }
+
+    public void UsersViewModel_DataChanged(object sender, EventArgs args)
+    {
+      OnPersonsChanged(_bioEngine.Database().Persons);
+    }
+
+    private void OnPersonsChanged(PersonList persons)
+    {
+      foreach (Person item in persons.Persons)
+      {
+        if (Users.Contains(item))
+          return;
+
+        Users.Add(item);
+      }
     }
 
     private RepeatedField<Person> _users;
@@ -241,8 +282,9 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => FilteredUsers);
       */
     }
-    private readonly IProcessorLocator _locator;
-    private readonly ViewModelSelector _selector;
-    private readonly IBioEngine        _bioEngine;
+    private readonly IProcessorLocator _locator   ;
+    private readonly ViewModelSelector _selector  ;
+    private readonly IBioEngine        _bioEngine ;    
+    private readonly IServiceManager   _bioService;
   }
 }

@@ -27,25 +27,39 @@ namespace BioModule.ViewModels
   {      
     public VisitorsViewModel(IProcessorLocator locator )
     {
-      _locator = locator;     
-
-      //_visitors         = new RepeatedField<Visitor>();      
-
-      //IBioEngine bioEngine = locator.GetProcessor<IBioEngine>();
-     // Visitors = bioEngine.Database().Visitors.Visitors;
-      
-
       DisplayName = "Visitors";
+
+      _locator = locator;
+      _bioEngine = locator.GetProcessor<IBioEngine>();
+      _selector = locator.GetProcessor<ViewModelSelector>();
+      _bioService = _locator.GetProcessor<IServiceManager>();
+
+      _visitors         = new RepeatedField<Visitor>();
+
+      _bioEngine.Database().DataChanged += VisitorsViewModel_DataChanged;     
+
     }
 
-
-    //TODO only when data comes
-    public void Init()
+    protected async override void OnActivate()
     {
-      IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
-      Visitors = bioEngine.Database().Visitors.Visitors;
+      await _bioService.DatabaseService.VisitorRequest(new CommandVisitor());
     }
 
+    public void VisitorsViewModel_DataChanged(object sender, EventArgs args)
+    {
+      OnPersonsChanged(_bioEngine.Database().Visitors);
+    }
+
+    private void OnPersonsChanged(VisitorList visitors)
+    {
+      foreach (Visitor item in visitors.Visitors)
+      {
+        if (Visitors.Contains(item))
+          return;
+
+        Visitors.Add(item);
+      }
+    }
 
     public void Update()
     {
@@ -65,8 +79,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-    
-    private readonly IProcessorLocator _locator;
 
     //**********************************************************Context Menu*****************************************************
 
@@ -100,6 +112,11 @@ namespace BioModule.ViewModels
 
         NotifyOfPropertyChange(() => MenuOpenStatus);
       }
-    }        
+    }
+
+    private readonly IProcessorLocator _locator   ;
+    private readonly ViewModelSelector _selector  ;
+    private readonly IBioEngine        _bioEngine ;
+    private readonly IServiceManager   _bioService;
   }
 }

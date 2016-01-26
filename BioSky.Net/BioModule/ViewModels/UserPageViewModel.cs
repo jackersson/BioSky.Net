@@ -16,7 +16,7 @@ using System.Reflection;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using BioFaceService;
-using static BioFaceService.Person.Types;
+//using static BioFaceService.Person.Types;
 
 namespace BioModule.ViewModels
 {
@@ -27,20 +27,22 @@ namespace BioModule.ViewModels
   }
   public class UserPageViewModel : Conductor<IScreen>.Collection.OneActive
   {   
-    public UserPageViewModel(IProcessorLocator locator) : base()
+    public UserPageViewModel(IProcessorLocator locator, IWindowManager windowManager) : base()
     {
       _locator = locator;
+      _windowManager = windowManager;
 
       IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
 
+      CurrentImageView = new ImageViewModel();
+
       Items.Add(new UserInformationViewModel    ());
-      Items.Add(new UserContactlessCardViewModel(bioEngine));
-      Items.Add(new UserPhotoViewModel(bioEngine));
+      Items.Add(new UserContactlessCardViewModel(bioEngine, _locator));
+      Items.Add(new UserPhotoViewModel(bioEngine, CurrentImageView));
      
       ActiveItem = Items[0];
       OpenTab();
 
-      CurrentImageView = new ImageViewModel();
       _methodInvoker = new FastMethodInvoker();
 
       DisplayName = "Add New User";
@@ -62,8 +64,8 @@ namespace BioModule.ViewModels
             Firstname = ""
           , Lastname = ""
           , Thumbnail = 0
-          , Gender = Gender.Male
-          , Rights = Rights.Operator
+          , Gender = BioFaceService.Person.Types.Gender.Male
+          , Rights = BioFaceService.Person.Types.Rights.Operator
         };
 
         _userPageMode = UserPageMode.NewUser;
@@ -96,9 +98,12 @@ namespace BioModule.ViewModels
     }
      
 
-    public void Apply()
-    {      
-      //var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+    public async void Apply()
+    {
+      //CommandPerson cmd = new CommandPerson();
+     // await _locator.GetProcessor<IServiceManager>().DatabaseService.PersonRequest(cmd);
+
+    //  var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
       //Console.WriteLine(result);
       //var result = _windowManager.ShowDialog(new AboutDialogViewModel());
       //var result = _windowManager.ShowDialog(new LoginDialogViewModel());
@@ -130,6 +135,8 @@ namespace BioModule.ViewModels
     private readonly FastMethodInvoker _methodInvoker;
 
     private readonly IProcessorLocator _locator;
+
+    private IWindowManager _windowManager;
 
     private UserPageMode  _userPageMode ; 
     

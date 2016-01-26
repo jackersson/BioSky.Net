@@ -16,15 +16,19 @@ using System.Windows.Media;
 using BioData;
 using BioFaceService;
 
+using BioContracts;
+
 namespace BioModule.ViewModels
 {
   public class LocationPageViewModel : Conductor<IScreen>.Collection.OneActive
-  {       
-    public LocationPageViewModel()
+  {
+    public LocationPageViewModel(IProcessorLocator locator)
     {
-      Items.Add(new LocationAccessDevicesViewModel ());
-      Items.Add(new LocationCaptureDevicesViewModel());
-      Items.Add(new LocationUsersNotifyViewModel   ());
+      _locator = locator;
+
+      Items.Add(new LocationAccessDevicesViewModel (_locator));
+      Items.Add(new LocationCaptureDevicesViewModel(_locator));
+      Items.Add(new LocationUsersNotifyViewModel   (_locator));
 
       ActiveItem = Items[0];
       OpenTab();
@@ -55,6 +59,8 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => CurrentLocation);
         }
       }
-    }      
+    }
+
+    private readonly IProcessorLocator _locator;
   }
 }

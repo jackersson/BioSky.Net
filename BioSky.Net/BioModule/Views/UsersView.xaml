@@ -28,6 +28,7 @@
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -82,7 +83,10 @@
                 <DataGridTemplateColumn Header="Photo" IsReadOnly="True" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Photo, Converter={StaticResource ConvertPhotoPathToImage}}" />
+                            <Image Width="32" Height="32" Source="{Binding Thumbnail, Converter={x:Static vm:UsersViewModel.PhotoIDConverter}}">
+                           
+                            </Image>
+
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

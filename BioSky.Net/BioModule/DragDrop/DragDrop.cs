@@ -49,6 +49,11 @@ namespace BioModule.DragDrop
              _topWindow = (Window)DragDrop.FindAncestor(typeof(Window), visual);
              
              _dragSource = (FindElementFromSource((DependencyObject)e.OriginalSource)) as UIElement;
+
+             if (_dragSource == null)
+             {
+               return;
+             }
              
              _initialMousePosition = e.GetPosition(_topWindow);
              

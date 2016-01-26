@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 using BioGRPC;
 
+
+
 namespace BioEngine
 {
   public class BioStarter : IBioStarter
   {
-    BioStarter(IProcessorLocator locator)
+    public BioStarter(IProcessorLocator locator)
     {
       _bioEngine      = locator.GetProcessor<IBioEngine>();
       _serviceManager = locator.GetProcessor<IServiceManager>();
@@ -19,7 +21,9 @@ namespace BioEngine
 
     public void Run()
     {
-      _serviceManager.Start("127.0.0.1:50051");
+      //_serviceManager.Start("192.168.1.127:50051");
+      _serviceManager.Start("192.168.1.178:50051");
+
     }
 
     private IServiceManager _serviceManager;

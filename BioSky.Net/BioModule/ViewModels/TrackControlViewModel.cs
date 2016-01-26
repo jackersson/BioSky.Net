@@ -32,11 +32,22 @@ namespace BioModule.ViewModels
 
       DisplayName = "Tracking";
 
-      foreach (TrackLocation location in TrackControlItems)      
-        location.ScreenViewModel = new TrackControlItemViewModel(locator, location);    
+      _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
 
+      
       //OnChecked();
     }
+
+    public void TrackLocations_CollectionChanged(object sender, EventArgs args)
+    {
+      foreach (TrackLocation location in TrackControlItems)
+      {
+        if (location.ScreenViewModel == null )
+          location.ScreenViewModel = new TrackControlItemViewModel(_locator, location); 
+      }
+     
+    }
+
     public ObservableCollection<TrackLocation> TrackControlItems
     {
       get {  return _bioEngine.TrackLocationEngine().TrackLocations;  }      

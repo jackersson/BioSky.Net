@@ -30,7 +30,10 @@ namespace BioModule
     }
 
     public void Init()
-    {      
+    {
+      IBioStarter starter = _locator.GetProcessor<IBioStarter>();
+      starter.Run();
+
       ViewModelSelector selector = _locator.GetProcessor<ViewModelSelector>();
       selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);
 

@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
+  //delegate void DataChangedHandler(object sender);
+
   public interface IBioSkyNetRepository
-  {
+  {   
+     event EventHandler DataChanged;
+
+     Photo GetPhotoByID( long id );
+
+
+
     PersonList Persons
     {
       get; set;

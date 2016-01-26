@@ -61,7 +61,11 @@ namespace BioModule
 
         container.Resolve<IProcessorLocator>().Init(container);
 
-        var test =  container.Resolve<IBioEngine>();
+       // IBioStarter starter = container.Resolve<IBioStarter>();
+        //starter.Run();
+
+        //var test =  container.Resolve<IBioEngine>();
+        //IBioStarter starter = container.Resolve<IBioStarter>();
         //container.Register(Component.For<IWindsorContainer>().Instance(container));
        // container.Register(Component.For<IProcessorLocator>().ImplementedBy<ProcessorLocator>());
 

@@ -82,7 +82,7 @@
 
                 <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.First_Name_}"/>
                 <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Location.Location_Name}"/>
-                <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Detection_Time}"/>
+                <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Time}"/>
 
                 <DataGridTemplateColumn Header="Status" IsReadOnly="True" >
                     <DataGridTemplateColumn.CellTemplate>

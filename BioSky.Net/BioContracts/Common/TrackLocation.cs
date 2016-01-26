@@ -22,6 +22,11 @@ namespace BioContracts
       _location = location;
     }
 
+    public long LocationID
+    {
+      get { return _location.Id; }
+    }
+
     public void Start()
     {
       //_accessDeviceEngine.Add(_location.Devices_IN_);
