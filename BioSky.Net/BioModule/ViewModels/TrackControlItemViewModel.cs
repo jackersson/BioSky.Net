@@ -22,18 +22,24 @@ namespace BioModule.ViewModels
   {   
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
     {
-      _location  = location;   
-
+      
       UserVerified = true;
       UserVerificationIconVisible = false;
       CardDetectedIconVisible = false;      
 
-      _visitorsView = new VisitorsViewModel(locator);   
+      _visitorsView = new VisitorsViewModel(locator);
+
+      DisplayName = "Location";
+
+      Update(location);
     }
 
-    public void Update()
+    public void Update(TrackLocation trackLocation)
     {
-      _visitorsView.Update();
+      if (trackLocation == null)
+        return;
+
+      CurrentLocation = trackLocation;
     }
 
     private VisitorsViewModel _visitorsView;
@@ -106,9 +112,18 @@ namespace BioModule.ViewModels
     }
 
     private TrackLocation _location;
-    public TrackLocation TrackLocation
+    public TrackLocation CurrentLocation
     {
       get { return _location; }
+
+      set
+      {
+        if (_location != value)
+        {
+          _location = value;
+          NotifyOfPropertyChange(() => CurrentLocation);
+        }
+      }
     }
 
     public void OnNext(AccessDeviceActivity value)
