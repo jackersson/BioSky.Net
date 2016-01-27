@@ -27,16 +27,34 @@ namespace BioModule.ViewModels
       _locator = locator;
 
       _bioEngine = locator.GetProcessor<IBioEngine>();
-     
+      _selector  = locator.GetProcessor<ViewModelSelector>();
+
       _visitorsView = new VisitorsViewModel(locator);
 
       DisplayName = "Tracking";
 
-      foreach (TrackLocation location in TrackControlItems)      
-        location.ScreenViewModel = new TrackControlItemViewModel(locator, location);    
+      _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
+      
 
+      foreach (TrackLocation location in TrackControlItems)
+      {
+        if (location.ScreenViewModel == null)
+          location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
+      }
+      
       //OnChecked();
     }
+
+    public void TrackLocations_CollectionChanged(object sender, EventArgs args)
+    {
+      foreach (TrackLocation location in TrackControlItems)
+      {
+        if (location.ScreenViewModel == null )
+          location.ScreenViewModel = new TrackControlItemViewModel(_locator, location); 
+      }
+     
+    }
+
     public ObservableCollection<TrackLocation> TrackControlItems
     {
       get {  return _bioEngine.TrackLocationEngine().TrackLocations;  }      
@@ -61,10 +79,34 @@ namespace BioModule.ViewModels
       get { return _visitorsView; }
     }
 
-    
+    private bool _canOpenSettings;
+    public bool CanOpenSettings
+    {
+      get { return _canOpenSettings; }
+      set
+      {
+        if (_canOpenSettings != value)
+        {
+          _canOpenSettings = value;
+          NotifyOfPropertyChange(() => CanOpenSettings);
+        }
+      }
+    }
+
+    public void OnMouseRightButtonDown(TrackLocation trackLocation)
+    {
+      CanOpenSettings = (trackLocation != null);
+      SelectedTrackLocation = trackLocation;
+    }
+
+    public void ShowLocationFlayout()
+    {
+      _selector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings, new object[] {  _bioEngine.Database().GetLocationByID(SelectedTrackLocation.LocationID) });
+    }    
 
     private readonly IProcessorLocator _locator  ;    
-    private readonly IBioEngine        _bioEngine;   
+    private readonly IBioEngine        _bioEngine;
+    private readonly ViewModelSelector _selector ;  
 
     //******************************************ComboBoxLocationCheck**************************
 
@@ -106,6 +148,5 @@ namespace BioModule.ViewModels
       SelectedItems = caption;
     }
     */
-  } 
-  
+  }   
 }

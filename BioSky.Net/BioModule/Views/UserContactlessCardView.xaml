@@ -55,7 +55,7 @@
                  ItemsSource="{Binding UserCards}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl Margin="2,2,2,2" Content="{Binding CardID}"></ContentControl>
+                    <ContentControl Margin="2,2,2,2" Content="{Binding UniqueNumber, Converter={StaticResource ConvertToFormatedNumber}}"></ContentControl>
                 </DataTemplate>
             </ListBox.ItemTemplate>
 

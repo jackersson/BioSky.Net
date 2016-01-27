@@ -12,14 +12,17 @@ using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
 using System.IO;
 using AForge.Video.DirectShow;
+using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace BioModule.ViewModels
 {
   public class UserPhotoViewModel : Screen
   {
-    public UserPhotoViewModel(IBioEngine bioEngine)
+    public UserPhotoViewModel(IBioEngine bioEngine, IScreen screen)
     {
       _bioEngine = bioEngine;
+      _screen = screen;
 
       DisplayName = "Photo";
 
@@ -27,6 +30,60 @@ namespace BioModule.ViewModels
       CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
 
       CaptureDeviceConnected = false;
+
+      _robotImages = new ObservableCollection<Uri>();
+      DirectoryInfo robotImageDir = new DirectoryInfo(@"C:\Users\Spark\Downloads\CustomItemsPanel\CustomItemsPanel\CustomItemsPanel\Robots");
+      foreach (FileInfo robotImageFile in robotImageDir.GetFiles("*.jpg"))
+      {
+        Uri uri = new Uri(robotImageFile.FullName);
+
+        RobotImages.Add(uri);
+      }
+      // BitmapSource _logoListIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.tracking);
+      //BitmapSource _logoListIconSource2 = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.add_user);
+
+      //RobotImages.Add(_logoListIconSource);
+      //RobotImages.Add(_logoListIconSource2);
+    }
+
+    public void OnSelectionChange()
+    {
+      if (SelectedItem != null)
+      {
+        MethodInfo method = _screen.GetType().GetMethod("UpdatePhoto");
+        if (method != null)
+          method.Invoke(_screen, new object[] { SelectedItem });
+      }
+    }
+
+    private ObservableCollection<Uri> _robotImages;
+    public ObservableCollection<Uri> RobotImages
+    {
+      get { return _robotImages; }
+      set
+      {
+        if (_robotImages != value)
+        {
+          _robotImages = value;
+
+          NotifyOfPropertyChange(() => RobotImages);
+        }
+      }
+    }
+
+    private Uri _selectedItem;
+    public Uri SelectedItem
+    {
+      get { return _selectedItem; }
+      set
+      {
+        if (_selectedItem != value)
+        {
+          _selectedItem = value;
+
+          NotifyOfPropertyChange(() => SelectedItem);
+        }
+      }
     }
 
     private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -89,5 +146,6 @@ namespace BioModule.ViewModels
     }  
 
     private readonly IBioEngine _bioEngine;
+    private readonly IScreen _screen;
   }
 }

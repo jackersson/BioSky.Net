@@ -114,6 +114,20 @@ namespace BioModule.ViewModels
       DragableItems.Add(di);
     }
 
+    public bool ContainsItem(DragableItem di)
+    {
+      DragableItem dragableItem = DragableItems.Where(x => x.DisplayName == di.DisplayName).FirstOrDefault();
+      if (dragableItem != null)
+        return true;
+
+      return false;
+    }
+
+    public void Clear()
+    {
+      DragableItems.Clear();
+    }
+
     private ObservableCollection<DragableItem> _dragableItems;
     public ObservableCollection<DragableItem> DragableItems
     {

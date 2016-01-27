@@ -23,6 +23,11 @@ namespace BioContracts
       _location = location;
     }
 
+    public long LocationID
+    {
+      get { return _location.Id; }
+    }
+
     public void Start()
     {
 

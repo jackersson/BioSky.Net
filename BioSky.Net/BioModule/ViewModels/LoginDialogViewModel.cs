@@ -9,14 +9,16 @@ using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
 using System.Security;
 using System.Windows.Controls;
+using System.Reflection;
 
 namespace BioModule.ViewModels
 {
   public class LoginDialogViewModel : Screen
   {
-    public LoginDialogViewModel(string title = "Login Form")
+    public LoginDialogViewModel(IScreen screen , string title = "Login Form")
     {
       Update(title);
+      _screen = screen;
     }
 
     public void Update(string title = "Login Form")
@@ -26,26 +28,34 @@ namespace BioModule.ViewModels
 
     public void Register(SecureString password)
     {
-      //register logic
-      PasswordBox pb = new PasswordBox();
-      
-      Console.WriteLine(password);
+      //register logic     
+
       UserPassword = password;
-      DialogResult = true;      
-      this.TryClose(DialogResult);      
+      DialogResult = true;
+
+      MethodInfo method = _screen.GetType().GetMethod("UpdateUserPassword");
+      if (method != null)
+        method.Invoke(_screen, new object[] { DialogResult, UserName, UserPassword });
+
+      this.TryClose(true);      
     }
     public void Login(SecureString password)
     {
       //login logic
-      Console.WriteLine(password);
+
       UserPassword = password;
-      DialogResult = true;
-      this.TryClose(DialogResult);
+      DialogResult = false;
+
+      MethodInfo method = _screen.GetType().GetMethod("UpdateUserPassword");
+      if (method != null)
+        method.Invoke(_screen, new object[] { DialogResult, UserName, UserPassword });
+
+      this.TryClose(true);
     }
     public void Cancel()
     {      
-      DialogResult = false;
-      this.TryClose(DialogResult);
+      
+      this.TryClose(false);
     }
 
     private bool _dialogResult;
@@ -89,5 +99,7 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    private readonly IScreen _screen;
   }
 }

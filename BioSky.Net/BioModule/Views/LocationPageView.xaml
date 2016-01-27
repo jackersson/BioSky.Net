@@ -9,8 +9,10 @@
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-                 mc:Ignorable="d"                  
-                 d:DesignHeight="600" d:DesignWidth="360" >
+             mc:Ignorable="d"                  
+             d:DesignHeight="600" d:DesignWidth="360" 
+             d:DataContext="{d:DesignInstance vm:LocationPageViewModel, IsDesignTimeCreatable=False}"
+             >
 
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
@@ -35,13 +37,16 @@
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0"
                  Controls:TextBoxHelper.Watermark="Location Name*"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                 Controls:TextBoxHelper.ClearTextButton="True">
+                 Controls:TextBoxHelper.ClearTextButton="True"
+                 Text="{Binding CurrentLocation.LocationName}"
+                 >
         </TextBox>
 
         <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
                  Controls:TextBoxHelper.Watermark="Description"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
+                 Text="{Binding CurrentLocation.Desctiption}"
                  >
         </TextBox>
 

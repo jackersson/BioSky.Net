@@ -16,7 +16,9 @@ namespace BioGRPC
     public BioDatabaseService(IProcessorLocator locator, BioFaceDetector.IBioFaceDetectorClient client)
     {
       _client    = client;
-      _locator   = locator;            
+      _locator   = locator;
+
+      _database = _locator.GetProcessor<IBioSkyNetRepository>();
     }
     
     
@@ -25,7 +27,9 @@ namespace BioGRPC
       try
       {
         CaptureDeviceList call = await _client.CaptureDeviceSelectAsync(command);
+        _database.CaptureDevices = call;
         Console.WriteLine(call.ToString());
+
       }
       catch (RpcException e)
       {
@@ -38,7 +42,8 @@ namespace BioGRPC
     {
       try
       {
-        AccessDeviceList call = await _client.AccessDeviceSelectAsync(command);
+        AccessDeviceList call = await _client.AccessDeviceSelectAsync(command);   
+        _database.AccessDevices = call;
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -53,6 +58,7 @@ namespace BioGRPC
       try
       {
         LocationList call = await _client.LocationSelectAsync(command);
+        _database.Locations = call;
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -67,6 +73,7 @@ namespace BioGRPC
       try
       {
         PhotoList call = await _client.PhotoSelectAsync(command);
+        _database.Photos = call;
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -81,6 +88,7 @@ namespace BioGRPC
       try
       {
         CardList call = await _client.CardSelectAsync(command);
+        _database.Cards = call;
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -95,6 +103,7 @@ namespace BioGRPC
       try
       {
         VisitorList call = await _client.VisitorSelectAsync(command);
+        _database.Visitors = call;
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -109,6 +118,7 @@ namespace BioGRPC
       try
       {
         PersonList call = await _client.PersonSelectAsync(command);
+        _database.Persons = call;
         Console.WriteLine(call.ToString());
 
       }
@@ -131,6 +141,6 @@ namespace BioGRPC
 
     private readonly IProcessorLocator                      _locator;
     private readonly BioFaceDetector.IBioFaceDetectorClient _client;
-    
+    private readonly IBioSkyNetRepository                   _database; 
   }
 }

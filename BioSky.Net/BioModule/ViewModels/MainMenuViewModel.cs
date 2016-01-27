@@ -13,7 +13,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using BioContracts;
-using Grpc.Core;
+
 
 namespace BioModule.ViewModels
 {
@@ -80,18 +80,25 @@ namespace BioModule.ViewModels
     }
 
     //***************************************************************************************************************
-      
-    public void ShowAboutDialog()
+    public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
     {
-      //_windowManager.ShowDialog(new AboutDialogViewModel());  
-      Channel _clientChannel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
-      //_locator.GetProcessor<IBioStarter>().Run();
+      Console.WriteLine(register + " " + name + " " + password);
+
+    } 
+    public void ShowAboutDialog()
+    {      
+      _windowManager.ShowDialog(new AboutDialogViewModel());      
     }
     public void ShowLogInDialog()
+    {      
+      var result = _windowManager.ShowDialog(new LoginDialogViewModel(this));      
+    }
+
+    public void OnLogOut()
     {
-      LoginDialogViewModel loginDialog = new LoginDialogViewModel();
-      var result = _windowManager.ShowDialog(loginDialog);
-      Console.WriteLine(loginDialog.UserPassword + " " + loginDialog.UserName);
+      string path = "D://";
+      string path2 = path + "media//test1//test2";
+      System.IO.Directory.CreateDirectory(path2);
     }
 
     private ViewModelSelector          _viewModelSelector;

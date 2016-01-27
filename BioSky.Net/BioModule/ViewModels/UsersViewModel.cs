@@ -19,10 +19,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 using BioData;
-
-
 using System.Windows.Input;
-
 using System.Windows.Data;
 
 using BioModule.Utils;
@@ -34,27 +31,122 @@ namespace BioModule.ViewModels
 {
   public class UsersViewModel : Screen
   {
+
+    private static ConvertPhotoIdToImage _photoIDConverter;
+    public static ConvertPhotoIdToImage PhotoIDConverter
+    {
+      get  { return _photoIDConverter; }
+      set
+      {
+        if (_photoIDConverter != value)
+        {
+          _photoIDConverter = value;         
+        }
+      }
+    }
+
+    private static ConvertPersonIdToFirstname _personIdToFirstnameConverter;
+    public static ConvertPersonIdToFirstname PersonIdToFirstnameConverter
+    {
+      get { return _personIdToFirstnameConverter; }
+      set
+      {
+        if (_personIdToFirstnameConverter != value)
+        {
+          _personIdToFirstnameConverter = value;
+        }
+      }
+    }
+
+    private static ConvertPersonIdToLastname _personIdToLastnameConverter;
+    public static ConvertPersonIdToLastname PersonIdToLastnameConverter
+    {
+      get { return _personIdToLastnameConverter; }
+      set
+      {
+        if (_personIdToLastnameConverter != value)
+        {
+          _personIdToLastnameConverter = value;
+        }
+      }
+    }
+
+    private static ConvertLocationIdToLocationname _locationIdToLocationnameConverter;
+    public static ConvertLocationIdToLocationname LocationIdToLocationnameConverter
+    {
+      get { return _locationIdToLocationnameConverter; }
+      set
+      {
+        if (_locationIdToLocationnameConverter != value)
+        {
+          _locationIdToLocationnameConverter = value;
+        }
+      }
+    }
+
     public UsersViewModel(IProcessorLocator locator)
     {
-      _locator   = locator;
-      _bioEngine = locator.GetProcessor<IBioEngine>();
-      _selector  = locator.GetProcessor<ViewModelSelector>();
+      DisplayName = "Users";
 
-      _users = new RepeatedField<Person>();
+      _locator    = locator;
+      _bioEngine  = locator.GetProcessor<IBioEngine>();
+      _selector   = locator.GetProcessor<ViewModelSelector>();
+      _bioService = _locator.GetProcessor<IServiceManager>();
+
+      _users = new ObservableCollection<Person>();
       _selectedItemIds = new ObservableCollection<long>();
 
       //FilteredUsers = new RepeatedField<Person>();
 
-      Users = _bioEngine.Database().Persons.Persons;
       //FilteredUsers = _bioEngine.Database().GetAllUsers();
 
       IsDeleteButtonEnabled = false;
 
-      DisplayName = "Users";
+      PhotoIDConverter                  = new ConvertPhotoIdToImage          (_bioEngine.Database());
+      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (_bioEngine.Database());
+      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (_bioEngine.Database());
+      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(_bioEngine.Database());
+
+      _bioEngine.Database().DataChanged += UsersViewModel_DataChanged;
+
+/*
+      PersonList persons = _bioEngine.Database().Persons;
+
+      foreach (Person item in persons.Persons)
+      {
+        if (Users.Contains(item))
+          return;
+
+        Users.Add(item);
+      }*/
+
     }
 
-    private RepeatedField<Person> _users;
-    public RepeatedField<Person> Users
+    protected async override void OnActivate()
+    {
+      await _bioService.DatabaseService.PhotoRequest(new CommandPhoto());
+      await _bioService.DatabaseService.PersonRequest(new CommandPerson());
+    }
+
+    public void UsersViewModel_DataChanged(object sender, EventArgs args)
+    {
+      OnPersonsChanged(_bioEngine.Database().Persons);
+    }
+
+    private void OnPersonsChanged(PersonList persons)
+    {
+      foreach (Person item in persons.Persons)
+      {
+        if (Users.Contains(item))
+          continue;
+
+        Users.Add(item);
+      }
+     
+    }
+
+    private ObservableCollection<Person> _users;
+    public ObservableCollection<Person> Users
     {
       get { return _users; }
       set
@@ -145,18 +237,18 @@ namespace BioModule.ViewModels
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)
     {
-      /*
+      
       IList selectedRecords = e.AddedItems as IList;
       IList unselectedRecords = e.RemovedItems as IList;
 
-      foreach (User currentUser in selectedRecords)
+      foreach (Person currentUser in selectedRecords)
       {
-        SelectedItemIds.Add(currentUser.UID);
+        SelectedItemIds.Add(currentUser.Id);
       }
 
-      foreach (User currentUser in unselectedRecords)
+      foreach (Person currentUser in unselectedRecords)
       {
-        SelectedItemIds.Remove(currentUser.UID);
+        SelectedItemIds.Remove(currentUser.Id);
       }
 
       if (SelectedItemIds.Count >= 1)
@@ -173,7 +265,7 @@ namespace BioModule.ViewModels
       {
         Console.WriteLine(item);
       }
-      */
+      
     }
 
     //*************************************************************Context Menu******************************************\
@@ -214,10 +306,16 @@ namespace BioModule.ViewModels
 
     public void ShowUserPage(bool isExistingUser)
     {
-      foreach (long item in SelectedItemIds)
+      if (!isExistingUser)
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { null });
+      else
       {
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users[(int)item] });
+        foreach (long item in SelectedItemIds)
+        {
+          _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users.Where(x => x.Id == (long)item).FirstOrDefault() });
+        }
       }
+
     }
 
     //************************************************************SearchBox***************************************************
@@ -241,8 +339,9 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => FilteredUsers);
       */
     }
-    private readonly IProcessorLocator _locator;
-    private readonly ViewModelSelector _selector;
-    private readonly IBioEngine        _bioEngine;
+    private readonly IProcessorLocator _locator   ;
+    private readonly ViewModelSelector _selector  ;
+    private readonly IBioEngine        _bioEngine ;    
+    private readonly IServiceManager   _bioService;
   }
 }

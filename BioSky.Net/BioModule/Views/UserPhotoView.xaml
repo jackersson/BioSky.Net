@@ -14,7 +14,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>          
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <utils:NullImageConverter x:Key="NullImageConverter"/>
     </UserControl.Resources>
 
     <Grid>
@@ -46,8 +47,24 @@
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
-                 Grid.Row="5" Margin="0, 5, 0, 0">        
-           
+                 Grid.Row="5" Margin="0, 5, 0, 0"                
+                 SelectedItem="{Binding SelectedItem}"
+                 ItemsSource="{Binding RobotImages}"  
+                 ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
+                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChange]"
+                 >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Black" BorderThickness="4" CornerRadius="5" Margin="6">
+                        <Image Source="{Binding Mode=OneWay, Converter={StaticResource NullImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
         </ListBox>
 
 

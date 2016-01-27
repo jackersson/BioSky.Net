@@ -19,15 +19,23 @@ using System.Windows.Documents;
 using System.Windows.Controls;
 using BioFaceService;
 
+using BioContracts;
+using Google.Protobuf.Collections;
+using BioModule.Utils;
+
 namespace BioModule.ViewModels
 {
   public class UserContactlessCardViewModel : Screen, IObserver<AccessDeviceActivity>
-  {        
-    public UserContactlessCardViewModel(IBioEngine bioEngine)
+  {
+    public UserContactlessCardViewModel(IBioEngine bioEngine, IProcessorLocator locator)
     {
-      _bioEngine = bioEngine;
-
       DisplayName = "Cards";
+
+      _locator = locator;
+      _bioEngine = bioEngine;
+      _selector = locator.GetProcessor<ViewModelSelector>();
+      _bioService = _locator.GetProcessor<IServiceManager>();
+
 
       AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
       AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
@@ -39,6 +47,37 @@ namespace BioModule.ViewModels
       CardState = "Card number";
 
       _userCards = new ObservableCollection<Card>();
+
+      _bioEngine.Database().DataChanged += UserContactlessCardViewModel_DataChanged; 
+    }
+
+    protected async override void OnActivate()
+    {
+      await _bioService.DatabaseService.CardRequest(new CommandCard());
+    }
+
+    public void UserContactlessCardViewModel_DataChanged(object sender, EventArgs args)
+    {
+      OnCardsChanged(_bioEngine.Database().Cards);
+    }
+
+    private void OnCardsChanged(CardList cards)
+    {
+      UserCards.Clear();
+
+      if (_user == null)
+        return;
+
+      foreach (Card item in cards.Cards)
+      {
+        if (item.Personid != _user.Id)
+          continue;
+
+        if (UserCards.Contains(item))
+          continue;
+
+        UserCards.Add(item);
+      }
     }
 
     private string _cardNumber;
@@ -158,7 +197,7 @@ namespace BioModule.ViewModels
       //_detectedCard.Personid = _user.;
 
       _dataChanged = false;
-
+      OnCardsChanged(_bioEngine.Database().Cards);
       /*
       _userCards.Clear();
 
@@ -269,8 +308,11 @@ namespace BioModule.ViewModels
       throw new NotImplementedException();
     }
 
-    private Person _user;
-    private readonly IBioEngine _bioEngine;
+    private Person                     _user      ;
+    private readonly IBioEngine        _bioEngine ;
+    private readonly IProcessorLocator _locator   ;
+    private readonly ViewModelSelector _selector  ;
+    private readonly IServiceManager   _bioService;
   }
 
  

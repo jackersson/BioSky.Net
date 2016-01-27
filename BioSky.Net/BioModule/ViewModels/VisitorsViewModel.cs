@@ -20,6 +20,7 @@ using BioModule.Utils;
 using BioContracts;
 using BioFaceService;
 using Google.Protobuf.Collections;
+using System.Collections;
 
 namespace BioModule.ViewModels
 {
@@ -27,25 +28,52 @@ namespace BioModule.ViewModels
   {      
     public VisitorsViewModel(IProcessorLocator locator )
     {
-      _locator = locator;     
-
-      //_visitors         = new RepeatedField<Visitor>();      
-
-      //IBioEngine bioEngine = locator.GetProcessor<IBioEngine>();
-     // Visitors = bioEngine.Database().Visitors.Visitors;
-      
-
       DisplayName = "Visitors";
+
+      _locator = locator;
+      _bioEngine = locator.GetProcessor<IBioEngine>();
+      _selector = locator.GetProcessor<ViewModelSelector>();
+      _bioService = _locator.GetProcessor<IServiceManager>();
+
+      _visitors         = new RepeatedField<Visitor>();
+      _selectedItemIds  = new ObservableCollection<long>();
+
+      _bioEngine.Database().DataChanged += VisitorsViewModel_DataChanged;
+
+
+/*
+      VisitorList visitors = _bioEngine.Database().Visitors;
+
+      foreach (Visitor item in visitors.Visitors)
+      {
+        if (Visitors.Contains(item))
+          return;
+
+        Visitors.Add(item);
+      }*/
+
     }
 
-
-    //TODO only when data comes
-    public void Init()
+    protected async override void OnActivate()
     {
-      IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
-      Visitors = bioEngine.Database().Visitors.Visitors;
+      await _bioService.DatabaseService.VisitorRequest(new CommandVisitor());
     }
 
+    public void VisitorsViewModel_DataChanged(object sender, EventArgs args)
+    {
+      OnPersonsChanged(_bioEngine.Database().Visitors);
+    }
+
+    private void OnPersonsChanged(VisitorList visitors)
+    {
+      foreach (Visitor item in visitors.Visitors)
+      {
+        if (Visitors.Contains(item))
+          return;
+
+        Visitors.Add(item);
+      }
+    }
 
     public void Update()
     {
@@ -65,8 +93,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-    
-    private readonly IProcessorLocator _locator;
 
     //**********************************************************Context Menu*****************************************************
 
@@ -100,6 +126,60 @@ namespace BioModule.ViewModels
 
         NotifyOfPropertyChange(() => MenuOpenStatus);
       }
-    }        
+    }
+
+    private ObservableCollection<long> _selectedItemIds;
+    public ObservableCollection<long> SelectedItemIds
+    {
+      get { return _selectedItemIds; }
+      set
+      {
+        if (_selectedItemIds != value)
+        {
+          _selectedItemIds = value;
+          NotifyOfPropertyChange(() => SelectedItemIds);
+        }
+      }
+    }
+    public void OnSelectionChanged(SelectionChangedEventArgs e)
+    {
+
+      IList selectedRecords = e.AddedItems as IList;
+      IList unselectedRecords = e.RemovedItems as IList;
+
+      foreach (Visitor currentUser in selectedRecords)
+      {
+        SelectedItemIds.Add(currentUser.Id);
+      }
+
+      foreach (Visitor currentUser in unselectedRecords)
+      {
+        SelectedItemIds.Remove(currentUser.Id);
+      }
+
+      foreach (long item in SelectedItemIds)
+      {
+        Console.WriteLine(item);
+      }
+    }
+    public void OnMouseRightButtonDown(Visitor visitor)
+    {
+      MenuOpenStatus = (visitor != null);
+      SelectedItem = visitor;
+    }
+    public void ShowUserPage()
+    {
+      foreach (long item in SelectedItemIds)
+      {
+        Visitor loc = _bioEngine.Database().GetVisitorByID(item);
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
+                             , new object[] { _bioEngine.Database().Persons.Persons.Where(x => x.Id == loc.Personid).FirstOrDefault() });
+      }
+    }
+
+    private readonly IProcessorLocator _locator   ;
+    private readonly ViewModelSelector _selector  ;
+    private readonly IBioEngine        _bioEngine ;
+    private readonly IServiceManager   _bioService;
   }
 }

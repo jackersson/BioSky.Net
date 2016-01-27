@@ -16,7 +16,9 @@ using System.Windows.Data;
 using System.Reflection;
 using System.Globalization;
 using BioFaceService;
-using static BioFaceService.Person.Types;
+//using static BioFaceService.Person.Types;
+
+
 
 namespace BioModule.ViewModels
 { 
@@ -27,6 +29,7 @@ namespace BioModule.ViewModels
       DisplayName = "Information";     
     }    
 
+    
     public void Update( Person user)
     {
       User = user;      
@@ -34,12 +37,12 @@ namespace BioModule.ViewModels
 
     public List<string> GenderSources
     {
-      get { return Enum.GetNames(typeof(Gender)).ToList(); }
+      get { return Enum.GetNames(typeof(BioFaceService.Person.Types.Gender)).ToList(); }
     }
 
     public List<string> RightsSources
     {
-      get { return Enum.GetNames(typeof(Rights)).ToList(); }
+      get { return Enum.GetNames(typeof(BioFaceService.Person.Types.Rights)).ToList(); }
     }
 
     private Person _user;
@@ -55,6 +58,6 @@ namespace BioModule.ViewModels
        }
       }
     } 
-
+    
   }
 }
