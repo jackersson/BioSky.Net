@@ -46,7 +46,7 @@ namespace BioModule.ViewModels
 
       CardState = "Card number";
 
-      _userCards = new RepeatedField<Card>();
+      _userCards = new ObservableCollection<Card>();
 
       _bioEngine.Database().DataChanged += UserContactlessCardViewModel_DataChanged; 
     }
@@ -63,10 +63,18 @@ namespace BioModule.ViewModels
 
     private void OnCardsChanged(CardList cards)
     {
+      UserCards.Clear();
+
+      if (_user == null)
+        return;
+
       foreach (Card item in cards.Cards)
       {
+        if (item.Personid != _user.Id)
+          continue;
+
         if (UserCards.Contains(item))
-          return;
+          continue;
 
         UserCards.Add(item);
       }
@@ -189,7 +197,7 @@ namespace BioModule.ViewModels
       //_detectedCard.Personid = _user.;
 
       _dataChanged = false;
-
+      OnCardsChanged(_bioEngine.Database().Cards);
       /*
       _userCards.Clear();
 
@@ -223,8 +231,8 @@ namespace BioModule.ViewModels
       get { return _detectedCard != null;  }
     }
 
-    private RepeatedField<Card> _userCards;
-    public RepeatedField<Card> UserCards
+    private ObservableCollection<Card> _userCards;
+    public ObservableCollection<Card> UserCards
     {
       get { return _userCards; }
       set

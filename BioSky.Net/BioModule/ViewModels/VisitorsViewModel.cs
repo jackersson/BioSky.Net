@@ -20,6 +20,7 @@ using BioModule.Utils;
 using BioContracts;
 using BioFaceService;
 using Google.Protobuf.Collections;
+using System.Collections;
 
 namespace BioModule.ViewModels
 {
@@ -35,8 +36,21 @@ namespace BioModule.ViewModels
       _bioService = _locator.GetProcessor<IServiceManager>();
 
       _visitors         = new RepeatedField<Visitor>();
+      _selectedItemIds  = new ObservableCollection<long>();
 
-      _bioEngine.Database().DataChanged += VisitorsViewModel_DataChanged;     
+      _bioEngine.Database().DataChanged += VisitorsViewModel_DataChanged;
+
+
+/*
+      VisitorList visitors = _bioEngine.Database().Visitors;
+
+      foreach (Visitor item in visitors.Visitors)
+      {
+        if (Visitors.Contains(item))
+          return;
+
+        Visitors.Add(item);
+      }*/
 
     }
 
@@ -111,6 +125,55 @@ namespace BioModule.ViewModels
           _menuOpenStatus = value;
 
         NotifyOfPropertyChange(() => MenuOpenStatus);
+      }
+    }
+
+    private ObservableCollection<long> _selectedItemIds;
+    public ObservableCollection<long> SelectedItemIds
+    {
+      get { return _selectedItemIds; }
+      set
+      {
+        if (_selectedItemIds != value)
+        {
+          _selectedItemIds = value;
+          NotifyOfPropertyChange(() => SelectedItemIds);
+        }
+      }
+    }
+    public void OnSelectionChanged(SelectionChangedEventArgs e)
+    {
+
+      IList selectedRecords = e.AddedItems as IList;
+      IList unselectedRecords = e.RemovedItems as IList;
+
+      foreach (Visitor currentUser in selectedRecords)
+      {
+        SelectedItemIds.Add(currentUser.Id);
+      }
+
+      foreach (Visitor currentUser in unselectedRecords)
+      {
+        SelectedItemIds.Remove(currentUser.Id);
+      }
+
+      foreach (long item in SelectedItemIds)
+      {
+        Console.WriteLine(item);
+      }
+    }
+    public void OnMouseRightButtonDown(Visitor visitor)
+    {
+      MenuOpenStatus = (visitor != null);
+      SelectedItem = visitor;
+    }
+    public void ShowUserPage()
+    {
+      foreach (long item in SelectedItemIds)
+      {
+        Visitor loc = _bioEngine.Database().GetVisitorByID(item);
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
+                             , new object[] { _bioEngine.Database().Persons.Persons.Where(x => x.Id == loc.Personid).FirstOrDefault() });
       }
     }
 

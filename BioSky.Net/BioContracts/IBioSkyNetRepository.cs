@@ -13,9 +13,10 @@ namespace BioContracts
   {   
      event EventHandler DataChanged;
 
-     Photo GetPhotoByID( long id );
-
-
+    Person GetPersonByID(long id);
+    Location GetLocationByID(long id);
+    Photo GetPhotoByID(long id);
+    Visitor GetVisitorByID(long id);
 
     PersonList Persons
     {

@@ -85,14 +85,20 @@ namespace BioModule.ViewModels
       Console.WriteLine(register + " " + name + " " + password);
 
     } 
-    public async void ShowAboutDialog()
-    {
-      
+    public void ShowAboutDialog()
+    {      
       _windowManager.ShowDialog(new AboutDialogViewModel());      
     }
     public void ShowLogInDialog()
     {      
       var result = _windowManager.ShowDialog(new LoginDialogViewModel(this));      
+    }
+
+    public void OnLogOut()
+    {
+      string path = "D://";
+      string path2 = path + "media//test1//test2";
+      System.IO.Directory.CreateDirectory(path2);
     }
 
     private ViewModelSelector          _viewModelSelector;

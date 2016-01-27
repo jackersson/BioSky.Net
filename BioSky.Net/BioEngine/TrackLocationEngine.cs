@@ -22,7 +22,7 @@ namespace BioEngine
       _locator.GetProcessor<IBioSkyNetRepository>().DataChanged += LocationViewModel_DataChanged;
 
      
-      //Init();
+      Init();
     }
 
     public void LocationViewModel_DataChanged(object sender, EventArgs args)

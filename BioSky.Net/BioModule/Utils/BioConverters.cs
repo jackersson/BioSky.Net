@@ -19,6 +19,26 @@ using BioFaceService;
 
 namespace BioModule.Utils
 {
+  public class ConvertLongToDateTime : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        return new DateTime((long)value);
+      }
+      return null;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        DateTime time = (DateTime)value;
+        return time.Ticks;
+      }
+      return null;
+    }
+  }
   public class ConvertPhotoIdToImage : IValueConverter
   {
     public ConvertPhotoIdToImage( IBioSkyNetRepository database )
@@ -42,6 +62,80 @@ namespace BioModule.Utils
 
       }
       return ResourceLoader.UserDefaultImageIconSource;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+
+    private readonly IBioSkyNetRepository _database;
+  }
+
+  public class ConvertLocationIdToLocationname : IValueConverter
+  {
+    public ConvertLocationIdToLocationname(IBioSkyNetRepository database)
+    {
+      _database = database;
+    }
+
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        Location location = _database.GetLocationByID((long)value);
+        return location.LocationName;
+      }
+      return null;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+
+    private readonly IBioSkyNetRepository _database;
+  }
+
+  public class ConvertPersonIdToFirstname : IValueConverter
+  {
+    public ConvertPersonIdToFirstname(IBioSkyNetRepository database)
+    {
+      _database = database;
+    }
+
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        Person person = _database.GetPersonByID((long)value);
+        if (person != null)
+          return person.Firstname;
+      }
+      return null;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+
+    private readonly IBioSkyNetRepository _database;
+  }
+
+  public class ConvertPersonIdToLastname : IValueConverter
+  {
+    public ConvertPersonIdToLastname(IBioSkyNetRepository database)
+    {
+      _database = database;
+    }
+
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        Person person = _database.GetPersonByID((long)value);
+        if (person != null)
+          return person.Lastname;
+      }
+      return null;
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {

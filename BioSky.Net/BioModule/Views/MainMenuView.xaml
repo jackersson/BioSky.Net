@@ -32,7 +32,9 @@
                 <MenuItem Header="Log In"
                           cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">
                 </MenuItem>
-                <MenuItem Header="Log Out">
+                <MenuItem Header="Log Out"
+                          cal:Message.Attach="[Event Click] = [Action OnLogOut]"
+                          >
                 </MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Exit"/>

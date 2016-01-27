@@ -19,10 +19,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 using BioData;
-
-
 using System.Windows.Input;
-
 using System.Windows.Data;
 
 using BioModule.Utils;
@@ -48,6 +45,45 @@ namespace BioModule.ViewModels
       }
     }
 
+    private static ConvertPersonIdToFirstname _personIdToFirstnameConverter;
+    public static ConvertPersonIdToFirstname PersonIdToFirstnameConverter
+    {
+      get { return _personIdToFirstnameConverter; }
+      set
+      {
+        if (_personIdToFirstnameConverter != value)
+        {
+          _personIdToFirstnameConverter = value;
+        }
+      }
+    }
+
+    private static ConvertPersonIdToLastname _personIdToLastnameConverter;
+    public static ConvertPersonIdToLastname PersonIdToLastnameConverter
+    {
+      get { return _personIdToLastnameConverter; }
+      set
+      {
+        if (_personIdToLastnameConverter != value)
+        {
+          _personIdToLastnameConverter = value;
+        }
+      }
+    }
+
+    private static ConvertLocationIdToLocationname _locationIdToLocationnameConverter;
+    public static ConvertLocationIdToLocationname LocationIdToLocationnameConverter
+    {
+      get { return _locationIdToLocationnameConverter; }
+      set
+      {
+        if (_locationIdToLocationnameConverter != value)
+        {
+          _locationIdToLocationnameConverter = value;
+        }
+      }
+    }
+
     public UsersViewModel(IProcessorLocator locator)
     {
       DisplayName = "Users";
@@ -57,7 +93,7 @@ namespace BioModule.ViewModels
       _selector   = locator.GetProcessor<ViewModelSelector>();
       _bioService = _locator.GetProcessor<IServiceManager>();
 
-      _users           = new RepeatedField<Person>();
+      _users = new ObservableCollection<Person>();
       _selectedItemIds = new ObservableCollection<long>();
 
       //FilteredUsers = new RepeatedField<Person>();
@@ -65,10 +101,24 @@ namespace BioModule.ViewModels
       //FilteredUsers = _bioEngine.Database().GetAllUsers();
 
       IsDeleteButtonEnabled = false;
-      PhotoIDConverter = new ConvertPhotoIdToImage(_bioEngine.Database());
 
+      PhotoIDConverter                  = new ConvertPhotoIdToImage          (_bioEngine.Database());
+      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (_bioEngine.Database());
+      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (_bioEngine.Database());
+      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(_bioEngine.Database());
 
-      _bioEngine.Database().DataChanged += UsersViewModel_DataChanged;     
+      _bioEngine.Database().DataChanged += UsersViewModel_DataChanged;
+
+/*
+      PersonList persons = _bioEngine.Database().Persons;
+
+      foreach (Person item in persons.Persons)
+      {
+        if (Users.Contains(item))
+          return;
+
+        Users.Add(item);
+      }*/
 
     }
 
@@ -88,14 +138,15 @@ namespace BioModule.ViewModels
       foreach (Person item in persons.Persons)
       {
         if (Users.Contains(item))
-          return;
+          continue;
 
         Users.Add(item);
       }
+     
     }
 
-    private RepeatedField<Person> _users;
-    public RepeatedField<Person> Users
+    private ObservableCollection<Person> _users;
+    public ObservableCollection<Person> Users
     {
       get { return _users; }
       set
@@ -255,10 +306,16 @@ namespace BioModule.ViewModels
 
     public void ShowUserPage(bool isExistingUser)
     {
-      foreach (long item in SelectedItemIds)
+      if (!isExistingUser)
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { null });
+      else
       {
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users.Where( x => x.Id == (long)item).FirstOrDefault() });
+        foreach (long item in SelectedItemIds)
+        {
+          _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users.Where(x => x.Id == (long)item).FirstOrDefault() });
+        }
       }
+
     }
 
     //************************************************************SearchBox***************************************************

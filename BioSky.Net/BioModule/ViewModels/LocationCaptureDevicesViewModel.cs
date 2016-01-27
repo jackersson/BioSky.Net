@@ -93,8 +93,14 @@ namespace BioModule.ViewModels
       }
     }
 
-    private readonly IProcessorLocator _locator;
-    private readonly IBioEngine        _bioEngine;
+    public void Update(Location location)
+    {
+      _location = location;
+    }
+
+    private          Location          _location  ;
+    private readonly IProcessorLocator _locator   ;
+    private readonly IBioEngine        _bioEngine ;
     private readonly IServiceManager   _bioService;
   }
 }

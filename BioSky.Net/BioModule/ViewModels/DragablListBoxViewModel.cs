@@ -123,6 +123,11 @@ namespace BioModule.ViewModels
       return false;
     }
 
+    public void Clear()
+    {
+      DragableItems.Clear();
+    }
+
     private ObservableCollection<DragableItem> _dragableItems;
     public ObservableCollection<DragableItem> DragableItems
     {

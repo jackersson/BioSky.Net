@@ -27,7 +27,7 @@ namespace BioModule.ViewModels
     {
       DisplayName = "Access Devices";
 
-      _locator    = locator;
+      _locator    = locator ;
       _bioService = _locator.GetProcessor<IServiceManager>();
       _bioEngine  = _locator.GetProcessor<IBioEngine>();
 
@@ -42,7 +42,10 @@ namespace BioModule.ViewModels
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
-      _bioEngine.Database().DataChanged += LocationAccessDevicesViewModel_DataChanged;     
+      _bioEngine.Database().DataChanged += LocationAccessDevicesViewModel_DataChanged;
+
+      AccessDeviceList accessDevices = _bioEngine.Database().AccessDevices;
+     // OnAccessDevicesChanged(accessDevices);
     }
 
     protected async override void OnActivate()
@@ -68,14 +71,22 @@ namespace BioModule.ViewModels
 
     private void OnAccessDevicesChanged( AccessDeviceList accessDevices )
     {
+      DevicesInList.Clear();
+      DevicesOutList.Clear();
+      DevicesList.Clear();
+
+      if (_location == null)
+        return;
+
       foreach (AccessDevice item in accessDevices.AccessDevices)
-      {        
+      {
+        if (item.Locationid != _location.Id)
+          continue;
+
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
 
-        if (DevicesList.ContainsItem(dragableItem))
-        {
-          return;
-        }
+        if (DevicesList.ContainsItem(dragableItem))        
+          continue;        
 
         switch (item.Type)
         {
@@ -92,8 +103,6 @@ namespace BioModule.ViewModels
            // DevicesList.Add(dragableItem);
            *  AddToGeneralDeviceList(dragableItem, true);
             break; */
-
-
         }
       }
     }
@@ -142,11 +151,13 @@ namespace BioModule.ViewModels
 
     public void Update(Location location)
     {
-
+      _location = location;
+      OnAccessDevicesChanged(_bioEngine.Database().AccessDevices);
     }
 
-    private readonly IProcessorLocator _locator;
-    private readonly IBioEngine        _bioEngine;
+    private          Location          _location  ;
+    private readonly IProcessorLocator _locator   ;
+    private readonly IBioEngine        _bioEngine ;
     private readonly IServiceManager   _bioService;
 
   }   
