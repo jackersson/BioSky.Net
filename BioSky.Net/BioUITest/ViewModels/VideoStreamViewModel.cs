@@ -1,29 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
 using AForge.Video.DirectShow;
 using AForge.Video;
-using AForge.Controls;
 
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Windows.Threading;
 using System.IO;
-using System.Net.Sockets;
-using System.Net;
 using System.Threading;
 
-using ProtoBuf;
 using BioContracts;
-
-using BioGRPC;
-
-using System.Collections.ObjectModel;
 
 
 

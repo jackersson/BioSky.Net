@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="BioModule.Views.Controls.VideoPlayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:aforge="clr-namespace:AForge.Controls;assembly=Accord.Controls.Imaging"
+             xmlns:local="clr-namespace:BioModule.Views.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid x:Name="NoVideoSourceGrid">
+            <Border BorderBrush="DimGray"
+                    BorderThickness="1">
+                <TextBlock x:Name="NoVideoSourceMessage"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           FontSize="20"
+                           FontWeight="Bold" />
+            </Border>
+        </Grid>
+
+        <WindowsFormsHost 
+            x:Name="VideoSourceWindowsFormsHost"
+                          Background="Transparent">
+
+            <aforge:VideoSourcePlayer  x:Name="VideoSourcePlayer">
+
+            </aforge:VideoSourcePlayer>
+
+        </WindowsFormsHost>
+
+        
+    </Grid>
+</UserControl>

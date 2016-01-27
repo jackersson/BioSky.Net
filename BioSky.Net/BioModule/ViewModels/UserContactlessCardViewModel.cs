@@ -1,26 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
 using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
-using BioData;
 
 using System.Collections.ObjectModel;
 using BioContracts;
-using System.Windows;
-
-using System.Text.RegularExpressions;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Controls;
 using BioFaceService;
-
-using BioContracts;
-using Google.Protobuf.Collections;
 using BioModule.Utils;
 
 namespace BioModule.ViewModels

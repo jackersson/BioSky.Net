@@ -29,8 +29,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-   
-   
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
@@ -51,7 +51,7 @@
 
         <GridSplitter Grid.Column="1"  Grid.Row="2" Grid.RowSpan="2" 
                       Width="2" Background="Gray"  ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0,2,0,0"/>
-    
+
 
         <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
@@ -73,13 +73,13 @@
                 VerticalAlignment="Stretch">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>
-        
+
         <ComboBox x:Name="LocationItems"
             Margin="2,5,0,0" Grid.Row="0"  Grid.Column="0" BorderThickness="1"
                    ItemsSource="{Binding TrackControlItems}" Grid.ColumnSpan="1"   
                   Controls:TextBoxHelper.Watermark="{Binding SelectedItems}"  
                   Controls:TextBoxHelper.UseFloatingWatermark="True"
-                   >       
+                   >
             <ComboBox.ItemTemplateSelector>
                 <utils:ComboBoxItemTemplateSelector>
                     <utils:ComboBoxItemTemplateSelector.ItemTemplate>
@@ -107,17 +107,17 @@
                 </utils:ComboBoxItemTemplateSelector>
             </ComboBox.ItemTemplateSelector>
         </ComboBox>
-        
-        
+
+
         <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0" 
                   IsChecked="{Binding IsAllChecked}"
                   Margin="10,0,0,0"/>
 
         <TextBlock Text="All" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Column="1" Grid.Row="0"
                    Margin="0,0,10,0"
-                   >            
+                   >
         </TextBlock>
-        
+
         <TextBlock Grid.Column="2"  Grid.Row="1" 
                    Grid.ColumnSpan="2" Text="Locations"
                    VerticalAlignment="Bottom"></TextBlock>
@@ -126,45 +126,44 @@
 
         </WrapPanel>
 
-        <DataGrid BorderThickness="0.8" ItemsSource="{Binding TrackControlItems}" 
-                 SelectedItem="{Binding SelectedTrackLocation}"
-                 SelectionMode="Single" HeadersVisibility="None" AutoGenerateColumns="False" 
-                 CanUserAddRows="False" CanUserDeleteRows="False"
-                 ColumnWidth="600"
-                 DataContext="{Binding Mode=OneWay}"
-                 Grid.Column="2"  Grid.Row="2" Grid.ColumnSpan="4"  Grid.RowSpan="3" Margin="3,2,0,0"
+        <ScrollViewer Grid.Column="2"  Grid.Row="2" Grid.ColumnSpan="4"  Grid.RowSpan="3" Margin="3,2,0,0">
+            <ItemsControl x:Name="dataGrid" BorderThickness="0.8" ItemsSource="{Binding TrackControlItems}" 
+                               
+               
+               
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"                                     
                  >
-            
-            <DataGrid.Resources>
+
+            <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
                     <local:TrackControlItemView DataContext="{Binding Mode=OneWay}"/>
                 </DataTemplate>
-            </DataGrid.Resources>
-            
-            <DataGrid.Columns>
-                <DataGridTemplateColumn MinWidth="64" MaxWidth="Infinity">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                                <ContentControl  Content="{Binding ScreenViewModel}" Margin="2, 2, 5, 2" 
-                                                 VerticalAlignment="Center" MinHeight="128" MinWidth="64" 
-                                                 MaxHeight="256" MaxWidth="Infinity"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-            
-            <DataGrid.ContextMenu >
+            </ItemsControl.Resources>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate >
+                        
+                            <ContentControl  Content="{Binding ScreenViewModel}" Margin="10, 10, 10, 10" 
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center" MinHeight="128" MinWidth="64" 
+                                    MaxHeight="512" MaxWidth="Infinity"/>
+                        
+                    </DataTemplate>                 
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ContextMenu >
                 <ContextMenu IsEnabled="True" >
                     <MenuItem Header="Open Settings"  
                               IsEnabled="{Binding CanOpenSettings, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowLocationFlayout()]"
                               />
                 </ContextMenu>
-            </DataGrid.ContextMenu>
-            
-        </DataGrid> 
+            </ItemsControl.ContextMenu>
 
+        </ItemsControl>
+        </ScrollViewer>
+        
+        
         <TabControl Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"
                     Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="0,2,5,0"
                     VerticalAlignment="Stretch" ItemsSource="{Binding Items}"               

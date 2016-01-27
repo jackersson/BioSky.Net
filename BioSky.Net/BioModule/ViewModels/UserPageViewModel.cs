@@ -98,7 +98,7 @@ namespace BioModule.ViewModels
     }
      
 
-    public async void Apply()
+    public void Apply()
     {
       //CommandPerson cmd = new CommandPerson();
      // await _locator.GetProcessor<IServiceManager>().DatabaseService.PersonRequest(cmd);

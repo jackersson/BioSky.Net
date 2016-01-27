@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using BioContracts;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
-using System.Linq.Expressions;
 
 using BioFaceService;
 using Caliburn.Micro;

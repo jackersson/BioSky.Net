@@ -8,6 +8,7 @@
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:cal="http://www.caliburnproject.org"   
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:video="clr-namespace:BioModule.Views.Controls"
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -66,18 +67,22 @@
                Visibility="{Binding UserVerificationIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                Grid.Column="5" />
 
-                <ContentControl Grid.Column="0" Grid.Row="1" 
-                        Grid.ColumnSpan="6" Margin="0,2,5,0"                        
-                        cal:View.Context="Shorted"                      
-                        cal:View.Model="{Binding Notifications}">
-                </ContentControl>
+            <video:VideoPlayer 
+                           Grid.Column="0" Grid.Row="0"
+                           Grid.RowSpan="3"
+                           Grid.ColumnSpan="6" 
+                           VideoPreviewWidth="Auto"
+                           VideoPreviewHeight="Auto"                                 
+                           VideoSource="{Binding VideoSource, Mode=OneWay}"                         
+                           />
+       
 
                 <Label Content="{Binding TrackLocation.Caption}" HorizontalAlignment="Left" 
                VerticalAlignment="Top" Background="{x:Null}" 
-               Foreground="#FF61792F" Grid.ColumnSpan="2">
+               Foreground="#FF61792F" Grid.ColumnSpan="3">
                 </Label>
 
-                <Label Content="21/01/2015 15:15:18" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" Width="127" Foreground="#FF657E30" Grid.ColumnSpan="3" Grid.Column="3"/>
+                <Label Content="21/01/2015 15:15:18" HorizontalAlignment="Right" VerticalAlignment="Top" Background="{x:Null}" Width="Auto" Foreground="#FF657E30" Grid.ColumnSpan="3" Grid.Column="3"/>
 
             </Grid>
 

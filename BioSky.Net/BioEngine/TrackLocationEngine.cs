@@ -20,9 +20,7 @@ namespace BioEngine
       _trackLocations = new ObservableCollection<TrackLocation>();
            
       _locator.GetProcessor<IBioSkyNetRepository>().DataChanged += LocationViewModel_DataChanged;
-
-     
-      Init();
+        
     }
 
     public void LocationViewModel_DataChanged(object sender, EventArgs args)
@@ -40,7 +38,7 @@ namespace BioEngine
         if (_trackLocations.Where(x => x.LocationID == location.Id ).FirstOrDefault() != null)        
           continue;        
           
-         TrackLocation trackLocation = new TrackLocation(accessDeviceEngine, location);
+         TrackLocation trackLocation = new TrackLocation(_locator, location);
         _trackLocations.Add(trackLocation);
       }     
     }
