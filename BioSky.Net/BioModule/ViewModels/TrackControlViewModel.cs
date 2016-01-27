@@ -20,7 +20,7 @@ using Google.Protobuf.Collections;
 
 namespace BioModule.ViewModels
 {
-  public class TrackControlViewModel : Screen
+  public class TrackControlViewModel : Conductor<IScreen>.Collection.OneActive
   {
     public TrackControlViewModel( IProcessorLocator locator)
     {
@@ -29,6 +29,8 @@ namespace BioModule.ViewModels
       _bioEngine = locator.GetProcessor<IBioEngine>();
       _selector  = locator.GetProcessor<ViewModelSelector>();
 
+      _methodInvoker = new FastMethodInvoker();
+
       _visitorsView = new VisitorsViewModel(locator);
 
       DisplayName = "Tracking";
@@ -36,13 +38,39 @@ namespace BioModule.ViewModels
       _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
       
 
+/*
       foreach (TrackLocation location in TrackControlItems)
       {
         if (location.ScreenViewModel == null)
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
-      }
-      
+      }*/
+
+      Items.Add(new TrackControlItemViewModel(_locator, null));
+      Items.Add(new VisitorsViewModel(_locator));
+
+      ActiveItem = Items[0];
+      OpenTab();
+
       //OnChecked();
+    }
+
+
+
+/*
+    public void Update(TrackLocation trackLocation)
+    {
+      if (trackLocation == null)
+        return;
+
+      Items.Add(new TrackControlItemViewModel(_locator, trackLocation));
+      Items.Add(new VisitorsViewModel(_locator));
+
+      ActiveItem = Items[0];
+      OpenTab();
+    }*/
+    public void OpenTab()
+    {
+      ActiveItem.Activate();
     }
 
     public void TrackLocations_CollectionChanged(object sender, EventArgs args)
@@ -50,9 +78,12 @@ namespace BioModule.ViewModels
       foreach (TrackLocation location in TrackControlItems)
       {
         if (location.ScreenViewModel == null )
-          location.ScreenViewModel = new TrackControlItemViewModel(_locator, location); 
+          location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);         
       }
-     
+
+      object it = Items[0];
+     _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { TrackControlItems[0] });
+
     }
 
     public ObservableCollection<TrackLocation> TrackControlItems
@@ -99,14 +130,24 @@ namespace BioModule.ViewModels
       SelectedTrackLocation = trackLocation;
     }
 
+    public void OnSelectionChanged(SelectionChangedEventArgs e)
+    {
+      if (SelectedTrackLocation == null)
+        return;
+
+      object it = Items[0];
+      _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { SelectedTrackLocation });
+    }
+
     public void ShowLocationFlayout()
     {
       _selector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings, new object[] {  _bioEngine.Database().GetLocationByID(SelectedTrackLocation.LocationID) });
     }    
 
-    private readonly IProcessorLocator _locator  ;    
-    private readonly IBioEngine        _bioEngine;
-    private readonly ViewModelSelector _selector ;  
+    private readonly IProcessorLocator _locator      ;    
+    private readonly IBioEngine        _bioEngine    ;
+    private readonly ViewModelSelector _selector     ;
+    private readonly FastMethodInvoker _methodInvoker;
 
     //******************************************ComboBoxLocationCheck**************************
 

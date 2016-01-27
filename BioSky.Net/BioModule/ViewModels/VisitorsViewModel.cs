@@ -35,12 +35,12 @@ namespace BioModule.ViewModels
       _selector = locator.GetProcessor<ViewModelSelector>();
       _bioService = _locator.GetProcessor<IServiceManager>();
 
-      _visitors         = new RepeatedField<Visitor>();
+      _visitors         = new ObservableCollection<Visitor>();
       _selectedItemIds  = new ObservableCollection<long>();
 
       _bioEngine.Database().DataChanged += VisitorsViewModel_DataChanged;
 
-
+      LocationId = -1;
 /*
       VisitorList visitors = _bioEngine.Database().Visitors;
 
@@ -54,6 +54,15 @@ namespace BioModule.ViewModels
 
     }
 
+/*
+    public void Update(long locationId)
+    {
+      if (locationId == null)
+        return;
+
+      LocationId = locationId;
+    }*/
+
     protected async override void OnActivate()
     {
       await _bioService.DatabaseService.VisitorRequest(new CommandVisitor());
@@ -66,11 +75,16 @@ namespace BioModule.ViewModels
 
     private void OnPersonsChanged(VisitorList visitors)
     {
+      Visitors.Clear();
+
       foreach (Visitor item in visitors.Visitors)
       {
+        if (LocationId != -1 && LocationId != item.Locationid)
+          continue;
+
         if (Visitors.Contains(item))
           return;
-
+        
         Visitors.Add(item);
       }
     }
@@ -80,8 +94,8 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => Visitors);
     }
     
-    private RepeatedField<Visitor> _visitors;
-    public RepeatedField<Visitor> Visitors
+    private ObservableCollection<Visitor> _visitors;
+    public ObservableCollection<Visitor> Visitors
     {
       get { return _visitors; }
       set
@@ -90,6 +104,20 @@ namespace BioModule.ViewModels
         {
           _visitors = value;
           NotifyOfPropertyChange(() => Visitors);
+        }
+      }
+    }
+
+    private long _locationId;
+    public long LocationId
+    {
+      get { return _locationId; }
+      set
+      {
+        if (_locationId != value)
+        {
+          _locationId = value;
+          NotifyOfPropertyChange(() => LocationId);
         }
       }
     }

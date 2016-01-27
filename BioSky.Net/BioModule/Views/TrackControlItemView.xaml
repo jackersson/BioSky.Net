@@ -77,7 +77,7 @@
                            />
        
 
-                <Label Content="{Binding TrackLocation.Caption}" HorizontalAlignment="Left" 
+            <Label Content="{Binding CurrentLocation.Caption}" HorizontalAlignment="Left" 
                VerticalAlignment="Top" Background="{x:Null}" 
                Foreground="#FF61792F" Grid.ColumnSpan="3">
                 </Label>
