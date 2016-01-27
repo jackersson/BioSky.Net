@@ -145,10 +145,42 @@
             </ListBox.ItemTemplate>
         </ListBox>
         
+        <!--
        <ContentControl Grid.Column="0" Grid.Row="2" 
                             Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,2,5,0"
                         cal:View.Context="Shorted"                      
                         cal:View.Model="{Binding Notifications}">
         </ContentControl>
+        -->
+
+        <TabControl Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Grid.RowSpan="2" 
+                    HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Stretch" ItemsSource="{Binding Items}"                 
+                    SelectedItem="{Binding ActiveItem}"
+                    cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"
+                    >
+            <TabControl.Resources>
+                <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
+                    <local:UserInformationView x:Name="ActiveItem"></local:UserInformationView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:UserContactlessCardViewModel}">
+                    <local:UserContactlessCardView x:Name="ActiveItem"></local:UserContactlessCardView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:UserPhotoViewModel}">
+                    <local:UserPhotoView x:Name="ActiveItem"></local:UserPhotoView>
+                </DataTemplate>
+            </TabControl.Resources>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+        				Text="{Binding DisplayName}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding }" ></ContentControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </UserControl>

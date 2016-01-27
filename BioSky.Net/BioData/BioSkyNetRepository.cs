@@ -18,8 +18,15 @@ namespace BioData
   public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
   {    
     public BioSkyNetRepository()
-    {           
-    }    
+    {
+      Locations = new LocationList();
+
+      Location loc = new Location() { Id = 1, LocationName = "Testable", Desctiption = "Test location" };
+      Locations.Locations.Add(loc);
+      
+    }
+
+    public HashSet<Location> locs;
 
     public PersonList _persons;
     public PersonList Persons

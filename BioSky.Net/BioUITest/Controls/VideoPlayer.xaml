@@ -3,10 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:controls="clr-namespace:AForge.Controls;assembly=AForge.Controls"
-             xmlns:local="clr-namespace:BioUITest.Controls"
-             Loaded="WebcamDeviceOnLoaded"
-             Unloaded="WebcamDeviceOnUnloaded"
+             xmlns:aforge="clr-namespace:AForge.Controls;assembly=Accord.Controls.Imaging"
+             xmlns:local="clr-namespace:BioUITest.Controls"             
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -21,9 +19,25 @@
                            FontWeight="Bold" />
             </Border>
         </Grid>
-        <WindowsFormsHost x:Name="VideoSourceWindowsFormsHost"
+        <WindowsFormsHost Canvas.ZIndex="-2"
+            x:Name="VideoSourceWindowsFormsHost"
                           Background="Transparent">
-            <controls:VideoSourcePlayer x:Name="VideoSourcePlayer" />
+
+            <aforge:VideoSourcePlayer  x:Name="VideoSourcePlayer">
+               
+             </aforge:VideoSourcePlayer>
+                
         </WindowsFormsHost>        
+        
+         <ItemsControl x:Name="VideoOverlay"
+                       Canvas.ZIndex="5"
+                      BorderThickness="2"
+                      BorderBrush="AliceBlue">            
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </Grid>
 </UserControl>

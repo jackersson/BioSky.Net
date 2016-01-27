@@ -49,51 +49,27 @@
                   ItemsSource="{Binding Visitors}"                
                   GridLinesVisibility="All"
                   AutoGenerateColumns="False"
-                  CanUserSortColumns="True" CanUserAddRows="False"
+                  CanUserSortColumns="True" 
+                  CanUserAddRows="False"
+            
                   materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                   materialDesign:DataGridAssist.ColumnHeaderPadding="8"              
                   ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
                   cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]">
 
-            <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"
-                                        RenderOptions.ClearTypeHint="Enabled"
-                                        TextOptions.TextFormattingMode="Display"
-                                        >
-                    <DataGridCheckBoxColumn.Header>
-                        <!--padding to allow hit test to pass thru for sorting -->
-                        <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
-                            <CheckBox HorizontalAlignment="Center"                                               
-                                              DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                              IsChecked="{Binding IsAllItems3Selected}" />
-                        </Border>
-                    </DataGridCheckBoxColumn.Header>
-                </DataGridCheckBoxColumn>
-
+            <DataGrid.Columns>                
                 <DataGridTemplateColumn Header="Photo" IsReadOnly="True" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding User.Photo, Converter={StaticResource ConvertPhotoPathToImage}}" />
+                            <StackPanel>
+                                <TextBlock Text="{Binding Time}" ></TextBlock>
+                                <Image Width="32" Height="32" Source="{Binding Personid, Converter={StaticResource ConvertPhotoPathToImage}}" />
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
-                <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.First_Name_}"/>
-                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Location.Location_Name}"/>
-                <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Detection_Time}"/>
-
-                <DataGridTemplateColumn Header="Status" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Path=Status, Converter={StaticResource ConvertTextToImage}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-
-            <DataGrid.ContextMenu >
+                </DataGrid.Columns>
+             <DataGrid.ContextMenu >
                 <ContextMenu x:Name="VisitorContextMenu" IsEnabled="True" >
                     <MenuItem Header="Open in New Tab"  
                               IsEnabled="{Binding CanOpenInNewTab, Mode=TwoWay}"

@@ -20,7 +20,16 @@
   using Drawing = System.Drawing;
   using Point = System.Windows.Point;
 
+  using BioContracts;
+  using System.Collections;
   using AForge.Video;
+  using ViewModels;
+  using AForge.Imaging;
+  using Accord.Vision.Detection;
+  using Accord.Vision.Tracking;
+  using Accord.Imaging.Filters;
+  using AForge.Imaging.Filters;
+  using Accord.Vision.Detection.Cascades;
 
   #endregion
 
@@ -31,43 +40,51 @@
   {
     #region Variable declaration
 
-    /// <summary>
-    /// Dependency property for video display width.
-    /// </summary>
+    
     public static readonly DependencyProperty  VideoPreviewWidthProperty
                                              = DependencyProperty.Register("VideoPreviewWidth"
                                              , typeof(double)
                                              , typeof(VideoPlayer)
                                              , new PropertyMetadata(VideoPreviewWidthPropertyChangedCallback));
 
-    /// <summary>
-    /// Dependency property for video display height.
-    /// </summary>
+  
     public static readonly DependencyProperty  VideoPreviewHeightProperty 
                                              = DependencyProperty.Register("VideoPreviewHeight"
                                              , typeof(double)
                                              , typeof(VideoPlayer)
                                              , new PropertyMetadata(VideoPreviewHeightPropertyChangedCallback));
 
-    /// <summary>
-    /// Dependency property for video device source Id.
-    /// </summary>
+   
     public static readonly DependencyProperty  VideoSourceProperty 
                                              = DependencyProperty.Register("VideoSource"
-                                             , typeof(string)
+                                             , typeof(IVideoSource)
                                              , typeof(VideoPlayer)
-                                             , new PropertyMetadata( string.Empty
-                                                                    , VideoSourcePropertyChangedCallback
-                                                                    , VideoSourcePropertyCoherceValueChanged));
-    
-    /// <summary>
-    /// Instance of video capture device.
-    /// </summary>
-    private IVideoSource videoCaptureDevice;
+                                             , new PropertyMetadata(  VideoSourcePropertyChangedCallback  ));
 
-    /// <summary>
-    /// The is video source initialized.
-    /// </summary>
+    /*
+
+    public static readonly DependencyProperty VideoOverlayItemSourceProperty
+                                             = DependencyProperty.Register("VideoOverlayItemSource"
+                                             , typeof(IEnumerable)
+                                             , typeof(VideoPlayer)
+                                             , new PropertyMetadata(VideoOverlayPropertyChangedCallback));
+
+    public static readonly DependencyProperty VideoOverlayDataTemplateProperty
+                                             = DependencyProperty.Register("VideoOverlayDataTemplate"
+                                             , typeof(DataTemplate)
+                                             , typeof(VideoPlayer)
+                                             , new PropertyMetadata(VideoOverlayDataTemplatePropertyChangedCallback));
+  */
+    /*
+    public static readonly DependencyProperty VideoDetectorSourceProperty
+                                             = DependencyProperty.Register("VideoDetectorSource"
+                                             , typeof(IVideoDetectorSource)
+                                             , typeof(VideoPlayer)
+                                             , new PropertyMetadata(VideoDetectorSourcePropertyChangedCallback));
+*/
+
+ 
+
     private bool isVideoSourceInitialized;
 
     #endregion
@@ -78,178 +95,132 @@
     {
       InitializeComponent();
 
-      //// Subcribe to dispatcher shutdown event and dispose all used resources gracefully.
       Dispatcher.ShutdownStarted += DispatcherShutdownStarted;      
     }
 
     #endregion
 
     #region Properties
-
-    /// <summary>
-    /// Gets video device source collection current available.
-    /// </summary>
-    public static FilterInfoCollection GetVideoDevices
-    {
-      get
-      {      
-        return new FilterInfoCollection(FilterCategory.VideoInputDevice);
-      }
-    }
-
-    /// <summary>
-    /// Gets or sets video source device display width.
-    /// </summary>
-    /// <remarks>
-    /// Important: Do not write any logic in dependency property stub.
-    /// </remarks>
+    
     [TypeConverter(typeof(LengthConverter))]
     public double VideoPreviewWidth
     {
-      get
-      {
-        return (double)GetValue(VideoPreviewWidthProperty);
-      }
-
+      get { return (double)GetValue(VideoPreviewWidthProperty); }
       set
-      {
+      {        
         this.SetValue(VideoPreviewWidthProperty, value);
       }
     }
 
-    /// <summary>
-    /// Gets or sets video source device display height.
-    /// </summary>
-    /// <remarks>
-    /// Important: Do not write any logic in dependency property stub.
-    /// </remarks>
+   
     [TypeConverter(typeof(LengthConverter))]
     public double VideoPreviewHeight
     {
-      get
-      {
-        return (double)GetValue(VideoPreviewHeightProperty);
-      }
-
+      get { return (double)GetValue(VideoPreviewHeightProperty); }
       set
       {
         this.SetValue(VideoPreviewHeightProperty, value);
       }
     }
-
-    /// <summary>
-    /// Gets or sets video device source Id / USB ID / Moniker string.
-    /// </summary>
-    /// <remarks>
-    /// Note: If the Id start with "Message:" followed by a message,
-    /// the following message will be display instead of the video source device.
-    /// Important: Do not write any logic in dependency property stub.
-    /// </remarks>
-    public string VideoSource
+    
+    /*
+    public IEnumerable VideoOverlayItemSource
     {
-      get
-      {
-        return (string)GetValue(VideoSourceProperty);
-      }
-
+      get { return (IEnumerable)GetValue(VideoOverlayItemSourceProperty); }
       set
       {
-        this.SetValue(VideoSourceProperty, value);
-      }
-    }   
+        this.SetValue(VideoOverlayItemSourceProperty, value);
 
+      }
+
+    }
+    */
+
+    public IVideoSource VideoSource
+    {
+      get { return (IVideoSource)GetValue(VideoSourceProperty); }
+      set
+      {
+        this.SetValue(VideoSourceProperty, value);        
+      }
+
+    }
+
+
+    /*
+    public DataTemplate VideoOverlayDataTemplate
+    {
+      get { return (DataTemplate)GetValue(VideoOverlayDataTemplateProperty); }
+      set
+      {
+        this.SetValue(VideoOverlayDataTemplateProperty, value);        
+      }
+    }
+
+      */
+    /*
+    public IVideoDetectorSource VideoDetectorSource
+    {
+      get { return (IVideoDetectorSource)GetValue(VideoDetectorSourceProperty); }
+      set
+      {
+        this.SetValue(VideoDetectorSourceProperty, value);
+      }
+    }
+    */
     #endregion
 
     #region Methods
 
-    /// <summary>
-    /// Call back function for video device source Id property changed event.
-    /// </summary>
-    /// <param name="sender">Sender object.</param>
-    /// <param name="eventArgs">Event argument.</param>
+      /*
+    private static void VideoOverlayDataTemplatePropertyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs eventArgs)
+    {
+      var newValue = eventArgs.NewValue as DataTemplate;
+
+      if (newValue == null)
+        return;
+      var videoPlayer = sender as VideoPlayer;
+
+      videoPlayer.VideoOverlay.ItemTemplate = newValue;
+    }
+
+    private static void VideoOverlayPropertyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs eventArgs)
+    {     
+      var newValue = eventArgs.NewValue as IEnumerable;
+
+      if (newValue == null)
+        return;
+      var videoPlayer = sender as VideoPlayer;
+
+      videoPlayer.VideoOverlay.ItemsSource = newValue; 
+    }
+    */
     private static void VideoSourcePropertyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs eventArgs)
     {
-      var oldValue = eventArgs.OldValue as string;
-      var newValue = eventArgs.NewValue as string;
-      var videoPlayer = sender as VideoPlayer;
-      if (null == videoPlayer)
-      {
-        return;
-      }
+      var oldValue = eventArgs.OldValue as IVideoSource;
+      var newValue = eventArgs.NewValue as IVideoSource;
 
-      if (null == eventArgs.NewValue)
-      {
-        return;
-      }
-
-      if (string.IsNullOrWhiteSpace(newValue))
-      {
-        if (!string.IsNullOrWhiteSpace(oldValue))
-        {
-          videoPlayer.InitializeVideoDevice(oldValue);
-        }
-      }
-      else
-      {
-        if (string.IsNullOrWhiteSpace(oldValue))
-        {
-          videoPlayer.InitializeVideoDevice(newValue);
-        }
-        else
-        {
-          if (oldValue != newValue)
-          {
-            videoPlayer.isVideoSourceInitialized = false;
-          }
-
-          videoPlayer.InitializeVideoDevice(oldValue.Equals(newValue) ? oldValue : newValue);
-        }
-      }
-    }
-
-    /// <summary>
-    /// Event handler for video device Id value changed event.
-    /// </summary>
-    /// <param name="dependencyObject">Instance of dependency object.</param>
-    /// <param name="basevalue">Base value.</param>
-    /// <returns>Return base value / NULL or the new Id value of the video device source.</returns>
-    private static object VideoSourcePropertyCoherceValueChanged(DependencyObject dependencyObject, object basevalue)
-    {
-       var baseValueStringFormat = Convert.ToString(basevalue, CultureInfo.InvariantCulture);
-       var availableMediaList = GetVideoDevices;      
-       if (string.IsNullOrEmpty(baseValueStringFormat) || availableMediaList.Count <= 0)
-       {
-         return null;
-       }
-
-      FilterInfo filteredVideoDevice = null;
-      foreach ( FilterInfo fi in availableMediaList)
-      {
-        if (fi.MonikerString == baseValueStringFormat)
-          filteredVideoDevice = fi;
-      }
-       
-      return null != filteredVideoDevice ? filteredVideoDevice.MonikerString : baseValueStringFormat; 
       
+      var videoPlayer = sender as VideoPlayer;
+
+      if (null == videoPlayer)      
+        return;      
+
+      if (null == newValue )    
+        return;
+
+      videoPlayer.InitializeVideoDevice(newValue);    
     }
 
-    /// <summary>
-    /// Call back function for source video device preview width property changed event.
-    /// </summary>
-    /// <param name="sender">Sender object.</param>
-    /// <param name="eventArgs">Event argument.</param>
+
     private static void VideoPreviewWidthPropertyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs eventArgs)
     {
       var videoPlayer = sender as VideoPlayer;
-      if (null == videoPlayer)
-      {
-        return;
-      }
+      if (null == videoPlayer)      
+        return;      
 
-      if (null == eventArgs.NewValue)
-      {
-        return;
-      }
+      if (null == eventArgs.NewValue)      
+        return;      
 
       var newValue = (double)eventArgs.NewValue;
       if (double.IsNaN(newValue))
@@ -257,29 +228,20 @@
         var parentControl = (videoPlayer.VisualParent as Grid);
         videoPlayer.SetVideoPlayerWidth(null != parentControl ? parentControl.Width : newValue);
       }
-      else
-      {
+      else      
         videoPlayer.SetVideoPlayerWidth(newValue);
-      }
+      
     }
 
-    /// <summary>
-    /// Call back function for source video device preview height property changed event.
-    /// </summary>
-    /// <param name="sender">Sender object.</param>
-    /// <param name="eventArgs">Event argument.</param>
     private static void VideoPreviewHeightPropertyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs eventArgs)
     {
       var webCamDevice = sender as VideoPlayer;
-      if (null == webCamDevice)
-      {
+      if (null == webCamDevice)      
         return;
-      }
+      
 
-      if (null == eventArgs.NewValue)
-      {
-        return;
-      }
+      if (null == eventArgs.NewValue)      
+        return;      
 
       var newValue = (double)eventArgs.NewValue;
       if (double.IsNaN(newValue))
@@ -287,140 +249,80 @@
         var parentControl = (webCamDevice.VisualParent as Grid);
         webCamDevice.SetVideoPlayerHeight(null != parentControl ? parentControl.Height : newValue);
       }
-      else
-      {
-        webCamDevice.SetVideoPlayerHeight(newValue);
-      }
+      else      
+        webCamDevice.SetVideoPlayerHeight(newValue);      
     }
 
 
-    /// <summary>
-    /// Initialize video device.
-    /// </summary>
-    /// <param name="videoDeviceSourceId">Video device source Id.</param>
-    /// <exception cref="InvalidOperationException">Throws invalid operation exception if video device source setup fails.</exception>
-    private void InitializeVideoDevice(string videoDeviceSource)
+   
+    private void InitializeVideoDevice(IVideoSource videoDeviceSource)
     {
-      if (isVideoSourceInitialized)
-      {
-        return;
-      }
+      if (isVideoSourceInitialized)      
+        return;      
 
       var errorAction = new Action(() => this.SetVideoPlayer(false, "Unable to set video device source"));
 
       ReleaseVideoDevice();
 
-      if (string.IsNullOrEmpty(videoDeviceSource))
-      {
+      if (videoDeviceSource == null)
         return;
-      }
-
-      if (videoDeviceSource.StartsWith("Message:", StringComparison.OrdinalIgnoreCase))
+     
+      try
       {
-        var splitString = videoDeviceSource.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-        if (splitString.Length == 2)
-        {
-          this.SetVideoPlayer(false, splitString[1]);
-        }
-        else
-        {
-          this.SetVideoPlayer(false);
-        }
-      }
-      else
-      {
-        try
-        {
-          if (!VideoDeviceEnabled(videoDeviceSource))
-          {
-            return;
-          }
+        HaarCascade cascade = new FaceHaarCascade();
+        detector = new HaarObjectDetector(cascade, 25
+                                          , ObjectDetectorSearchMode.NoOverlap, 1.2f
+                                          , ObjectDetectorScalingMode.GreaterToSmaller);
+                       
 
-          this.videoCaptureDevice = new VideoCaptureDevice(videoDeviceSource);
-          this.VideoSourcePlayer.VideoSource = this.videoCaptureDevice;
-          this.VideoSourcePlayer.Start();
-          this.isVideoSourceInitialized = true;
-          this.SetVideoPlayer(true);
-        }
-        catch (ArgumentNullException)
-        {
-          errorAction();
-        }
-        catch (ArgumentException)
-        {
-          errorAction();
-        }
+        VideoSourcePlayer.VideoSource = videoDeviceSource;
+        VideoSourcePlayer.NewFrame += videoSourcePlayer_NewFrame;    
+        VideoSourcePlayer.Start();
+        isVideoSourceInitialized = true;
+        SetVideoPlayer(true);
       }
+      catch (ArgumentNullException)
+      {
+        errorAction();
+      }
+      catch (ArgumentException)
+      {
+        errorAction();
+      }
+      
     }
 
-    private bool VideoDeviceEnabled( string videoDeviceSource)
-    {
-      foreach (FilterInfo fi in GetVideoDevices)
-      {
-        if (fi.MonikerString.Equals(videoDeviceSource))
-          return true;
-      }
-      return false;
-    }
+  
 
-    /// <summary>
-    /// Set video player width.
-    /// </summary>
-    /// <param name="newWidth">New width value.</param>
     private void SetVideoPlayerWidth(double newWidth)
     {
       this.NoVideoSourceGrid.Width = newWidth;
       this.VideoSourceWindowsFormsHost.Width = newWidth;
     }
-
-    /// <summary>
-    /// Set video player height.
-    /// </summary>
-    /// <param name="newHeight">New height value.</param>
+   
     private void SetVideoPlayerHeight(double newHeight)
     {
       this.NoVideoSourceGrid.Height = newHeight;
       this.VideoSourceWindowsFormsHost.Height = newHeight;
     }
 
-    /// <summary>
-    /// Event handler for camera video device on loaded event.
-    /// </summary>
-    /// <param name="sender">Sender object.</param>
-    /// <param name="eventArgs">Event argument.</param>
-    private void WebcamDeviceOnLoaded(object sender, RoutedEventArgs eventArgs)
-    {
-      //// Set controls width / height based on VideoPreviewWidth / VideoPreviewHeight binding properties.
-      this.NoVideoSourceGrid.Width = this.VideoPreviewWidth;
-      this.VideoSourceWindowsFormsHost.Width = this.VideoPreviewWidth;
-      this.NoVideoSourceGrid.Height = this.VideoPreviewHeight;
-      this.VideoSourceWindowsFormsHost.Height = this.VideoPreviewHeight;
-      this.InitializeVideoDevice(this.VideoSource);
-    }
 
-    /// <summary>
-    ///  Disconnect video source device.
-    /// </summary>
     private void ReleaseVideoDevice()
     {
-      this.isVideoSourceInitialized = false;
-      this.SetVideoPlayer(false);
-      if (null == this.videoCaptureDevice)
-      {
+      isVideoSourceInitialized = false;
+      SetVideoPlayer(false);
+
+      if (null == VideoSource)      
         return;
-      }
 
-      this.videoCaptureDevice.SignalToStop();
-      this.videoCaptureDevice.WaitForStop();
-      this.videoCaptureDevice.Stop();
-      this.videoCaptureDevice = null;
+     
+
+      VideoSource.SignalToStop();
+      VideoSource.WaitForStop();
+      VideoSource.Stop();
+      VideoSource = null;
     }
-
-    /// <summary>
-    /// Set video source player visibility.
-    /// </summary>
-    /// <param name="isVideoSourceFound">Indicates a value weather video source device found or not.</param>
-    /// <param name="noVideoSourceMessage">Message to display when no video source found, optional will use empty string.</param>
+ 
     private void SetVideoPlayer(bool isVideoSourceFound, string noVideoSourceMessage = "")
     {
       //// If video source found is true show the video source player or else show no video source message.
@@ -438,25 +340,57 @@
       }
     }
 
-    /// <summary>
-    /// Event handler for dispatcher shutdown started event.
-    /// </summary>
-    /// <param name="sender">Sender object.</param>
-    /// <param name="eventArgs">Event arguments.</param>
+   
     private void DispatcherShutdownStarted(object sender, EventArgs eventArgs)
     {
       this.ReleaseVideoDevice();
     }
-
-    /// <summary>
-    /// Event handler for camera video device on unloaded event.
-    /// </summary>
-    /// <param name="sender">Sender object.</param>
-    /// <param name="eventArgs">Event arguments.</param>
+    
     private void WebcamDeviceOnUnloaded(object sender, RoutedEventArgs eventArgs)
     {
       this.ReleaseVideoDevice();
     }
+
+
+    private void videoSourcePlayer_NewFrame(object sender, ref Bitmap image)
+    {      
+      lock (this)
+      {
+        UnmanagedImage im = UnmanagedImage.FromManagedImage(image);
+
+        float xscale = image.Width / 160f;
+        float yscale = image.Height / 120f;
+
+        ResizeNearestNeighbor resize = new ResizeNearestNeighbor(160, 120);
+        UnmanagedImage downsample = resize.Apply(im);
+
+        Rectangle[] regions = detector.ProcessFrame(downsample);
+        
+        if (regions.Length > 0)
+        {          
+          foreach (Rectangle face in regions)
+          {
+
+            Rectangle window = new Rectangle(
+                (int)((face.X + face.Width / 2.5f) * xscale),  (int)((face.Y + face.Height / 2.5f) * yscale),
+                1, 1);
+
+            window.Inflate(
+                (int)(0.5f * face.Width * xscale),
+                (int)(0.7f * face.Height * yscale));
+
+            marker = new RectanglesMarker(window);
+            marker.ApplyInPlace(im);
+
+            image = im.ToManagedImage();
+          }
+        }
+      }
+    }
+       
+    HaarObjectDetector detector;     
+    RectanglesMarker   marker;
+    
 
     #endregion
   }

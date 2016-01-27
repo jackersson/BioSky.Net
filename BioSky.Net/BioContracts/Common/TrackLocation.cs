@@ -10,11 +10,12 @@ namespace BioContracts
   public class TrackLocation : IObserver<AccessDeviceActivity>
   {
 
-    public TrackLocation(IAccessDeviceEngine accessDeviceEngine, Location location)
+    public TrackLocation(IProcessorLocator locator, Location location)
     {
-      _accessDeviceEngine = accessDeviceEngine;
-      Update(location);
+      _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
+      _database           = locator.GetProcessor<IBioSkyNetRepository>();
 
+      Update(location);
     }
 
     public void Update(Location location)
@@ -24,6 +25,19 @@ namespace BioContracts
 
     public void Start()
     {
+
+      List<AccessDevice> access_devices = _database.AccessDevices.AccessDevices
+                                          .Where(ad => ad.Locationid == _location.Id)
+                                          .ToList();
+
+      //foreach (AccessDevice ac in access_devices)      
+        //_accessDeviceEngine.Add(ac.Portname);
+      
+      
+      List<CaptureDevice> capture_devices = _database.CaptureDevices.CaptureDevices
+                                            .Where( cap => cap.Locationid == _location.Id)
+                                            .ToList();      
+
       //_accessDeviceEngine.Add(_location.Devices_IN_);
       Subscribe(this);
     }
@@ -79,6 +93,8 @@ namespace BioContracts
     }
 
     private Location _location;
-    private readonly IAccessDeviceEngine _accessDeviceEngine;
+    private readonly IAccessDeviceEngine  _accessDeviceEngine;
+    private readonly IBioSkyNetRepository _database;
+    
   }
 }

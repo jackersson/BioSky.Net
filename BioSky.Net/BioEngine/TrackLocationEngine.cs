@@ -21,7 +21,7 @@ namespace BioEngine
 
 
       //TODO init only when data comes
-      //Init();
+      Init();
     }
 
     public void Init()
@@ -31,7 +31,7 @@ namespace BioEngine
 
       foreach (Location location in database.Locations.Locations)
       {
-        TrackLocation trackLocation = new TrackLocation(accessDeviceEngine, location);
+        TrackLocation trackLocation = new TrackLocation(_locator, location);
         _trackLocations.Add(trackLocation);
       }     
     }

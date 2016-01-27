@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using BioContracts;
+using Grpc.Core;
 
 namespace BioModule.ViewModels
 {
@@ -82,7 +83,9 @@ namespace BioModule.ViewModels
       
     public void ShowAboutDialog()
     {
-      _windowManager.ShowDialog(new AboutDialogViewModel());      
+      //_windowManager.ShowDialog(new AboutDialogViewModel());  
+      Channel _clientChannel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
+      //_locator.GetProcessor<IBioStarter>().Run();
     }
     public void ShowLogInDialog()
     {

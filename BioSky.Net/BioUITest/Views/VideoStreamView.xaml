@@ -9,10 +9,20 @@
              xmlns:video="clr-namespace:BioUITest.Controls"
              xmlns:draw="clr-namespace:System.Drawing;assembly=System.Drawing"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:aforge="clr-namespace:AForge.Controls;assembly=AForge.Controls"
-             Width="300"
-             Height="300"
+             
+            
              d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="FacesRectangle">
+            <Rectangle Stroke="Green"
+                               Fill="Transparent"  Width="{Binding Width}" Height="{Binding Height}">
+                <Rectangle.RenderTransform>
+                    <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </DataTemplate>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -61,10 +71,10 @@
 
         <ListBox  ItemsSource="{Binding DevicesNames}"
                   SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Stretch"
                 
-                  Height="10" Margin="105,0,0,0"
-                  VerticalAlignment="Top" Width="35" Grid.Column="1">
+                
+                  VerticalAlignment="Stretch" Grid.Column="1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
@@ -73,6 +83,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <!--
         <Border Grid.Column="0" 
                 Grid.ColumnSpan="2"
                 Grid.Row="1"
@@ -84,32 +95,11 @@
                >
 
             </Image>
-        </Border>
+        </Border> -->
 
-        <ItemsControl Grid.Row="1"
-                      Grid.Column="0" 
-                      Grid.ColumnSpan="2"
-                      BorderThickness="2"
-                      BorderBrush="AliceBlue"
-                      ItemsSource="{Binding Faces, Mode=OneWay}"
-                      >
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Rectangle Stroke="Green"
-                               Fill="Transparent"  Width="{Binding Width}" Height="{Binding Height}">
-                        <Rectangle.RenderTransform>
-                            <TranslateTransform X="{Binding FacePos.XPos}" Y="{Binding FacePos.YPos}"/>
-                        </Rectangle.RenderTransform>
-                    </Rectangle>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas IsItemsHost="True" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+       
 
+        <!--
         <Grid Grid.Row="1"
                     Grid.Column="0" 
                     Grid.ColumnSpan="2"
@@ -126,7 +116,7 @@
 
 
 
-
+-->
         <Button Content="Enroll" 
                 HorizontalAlignment="Left" 
                 Margin="10,10,0,0" 
@@ -134,7 +124,7 @@
                 Width="105" Height="25"
                 cal:Message.Attach="[Event Click]=[Action Enroll]"
                 />
-
+<!--
         <Button Content="Verify" 
                 HorizontalAlignment="Left" 
                 Margin="10,40,0,0" 
@@ -167,17 +157,53 @@
                 cal:Message.Attach="[Event Click]=[Action VisitorRequest]" Grid.Column="1"
                 />
 
-
-        <video:VideoPlayer Grid.Row="1"
-                           Grid.Column="0" 
-                           Grid.ColumnSpan="2"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Stretch"
+-->
+       
+            
+            <Border BorderThickness="4"
+                      Canvas.ZIndex ="-5"
+                Grid.Row="1"
+                Grid.Column="0" 
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+            <video:VideoPlayer 
                            VideoPreviewWidth="Auto"
                            VideoPreviewHeight="Auto"
-                           VideoSource="{Binding SelectedDevice.MonikerString, Mode=OneWay}"
-                           />
+                                 
+                           VideoSource="{Binding VideoSource, Mode=OneWay}"
+                           VideoOverlayItemSource="{Binding Faces}"
+                           VideoOverlayDataTemplate="{StaticResource FacesRectangle}"
+                           /> 
+        </Border>
+        
 
+            <ItemsControl 
+        Canvas.ZIndex ="5"
+            Grid.Row="1"
+                      Grid.Column="0" 
+                      Grid.ColumnSpan="2"
+                      BorderThickness="2"
+                      BorderBrush="AliceBlue"
+                      ItemsSource="{Binding Faces, Mode=OneWay}"
+                      >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Stroke="Green"
+                               Fill="Transparent"  Width="{Binding Width}" Height="{Binding Height}">
+                            <Rectangle.RenderTransform>
+                                <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        
 
     </Grid>
 </UserControl>

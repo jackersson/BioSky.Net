@@ -11,7 +11,7 @@ namespace BioEngine
 {
   public class BioStarter : IBioStarter
   {
-    BioStarter(IProcessorLocator locator)
+    public BioStarter(IProcessorLocator locator)
     {
       _bioEngine      = locator.GetProcessor<IBioEngine>();
       _serviceManager = locator.GetProcessor<IServiceManager>();

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using BioShell.ViewModels;
 using BioContracts;
+using Grpc.Core;
 
 namespace BioShell
 {
@@ -19,6 +20,16 @@ namespace BioShell
     {
       _loader = loader;
       _shellViewModel = shellViewModel;
+
+      try
+      {
+        Channel _clientChannel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e.Message);
+      }
+      
     }    
     public object TabControl
     {
