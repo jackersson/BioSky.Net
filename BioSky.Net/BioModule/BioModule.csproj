@@ -235,8 +235,11 @@
     <Compile Include="Views\ToolBarView.xaml.cs">
       <DependentUpon>ToolBarView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TrackControlItemView.xaml.cs">
-      <DependentUpon>TrackControlItemView.xaml</DependentUpon>
+    <Compile Include="Views\TrackControlItem\Detailed.xaml.cs">
+      <DependentUpon>Detailed.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrackControlItem\Shorted.xaml.cs">
+      <DependentUpon>Shorted.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TrackControlView.xaml.cs">
       <DependentUpon>TrackControlView.xaml</DependentUpon>
@@ -331,7 +334,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TrackControlItemView.xaml">
+    <Page Include="Views\TrackControlItem\Detailed.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TrackControlItem\Shorted.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -493,9 +500,7 @@
   <ItemGroup>
     <None Include="Resources\logo.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\TrackControlItem\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets" Condition="Exists('..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
