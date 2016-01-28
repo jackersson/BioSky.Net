@@ -7,15 +7,39 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public class TrackLocation : IObserver<AccessDeviceActivity>
+  public class TrackLocation
   {
 
     public TrackLocation(IProcessorLocator locator, Location location)
     {
-      _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
-      _database           = locator.GetProcessor<IBioSkyNetRepository>();
+      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
+      _database            = locator.GetProcessor<IBioSkyNetRepository>();
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      _bioService          = locator.GetProcessor<IServiceManager>();
+     // _database.AccessDevicesChanged  += _database_AccessDevicesChanged;
+     _database.CaptureDevicesChanged += _database_CaptureDevicesChanged;  
 
       Update(location);
+    }
+
+    private void _database_CaptureDevicesChanged(object sender, EventArgs e)
+    {
+      List<CaptureDevice> capture_devices = _database.CaptureDevices.CaptureDevices
+                                            .Where(cap => cap.Locationid == _location.Id)
+                                            .ToList();
+
+      foreach (CaptureDevice cd in capture_devices)
+        _captureDeviceEngine.Add(cd.Devicename);
+    }
+
+    private void _database_AccessDevicesChanged(object sender, EventArgs e)
+    {
+      List<AccessDevice> access_devices = _database.AccessDevices.AccessDevices
+                                         .Where(ad => ad.Locationid == _location.Id)
+                                         .ToList();
+
+      //foreach (AccessDevice ac in access_devices)      
+       // _accessDeviceEngine.Add(ac.Portname);
     }
 
     public void Update(Location location)
@@ -28,55 +52,25 @@ namespace BioContracts
       get { return _location.Id; }
     }
 
-    public void Start()
-    {
+    public async void Start()
+    {      
+      if (_database.AccessDevices.AccessDevices.Count <= 0)
+        await _bioService.DatabaseService.AccessDeviceRequest(new CommandAccessDevice());
+      else
+        _database_AccessDevicesChanged(null, null);
 
-      List<AccessDevice> access_devices = _database.AccessDevices.AccessDevices
-                                          .Where(ad => ad.Locationid == _location.Id)
-                                          .ToList();
-
-      //foreach (AccessDevice ac in access_devices)      
-        //_accessDeviceEngine.Add(ac.Portname);
-      
-      
-      List<CaptureDevice> capture_devices = _database.CaptureDevices.CaptureDevices
-                                            .Where( cap => cap.Locationid == _location.Id)
-                                            .ToList();      
-
-      //_accessDeviceEngine.Add(_location.Devices_IN_);
-      Subscribe(this);
-    }
-
-    public void Subscribe(IObserver<AccessDeviceActivity> observer)
-    {
-      //_accessDeviceEngine.Subscribe(observer, _location.Devices_IN_);
-    }
-
-    public void Unsubscribe(IObserver<AccessDeviceActivity> observer)
-    {
+      if (_database.CaptureDevices.CaptureDevices.Count <= 0)
+        await _bioService.DatabaseService.CaptureDeviceRequest(new CommandCaptureDevice());
+      else
+        _database_CaptureDevicesChanged(null, null);
 
     }
-
+   
     public void Stop()
     {
       //_accessDeviceEngine.Remove(_location.Devices_IN_);
     }
-
-    public void OnNext(AccessDeviceActivity value)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void OnError(Exception error)
-    {
-      throw new NotImplementedException();
-    }
-
-    public void OnCompleted()
-    {
-      throw new NotImplementedException();
-    }
-
+    
     public object ScreenViewModel { get; set; }
 
     public string Caption
@@ -84,6 +78,7 @@ namespace BioContracts
       get { return _location.LocationName; }
     }
 
+    /*
     private bool _isChecked;
 
     public bool IsChecked
@@ -96,9 +91,11 @@ namespace BioContracts
         _isChecked = value;
       }
     }
-
+    */
     private Location _location;
     private readonly IAccessDeviceEngine  _accessDeviceEngine;
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+    private readonly IServiceManager      _bioService;
     private readonly IBioSkyNetRepository _database;
     
   }

@@ -13,10 +13,9 @@ using System.Threading.Tasks;
 namespace BioEngine.CaptureDevices
 {
   
-  public class CaptureDeviceEnumerator : Threadable
+  public class CaptureDeviceEnumerator : Threadable, ICaptureDeviceConnectivity
   {
-
-    public CaptureDeviceEnumerator() : base()
+     public CaptureDeviceEnumerator() : base()
     {
       _captureDevicesNames = new AsyncObservableCollection<FilterInfo>();
     }
@@ -75,9 +74,14 @@ namespace BioEngine.CaptureDevices
     }
 
 
-    public bool CaptureDeviceConnected(FilterInfo deviceName)
+    public FilterInfo CaptureDeviceConnected(string deviceName)
     {
-      return _captureDevicesNames.Contains(deviceName);
+      foreach (FilterInfo fi in CaptureDevicesNames )
+      {
+        if (fi.Name == deviceName)
+          return fi;
+      }
+      return null;
     }
 
     private AsyncObservableCollection<FilterInfo> _captureDevicesNames;

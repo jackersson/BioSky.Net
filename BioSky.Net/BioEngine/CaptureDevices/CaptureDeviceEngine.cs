@@ -13,9 +13,39 @@ namespace BioEngine.CaptureDevices
   {
     public CaptureDeviceEngine()
     {
-      //_captureDevicesNames = new FilterInfoCollection(FilterCategory.VideoInputDevice);    
+      _captureDevices = new Dictionary<string, СaptureDeviceListener>();
+        
       _captureDeviceEnumerator = new CaptureDeviceEnumerator();
       _captureDeviceEnumerator.Start();
+    }
+
+    public void Add(string cameraName)
+    {
+      СaptureDeviceListener listener;
+      if (!_captureDevices.TryGetValue(cameraName, out listener))
+      {      
+        listener = new СaptureDeviceListener(cameraName, _captureDeviceEnumerator);
+        listener.Start();
+        _captureDevices.Add(cameraName, listener);
+      }
+    }
+
+    public void Remove(string cameraName)
+    {
+      СaptureDeviceListener listener;
+      if (!_captureDevices.TryGetValue(cameraName, out listener))
+      {       
+        listener.Kill();       
+        _captureDevices.Remove(cameraName);
+      }
+    }
+
+    public bool CaptureDeviceActive(string cameraName)
+    {
+      СaptureDeviceListener listener;
+      if (_captureDevices.TryGetValue(cameraName, out listener))
+        return listener.IsActive();
+      return false;
     }
 
     public AsyncObservableCollection<FilterInfo> GetCaptureDevicesNames()
@@ -23,12 +53,26 @@ namespace BioEngine.CaptureDevices
       return _captureDeviceEnumerator.CaptureDevicesNames;
     }
 
+    public void Subscribe( FrameEventHandler eventListener, string cameraName)
+    {
+      СaptureDeviceListener listener;
+      if (_captureDevices.TryGetValue(cameraName, out listener))      
+        listener.NewFrame += eventListener;      
+    }
+
+
     public void Stop()
     {
       _captureDeviceEnumerator.Stop();
+   
+      foreach (KeyValuePair<string, СaptureDeviceListener> par in _captureDevices)
+        par.Value.Kill();
+
+      _captureDevices.Clear();
     }
 
     private readonly CaptureDeviceEnumerator _captureDeviceEnumerator;
-    //private FilterInfoCollection _captureDevicesNames;
+    private Dictionary<string, СaptureDeviceListener> _captureDevices;
+  
   }
 }

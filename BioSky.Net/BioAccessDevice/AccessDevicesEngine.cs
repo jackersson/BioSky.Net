@@ -45,8 +45,11 @@ namespace BioAccessDevice
     public void Remove(string portName)
     {
       AccessDeviceListener listener;
-      if (_accessDevices.TryGetValue(portName, out listener))            
-        _accessDevices.Remove(portName);      
+      if (_accessDevices.TryGetValue(portName, out listener))
+      {
+        listener.Stop();
+        _accessDevices.Remove(portName);
+      }     
     }
 
     

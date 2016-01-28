@@ -14,7 +14,7 @@ namespace BioEngine
     public void Run()
     {     
       _serviceManager.Start("192.168.1.178:50051");
-
+      
       RequestData();    
     }
 

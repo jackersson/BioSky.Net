@@ -30,8 +30,7 @@ namespace BioEngine
 
     public void Init()
     {
-      IBioSkyNetRepository database           = _locator.GetProcessor<IBioSkyNetRepository>();
-      IAccessDeviceEngine  accessDeviceEngine = _locator.GetProcessor<IAccessDeviceEngine> ();
+      IBioSkyNetRepository database           = _locator.GetProcessor<IBioSkyNetRepository>();     
 
       foreach (Location location in database.Locations.Locations)
       {
@@ -39,6 +38,7 @@ namespace BioEngine
           continue;        
           
          TrackLocation trackLocation = new TrackLocation(_locator, location);
+         trackLocation.Start();
         _trackLocations.Add(trackLocation);
       }     
     }
