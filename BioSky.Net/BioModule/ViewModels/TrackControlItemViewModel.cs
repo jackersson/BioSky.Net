@@ -28,6 +28,7 @@ namespace BioModule.ViewModels
       CardDetectedIconVisible = false;      
 
       _visitorsView = new VisitorsViewModel(locator);
+      _imageView    = new ImageViewModel();
 
       DisplayName = "Location";
 
@@ -46,6 +47,12 @@ namespace BioModule.ViewModels
     public VisitorsViewModel VisitorsView
     {
       get { return _visitorsView; }
+    }
+
+    private ImageViewModel _imageView;
+    public ImageViewModel ImageView
+    {
+      get { return _imageView; }
     }
 
     public void OnChecked(object name)

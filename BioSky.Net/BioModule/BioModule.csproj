@@ -493,7 +493,9 @@
   <ItemGroup>
     <None Include="Resources\logo.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\TrackControlItem\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets" Condition="Exists('..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

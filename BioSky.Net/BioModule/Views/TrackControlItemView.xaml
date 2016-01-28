@@ -28,7 +28,7 @@
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="65"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -67,9 +67,8 @@
                Grid.Column="5" />
 
                 <ContentControl Grid.Column="0" Grid.Row="1" 
-                        Grid.ColumnSpan="6" Margin="0,2,5,0"                        
-                        cal:View.Context="Shorted"                      
-                        cal:View.Model="{Binding Notifications}">
+                        Grid.ColumnSpan="6" Margin="0,2,5,0"             
+                        cal:View.Model="{Binding ImageView}">
                 </ContentControl>
 
             <Label Content="{Binding CurrentLocation.Caption}" HorizontalAlignment="Left" 
