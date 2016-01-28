@@ -81,7 +81,7 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
                     <ContentControl x:Name="ActiveItem" 
-                              cal:View.Context="Detailed"                                    
+                              cal:View.Context="Photo"                                    
                               cal:View.Model="{Binding}"                              
                                  >
                     </ContentControl>
