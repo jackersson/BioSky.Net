@@ -147,8 +147,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                                 <ContentControl Width="200"  Content="{Binding ScreenViewModel}" Margin="2, 2, 5, 2" 
-                                                 HorizontalAlignment="Left" 
-                                                 />
+                                                 HorizontalAlignment="Left"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

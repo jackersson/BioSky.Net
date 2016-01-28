@@ -59,6 +59,18 @@
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"              
                   cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                       [Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Success">
+                            <Setter Property="Background" Value="#FFEAFFEA"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Failed">
+                            <Setter Property="Background" Value="#7FFFECEC"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
 
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
@@ -103,14 +115,7 @@
                 <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.Firstname}"/>
                 <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Locationid, Converter={x:Static utils:ConverterInitializer.LocationIdToLocationnameConverter}}"/>
                 <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}"/>
-
-                <DataGridTemplateColumn Header="Status" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Path=Status, Converter={StaticResource ConvertTextToImage}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                
             </DataGrid.Columns>
 
             <DataGrid.ContextMenu >
