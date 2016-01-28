@@ -45,7 +45,7 @@
                   ItemsSource="{Binding Visitors}"                
                   GridLinesVisibility="None"
                   AutoGenerateColumns="False"
-                  HeadersVisibility ="None"
+                  HeadersVisibility ="None" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                   CanUserSortColumns="True" CanUserAddRows="False"
                   materialDesign:DataGridAssist.CellPadding="13 8 8 8"
                   materialDesign:DataGridAssist.ColumnHeaderPadding="8"              

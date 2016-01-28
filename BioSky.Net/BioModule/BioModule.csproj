@@ -327,6 +327,9 @@
     <Compile Include="Views\Visitors\Detailed.xaml.cs">
       <DependentUpon>Detailed.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Visitors\LastPhoto.xaml.cs">
+      <DependentUpon>LastPhoto.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Visitors\Photo.xaml.cs">
       <DependentUpon>Photo.xaml</DependentUpon>
     </Compile>
@@ -443,6 +446,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Visitors\Detailed.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Visitors\LastPhoto.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

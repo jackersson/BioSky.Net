@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="BioModule.Views.Visitors.LastPhoto"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:cal="http://www.caliburnproject.org"   
+             xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
+             >
+
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
+            <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel>
+            <Grid Margin="5,5,5,5" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="{Binding LastVisitor.Personid, Converter={x:Static vm:UsersViewModel.PhotoIDConverter}}" 
+                                       Stretch="Fill" Width="50" Height="50"/>
+
+                <StackPanel Margin="5,-4,0,0" Grid.Column="1">
+                    <TextBlock>Last Activity</TextBlock>
+                    <!--<TextBlock Text="{Binding LastVisitor.Personid, Converter={x:Static vm:UsersViewModel.PersonIdToLastnameConverter}}" 
+                                               HorizontalAlignment="Left" Foreground="#FF5E82A8" FontWeight="Bold" ></TextBlock>
+                    <TextBlock Text="{Binding LastVisitor.Personid, Converter={x:Static vm:UsersViewModel.PersonIdToFirstnameConverter}}" 
+                                               HorizontalAlignment="Left" Foreground="#FF5E82A8" FontWeight="Bold" ></TextBlock>-->
+                    <TextBlock Text="{Binding LastVisitor.Time, Converter={StaticResource ConvertLongToDateTime}}" 
+                                               HorizontalAlignment="Left" Foreground="Gray" FontSize="11" FontWeight="SemiBold" ></TextBlock>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>
