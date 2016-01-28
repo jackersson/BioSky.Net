@@ -28,7 +28,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="180"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -46,13 +46,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="28"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="24"/>
             </Grid.RowDefinitions>
-
-            <Image HorizontalAlignment="Left"  Height="24" Grid.Row="2"
-               VerticalAlignment="Top" Width="24" 
-               Source="{Binding OkIconSource}" Grid.Column="0">
-            </Image>
 
             <Image HorizontalAlignment="Right" Height="24" Grid.Row="2" 
                VerticalAlignment="Top" Width="24" 
@@ -82,7 +76,11 @@
 
 
         <Grid Grid.Column="1">
-            <ContentControl   cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ContentControl Width="180" Grid.Row="1" cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
         </Grid>
 
     </Grid>

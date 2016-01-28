@@ -87,6 +87,12 @@ namespace BioModule.ViewModels
         
         Visitors.Add(item);
       }
+
+      if(Visitors.Count != 0)
+      {
+        LastVisitor = Visitors[Visitors.Count - 1];
+      }
+
     }
 
     public void Update()
@@ -104,6 +110,20 @@ namespace BioModule.ViewModels
         {
           _visitors = value;
           NotifyOfPropertyChange(() => Visitors);
+        }
+      }
+    }
+
+    private Visitor _lastVisitor;
+    public Visitor LastVisitor
+    {
+      get { return _lastVisitor; }
+      set
+      {
+        if (_lastVisitor != value)
+        {
+          _lastVisitor = value;
+          NotifyOfPropertyChange(() => LastVisitor);
         }
       }
     }

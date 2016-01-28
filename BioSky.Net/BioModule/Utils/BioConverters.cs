@@ -25,7 +25,7 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
-        return new DateTime((long)value);
+        return new DateTime((long)value).ToString("hh:mm:ss dd.MM.yy");
       }
       return null;
     }

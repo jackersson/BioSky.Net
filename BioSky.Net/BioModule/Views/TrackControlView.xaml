@@ -42,16 +42,13 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="56"/>
-            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="62"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
 
         </Grid.ColumnDefinitions>
 
-        <GridSplitter Grid.Column="1"  Grid.Row="2" Grid.RowSpan="2" 
-                      Width="2" Background="Gray"  ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0,2,0,0"/>
-    
 
         <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
@@ -131,6 +128,7 @@
                  SelectionMode="Single" HeadersVisibility="None" AutoGenerateColumns="False" 
                  CanUserAddRows="False" CanUserDeleteRows="False"
                  ColumnWidth="600"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  DataContext="{Binding Mode=OneWay}"
                  Grid.Column="2"  Grid.Row="2" Grid.ColumnSpan="4"  Grid.RowSpan="3" Margin="3,2,0,0"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
@@ -145,12 +143,12 @@
             </DataGrid.Resources>
             
             <DataGrid.Columns>
-                <DataGridTemplateColumn MinWidth="64" MaxWidth="Infinity">
+                <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                                <ContentControl  Content="{Binding ScreenViewModel}" Margin="2, 2, 5, 2" 
-                                                 VerticalAlignment="Center" MinHeight="128" MinWidth="64" 
-                                                 MaxHeight="256" MaxWidth="Infinity"/>
+                                <ContentControl Width="200"  Content="{Binding ScreenViewModel}" Margin="2, 2, 5, 2" 
+                                                 HorizontalAlignment="Left" 
+                                                 />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
