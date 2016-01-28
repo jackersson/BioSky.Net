@@ -11,7 +11,15 @@ namespace BioContracts
 
   public interface IBioSkyNetRepository
   {   
-     event EventHandler DataChanged;
+   
+
+   event EventHandler AccessDevicesChanged;
+   event EventHandler CaptureDevicesChanged;
+   event EventHandler CardsChanged;
+   event EventHandler PersonChanged;
+   event EventHandler VisitorChanged;
+   event EventHandler LocationChanged;
+   event EventHandler PhotoChanged;
 
     Person GetPersonByID(long id);
     Location GetLocationByID(long id);

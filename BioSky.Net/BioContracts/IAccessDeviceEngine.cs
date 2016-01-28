@@ -25,6 +25,8 @@ namespace BioContracts
 
     void Execute(AccessDeviceCommands command, string portName);
 
-    void Subscribe(System.IObserver<AccessDeviceActivity> observer, string portName);    
+    void Subscribe(System.IObserver<AccessDeviceActivity> observer, string portName);
+
+    void Stop();
   }
 }

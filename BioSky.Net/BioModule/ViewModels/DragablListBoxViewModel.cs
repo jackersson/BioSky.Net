@@ -116,6 +116,7 @@ namespace BioModule.ViewModels
 
     public bool ContainsItem(DragableItem di)
     {
+
       DragableItem dragableItem = DragableItems.Where(x => x.DisplayName == di.DisplayName).FirstOrDefault();
       if (dragableItem != null)
         return true;

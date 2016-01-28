@@ -15,6 +15,7 @@ namespace BioContracts.Services
     Task CardRequest        (CommandCard command);
     Task VisitorRequest     (CommandVisitor command);
     Task PersonRequest      (CommandPerson command);
+    Task PersonUpdateRequest(PersonList command);
 
     Task LocationRequest(CommandLocation command);
 

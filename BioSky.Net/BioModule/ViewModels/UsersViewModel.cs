@@ -107,7 +107,7 @@ namespace BioModule.ViewModels
       PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (_bioEngine.Database());
       LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(_bioEngine.Database());
 
-      _bioEngine.Database().DataChanged += UsersViewModel_DataChanged;
+      _bioEngine.Database().PersonChanged += UsersViewModel_DataChanged;
 
 /*
       PersonList persons = _bioEngine.Database().Persons;
@@ -124,8 +124,10 @@ namespace BioModule.ViewModels
 
     protected async override void OnActivate()
     {
-      await _bioService.DatabaseService.PhotoRequest(new CommandPhoto());
-      await _bioService.DatabaseService.PersonRequest(new CommandPerson());
+      if (_bioEngine.Database().Persons.Persons.Count <= 0)
+        await _bioService.DatabaseService.PersonRequest(new CommandPerson());
+      else
+        UsersViewModel_DataChanged(null, null);
     }
 
     public void UsersViewModel_DataChanged(object sender, EventArgs args)

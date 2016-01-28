@@ -9,6 +9,8 @@ namespace BioContracts
 {
   public interface IBioEngine
   {
+    void Stop();
+
     IBioSkyNetRepository Database();
 
     IAccessDeviceEngine AccessDeviceEngine();

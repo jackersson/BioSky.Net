@@ -119,7 +119,14 @@ namespace BioGRPC
       {
         PersonList call = await _client.PersonSelectAsync(command);
         _database.Persons = call;
+        
         Console.WriteLine(call.ToString());
+
+        //call.Persons[0].Country = "Ucrania";
+        //call.Persons[0].Dbstate = DbState.Update;
+
+        //BioFaceService.CommandPerson cmd1 = new BioFaceService.CommandPerson();
+        //await PersonUpdateRequest(call);
 
       }
       catch (RpcException e)
@@ -128,6 +135,27 @@ namespace BioGRPC
         throw;
       }
     }
+
+    public async Task PersonUpdateRequest(PersonList command)
+    {
+      try
+      {
+        Result call = await _client.PersonUpdateAsync(command);        
+        Console.WriteLine(call.ToString());
+
+        foreach (ResultPair ss in call.Status)
+        {
+          Console.WriteLine(ss.Status);
+         
+        }
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
 
     private void Log(string s, params object[] args)
     {

@@ -34,13 +34,8 @@ namespace BioModule.ViewModels
 
       _userCards = new ObservableCollection<Card>();
 
-      _bioEngine.Database().DataChanged += UserContactlessCardViewModel_DataChanged; 
-    }
-
-    protected async override void OnActivate()
-    {
-      await _bioService.DatabaseService.CardRequest(new CommandCard());
-    }
+      _bioEngine.Database().CardsChanged += UserContactlessCardViewModel_DataChanged; 
+    }    
 
     public void UserContactlessCardViewModel_DataChanged(object sender, EventArgs args)
     {

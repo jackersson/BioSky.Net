@@ -9,6 +9,8 @@ namespace BioContracts
 {
   public interface ICaptureDeviceEngine
   {
+    void Stop();
+
     AsyncObservableCollection<FilterInfo> GetCaptureDevicesNames();
   }
 }

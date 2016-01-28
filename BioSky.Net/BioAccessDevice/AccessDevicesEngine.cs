@@ -22,6 +22,15 @@ namespace BioAccessDevice
       _accessDeviceEnumerator.Start();
     }
 
+    public void Stop()
+    {
+      _accessDeviceEnumerator.Stop();
+      foreach ( KeyValuePair<string, AccessDeviceListener> par in _accessDevices)      
+        par.Value.Stop();       
+
+      _accessDevices.Clear();
+    }
+
     public void Add( string portName)
     {
       AccessDeviceListener listener;
@@ -85,7 +94,7 @@ namespace BioAccessDevice
       return false;
     }
 
-    private AccessDevicesEnumerator _accessDeviceEnumerator;
+    private readonly AccessDevicesEnumerator _accessDeviceEnumerator;
 
 
     public AsyncObservableCollection<string> GetAccessDevicesNames()

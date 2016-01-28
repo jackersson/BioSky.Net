@@ -39,6 +39,12 @@ namespace BioEngine
     {
       return _captureDeviceEngine;
     }
+
+    public void Stop()
+    {
+      _captureDeviceEngine.Stop();
+      _accessDeviceEngine.Stop();
+    }
     
     private readonly IBioSkyNetRepository _data              ;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;

@@ -23,7 +23,12 @@ namespace BioEngine.CaptureDevices
       return _captureDeviceEnumerator.CaptureDevicesNames;
     }
 
-    private CaptureDeviceEnumerator _captureDeviceEnumerator;
+    public void Stop()
+    {
+      _captureDeviceEnumerator.Stop();
+    }
+
+    private readonly CaptureDeviceEnumerator _captureDeviceEnumerator;
     //private FilterInfoCollection _captureDevicesNames;
   }
 }

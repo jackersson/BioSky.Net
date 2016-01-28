@@ -17,11 +17,56 @@ namespace BioData
     private Dictionary<long, Visitor>  visitorSet;
 
 
-    public event EventHandler DataChanged;
+    //public event EventHandler DataChanged;
+
+
+    public event EventHandler AccessDevicesChanged;
+    public event EventHandler CaptureDevicesChanged;
+    public event EventHandler CardsChanged;
+    public event EventHandler PersonChanged;
+    public event EventHandler VisitorChanged;
+    public event EventHandler LocationChanged;
+    public event EventHandler PhotoChanged;
+
+    public void OnAccessDevicesChanged()
+    {
+      if (AccessDevicesChanged != null)
+        AccessDevicesChanged(this, EventArgs.Empty);
+    }
+    public void OnCaptureDevicesChanged()
+    {
+      if (CaptureDevicesChanged != null)
+        CaptureDevicesChanged(this, EventArgs.Empty);
+    }
+    public void OnCardsChanged()
+    {
+      if (CardsChanged != null)
+        CardsChanged(this, EventArgs.Empty);
+    }
+    public void OnPhotoChanged()
+    {
+      if (PhotoChanged != null)
+        PhotoChanged(this, EventArgs.Empty);
+    }
+    public void OnLocationChanged()
+    {
+      if (LocationChanged != null)
+        LocationChanged(this, EventArgs.Empty);
+    }
+    public void OnVisitorChanged()
+    {
+      if (VisitorChanged != null)
+        VisitorChanged(this, EventArgs.Empty);
+    }
+
+    public void OnPersonChanged()
+    {
+      if (PersonChanged != null)
+        PersonChanged(this, EventArgs.Empty);
+    }
 
     public BioSkyNetRepository()
     {
-
       _persons         = new PersonList();
       _visitors        = new VisitorList();
       _locations       = new LocationList();
@@ -34,67 +79,6 @@ namespace BioData
       personSet   = new Dictionary<long, Person>();
       locationSet = new Dictionary<long, Location>();
       visitorSet  = new Dictionary<long, Visitor>();
-
-
-
-/*
-      Person pers = new Person() { Id = 1, Firstname = "Sasha", Lastname = "Iskra", Gender = Person.Types.Gender.Male, Rights = Person.Types.Rights.Operator, Country = "Vinnitsya", Thumbnail = 1 };
-      Persons.Persons.Add(pers);
-
-      Visitor vis = new Visitor() { Id = 1, Personid = 1, Status = Visitor.Types.VisitorStatus.Success, Time = 1297380023295, Locationid = 1, Photoid = 1 };
-      Visitors.Visitors.Add(vis);
-
-      Location loc1 = new Location() { Id = 1, LocationName = "Location 1", Desctiption = "Location" };
-      Location loc2 = new Location() { Id = 2, LocationName = "Location 2", Desctiption = "Location" };
-      Location loc3 = new Location() { Id = 3, LocationName = "Location 3", Desctiption = "Location" };
-
-      Locations.Locations.Add(loc1);
-      Locations.Locations.Add(loc2);
-      Locations.Locations.Add(loc3);
-
-      AccessDevice acDev1 = new AccessDevice() { Id = 1, Locationid = 1, Portname = "Com1", Type = AccessDevice.Types.AccessDeviceType.DeviceIn };
-      AccessDevice acDev2 = new AccessDevice() { Id = 2, Locationid = 1, Portname = "Com2", Type = AccessDevice.Types.AccessDeviceType.DeviceOut };
-      AccessDevice acDev3 = new AccessDevice() { Id = 3, Locationid = 1, Portname = "Com3", Type = AccessDevice.Types.AccessDeviceType.DeviceIn };
-      AccessDevice acDev4 = new AccessDevice() { Id = 1, Locationid = 2, Portname = "Com4", Type = AccessDevice.Types.AccessDeviceType.DeviceIn };
-      AccessDevice acDev5 = new AccessDevice() { Id = 2, Locationid = 2, Portname = "Com5", Type = AccessDevice.Types.AccessDeviceType.DeviceOut };
-      AccessDevice acDev6 = new AccessDevice() { Id = 3, Locationid = 2, Portname = "Com6", Type = AccessDevice.Types.AccessDeviceType.DeviceIn };
-      AccessDevice acDev7 = new AccessDevice() { Id = 1, Locationid = 3, Portname = "Com7", Type = AccessDevice.Types.AccessDeviceType.DeviceIn };
-      AccessDevice acDev8 = new AccessDevice() { Id = 2, Locationid = 3, Portname = "Com8", Type = AccessDevice.Types.AccessDeviceType.DeviceOut };
-      AccessDevice acDev9 = new AccessDevice() { Id = 3, Locationid = 3, Portname = "Com9", Type = AccessDevice.Types.AccessDeviceType.DeviceIn };
-      AccessDevices.AccessDevices.Add(acDev1);
-      AccessDevices.AccessDevices.Add(acDev2);
-      AccessDevices.AccessDevices.Add(acDev3);
-      AccessDevices.AccessDevices.Add(acDev4);
-      AccessDevices.AccessDevices.Add(acDev5);
-      AccessDevices.AccessDevices.Add(acDev6);
-      AccessDevices.AccessDevices.Add(acDev7);
-      AccessDevices.AccessDevices.Add(acDev8);
-      AccessDevices.AccessDevices.Add(acDev9);
-
-      CaptureDevice capDev1 = new CaptureDevice() { Id = 1, Locationid = 1, Devicename = "Camera1" };
-      CaptureDevice capDev2 = new CaptureDevice() { Id = 2, Locationid = 1, Devicename = "Camera2" };
-      CaptureDevice capDev3 = new CaptureDevice() { Id = 3, Locationid = 1, Devicename = "Camera3" };
-
-      Card card = new Card() { Id = 1, Personid = 1, UniqueNumber = "34567834567" };
-      Cards.Cards.Add(card);
-
-      Photo photo = new Photo() { Id = 1, Personid = 1, FileLocation = "taras.jpg" };
-      Photos.Photos.Add(photo);
-
-
-      foreach (Person person in Persons.Persons)
-      {
-        if (!personSet.ContainsKey(pers.Id))
-          personSet.Add(pers.Id, pers);
-      }
-
-      foreach (Location location in Locations.Locations)
-      {
-        if (!locationSet.ContainsKey(location.Id))
-          locationSet.Add(location.Id, location);
-      }*/
-
-
     }
 
     public Photo GetPhotoByID( long id )
@@ -123,12 +107,7 @@ namespace BioData
       bool flag = locationSet.TryGetValue(id, out location);
       return location;
     }
-    
-    public void OnDataChanged()
-    {
-      if (DataChanged != null)
-        DataChanged(this, EventArgs.Empty);
-    }
+
 
     public PersonList _persons;
     public PersonList Persons
@@ -140,7 +119,7 @@ namespace BioData
         {
           _persons = value;
           NotifyOfPropertyChange(() => Persons);
-          OnDataChanged();
+          OnPersonChanged();
 
           foreach (Person pers in Persons.Persons)
           {
@@ -161,7 +140,7 @@ namespace BioData
         {
           _visitors = value;
           NotifyOfPropertyChange(() => Visitors);
-          OnDataChanged();
+          OnVisitorChanged();
 
           foreach (Visitor visitor in Visitors.Visitors)
           {
@@ -182,7 +161,7 @@ namespace BioData
         {
           _access_devices = value;
           NotifyOfPropertyChange(() => AccessDevices);
-          OnDataChanged();
+          OnAccessDevicesChanged();
         }
       }
     }
@@ -197,7 +176,7 @@ namespace BioData
         {
           _capture_devices = value;
           NotifyOfPropertyChange(() => CaptureDevices);
-          OnDataChanged();
+          OnCaptureDevicesChanged();
         }
       }
     }
@@ -212,7 +191,7 @@ namespace BioData
         {
           _cards = value;
           NotifyOfPropertyChange(() => Cards);
-          OnDataChanged();
+          OnCardsChanged();
         }
       }
     }
@@ -227,6 +206,8 @@ namespace BioData
         {
           _locations = value;
           NotifyOfPropertyChange(() => Locations);
+
+          OnLocationChanged();
 
           foreach (Location location in Locations.Locations)
           {
@@ -247,6 +228,8 @@ namespace BioData
         {
           _photos = value;
           NotifyOfPropertyChange(() => Photos);
+
+          OnPhotoChanged();
 
           foreach ( Photo ph in Photos.Photos )
           {

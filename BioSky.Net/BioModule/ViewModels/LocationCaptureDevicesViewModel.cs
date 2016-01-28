@@ -29,7 +29,7 @@ namespace BioModule.ViewModels
       DevicesInList = new DragablListBoxViewModel(removeDragable);
       DevicesInList.ItemRemoved += DevicesList.ItemDropped;
 
-      _bioEngine.Database().DataChanged += LocationCaptureDevicesViewModel_DataChanged;         
+      _bioEngine.Database().CaptureDevicesChanged += LocationCaptureDevicesViewModel_DataChanged;         
     }
 
     protected async override void OnActivate()

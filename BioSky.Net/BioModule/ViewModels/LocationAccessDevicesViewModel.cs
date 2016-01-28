@@ -42,17 +42,10 @@ namespace BioModule.ViewModels
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
-      _bioEngine.Database().DataChanged += LocationAccessDevicesViewModel_DataChanged;
+      _bioEngine.Database().AccessDevicesChanged += LocationAccessDevicesViewModel_DataChanged;
 
-      AccessDeviceList accessDevices = _bioEngine.Database().AccessDevices;
-     // OnAccessDevicesChanged(accessDevices);
-    }
-
-    protected async override void OnActivate()
-    {
-      await _bioService.DatabaseService.LocationRequest    (new CommandLocation());   
-      await _bioService.DatabaseService.AccessDeviceRequest(new CommandAccessDevice());      
-    }
+      AccessDeviceList accessDevices = _bioEngine.Database().AccessDevices;     
+    }    
 
     public void LocationAccessDevicesViewModel_DataChanged( object sender, EventArgs args)
     {       
@@ -69,6 +62,8 @@ namespace BioModule.ViewModels
       DevicesList.Add(newItem);
     }
 
+
+    //TODO not smart way (Consider to search items once)
     private void OnAccessDevicesChanged( AccessDeviceList accessDevices )
     {
       DevicesInList.Clear();
@@ -80,13 +75,16 @@ namespace BioModule.ViewModels
 
       foreach (AccessDevice item in accessDevices.AccessDevices)
       {
-        if (item.Locationid != _location.Id)
+        if (item.Locationid != _location.Id && item.Type != AccessDevice.Types.AccessDeviceType.DeviceNone)
           continue;
 
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
 
+        /*
         if (DevicesList.ContainsItem(dragableItem))        
           continue;        
+          */
+
 
         switch (item.Type)
         {
@@ -97,12 +95,10 @@ namespace BioModule.ViewModels
           case AccessDevice.Types.AccessDeviceType.DeviceOut:
             DevicesOutList.Add(dragableItem);
             AddToGeneralDeviceList(dragableItem, false);
-            break;
-          /*
-          case AccessDevice.Types.AccessDeviceType.DeviceNone:
-           // DevicesList.Add(dragableItem);
-           *  AddToGeneralDeviceList(dragableItem, true);
-            break; */
+            break;          
+          case AccessDevice.Types.AccessDeviceType.DeviceNone:           
+            AddToGeneralDeviceList(dragableItem, true);
+            break; 
         }
       }
     }

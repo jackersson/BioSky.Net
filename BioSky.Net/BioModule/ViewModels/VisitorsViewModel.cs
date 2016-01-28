@@ -38,7 +38,7 @@ namespace BioModule.ViewModels
       _visitors         = new ObservableCollection<Visitor>();
       _selectedItemIds  = new ObservableCollection<long>();
 
-      _bioEngine.Database().DataChanged += VisitorsViewModel_DataChanged;
+      _bioEngine.Database().VisitorChanged += VisitorsViewModel_DataChanged;
 
       LocationId = -1;
 /*
@@ -54,19 +54,23 @@ namespace BioModule.ViewModels
 
     }
 
-/*
-    public void Update(long locationId)
-    {
-      if (locationId == null)
-        return;
+    /*
+        public void Update(long locationId)
+        {
+          if (locationId == null)
+            return;
 
-      LocationId = locationId;
-    }*/
+          LocationId = locationId;
+        }*/
 
     protected async override void OnActivate()
     {
-      await _bioService.DatabaseService.VisitorRequest(new CommandVisitor());
+      if (_bioEngine.Database().Visitors.Visitors.Count <= 0)
+        await _bioService.DatabaseService.VisitorRequest(new CommandVisitor());
+      else
+        VisitorsViewModel_DataChanged(null, null);
     }
+
 
     public void VisitorsViewModel_DataChanged(object sender, EventArgs args)
     {

@@ -34,7 +34,8 @@ namespace BioGRPC
     }
     public void Stop()
     {
-      _clientChannel.ShutdownAsync().Wait();
+      if (_clientChannel != null)
+        _clientChannel.ShutdownAsync().Wait();
     }
 
 

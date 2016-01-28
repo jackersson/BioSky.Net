@@ -9,5 +9,7 @@ namespace BioContracts
   public interface IBioStarter
   {
     void Run();
+
+    void Stop();    
   }
 }

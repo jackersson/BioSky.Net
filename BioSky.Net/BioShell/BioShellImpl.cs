@@ -19,18 +19,9 @@ namespace BioShell
     public BioShellImpl(BioModuleLoader loader, BioShellViewModel shellViewModel)
     {
       _loader = loader;
-      _shellViewModel = shellViewModel;
-
-      try
-      {
-        Channel _clientChannel = new Channel("127.0.0.1:50051", ChannelCredentials.Insecure);
-      }
-      catch (Exception e)
-      {
-        Console.WriteLine(e.Message);
-      }
-      
+      _shellViewModel = shellViewModel;      
     }    
+
     public object TabControl
     {
       get { return _shellViewModel.TabControl;  }

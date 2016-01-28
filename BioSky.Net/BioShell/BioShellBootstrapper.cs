@@ -15,6 +15,7 @@ using System.Windows.Input;
 
 using System.Threading;
 using System.Globalization;
+using BioContracts;
 
 namespace BioShell
 {
@@ -27,8 +28,18 @@ namespace BioShell
       Initialize();
     }
 
+
+    protected override void OnExit(object sender, EventArgs e)
+    {
+      Console.WriteLine("Exit");
+      IBioStarter starter = _container.Resolve<IBioStarter>();
+      if (starter != null)
+        starter.Stop();
+    }
+
     protected override void OnStartup(object sender, StartupEventArgs e)
     {
+      
       var loader     = _container.Resolve<BioModuleLoader>();
       var dataloader = _container.Resolve<BioDataLoader>();
 

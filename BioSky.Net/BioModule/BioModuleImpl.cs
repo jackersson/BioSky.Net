@@ -31,18 +31,21 @@ namespace BioModule
 
     public void Init()
     {
+      
       IBioStarter starter = _locator.GetProcessor<IBioStarter>();
       starter.Run();
-
+     
+      
       ViewModelSelector selector = _locator.GetProcessor<ViewModelSelector>();
       selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);
-
+      
       IBioShell bioShell = _locator.GetProcessor<IBioShell>();
 
       bioShell.TabControl    = _locator.GetProcessor<TabViewModel>();
       bioShell.FlyoutControl = _locator.GetProcessor<FlyoutControlViewModel>();
       bioShell.ToolBar       = _locator.GetProcessor<ToolBarViewModel>();
-      bioShell.MainMenu      = _locator.GetProcessor<MainMenuViewModel>();    
+      bioShell.MainMenu      = _locator.GetProcessor<MainMenuViewModel>();
+      
     }
   }
 }

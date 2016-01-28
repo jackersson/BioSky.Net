@@ -29,7 +29,7 @@ namespace BioModule.ViewModels
       UsersNotifyList = new DragablListBoxViewModel(removeDragable);
       UsersNotifyList.ItemRemoved += UsersList.ItemDropped;
 
-      _bioEngine.Database().DataChanged += LocationUsersNotifyViewModel_DataChanged; 
+      _bioEngine.Database().PersonChanged += LocationUsersNotifyViewModel_DataChanged; 
     }
 
     protected async override void OnActivate()
