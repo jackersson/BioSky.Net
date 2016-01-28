@@ -27,14 +27,14 @@
     <Grid>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="155"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid>
+        <Grid Grid.Column="1" Margin="5,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="24"/>
                 <ColumnDefinition Width="*"/>
@@ -75,10 +75,11 @@
         </Grid>
 
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="28"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="48"/>
             </Grid.RowDefinitions>
             <ContentControl Width="155" Grid.Row="1" cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
         </Grid>

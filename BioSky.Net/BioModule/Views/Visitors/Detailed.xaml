@@ -63,10 +63,10 @@
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Status}" Value="Success">
-                            <Setter Property="Background" Value="#FFEAFFEA"/>
+                            <Setter Property="Background" Value="#66EAFFEA"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding Status}" Value="Failed">
-                            <Setter Property="Background" Value="#7FFFECEC"/>
+                            <Setter Property="Background" Value="#4CFFECEC"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
