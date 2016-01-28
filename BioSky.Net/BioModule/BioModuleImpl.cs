@@ -34,7 +34,8 @@ namespace BioModule
       
       IBioStarter starter = _locator.GetProcessor<IBioStarter>();
       starter.Run();
-     
+
+      ConverterInitializer initializer = new ConverterInitializer(_locator.GetProcessor<IBioSkyNetRepository>());     
       
       ViewModelSelector selector = _locator.GetProcessor<ViewModelSelector>();
       selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);

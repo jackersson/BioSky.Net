@@ -19,6 +19,69 @@ using BioFaceService;
 
 namespace BioModule.Utils
 {
+
+  public class ConverterInitializer
+  {
+
+    private static ConvertPhotoIdToImage _photoIDConverter;
+    public static ConvertPhotoIdToImage PhotoIDConverter
+    {
+      get { return _photoIDConverter; }
+      set
+      {
+        if (_photoIDConverter != value)
+        {
+          _photoIDConverter = value;
+        }
+      }
+    }
+
+    private static ConvertPersonIdToFirstname _personIdToFirstnameConverter;
+    public static ConvertPersonIdToFirstname PersonIdToFirstnameConverter
+    {
+      get { return _personIdToFirstnameConverter; }
+      set
+      {
+        if (_personIdToFirstnameConverter != value)
+        {
+          _personIdToFirstnameConverter = value;
+        }
+      }
+    }
+
+    private static ConvertPersonIdToLastname _personIdToLastnameConverter;
+    public static ConvertPersonIdToLastname PersonIdToLastnameConverter
+    {
+      get { return _personIdToLastnameConverter; }
+      set
+      {
+        if (_personIdToLastnameConverter != value)
+        {
+          _personIdToLastnameConverter = value;
+        }
+      }
+    }
+
+    private static ConvertLocationIdToLocationname _locationIdToLocationnameConverter;
+    public static ConvertLocationIdToLocationname LocationIdToLocationnameConverter
+    {
+      get { return _locationIdToLocationnameConverter; }
+      set
+      {
+        if (_locationIdToLocationnameConverter != value)
+        {
+          _locationIdToLocationnameConverter = value;
+        }
+      }
+    }
+    public ConverterInitializer( IBioSkyNetRepository database )
+    {
+      PhotoIDConverter                  = new ConvertPhotoIdToImage          (database);
+      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database);
+      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database);
+      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database);
+    }
+  }
   public class ConvertLongToDateTime : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

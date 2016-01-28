@@ -30,13 +30,7 @@ namespace BioEngine.CaptureDevices
     {
       _cameraName = cameraName;
 
-      _capDevConnectivity = capDevConnectivity;
-      /*
-      HaarCascade cascade = new FaceHaarCascade();
-      detector = new HaarObjectDetector( cascade, 25
-                                        , ObjectDetectorSearchMode.Default, 1.2f
-                                        , ObjectDetectorScalingMode.GreaterToSmaller);
-     */
+      _capDevConnectivity = capDevConnectivity;   
 
       CanConnect += Connect;
     }

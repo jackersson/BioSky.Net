@@ -45,9 +45,9 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid 
-            BorderThickness="1" 
+                  BorderThickness="1" 
                   Grid.Column="0" HorizontalAlignment="Stretch" 
-            Grid.ColumnSpan="5"
+                  Grid.ColumnSpan="5"
                   Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
                   ItemsSource="{Binding Visitors}"                
                   GridLinesVisibility="All"
@@ -82,11 +82,11 @@
                         <DataTemplate>
                             <StackPanel>
                                 <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="2">
-                                    <Image Source="{Binding Personid, Converter={x:Static vm:UsersViewModel.PhotoIDConverter}}" 
+                                    <Image Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
                                        Stretch="Fill" Width="50" Height="50"/>
-                                </Border>                                
-                                <TextBlock Text="{Binding Personid, Converter={x:Static vm:UsersViewModel.PersonIdToFirstnameConverter}}" HorizontalAlignment="Center"></TextBlock>
-                                <TextBlock Text="{Binding Personid, Converter={x:Static vm:UsersViewModel.PersonIdToLastnameConverter}}" HorizontalAlignment="Center"></TextBlock>                             
+                                </Border>
+                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}" HorizontalAlignment="Center"></TextBlock>
+                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" HorizontalAlignment="Center"></TextBlock>                             
                             </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -101,7 +101,7 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.Firstname}"/>
-                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Locationid, Converter={x:Static vm:UsersViewModel.LocationIdToLocationnameConverter}}"/>
+                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Locationid, Converter={x:Static utils:ConverterInitializer.LocationIdToLocationnameConverter}}"/>
                 <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}"/>
 
                 <DataGridTemplateColumn Header="Status" IsReadOnly="True" >

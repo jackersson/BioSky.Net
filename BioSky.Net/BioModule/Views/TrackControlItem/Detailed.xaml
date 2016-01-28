@@ -80,7 +80,9 @@
                 <RowDefinition Height="28"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ContentControl Width="180" Grid.Row="1" cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
+            <ContentControl Width="180" Grid.Row="1" 
+                            cal:View.Context="Photo"
+                            cal:View.Model="{Binding VisitorsView}"></ContentControl>
         </Grid>
 
     </Grid>

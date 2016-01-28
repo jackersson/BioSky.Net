@@ -83,7 +83,7 @@
                 <DataGridTemplateColumn Header="Photo" IsReadOnly="True" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Thumbnail, Converter={x:Static vm:UsersViewModel.PhotoIDConverter}}">
+                            <Image Width="32" Height="32" Source="{Binding Thumbnail, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}">
                            
                             </Image>
 

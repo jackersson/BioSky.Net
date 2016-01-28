@@ -41,6 +41,8 @@ namespace BioModule.ViewModels
       _bioEngine.Database().VisitorChanged += VisitorsViewModel_DataChanged;
 
       LocationId = -1;
+
+      //LastVisitor = new Visitor() { Id = 1, Locationid = 1, Personid = 1, Photoid = 1, Status = 0, Time = 11243141421 };
 /*
       VisitorList visitors = _bioEngine.Database().Visitors;
 
@@ -101,6 +103,7 @@ namespace BioModule.ViewModels
 
     public void Update()
     {
+      VisitorsViewModel_DataChanged(null, null);
       NotifyOfPropertyChange(() => Visitors);
     }
     

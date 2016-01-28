@@ -32,57 +32,7 @@ namespace BioModule.ViewModels
   public class UsersViewModel : Screen
   {
 
-    private static ConvertPhotoIdToImage _photoIDConverter;
-    public static ConvertPhotoIdToImage PhotoIDConverter
-    {
-      get  { return _photoIDConverter; }
-      set
-      {
-        if (_photoIDConverter != value)
-        {
-          _photoIDConverter = value;         
-        }
-      }
-    }
-
-    private static ConvertPersonIdToFirstname _personIdToFirstnameConverter;
-    public static ConvertPersonIdToFirstname PersonIdToFirstnameConverter
-    {
-      get { return _personIdToFirstnameConverter; }
-      set
-      {
-        if (_personIdToFirstnameConverter != value)
-        {
-          _personIdToFirstnameConverter = value;
-        }
-      }
-    }
-
-    private static ConvertPersonIdToLastname _personIdToLastnameConverter;
-    public static ConvertPersonIdToLastname PersonIdToLastnameConverter
-    {
-      get { return _personIdToLastnameConverter; }
-      set
-      {
-        if (_personIdToLastnameConverter != value)
-        {
-          _personIdToLastnameConverter = value;
-        }
-      }
-    }
-
-    private static ConvertLocationIdToLocationname _locationIdToLocationnameConverter;
-    public static ConvertLocationIdToLocationname LocationIdToLocationnameConverter
-    {
-      get { return _locationIdToLocationnameConverter; }
-      set
-      {
-        if (_locationIdToLocationnameConverter != value)
-        {
-          _locationIdToLocationnameConverter = value;
-        }
-      }
-    }
+   
 
     public UsersViewModel(IProcessorLocator locator)
     {
@@ -96,29 +46,10 @@ namespace BioModule.ViewModels
       _users = new ObservableCollection<Person>();
       _selectedItemIds = new ObservableCollection<long>();
 
-      //FilteredUsers = new RepeatedField<Person>();
-
-      //FilteredUsers = _bioEngine.Database().GetAllUsers();
-
       IsDeleteButtonEnabled = false;
 
-      PhotoIDConverter                  = new ConvertPhotoIdToImage          (_bioEngine.Database());
-      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (_bioEngine.Database());
-      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (_bioEngine.Database());
-      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(_bioEngine.Database());
 
       _bioEngine.Database().PersonChanged += UsersViewModel_DataChanged;
-
-/*
-      PersonList persons = _bioEngine.Database().Persons;
-
-      foreach (Person item in persons.Persons)
-      {
-        if (Users.Contains(item))
-          return;
-
-        Users.Add(item);
-      }*/
 
     }
 
@@ -131,7 +62,7 @@ namespace BioModule.ViewModels
     }
 
     public void UsersViewModel_DataChanged(object sender, EventArgs args)
-    {
+    {   
       OnPersonsChanged(_bioEngine.Database().Persons);
     }
 

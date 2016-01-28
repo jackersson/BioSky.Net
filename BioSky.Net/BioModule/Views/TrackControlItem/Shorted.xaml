@@ -58,7 +58,9 @@
             </Grid>
         </StackPanel>
         
-        <ContentControl Grid.Row="1" Grid.ColumnSpan="4"   cal:View.Context="LastPhoto" cal:View.Model="{Binding VisitorsView}"></ContentControl>
+        <ContentControl Grid.Row="1" Grid.ColumnSpan="4"   
+                        cal:View.Context="LastPhoto"
+                        cal:View.Model="{Binding VisitorsView}"></ContentControl>
 
 
     </Grid>

@@ -19,7 +19,10 @@ namespace BioModule.ViewModels
 {
 
   public class TrackControlItemViewModel : Screen, IObserver<AccessDeviceActivity>
-  {   
+  {
+    private readonly IBioSkyNetRepository _database;
+
+
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
     {
       
@@ -32,7 +35,13 @@ namespace BioModule.ViewModels
 
       DisplayName = "Location";
 
-      Update(location);
+      //_database = locator.GetProcessor<IBioSkyNetRepository>();
+
+      //_database.
+
+      
+
+       Update(location);
     }
 
     public void Update(TrackLocation trackLocation)
@@ -41,12 +50,22 @@ namespace BioModule.ViewModels
         return;
 
       CurrentLocation = trackLocation;
+      _visitorsView.Update();
     }
 
     private VisitorsViewModel _visitorsView;
     public VisitorsViewModel VisitorsView
     {
       get { return _visitorsView; }
+      set
+      {
+        if (_visitorsView != value)
+        {
+          _visitorsView = value;
+
+          NotifyOfPropertyChange(() => VisitorsView);
+        }
+      }
     }
 
     private ImageViewModel _imageView;
