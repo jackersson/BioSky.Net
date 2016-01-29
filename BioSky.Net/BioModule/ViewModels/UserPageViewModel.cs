@@ -16,7 +16,6 @@ using System.Reflection;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using BioFaceService;
-//using static BioFaceService.Person.Types;
 
 namespace BioModule.ViewModels
 {
@@ -33,6 +32,7 @@ namespace BioModule.ViewModels
       _windowManager = windowManager;
 
       IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
+      _bioService = _locator.GetProcessor<IServiceManager>();
 
       CurrentImageView = new ImageViewModel();
 
@@ -45,6 +45,8 @@ namespace BioModule.ViewModels
 
       _methodInvoker = new FastMethodInvoker();
 
+      
+
       DisplayName = "Add New User";
     }
 
@@ -52,8 +54,9 @@ namespace BioModule.ViewModels
     {
       if (user != null)
       {
-        _user = user;
+        _user = user.Clone();
         _userPageMode = UserPageMode.ExistingUser;
+     
 
         DisplayName = (_user.Firstname + " " + _user.Lastname);
       }
@@ -96,39 +99,79 @@ namespace BioModule.ViewModels
         }
       }
     }
-     
 
-    public void Apply()
+    public async void Remove()
     {
-      //CommandPerson cmd = new CommandPerson();
-     // await _locator.GetProcessor<IServiceManager>().DatabaseService.PersonRequest(cmd);
-
-    //  var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
-      //Console.WriteLine(result);
-      //var result = _windowManager.ShowDialog(new AboutDialogViewModel());
-      //var result = _windowManager.ShowDialog(new LoginDialogViewModel());
-      
-/*
-      if (result == true)
-      {
-        if (_userPageMode == UserPageMode.NewUser)
-          _bioEngine.Database().AddUser(_user);
-        else
-          _bioEngine.Database().UpdateUser(_user);
-
-        MessageBox.Show(_userPageMode == UserPageMode.NewUser
-                        ? "User Successfully Added"
-                        : "Successfully updated");
-
-        foreach (IScreen scrn in Items)
-        {
-          MethodInfo method = scrn.GetType().GetMethod("Apply");
-          if (method != null)
-            method.Invoke(scrn, null);
-        } 
-      } */    
+      await UserUpdatePerformer(DbState.Remove);    
     }
 
+    public async Task UserUpdatePerformer( DbState state )
+    {
+      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      if (result == true)
+      {
+        _user.Dbstate = state;
+        PersonList personList = new PersonList();
+        personList.Persons.Add(_user);
+
+        _bioService.DatabaseService.PersonUpdated += DatabaseService_PersonUpdated;
+
+        await _bioService.DatabaseService.PersonUpdateRequest(personList);
+      }     
+    }
+
+    public async void Apply()
+    {
+      await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);
+    }
+
+   
+    private Person PersonUpdateResultProcessing(PersonList list, Result result, Person personToUpdate)
+    {
+      _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonUpdated;
+
+      IBioSkyNetRepository database = _locator.GetProcessor<IBioSkyNetRepository>();
+
+      string message = "";
+
+      foreach (ResultPair rp in result.Status)
+      {
+        Person person = null;
+        if (rp.Status == ResultStatus.Success )
+        {
+          if (rp.State == DbState.Insert)
+          {
+            person = personToUpdate;
+            person.Id = rp.Id;
+          }
+          else          
+            person = list.Persons.Where(x => x.Id == rp.Id).FirstOrDefault();       
+
+          database.UpdatePerson(person, rp.State);
+     
+        }
+        else
+        {
+          if (rp.State == DbState.Insert)
+            message += rp.Status.ToString() + " " + rp.State.ToString() + " " + personToUpdate.Firstname + " " + personToUpdate.Lastname + "\n";
+        }
+
+        if (person != null )
+          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + person.Firstname + " " + person.Lastname + "\n";
+
+        personToUpdate = person;
+      }
+
+      MessageBox.Show(message);
+
+      return personToUpdate;
+    }
+
+    private void DatabaseService_PersonUpdated( PersonList list, Result result)
+    {
+      Person person = PersonUpdateResultProcessing(list, result, _user);
+      Update(person);      
+    }
    
     private Person _user;
 
@@ -138,7 +181,9 @@ namespace BioModule.ViewModels
 
     private IWindowManager _windowManager;
 
-    private UserPageMode  _userPageMode ; 
+    private UserPageMode  _userPageMode ;
+
+    private readonly IServiceManager _bioService ;
     
   }
 }

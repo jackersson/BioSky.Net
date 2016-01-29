@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Collections.ObjectModel;
+
 namespace BioContracts
 {
   //delegate void DataChangedHandler(object sender);
@@ -26,48 +28,24 @@ namespace BioContracts
     Photo GetPhotoByID(long id);
     Visitor GetVisitorByID(long id);
 
-    PersonList Persons
-    {
-      get; set;
-    }
-
-    VisitorList Visitors
-    {
-      get; set;
-    }
+    void UpdatePersonSet(PersonList Persons);
+    void UpdateVisitorSet(VisitorList Visitors);
+    void UpdateLocationSet(LocationList Locations);
+    void UpdateAccessDeviceSet(AccessDeviceList AccessDevices);
+    void UpdateCaptureDeviceSet(CaptureDeviceList CaptureDevices);
+    void UpdatePhotoSet(PhotoList Photos);
+    void UpdateCardSet(CardList Cards);
 
 
-    AccessDeviceList AccessDevices
-    {
-      get; set;
-    }
+    void UpdatePerson(Person person, DbState state);
 
-
-    CaptureDeviceList CaptureDevices
-    {
-      get; set;
-    }
-
-
-    PhotoList Photos
-    {
-      get; set;
-    }
-
-
-    CardList Cards
-    {
-      get; set;
-    }
-
-
-    LocationList Locations
-    {
-      get; set;
-    }
-
-
-
+    ObservableCollection<Person> Persons { get; }
+    ObservableCollection<Visitor> Visitors { get; }
+    ObservableCollection<Location> Locations { get; }
+    ObservableCollection<AccessDevice> AccessDevices { get; }
+    ObservableCollection<CaptureDevice> CaptureDevices { get; }
+    ObservableCollection<Photo> Photos { get; }
+    ObservableCollection<Card> Cards { get; }
 
   }
 }

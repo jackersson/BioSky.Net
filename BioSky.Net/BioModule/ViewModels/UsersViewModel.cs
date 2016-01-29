@@ -31,52 +31,23 @@ namespace BioModule.ViewModels
 {
   public class UsersViewModel : Screen
   {
-
-   
-
-    public UsersViewModel(IProcessorLocator locator)
+    public UsersViewModel(IProcessorLocator locator, IWindowManager windowManager)
     {
       DisplayName = "Users";
 
-      _locator    = locator;
-      _bioEngine  = locator.GetProcessor<IBioEngine>();
-      _selector   = locator.GetProcessor<ViewModelSelector>();
-      _bioService = _locator.GetProcessor<IServiceManager>();
+      _locator       = locator;
+      _windowManager = windowManager;
+      _bioEngine     = locator.GetProcessor<IBioEngine>();
+      _selector      = locator.GetProcessor<ViewModelSelector>();
+      _bioService    = _locator.GetProcessor<IServiceManager>();
+      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      _users = new ObservableCollection<Person>();
       _selectedItemIds = new ObservableCollection<long>();
 
       IsDeleteButtonEnabled = false;
 
-
-      _bioEngine.Database().PersonChanged += UsersViewModel_DataChanged;
-
-    }
-
-    protected async override void OnActivate()
-    {
-      if (_bioEngine.Database().Persons.Persons.Count <= 0)
-        await _bioService.DatabaseService.PersonRequest(new CommandPerson());
-      else
-        UsersViewModel_DataChanged(null, null);
-    }
-
-    public void UsersViewModel_DataChanged(object sender, EventArgs args)
-    {   
-      OnPersonsChanged(_bioEngine.Database().Persons);
-    }
-
-    private void OnPersonsChanged(PersonList persons)
-    {
-      foreach (Person item in persons.Persons)
-      {
-        if (Users.Contains(item))
-          continue;
-
-        Users.Add(item);
-      }
-     
-    }
+      Users = _database.Persons;
+    }    
 
     private ObservableCollection<Person> _users;
     public ObservableCollection<Person> Users
@@ -134,8 +105,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-    public void Update()
-    { }
 
     private bool? _isAllItemsSelected;
     public bool? IsAllItemsSelected
@@ -184,22 +153,70 @@ namespace BioModule.ViewModels
         SelectedItemIds.Remove(currentUser.Id);
       }
 
-      if (SelectedItemIds.Count >= 1)
-      {
-        Console.WriteLine("Delete Records (" + SelectedItemIds.Count + ")");
-        IsDeleteButtonEnabled = true;
-      }
-      else
-      {
-        Console.WriteLine("Delete Record");
-        IsDeleteButtonEnabled = false;
-      }
-      foreach (long item in SelectedItemIds)
-      {
-        Console.WriteLine(item);
-      }
-      
+      if (SelectedItemIds.Count >= 1)      
+        IsDeleteButtonEnabled = true;      
+      else      
+        IsDeleteButtonEnabled = false;            
     }
+
+    public async void OnDeleteUsers()
+    {
+      await UserUpdatePerformer(DbState.Remove);      
+    }
+
+    public async Task UserUpdatePerformer(DbState state)
+    {
+      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      if (result == true)
+      {
+        if (SelectedItemIds == null)
+          return;
+
+        PersonList personList = new PersonList();
+
+        foreach (long personId in SelectedItemIds)
+        {
+          Person person = _database.GetPersonByID(personId);
+          person.Dbstate = state;
+          personList.Persons.Add(person);
+        }
+
+        _bioService.DatabaseService.PersonUpdated += DatabaseService_PersonsUpdated;
+
+        await _bioService.DatabaseService.PersonUpdateRequest(personList);
+      }
+    }
+
+    private void PersonUpdateResultProcessing(PersonList list, Result result)
+    {
+      _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonsUpdated;
+
+      string message = "";
+
+      foreach (ResultPair rp in result.Status)
+      {
+        Person person = null;
+        if (rp.Status == ResultStatus.Success)
+        {
+          person = list.Persons.Where(x => x.Id == rp.Id).FirstOrDefault();  
+
+          _database.UpdatePerson(person, rp.State);
+        }
+
+        if (person != null)
+          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + person.Firstname + " " + person.Lastname + "\n";
+
+        
+      }
+
+      MessageBox.Show(message);     
+    }
+
+    private void DatabaseService_PersonsUpdated(PersonList list, Result result)
+    {
+      PersonUpdateResultProcessing(list, result);
+    }
+   
 
     //*************************************************************Context Menu******************************************\
 
@@ -272,9 +289,11 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => FilteredUsers);
       */
     }
-    private readonly IProcessorLocator _locator   ;
-    private readonly ViewModelSelector _selector  ;
-    private readonly IBioEngine        _bioEngine ;    
-    private readonly IServiceManager   _bioService;
+    private readonly IWindowManager       _windowManager;
+    private readonly IProcessorLocator    _locator      ;
+    private readonly ViewModelSelector    _selector     ;
+    private readonly IBioEngine           _bioEngine    ;    
+    private readonly IServiceManager      _bioService   ;
+    private readonly IBioSkyNetRepository _database     ;
   }
 }

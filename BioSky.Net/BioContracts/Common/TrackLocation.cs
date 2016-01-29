@@ -24,7 +24,7 @@ namespace BioContracts
 
     private void _database_CaptureDevicesChanged(object sender, EventArgs e)
     {
-      List<CaptureDevice> capture_devices = _database.CaptureDevices.CaptureDevices
+      List<CaptureDevice> capture_devices = _database.CaptureDevices
                                             .Where(cap => cap.Locationid == _location.Id)
                                             .ToList();
 
@@ -34,7 +34,7 @@ namespace BioContracts
 
     private void _database_AccessDevicesChanged(object sender, EventArgs e)
     {
-      List<AccessDevice> access_devices = _database.AccessDevices.AccessDevices
+      List<AccessDevice> access_devices = _database.AccessDevices
                                          .Where(ad => ad.Locationid == _location.Id)
                                          .ToList();
 
@@ -54,15 +54,17 @@ namespace BioContracts
 
     public async void Start()
     {      
-      if (_database.AccessDevices.AccessDevices.Count <= 0)
+      
+      if (_database.AccessDevices.Count <= 0)
         await _bioService.DatabaseService.AccessDeviceRequest(new CommandAccessDevice());
       else
         _database_AccessDevicesChanged(null, null);
 
-      if (_database.CaptureDevices.CaptureDevices.Count <= 0)
+      if (_database.CaptureDevices.Count <= 0)
         await _bioService.DatabaseService.CaptureDeviceRequest(new CommandCaptureDevice());
       else
         _database_CaptureDevicesChanged(null, null);
+       
 
     }
    

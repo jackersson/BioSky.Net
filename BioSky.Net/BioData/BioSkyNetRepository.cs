@@ -6,15 +6,20 @@ using BioContracts;
 using BioFaceService;
 using Caliburn.Micro;
 
+using System.Collections.ObjectModel;
+
 namespace BioData
 {
   public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
   {
 
-    private Dictionary<long, Photo>    photoSet;
-    private Dictionary<long, Person>   personSet;
-    private Dictionary<long, Location> locationSet;
-    private Dictionary<long, Visitor>  visitorSet;
+    private Dictionary<long, Photo>         photoSet        ;
+    private Dictionary<long, Person>        personSet       ;
+    private Dictionary<long, Location>      locationSet     ;
+    private Dictionary<long, Visitor>       visitorSet      ;
+    private Dictionary<long, AccessDevice>  accessDeviceSet ;
+    private Dictionary<long, CaptureDevice> captureDeviceSet;
+    private Dictionary<long, Card>          cardSet         ;        
 
 
     //public event EventHandler DataChanged;
@@ -67,18 +72,21 @@ namespace BioData
 
     public BioSkyNetRepository()
     {
-      _persons         = new PersonList();
-      _visitors        = new VisitorList();
-      _locations       = new LocationList();
-      _access_devices  = new AccessDeviceList();
-      _capture_devices = new CaptureDeviceList();
-      _photos          = new PhotoList();
-      _cards           = new CardList();
+      _persons         = new ObservableCollection<Person>();
+      _visitors        = new ObservableCollection<Visitor>();
+      _locations       = new ObservableCollection<Location>();
+      _access_devices  = new ObservableCollection<AccessDevice>();
+      _capture_devices = new ObservableCollection<CaptureDevice>();
+      _photos          = new ObservableCollection<Photo>();
+      _cards           = new ObservableCollection<Card>();
 
-      photoSet    = new Dictionary<long, Photo>();
-      personSet   = new Dictionary<long, Person>();
-      locationSet = new Dictionary<long, Location>();
-      visitorSet  = new Dictionary<long, Visitor>();
+      personSet        = new Dictionary<long, Person>();
+      visitorSet       = new Dictionary<long, Visitor>();
+      locationSet      = new Dictionary<long, Location>();
+      accessDeviceSet  = new Dictionary<long, AccessDevice>();
+      captureDeviceSet = new Dictionary<long, CaptureDevice>();
+      cardSet          = new Dictionary<long, Card>();
+      photoSet         = new Dictionary<long, Photo>();
     }
 
     public Photo GetPhotoByID( long id )
@@ -108,142 +116,216 @@ namespace BioData
       return location;
     }
 
-
-    public PersonList _persons;
-    public PersonList Persons
+    public void UpdatePersonSet(PersonList list)
     {
-      get { return _persons;  }
-      set
+      Persons = new ObservableCollection<Person>(list.Persons);
+
+      foreach (Person pers in list.Persons)
+      {
+        if (!personSet.ContainsKey(pers.Id))
+          personSet.Add(pers.Id, pers);        
+      }
+    }
+    public void UpdateVisitorSet(VisitorList list)
+    {
+      Visitors = new ObservableCollection<Visitor>(list.Visitors);
+
+      foreach (Visitor pers in list.Visitors)
+      {
+        if (!visitorSet.ContainsKey(pers.Id))
+          visitorSet.Add(pers.Id, pers);
+      }
+    }
+
+    public void UpdateAccessDeviceSet(AccessDeviceList list)
+    {
+      AccessDevices = new ObservableCollection<AccessDevice>(list.AccessDevices);
+
+      foreach (AccessDevice dev in list.AccessDevices)
+      {
+        if (!accessDeviceSet.ContainsKey(dev.Id))
+          accessDeviceSet.Add(dev.Id, dev);
+      }
+    }
+    public void UpdateCaptureDeviceSet(CaptureDeviceList list)
+    {
+      CaptureDevices = new ObservableCollection<CaptureDevice>(list.CaptureDevices);
+
+      foreach (CaptureDevice dev in list.CaptureDevices)
+      {
+        if (!captureDeviceSet.ContainsKey(dev.Id))
+          captureDeviceSet.Add(dev.Id, dev);
+      }
+    }
+    public void UpdateCardSet(CardList list)
+    {
+      Cards = new ObservableCollection<Card>(list.Cards);
+
+      foreach (Card card in list.Cards)
+      {
+        if (!cardSet.ContainsKey(card.Id))
+          cardSet.Add(card.Id, card);
+      }
+    }
+    public void UpdateLocationSet(LocationList list)
+    {
+      Locations = new ObservableCollection<Location>(list.Locations);
+
+      foreach (Location location in list.Locations)
+      {
+        if (!locationSet.ContainsKey(location.Id))
+          locationSet.Add(location.Id, location);
+      }
+    }
+    public void UpdatePhotoSet(PhotoList list)
+    {
+      Photos = new ObservableCollection<Photo>(list.Photos);
+
+      foreach (Photo photo in list.Photos)
+      {
+        if (!photoSet.ContainsKey(photo.Id))
+          photoSet.Add(photo.Id, photo);
+      }
+    }   
+
+    private void AddPerson(Person person)
+    {
+      long id = person.Id;
+      Persons.Add(person);
+      if (!personSet.ContainsKey(id))
+        personSet.Add(id, person);
+    }
+
+    private void UpdatePerson(Person person)
+    {
+      long id = person.Id;
+      if (personSet.ContainsKey(id))
+        personSet[id] = person;
+    }
+
+    private void RemovePerson(Person person)
+    {
+      personSet.Remove(person.Id);
+      Persons.Remove(person);
+    }
+  
+
+    public void UpdatePerson(Person person, DbState state)
+    {      
+      switch (state)
+      {
+        case DbState.Insert:
+          AddPerson(person);
+          break;
+
+        case DbState.Update:
+          UpdatePerson(person);         
+          break;
+
+        case DbState.Remove:
+          RemovePerson(person);
+          break;
+      }
+
+      NotifyOfPropertyChange(() => Persons);
+    }
+
+    private ObservableCollection<Person> _persons;
+    public ObservableCollection<Person> Persons
+    {
+      get { return _persons; }  
+      private set
       {
         if ( _persons != value )
         {
           _persons = value;
           NotifyOfPropertyChange(() => Persons);
-          OnPersonChanged();
-
-          foreach (Person pers in Persons.Persons)
-          {
-            if (!personSet.ContainsKey(pers.Id))
-              personSet.Add(pers.Id, pers);
-          }
         }
-      }      
+      }
     }
 
-    public VisitorList _visitors;
-    public VisitorList Visitors
+    private ObservableCollection<Visitor> _visitors;
+    public ObservableCollection<Visitor> Visitors
     {
       get { return _visitors; }
-      set
+      private set
       {
         if (_visitors != value)
         {
           _visitors = value;
           NotifyOfPropertyChange(() => Visitors);
-          OnVisitorChanged();
-
-          foreach (Visitor visitor in Visitors.Visitors)
-          {
-            if (!visitorSet.ContainsKey(visitor.Id))
-              visitorSet.Add(visitor.Id, visitor);
-          }
         }
       }
     }
 
-    public AccessDeviceList _access_devices;
-    public AccessDeviceList AccessDevices
+    private ObservableCollection<AccessDevice> _access_devices;
+    public ObservableCollection<AccessDevice> AccessDevices
     {
       get { return _access_devices; }
-      set
+      private set
       {
         if (_access_devices != value)
         {
           _access_devices = value;
           NotifyOfPropertyChange(() => AccessDevices);
-          OnAccessDevicesChanged();
         }
       }
     }
 
-    public CaptureDeviceList _capture_devices;
-    public CaptureDeviceList CaptureDevices
+    private ObservableCollection<CaptureDevice> _capture_devices;
+    public ObservableCollection<CaptureDevice> CaptureDevices
     {
       get { return _capture_devices; }
-      set
+      private set
       {
         if (_capture_devices != value)
         {
           _capture_devices = value;
           NotifyOfPropertyChange(() => CaptureDevices);
-          OnCaptureDevicesChanged();
         }
       }
     }
 
-    public CardList _cards;
-    public CardList Cards
+    private ObservableCollection<Card> _cards;
+    public ObservableCollection<Card> Cards
     {
       get { return _cards; }
-      set
+      private set
       {
         if (_cards != value)
         {
           _cards = value;
           NotifyOfPropertyChange(() => Cards);
-          OnCardsChanged();
         }
       }
     }
 
-    public LocationList _locations;
-    public LocationList Locations
+    private ObservableCollection<Location> _locations;
+    public ObservableCollection<Location> Locations
     {
       get { return _locations; }
-      set
+      private set
       {
         if (_locations != value)
         {
           _locations = value;
           NotifyOfPropertyChange(() => Locations);
-
-          OnLocationChanged();
-
-          foreach (Location location in Locations.Locations)
-          {
-            if (!locationSet.ContainsKey(location.Id))
-              locationSet.Add(location.Id, location);
-          }
         }
       }
     }
 
-    public PhotoList _photos;
-    public PhotoList Photos
+    private ObservableCollection<Photo> _photos;
+    public ObservableCollection<Photo> Photos
     {
       get { return _photos; }
-      set
+      private set
       {
         if (_photos != value)
         {
           _photos = value;
           NotifyOfPropertyChange(() => Photos);
-
-          OnPhotoChanged();
-
-          foreach ( Photo ph in Photos.Photos )
-          {
-            if (!photoSet.ContainsKey(ph.Id))
-              photoSet.Add(ph.Id, ph);     
-          }
-         
-
         }
       }
     }
-
-  
-
-
   }
 }

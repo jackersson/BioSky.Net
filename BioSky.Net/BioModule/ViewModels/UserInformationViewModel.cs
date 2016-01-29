@@ -16,9 +16,6 @@ using System.Windows.Data;
 using System.Reflection;
 using System.Globalization;
 using BioFaceService;
-//using static BioFaceService.Person.Types;
-
-
 
 namespace BioModule.ViewModels
 { 
@@ -54,6 +51,7 @@ namespace BioModule.ViewModels
        if (_user != value)
        {
          _user = value;
+         NotifyOfPropertyChange(() => GenderSources);
           NotifyOfPropertyChange(() => User);
        }
       }

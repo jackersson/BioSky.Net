@@ -30,55 +30,24 @@ namespace BioModule.ViewModels
     {
       DisplayName = "Visitors";
 
-      _locator = locator;
-      _bioEngine = locator.GetProcessor<IBioEngine>();
-      _selector = locator.GetProcessor<ViewModelSelector>();
+      _locator    = locator;
+      _bioEngine  = _locator.GetProcessor<IBioEngine>();
+      _selector   = _locator.GetProcessor<ViewModelSelector>();
       _bioService = _locator.GetProcessor<IServiceManager>();
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
       _visitors         = new ObservableCollection<Visitor>();
       _selectedItemIds  = new ObservableCollection<long>();
 
-      _bioEngine.Database().VisitorChanged += VisitorsViewModel_DataChanged;
-
       LocationId = -1;
 
-      //LastVisitor = new Visitor() { Id = 1, Locationid = 1, Personid = 1, Photoid = 1, Status = 0, Time = 11243141421 };
+      Visitors = _database.Visitors;
+
+      if (Visitors.Count != 0)
+        LastVisitor = Visitors[Visitors.Count - 1];    
+    }
+
 /*
-      VisitorList visitors = _bioEngine.Database().Visitors;
-
-      foreach (Visitor item in visitors.Visitors)
-      {
-        if (Visitors.Contains(item))
-          return;
-
-        Visitors.Add(item);
-      }*/
-
-    }
-
-    /*
-        public void Update(long locationId)
-        {
-          if (locationId == null)
-            return;
-
-          LocationId = locationId;
-        }*/
-
-    protected async override void OnActivate()
-    {
-      if (_bioEngine.Database().Visitors.Visitors.Count <= 0)
-        await _bioService.DatabaseService.VisitorRequest(new CommandVisitor());
-      else
-        VisitorsViewModel_DataChanged(null, null);
-    }
-
-
-    public void VisitorsViewModel_DataChanged(object sender, EventArgs args)
-    {
-      OnPersonsChanged(_bioEngine.Database().Visitors);
-    }
-
     private void OnPersonsChanged(VisitorList visitors)
     {
       Visitors.Clear();
@@ -99,11 +68,10 @@ namespace BioModule.ViewModels
         LastVisitor = Visitors[Visitors.Count - 1];
       }
 
-    }
+    }*/
 
     public void Update()
     {
-      VisitorsViewModel_DataChanged(null, null);
       NotifyOfPropertyChange(() => Visitors);
     }
     
@@ -223,18 +191,19 @@ namespace BioModule.ViewModels
       SelectedItem = visitor;
     }
     public void ShowUserPage()
-    {
+    {      
       foreach (long item in SelectedItemIds)
       {
         Visitor loc = _bioEngine.Database().GetVisitorByID(item);
         _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
-                             , new object[] { _bioEngine.Database().Persons.Persons.Where(x => x.Id == loc.Personid).FirstOrDefault() });
-      }
+                             , new object[] { _bioEngine.Database().GetPersonByID(loc.Personid) });
+      }       
     }
 
-    private readonly IProcessorLocator _locator   ;
-    private readonly ViewModelSelector _selector  ;
-    private readonly IBioEngine        _bioEngine ;
-    private readonly IServiceManager   _bioService;
+    private readonly IProcessorLocator    _locator   ;
+    private readonly ViewModelSelector    _selector  ;
+    private readonly IBioEngine           _bioEngine ;
+    private readonly IServiceManager      _bioService;
+    private readonly IBioSkyNetRepository _database  ;
   }
 }
