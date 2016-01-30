@@ -29,18 +29,15 @@ namespace BioModule.ViewModels
       DevicesInList = new DragablListBoxViewModel(removeDragable);
       DevicesInList.ItemRemoved += DevicesList.ItemDropped;
 
-      _bioEngine.Database().CaptureDevicesChanged += LocationCaptureDevicesViewModel_DataChanged;         
+      foreach (CaptureDevice item in _bioEngine.Database().CaptureDevices)
+      {
+        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
+        AddToGeneralDeviceList(dragableItem);
+      }
+      
+  
     }
 
-    protected async override void OnActivate()
-    {
-      await _bioService.DatabaseService.CaptureDeviceRequest(new CommandCaptureDevice());
-    }
-
-    public void LocationCaptureDevicesViewModel_DataChanged(object sender, EventArgs args)
-    {
-      OnCaptureDevicesChanged(_bioEngine.Database().CaptureDevices);
-    }
     public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)
     {
       if (item == null)
@@ -50,7 +47,7 @@ namespace BioModule.ViewModels
       newItem.ItemEnabled = isEnabled;
       DevicesList.Add(newItem);
     }
-    private void OnCaptureDevicesChanged(CaptureDeviceList captureDevices)
+    /*private void OnCaptureDevicesChanged(CaptureDeviceList captureDevices)
     {
       foreach (CaptureDevice item in captureDevices.CaptureDevices)
       {
@@ -63,7 +60,7 @@ namespace BioModule.ViewModels
 
         AddToGeneralDeviceList(dragableItem);
       }
-    }
+    }*/
 
     private DragablListBoxViewModel _devicesList;
     public DragablListBoxViewModel DevicesList

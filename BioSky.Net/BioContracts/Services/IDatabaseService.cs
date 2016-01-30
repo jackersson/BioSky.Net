@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace BioContracts.Services
 {
+  public delegate void PersonUpdateHandler(PersonList list, Result result);
   public interface IDatabaseService
   {
+    event PersonUpdateHandler PersonUpdated;
+
     Task CaptureDeviceRequest(CommandCaptureDevice command);
     Task AccessDeviceRequest(CommandAccessDevice command);   
     Task PhotoRequest       (CommandPhoto command);

@@ -121,6 +121,7 @@
         <Button Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
                 IsEnabled="{Binding IsDeleteButtonEnabled}"
                 ToolTip="Delete"
+                cal:Message.Attach="[Event Click] = [Action OnDeleteUsers()]"
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>

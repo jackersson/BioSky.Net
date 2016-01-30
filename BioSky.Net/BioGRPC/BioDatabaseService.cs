@@ -9,10 +9,14 @@ using BioFaceService;
 using Grpc.Core;
 using BioContracts.Services;
 
+using System.Collections.ObjectModel;
+
 namespace BioGRPC
 {
   public class BioDatabaseService : IDatabaseService
-  {      
+  {
+    public event PersonUpdateHandler PersonUpdated;
+
     public BioDatabaseService(IProcessorLocator locator, BioFaceDetector.IBioFaceDetectorClient client)
     {
       _client    = client;
@@ -21,13 +25,18 @@ namespace BioGRPC
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
     }
     
+    private void OnPersonUpdated(PersonList list, Result result)
+    {
+      if (PersonUpdated != null)
+        PersonUpdated(list, result);
+    }
     
     public async Task CaptureDeviceRequest(CommandCaptureDevice command)
     {
       try
       {
         CaptureDeviceList call = await _client.CaptureDeviceSelectAsync(command);
-        _database.CaptureDevices = call;
+        _database.UpdateCaptureDeviceSet(call);
         Console.WriteLine(call.ToString());
 
       }
@@ -42,8 +51,8 @@ namespace BioGRPC
     {
       try
       {
-        AccessDeviceList call = await _client.AccessDeviceSelectAsync(command);   
-        _database.AccessDevices = call;
+        AccessDeviceList call = await _client.AccessDeviceSelectAsync(command);
+        _database.UpdateAccessDeviceSet(call);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -58,7 +67,7 @@ namespace BioGRPC
       try
       {
         LocationList call = await _client.LocationSelectAsync(command);
-        _database.Locations = call;
+        _database.UpdateLocationSet(call);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -73,7 +82,7 @@ namespace BioGRPC
       try
       {
         PhotoList call = await _client.PhotoSelectAsync(command);
-        _database.Photos = call;
+        _database.UpdatePhotoSet(call);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -88,7 +97,7 @@ namespace BioGRPC
       try
       {
         CardList call = await _client.CardSelectAsync(command);
-        _database.Cards = call;
+        _database.UpdateCardSet(call);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -103,7 +112,7 @@ namespace BioGRPC
       try
       {
         VisitorList call = await _client.VisitorSelectAsync(command);
-        _database.Visitors = call;
+        _database.UpdateVisitorSet(call);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -118,16 +127,8 @@ namespace BioGRPC
       try
       {
         PersonList call = await _client.PersonSelectAsync(command);
-        _database.Persons = call;
-        
+        _database.UpdatePersonSet(call);
         Console.WriteLine(call.ToString());
-
-        //call.Persons[0].Country = "Ucrania";
-        //call.Persons[0].Dbstate = DbState.Update;
-
-        //BioFaceService.CommandPerson cmd1 = new BioFaceService.CommandPerson();
-        //await PersonUpdateRequest(call);
-
       }
       catch (RpcException e)
       {
@@ -136,18 +137,18 @@ namespace BioGRPC
       }
     }
 
-    public async Task PersonUpdateRequest(PersonList command)
+    public async Task PersonUpdateRequest(PersonList list)
     {
       try
       {
-        Result call = await _client.PersonUpdateAsync(command);        
-        Console.WriteLine(call.ToString());
+        Result call = await _client.PersonUpdateAsync(list);        
+        //Console.WriteLine(call.ToString());
 
-        foreach (ResultPair ss in call.Status)
-        {
-          Console.WriteLine(ss.Status);
-         
-        }
+        OnPersonUpdated(list, call);
+
+        //foreach (ResultPair ss in call.Status)        
+          //Console.WriteLine(ss.Status);         
+        
       }
       catch (RpcException e)
       {

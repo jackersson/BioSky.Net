@@ -32,7 +32,8 @@ namespace BioEngine
     {
       IBioSkyNetRepository database           = _locator.GetProcessor<IBioSkyNetRepository>();     
 
-      foreach (Location location in database.Locations.Locations)
+      
+      foreach (Location location in database.Locations)
       {
         if (_trackLocations.Where(x => x.LocationID == location.Id ).FirstOrDefault() != null)        
           continue;        

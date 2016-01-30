@@ -35,14 +35,13 @@ namespace BioModule.ViewModels
 
       _userCards = new ObservableCollection<Card>();
 
-      _bioEngine.Database().CardsChanged += UserContactlessCardViewModel_DataChanged; 
+      UserCards = _bioEngine.Database().Cards;
+
+     
     }    
 
-    public void UserContactlessCardViewModel_DataChanged(object sender, EventArgs args)
-    {
-      OnCardsChanged(_bioEngine.Database().Cards);
-    }
 
+/*
     private void OnCardsChanged(CardList cards)
     {
       UserCards.Clear();
@@ -60,7 +59,7 @@ namespace BioModule.ViewModels
 
         UserCards.Add(item);
       }
-    }
+    }*/
 
     private string _cardNumber;
     public string CardNumber
@@ -179,7 +178,7 @@ namespace BioModule.ViewModels
       //_detectedCard.Personid = _user.;
 
       _dataChanged = false;
-      OnCardsChanged(_bioEngine.Database().Cards);
+
       /*
       _userCards.Clear();
 
@@ -209,7 +208,17 @@ namespace BioModule.ViewModels
     private ObservableCollection<Card> _userCards;
     public ObservableCollection<Card> UserCards
     {
-      get { return _userCards; }
+      get {
+
+        if ( _user != null  )
+        {
+          //_user.Id
+          return _userCards;
+        }
+        
+        return _userCards;
+      
+      }
       set
       {
         if ( _userCards != value )

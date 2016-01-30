@@ -29,18 +29,15 @@ namespace BioModule.ViewModels
       UsersNotifyList = new DragablListBoxViewModel(removeDragable);
       UsersNotifyList.ItemRemoved += UsersList.ItemDropped;
 
-      _bioEngine.Database().PersonChanged += LocationUsersNotifyViewModel_DataChanged; 
+
+      foreach (Person item in _bioEngine.Database().Persons)
+      {
+        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Firstname + " " + item.Lastname };
+        AddToGeneralDeviceList(dragableItem);
+      }
+
     }
 
-    protected async override void OnActivate()
-    {
-      await _bioService.DatabaseService.PersonRequest(new CommandPerson());
-    }
-
-    public void LocationUsersNotifyViewModel_DataChanged(object sender, EventArgs args)
-    {
-      OnPersonsChanged(_bioEngine.Database().Persons);
-    }
     public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)
     {
       if (item == null)
@@ -50,6 +47,7 @@ namespace BioModule.ViewModels
       newItem.ItemEnabled = isEnabled;
       UsersList.Add(newItem);
     }
+/*
     private void OnPersonsChanged(PersonList Persons)
     {
       foreach (Person item in Persons.Persons)
@@ -63,7 +61,7 @@ namespace BioModule.ViewModels
 
         AddToGeneralDeviceList(dragableItem);
       }
-    }
+    }*/
 
     private DragablListBoxViewModel _usersList;
     public DragablListBoxViewModel UsersList

@@ -67,6 +67,15 @@
                     <ContentControl Content="{Binding }" ></ContentControl>
                 </DataTemplate>
             </TabControl.ContentTemplate>
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="{x:Type TabItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Path=Items.Count}" Value="1">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TabControl.ItemContainerStyle>
         </TabControl>
 
 
@@ -83,7 +92,9 @@
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
-        <Button ToolTip="Delete User" Grid.Row="5" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button ToolTip="Delete User" Grid.Row="5" Grid.Column="4" 
+                cal:Message.Attach="[Event Click]=[Action Remove]"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" />
         </Button>
        

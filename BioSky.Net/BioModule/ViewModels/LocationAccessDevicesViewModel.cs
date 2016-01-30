@@ -42,15 +42,17 @@ namespace BioModule.ViewModels
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
-      _bioEngine.Database().AccessDevicesChanged += LocationAccessDevicesViewModel_DataChanged;
 
-      AccessDeviceList accessDevices = _bioEngine.Database().AccessDevices;     
+      foreach(AccessDevice item in _bioEngine.Database().AccessDevices)
+      {
+        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
+        AddToGeneralDeviceList(dragableItem);
+      }
+
+
     }    
 
-    public void LocationAccessDevicesViewModel_DataChanged( object sender, EventArgs args)
-    {       
-       OnAccessDevicesChanged(_bioEngine.Database().AccessDevices);
-    }
+
 
     public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)
     {
@@ -64,7 +66,7 @@ namespace BioModule.ViewModels
 
 
     //TODO not smart way (Consider to search items once)
-    private void OnAccessDevicesChanged( AccessDeviceList accessDevices )
+   /* private void OnAccessDevicesChanged( AccessDeviceList accessDevices )
     {
       DevicesInList.Clear();
       DevicesOutList.Clear();
@@ -80,10 +82,10 @@ namespace BioModule.ViewModels
 
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
 
-        /*
+        / *
         if (DevicesList.ContainsItem(dragableItem))        
           continue;        
-          */
+          * /
 
 
         switch (item.Type)
@@ -101,7 +103,7 @@ namespace BioModule.ViewModels
             break; 
         }
       }
-    }
+    }*/
    
     private DragablListBoxViewModel _devicesList;
     public DragablListBoxViewModel DevicesList
@@ -148,7 +150,6 @@ namespace BioModule.ViewModels
     public void Update(Location location)
     {
       _location = location;
-      OnAccessDevicesChanged(_bioEngine.Database().AccessDevices);
     }
 
     private          Location          _location  ;

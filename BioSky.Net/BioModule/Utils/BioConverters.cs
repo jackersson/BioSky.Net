@@ -242,12 +242,16 @@ namespace BioModule.Utils
     public object Convert( object value, Type targetType,
                            object parameter, CultureInfo culture)
     {
-      return Enum.Parse(typeof(TEnum), value.ToString());
+      //value.ToString();//
+      return value.ToString(); //Enum.Parse(typeof(TEnum), value.ToString());
     }    
     public object ConvertBack(object value, Type targetType,
         object parameter, CultureInfo culture)
     {
-      return Enum.Parse(targetType, value.ToString());
+      if(value != null)
+        return (TEnum)Enum.Parse(targetType, value.ToString());
+
+      return null;
     }
     
   }
