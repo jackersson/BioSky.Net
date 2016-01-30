@@ -11,11 +11,11 @@
              mc:Ignorable="d" 
              x:Name="ImageViewModel"             
              d:DesignHeight="300" d:DesignWidth="300">
-    
+
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
     </UserControl.Resources>
-    
+
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition/>
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
         <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
@@ -38,7 +38,7 @@
                     <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding CurrentImageSource}">
                         <Image.LayoutTransform>
                             <ScaleTransform ScaleX="{Binding CalculatedImageScale}" ScaleY="{Binding CalculatedImageScale}">
-                                
+
                             </ScaleTransform>
                         </Image.LayoutTransform>
                     </Image>
@@ -46,23 +46,89 @@
             </Grid>
         </Border>
 
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0" Grid.ColumnSpan="4">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ProgressRingVisibility}" Value="false">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ProgressRingVisibility}" Value="true">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Controls:ProgressRing Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Bottom"></Controls:ProgressRing>
+
+            <Ellipse Grid.ColumnSpan="4" Width="44" Height="44" 
+                 StrokeThickness="1"
+                 Margin="0,0,0,9" 
+                 HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Ellipse.Style>
+                    <Style TargetType="Ellipse">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="None">
+                                <Setter Property="Fill" Value="#FF02B3FF"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="Medium">
+                                <Setter Property="Fill" Value="White"/>
+                            </DataTrigger>                           
+                        </Style.Triggers>
+                    </Style>
+                </Ellipse.Style>
+            </Ellipse>
+
+            <TextBlock Text="{Binding ProgressRingText}"   Grid.ColumnSpan="4" HorizontalAlignment="Center" 
+                 Margin="0,0,0,23" 
+                   VerticalAlignment="Bottom" Foreground="#FF0A3B4F" FontWeight="Bold" 
+                   >
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ProgressRingTextVisibility}" Value="false">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ProgressRingTextVisibility}" Value="true">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <Image Source="{Binding ProgressRingIconSource}" Width="40" Height="40">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ProgressRingImageVisibility}" Value="false">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ProgressRingImageVisibility}" Value="true">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+        </Grid>
+
         <Slider x:Name="Slider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
                     Minimum="30"
                     Maximum="150"
                     Value="{Binding ZoomRate, Mode=TwoWay}"
                     LargeChange="20"
-                    SmallChange="10"                   
+                    SmallChange="10" Margin="0,15"                   
                     />
-       
+
 
         <Controls:ToggleSwitch x:Name="Switch" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                    cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"                               
                                    IsChecked="{Binding ZoomToFitState, Mode=TwoWay}"                                
                                    OnLabel="Fit On"
-                                   OffLabel="Fit Off"  >
+                                   OffLabel="Fit Off" Margin="0,6"  >
 
-          
+
         </Controls:ToggleSwitch>
 
         <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
