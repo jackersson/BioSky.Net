@@ -19,7 +19,7 @@ namespace BioData
     private Dictionary<long, Visitor>       visitorSet      ;
     private Dictionary<long, AccessDevice>  accessDeviceSet ;
     private Dictionary<long, CaptureDevice> captureDeviceSet;
-    private Dictionary<long, Card>          cardSet         ;        
+    private Dictionary<string, Card>          cardSet         ;        
 
 
     //public event EventHandler DataChanged;
@@ -85,7 +85,7 @@ namespace BioData
       locationSet      = new Dictionary<long, Location>();
       accessDeviceSet  = new Dictionary<long, AccessDevice>();
       captureDeviceSet = new Dictionary<long, CaptureDevice>();
-      cardSet          = new Dictionary<long, Card>();
+      cardSet          = new Dictionary<string, Card>();
       photoSet         = new Dictionary<long, Photo>();
     }
 
@@ -115,6 +115,13 @@ namespace BioData
       bool flag = locationSet.TryGetValue(id, out location);
       return location;
     }
+    public Card GetCardByNumber(string number)
+    {
+      Card card;
+      bool flag = cardSet.TryGetValue(number, out card);
+      return card;
+    }
+
 
     public void UpdatePersonSet(PersonList list)
     {
@@ -163,13 +170,15 @@ namespace BioData
 
       foreach (Card card in list.Cards)
       {
-        if (!cardSet.ContainsKey(card.Id))
-          cardSet.Add(card.Id, card);
+        if (!cardSet.ContainsKey(card.UniqueNumber))
+          cardSet.Add(card.UniqueNumber, card);
       }
     }
     public void UpdateLocationSet(LocationList list)
     {
       Locations = new ObservableCollection<Location>(list.Locations);
+
+      OnLocationChanged();
 
       foreach (Location location in list.Locations)
       {

@@ -31,7 +31,6 @@ namespace BioEngine
     public void Init()
     {
       IBioSkyNetRepository database           = _locator.GetProcessor<IBioSkyNetRepository>();     
-
       
       foreach (Location location in database.Locations)
       {

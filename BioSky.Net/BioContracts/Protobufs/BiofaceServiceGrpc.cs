@@ -29,10 +29,11 @@ namespace BioFaceService {
     static readonly Marshaller<global::BioFaceService.CardList> __Marshaller_CardList = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.CardList.Parser.ParseFrom);
     static readonly Marshaller<global::BioFaceService.BioImage> __Marshaller_BioImage = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.BioImage.Parser.ParseFrom);
     static readonly Marshaller<global::BioFaceService.DetectedObjectsInfo> __Marshaller_DetectedObjectsInfo = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.DetectedObjectsInfo.Parser.ParseFrom);
-    static readonly Marshaller<global::BioFaceService.BioImagesList> __Marshaller_BioImagesList = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.BioImagesList.Parser.ParseFrom);
+    static readonly Marshaller<global::BioFaceService.EnrollmentData> __Marshaller_EnrollmentData = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.EnrollmentData.Parser.ParseFrom);
     static readonly Marshaller<global::BioFaceService.EnrollmentFeedback> __Marshaller_EnrollmentFeedback = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.EnrollmentFeedback.Parser.ParseFrom);
     static readonly Marshaller<global::BioFaceService.VerificationData> __Marshaller_VerificationData = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.VerificationData.Parser.ParseFrom);
     static readonly Marshaller<global::BioFaceService.VerificationFeedback> __Marshaller_VerificationFeedback = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.VerificationFeedback.Parser.ParseFrom);
+    static readonly Marshaller<global::BioFaceService.BioImagesList> __Marshaller_BioImagesList = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.BioImagesList.Parser.ParseFrom);
     static readonly Marshaller<global::BioFaceService.IdentificationFeedback> __Marshaller_IdentificationFeedback = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioFaceService.IdentificationFeedback.Parser.ParseFrom);
 
     static readonly Method<global::BioFaceService.CommandPerson, global::BioFaceService.PersonList> __Method_PersonSelect = new Method<global::BioFaceService.CommandPerson, global::BioFaceService.PersonList>(
@@ -140,11 +141,11 @@ namespace BioFaceService {
         __Marshaller_BioImage,
         __Marshaller_DetectedObjectsInfo);
 
-    static readonly Method<global::BioFaceService.BioImagesList, global::BioFaceService.EnrollmentFeedback> __Method_EnrollFace = new Method<global::BioFaceService.BioImagesList, global::BioFaceService.EnrollmentFeedback>(
+    static readonly Method<global::BioFaceService.EnrollmentData, global::BioFaceService.EnrollmentFeedback> __Method_EnrollFace = new Method<global::BioFaceService.EnrollmentData, global::BioFaceService.EnrollmentFeedback>(
         MethodType.ServerStreaming,
         __ServiceName,
         "EnrollFace",
-        __Marshaller_BioImagesList,
+        __Marshaller_EnrollmentData,
         __Marshaller_EnrollmentFeedback);
 
     static readonly Method<global::BioFaceService.VerificationData, global::BioFaceService.VerificationFeedback> __Method_VerifyFace = new Method<global::BioFaceService.VerificationData, global::BioFaceService.VerificationFeedback>(
@@ -228,8 +229,8 @@ namespace BioFaceService {
       AsyncUnaryCall<global::BioFaceService.Result> CardUpdateAsync(global::BioFaceService.CardList request, CallOptions options);
       AsyncDuplexStreamingCall<global::BioFaceService.BioImage, global::BioFaceService.DetectedObjectsInfo> DetectFace(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
       AsyncDuplexStreamingCall<global::BioFaceService.BioImage, global::BioFaceService.DetectedObjectsInfo> DetectFace(CallOptions options);
-      AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.BioImagesList request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.BioImagesList request, CallOptions options);
+      AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.EnrollmentData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.EnrollmentData request, CallOptions options);
       AsyncServerStreamingCall<global::BioFaceService.VerificationFeedback> VerifyFace(global::BioFaceService.VerificationData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
       AsyncServerStreamingCall<global::BioFaceService.VerificationFeedback> VerifyFace(global::BioFaceService.VerificationData request, CallOptions options);
       AsyncServerStreamingCall<global::BioFaceService.IdentificationFeedback> IdentifyFace(global::BioFaceService.BioImagesList request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -254,7 +255,7 @@ namespace BioFaceService {
       Task<global::BioFaceService.CardList> CardSelect(global::BioFaceService.CommandCard request, ServerCallContext context);
       Task<global::BioFaceService.Result> CardUpdate(global::BioFaceService.CardList request, ServerCallContext context);
       Task DetectFace(IAsyncStreamReader<global::BioFaceService.BioImage> requestStream, IServerStreamWriter<global::BioFaceService.DetectedObjectsInfo> responseStream, ServerCallContext context);
-      Task EnrollFace(global::BioFaceService.BioImagesList request, IServerStreamWriter<global::BioFaceService.EnrollmentFeedback> responseStream, ServerCallContext context);
+      Task EnrollFace(global::BioFaceService.EnrollmentData request, IServerStreamWriter<global::BioFaceService.EnrollmentFeedback> responseStream, ServerCallContext context);
       Task VerifyFace(global::BioFaceService.VerificationData request, IServerStreamWriter<global::BioFaceService.VerificationFeedback> responseStream, ServerCallContext context);
       Task IdentifyFace(global::BioFaceService.BioImagesList request, IServerStreamWriter<global::BioFaceService.IdentificationFeedback> responseStream, ServerCallContext context);
     }
@@ -555,12 +556,12 @@ namespace BioFaceService {
         var call = CreateCall(__Method_DetectFace, options);
         return Calls.AsyncDuplexStreamingCall(call);
       }
-      public AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.BioImagesList request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.EnrollmentData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         var call = CreateCall(__Method_EnrollFace, new CallOptions(headers, deadline, cancellationToken));
         return Calls.AsyncServerStreamingCall(call, request);
       }
-      public AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.BioImagesList request, CallOptions options)
+      public AsyncServerStreamingCall<global::BioFaceService.EnrollmentFeedback> EnrollFace(global::BioFaceService.EnrollmentData request, CallOptions options)
       {
         var call = CreateCall(__Method_EnrollFace, options);
         return Calls.AsyncServerStreamingCall(call, request);

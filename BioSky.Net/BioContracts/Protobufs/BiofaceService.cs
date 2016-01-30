@@ -30,101 +30,117 @@ namespace BioFaceService {
             "ChNEZXRlY3RlZE9iamVjdHNJbmZvEisKB29iamVjdHMYASADKAsyGi5CaW9G", 
             "YWNlU2VydmljZS5PYmplY3RJbmZvIh8KCEJpb0ltYWdlEhMKC2Rlc2NyaXB0", 
             "aW9uGAEgASgMIjkKDUJpb0ltYWdlc0xpc3QSKAoGaW1hZ2VzGAEgAygLMhgu", 
-            "QmlvRmFjZVNlcnZpY2UuQmlvSW1hZ2UiSgoSRW5yb2xsbWVudEZlZWRiYWNr", 
-            "EhAKCHByb2dyZXNzGAEgASgPEhEKCWV5ZXNmb3VuZBgCIAEoCBIPCgdzdWNj", 
-            "ZXNzGAMgASgIIl4KEFZlcmlmaWNhdGlvbkRhdGESLQoGaW1hZ2VzGAEgASgL", 
-            "Mh0uQmlvRmFjZVNlcnZpY2UuQmlvSW1hZ2VzTGlzdBIbChN2ZXJpZmljYXRp", 
-            "b25fdGFyZ2V0GAIgASgJImYKFFZlcmlmaWNhdGlvbkZlZWRiYWNrEj8KE2Vu", 
-            "cm9sbG1lbnRfZmVlZGJhY2sYASABKAsyIi5CaW9GYWNlU2VydmljZS5FbnJv", 
-            "bGxtZW50RmVlZGJhY2sSDQoFbWF0Y2gYAiABKAIiQwoTSWRlbnRpZmljYXRp", 
-            "b25TY29yZRINCgVzY29yZRgBIAEoAhIdChVpZGVudGlmaWNhdGlvbl90YXJn", 
-            "ZXQYAiABKAkijgEKFklkZW50aWZpY2F0aW9uRmVlZGJhY2sSPwoTZW5yb2xs", 
-            "bWVudF9mZWVkYmFjaxgBIAEoCzIiLkJpb0ZhY2VTZXJ2aWNlLkVucm9sbG1l", 
-            "bnRGZWVkYmFjaxIzCgZzY29yZXMYAiADKAsyIy5CaW9GYWNlU2VydmljZS5J", 
-            "ZGVudGlmaWNhdGlvblNjb3JlIogDCgZQZXJzb24SCgoCaWQYASABKAMSEQoJ", 
-            "Zmlyc3RuYW1lGAIgASgJEhAKCGxhc3RuYW1lGAMgASgJEhMKC2RhdGVvZmJp", 
-            "cnRoGAQgASgDEi0KBmdlbmRlchgFIAEoDjIdLkJpb0ZhY2VTZXJ2aWNlLlBl", 
-            "cnNvbi5HZW5kZXISDwoHY291bnRyeRgGIAEoCRIMCgRjaXR5GAcgASgJEhEK", 
-            "CXRodW1ibmFpbBgIIAEoAxIQCghjb21tZW50cxgJIAEoCRItCgZyaWdodHMY", 
-            "CiABKA4yHS5CaW9GYWNlU2VydmljZS5QZXJzb24uUmlnaHRzEg0KBWVtYWls", 
-            "GAsgASgJEigKB2Ric3RhdGUYDCABKA4yFy5CaW9GYWNlU2VydmljZS5EYlN0", 
-            "YXRlIigKBkdlbmRlchIICgROb25lEAASCAoETWFsZRABEgoKBkZlbWFsZRAC", 
-            "IjMKBlJpZ2h0cxIMCghPcGVyYXRvchAAEgsKB01hbmFnZXIQARIOCgpTdXBl", 
-            "cnZpc29yEAIivgEKDEFjY2Vzc0RldmljZRIKCgJpZBgBIAEoAxISCgpsb2Nh", 
-            "dGlvbmlkGAIgASgDEhAKCHBvcnRuYW1lGAMgASgJEjsKBHR5cGUYBCABKA4y", 
-            "LS5CaW9GYWNlU2VydmljZS5BY2Nlc3NEZXZpY2UuQWNjZXNzRGV2aWNlVHlw", 
-            "ZSI/ChBBY2Nlc3NEZXZpY2VUeXBlEg4KCkRldmljZU5vbmUQABIMCghEZXZp", 
-            "Y2VJbhABEg0KCURldmljZU91dBACIkMKDUNhcHR1cmVEZXZpY2USCgoCaWQY", 
-            "ASABKAMSEgoKbG9jYXRpb25pZBgCIAEoAxISCgpkZXZpY2VuYW1lGAMgASgJ", 
-            "IjsKBENhcmQSCgoCaWQYASABKAMSEAoIcGVyc29uaWQYAiABKAMSFQoNdW5p", 
-            "cXVlX251bWJlchgDIAEoCSJCCghMb2NhdGlvbhIKCgJpZBgBIAEoAxIVCg1s", 
-            "b2NhdGlvbl9uYW1lGAIgASgJEhMKC2Rlc2N0aXB0aW9uGAMgASgJIqwBCgVQ", 
-            "aG90bxIKCgJpZBgBIAEoAxIQCghwZXJzb25pZBgCIAEoAxIxCgR0eXBlGAMg", 
-            "ASgOMiMuQmlvRmFjZVNlcnZpY2UuUGhvdG8uUGhvdG9TaXplVHlwZRIUCgxm", 
-            "aXJfbG9jYXRpb24YBCABKAkSFQoNZmlsZV9sb2NhdGlvbhgFIAEoCSIlCg1Q", 
-            "aG90b1NpemVUeXBlEggKBEZ1bGwQABIKCgZDcm9wZWQQASK7AQoHVmlzaXRv", 
-            "chIKCgJpZBgBIAEoAxIQCghwZXJzb25pZBgCIAEoAxIPCgdwaG90b2lkGAMg", 
-            "ASgDEhIKCmxvY2F0aW9uaWQYBCABKAMSDAoEdGltZRgFIAEoAxI1CgZzdGF0", 
-            "dXMYBiABKA4yJS5CaW9GYWNlU2VydmljZS5WaXNpdG9yLlZpc2l0b3JTdGF0", 
-            "dXMiKAoNVmlzaXRvclN0YXR1cxILCgdTdWNjZXNzEAASCgoGRmFpbGVkEAEi", 
-            "NQoKUGVyc29uTGlzdBInCgdwZXJzb25zGAEgAygLMhYuQmlvRmFjZVNlcnZp", 
-            "Y2UuUGVyc29uIjIKCVBob3RvTGlzdBIlCgZwaG90b3MYASADKAsyFS5CaW9G", 
-            "YWNlU2VydmljZS5QaG90byI4CgtWaXNpdG9yTGlzdBIpCgh2aXNpdG9ycxgB", 
-            "IAMoCzIXLkJpb0ZhY2VTZXJ2aWNlLlZpc2l0b3IiOwoMTG9jYXRpb25MaXN0", 
-            "EisKCWxvY2F0aW9ucxgBIAMoCzIYLkJpb0ZhY2VTZXJ2aWNlLkxvY2F0aW9u", 
-            "IkgKEEFjY2Vzc0RldmljZUxpc3QSNAoOYWNjZXNzX2RldmljZXMYASADKAsy", 
-            "HC5CaW9GYWNlU2VydmljZS5BY2Nlc3NEZXZpY2UiLwoIQ2FyZExpc3QSIwoF", 
-            "Y2FyZHMYASADKAsyFC5CaW9GYWNlU2VydmljZS5DYXJkIksKEUNhcHR1cmVE", 
-            "ZXZpY2VMaXN0EjYKD2NhcHR1cmVfZGV2aWNlcxgBIAMoCzIdLkJpb0ZhY2VT", 
-            "ZXJ2aWNlLkNhcHR1cmVEZXZpY2UibgoKUmVzdWx0UGFpchIKCgJpZBgBIAEo", 
-            "AxImCgVzdGF0ZRgCIAEoDjIXLkJpb0ZhY2VTZXJ2aWNlLkRiU3RhdGUSLAoG", 
-            "c3RhdHVzGAMgASgOMhwuQmlvRmFjZVNlcnZpY2UuUmVzdWx0U3RhdHVzIjQK", 
-            "BlJlc3VsdBIqCgZzdGF0dXMYASADKAsyGi5CaW9GYWNlU2VydmljZS5SZXN1", 
-            "bHRQYWlyIhwKDUNvbW1hbmRQZXJzb24SCwoDYWxsGAEgASgIIh0KDkNvbW1h", 
-            "bmRWaXNpdG9yEgsKA2FsbBgBIAEoCCIeCg9Db21tYW5kTG9jYXRpb24SCwoD", 
-            "YWxsGAEgASgIIiIKE0NvbW1hbmRBY2Nlc3NEZXZpY2USCwoDYWxsGAEgASgI", 
-            "IhsKDENvbW1hbmRQaG90bxILCgNhbGwYASABKAgiIwoUQ29tbWFuZENhcHR1", 
-            "cmVEZXZpY2USCwoDYWxsGAEgASgIIhoKC0NvbW1hbmRDYXJkEgsKA2FsbBgB", 
-            "IAEoCCLMAQoHQ29tbWFuZBI5Cgpjb21tYW5kX2lkGAEgASgOMiUuQmlvRmFj", 
-            "ZVNlcnZpY2UuQ29tbWFuZC5TZXJ2ZXJDb21tYW5kIoUBCg1TZXJ2ZXJDb21t", 
-            "YW5kEg0KCUdldFBlcnNvbhAAEg4KCkdldFZpc2l0b3IQARIMCghHZXRQaG90", 
-            "bxACEg8KC0dldExvY2F0aW9uEAMSEwoPR2V0QWNjZXNzRGV2aWNlEAQSFAoQ", 
-            "R2V0Q2FwdHVyZURldmljZRAFEgsKB0dldENhcmQQBio3CgdEYlN0YXRlEggK", 
-            "BE5vbmUQABIKCgZJbnNlcnQQARIKCgZVcGRhdGUQAhIKCgZSZW1vdmUQAyon", 
-            "CgxSZXN1bHRTdGF0dXMSCwoHU3VjY2VzcxAAEgoKBkZhaWxlZBABMrQLCg9C", 
-            "aW9GYWNlRGV0ZWN0b3ISSwoMUGVyc29uU2VsZWN0Eh0uQmlvRmFjZVNlcnZp", 
-            "Y2UuQ29tbWFuZFBlcnNvbhoaLkJpb0ZhY2VTZXJ2aWNlLlBlcnNvbkxpc3Qi", 
-            "ABJECgxQZXJzb25VcGRhdGUSGi5CaW9GYWNlU2VydmljZS5QZXJzb25MaXN0", 
-            "GhYuQmlvRmFjZVNlcnZpY2UuUmVzdWx0IgASSAoLUGhvdG9TZWxlY3QSHC5C", 
-            "aW9GYWNlU2VydmljZS5Db21tYW5kUGhvdG8aGS5CaW9GYWNlU2VydmljZS5Q", 
-            "aG90b0xpc3QiABJCCgtQaG90b1VwZGF0ZRIZLkJpb0ZhY2VTZXJ2aWNlLlBo", 
-            "b3RvTGlzdBoWLkJpb0ZhY2VTZXJ2aWNlLlJlc3VsdCIAEk4KDVZpc2l0b3JT", 
-            "ZWxlY3QSHi5CaW9GYWNlU2VydmljZS5Db21tYW5kVmlzaXRvchobLkJpb0Zh", 
-            "Y2VTZXJ2aWNlLlZpc2l0b3JMaXN0IgASRgoNVmlzaXRvclVwZGF0ZRIbLkJp", 
-            "b0ZhY2VTZXJ2aWNlLlZpc2l0b3JMaXN0GhYuQmlvRmFjZVNlcnZpY2UuUmVz", 
-            "dWx0IgASUQoOTG9jYXRpb25TZWxlY3QSHy5CaW9GYWNlU2VydmljZS5Db21t", 
-            "YW5kTG9jYXRpb24aHC5CaW9GYWNlU2VydmljZS5Mb2NhdGlvbkxpc3QiABJI", 
-            "Cg5Mb2NhdGlvblVwZGF0ZRIcLkJpb0ZhY2VTZXJ2aWNlLkxvY2F0aW9uTGlz", 
-            "dBoWLkJpb0ZhY2VTZXJ2aWNlLlJlc3VsdCIAEl0KEkFjY2Vzc0RldmljZVNl", 
-            "bGVjdBIjLkJpb0ZhY2VTZXJ2aWNlLkNvbW1hbmRBY2Nlc3NEZXZpY2UaIC5C", 
-            "aW9GYWNlU2VydmljZS5BY2Nlc3NEZXZpY2VMaXN0IgASUAoSQWNjZXNzRGV2", 
-            "aWNlVXBkYXRlEiAuQmlvRmFjZVNlcnZpY2UuQWNjZXNzRGV2aWNlTGlzdBoW", 
-            "LkJpb0ZhY2VTZXJ2aWNlLlJlc3VsdCIAEmAKE0NhcHR1cmVEZXZpY2VTZWxl", 
-            "Y3QSJC5CaW9GYWNlU2VydmljZS5Db21tYW5kQ2FwdHVyZURldmljZRohLkJp", 
-            "b0ZhY2VTZXJ2aWNlLkNhcHR1cmVEZXZpY2VMaXN0IgASUgoTQ2FwdHVyZURl", 
-            "dmljZVVwZGF0ZRIhLkJpb0ZhY2VTZXJ2aWNlLkNhcHR1cmVEZXZpY2VMaXN0", 
-            "GhYuQmlvRmFjZVNlcnZpY2UuUmVzdWx0IgASRQoKQ2FyZFNlbGVjdBIbLkJp", 
-            "b0ZhY2VTZXJ2aWNlLkNvbW1hbmRDYXJkGhguQmlvRmFjZVNlcnZpY2UuQ2Fy", 
-            "ZExpc3QiABJACgpDYXJkVXBkYXRlEhguQmlvRmFjZVNlcnZpY2UuQ2FyZExp", 
-            "c3QaFi5CaW9GYWNlU2VydmljZS5SZXN1bHQiABJRCgpEZXRlY3RGYWNlEhgu", 
-            "QmlvRmFjZVNlcnZpY2UuQmlvSW1hZ2UaIy5CaW9GYWNlU2VydmljZS5EZXRl", 
-            "Y3RlZE9iamVjdHNJbmZvIgAoATABElMKCkVucm9sbEZhY2USHS5CaW9GYWNl", 
-            "U2VydmljZS5CaW9JbWFnZXNMaXN0GiIuQmlvRmFjZVNlcnZpY2UuRW5yb2xs", 
-            "bWVudEZlZWRiYWNrIgAwARJYCgpWZXJpZnlGYWNlEiAuQmlvRmFjZVNlcnZp", 
-            "Y2UuVmVyaWZpY2F0aW9uRGF0YRokLkJpb0ZhY2VTZXJ2aWNlLlZlcmlmaWNh", 
-            "dGlvbkZlZWRiYWNrIgAwARJZCgxJZGVudGlmeUZhY2USHS5CaW9GYWNlU2Vy", 
-            "dmljZS5CaW9JbWFnZXNMaXN0GiYuQmlvRmFjZVNlcnZpY2UuSWRlbnRpZmlj", 
-            "YXRpb25GZWVkYmFjayIAMAFCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
+            "QmlvRmFjZVNlcnZpY2UuQmlvSW1hZ2UiVAoQVmVyaWZpY2F0aW9uRGF0YRIt", 
+            "CgZpbWFnZXMYASABKAsyHS5CaW9GYWNlU2VydmljZS5CaW9JbWFnZXNMaXN0", 
+            "EhEKCXBlcnNvbl9pZBgCIAEoAyJSCg5FbnJvbGxtZW50RGF0YRItCgZpbWFn", 
+            "ZXMYASABKAsyHS5CaW9GYWNlU2VydmljZS5CaW9JbWFnZXNMaXN0EhEKCXBl", 
+            "cnNvbl9pZBgCIAEoAyJDChNJZGVudGlmaWNhdGlvblNjb3JlEg0KBXNjb3Jl", 
+            "GAEgASgCEh0KFWlkZW50aWZpY2F0aW9uX3RhcmdldBgCIAEoCSKOAQoWSWRl", 
+            "bnRpZmljYXRpb25GZWVkYmFjaxI/ChNlbnJvbGxtZW50X2ZlZWRiYWNrGAEg", 
+            "ASgLMiIuQmlvRmFjZVNlcnZpY2UuRW5yb2xsbWVudEZlZWRiYWNrEjMKBnNj", 
+            "b3JlcxgCIAMoCzIjLkJpb0ZhY2VTZXJ2aWNlLklkZW50aWZpY2F0aW9uU2Nv", 
+            "cmUiiAMKBlBlcnNvbhIKCgJpZBgBIAEoAxIRCglmaXJzdG5hbWUYAiABKAkS", 
+            "EAoIbGFzdG5hbWUYAyABKAkSEwoLZGF0ZW9mYmlydGgYBCABKAMSLQoGZ2Vu", 
+            "ZGVyGAUgASgOMh0uQmlvRmFjZVNlcnZpY2UuUGVyc29uLkdlbmRlchIPCgdj", 
+            "b3VudHJ5GAYgASgJEgwKBGNpdHkYByABKAkSEQoJdGh1bWJuYWlsGAggASgD", 
+            "EhAKCGNvbW1lbnRzGAkgASgJEi0KBnJpZ2h0cxgKIAEoDjIdLkJpb0ZhY2VT", 
+            "ZXJ2aWNlLlBlcnNvbi5SaWdodHMSDQoFZW1haWwYCyABKAkSKAoHZGJzdGF0", 
+            "ZRgMIAEoDjIXLkJpb0ZhY2VTZXJ2aWNlLkRiU3RhdGUiKAoGR2VuZGVyEggK", 
+            "BE5vbmUQABIICgRNYWxlEAESCgoGRmVtYWxlEAIiMwoGUmlnaHRzEgwKCE9w", 
+            "ZXJhdG9yEAASCwoHTWFuYWdlchABEg4KClN1cGVydmlzb3IQAiLoAQoMQWNj", 
+            "ZXNzRGV2aWNlEgoKAmlkGAEgASgDEhIKCmxvY2F0aW9uaWQYAiABKAMSEAoI", 
+            "cG9ydG5hbWUYAyABKAkSOwoEdHlwZRgEIAEoDjItLkJpb0ZhY2VTZXJ2aWNl", 
+            "LkFjY2Vzc0RldmljZS5BY2Nlc3NEZXZpY2VUeXBlEigKB2Ric3RhdGUYBSAB", 
+            "KA4yFy5CaW9GYWNlU2VydmljZS5EYlN0YXRlIj8KEEFjY2Vzc0RldmljZVR5", 
+            "cGUSDgoKRGV2aWNlTm9uZRAAEgwKCERldmljZUluEAESDQoJRGV2aWNlT3V0", 
+            "EAIibQoNQ2FwdHVyZURldmljZRIKCgJpZBgBIAEoAxISCgpsb2NhdGlvbmlk", 
+            "GAIgASgDEhIKCmRldmljZW5hbWUYAyABKAkSKAoHZGJzdGF0ZRgEIAEoDjIX", 
+            "LkJpb0ZhY2VTZXJ2aWNlLkRiU3RhdGUiZQoEQ2FyZBIKCgJpZBgBIAEoAxIQ", 
+            "CghwZXJzb25pZBgCIAEoAxIVCg11bmlxdWVfbnVtYmVyGAMgASgJEigKB2Ri", 
+            "c3RhdGUYBCABKA4yFy5CaW9GYWNlU2VydmljZS5EYlN0YXRlIm0KCExvY2F0", 
+            "aW9uEgoKAmlkGAEgASgDEhUKDWxvY2F0aW9uX25hbWUYAiABKAkSFAoMZGVz", 
+            "Y3RyaXB0aW9uGAMgASgJEigKB2Ric3RhdGUYBCABKA4yFy5CaW9GYWNlU2Vy", 
+            "dmljZS5EYlN0YXRlItYBCgVQaG90bxIKCgJpZBgBIAEoAxIQCghwZXJzb25p", 
+            "ZBgCIAEoAxIxCgR0eXBlGAMgASgOMiMuQmlvRmFjZVNlcnZpY2UuUGhvdG8u", 
+            "UGhvdG9TaXplVHlwZRIUCgxmaXJfbG9jYXRpb24YBCABKAkSFQoNZmlsZV9s", 
+            "b2NhdGlvbhgFIAEoCRIoCgdkYnN0YXRlGAYgASgOMhcuQmlvRmFjZVNlcnZp", 
+            "Y2UuRGJTdGF0ZSIlCg1QaG90b1NpemVUeXBlEggKBEZ1bGwQABIKCgZDcm9w", 
+            "ZWQQASLlAQoHVmlzaXRvchIKCgJpZBgBIAEoAxIQCghwZXJzb25pZBgCIAEo", 
+            "AxIPCgdwaG90b2lkGAMgASgDEhIKCmxvY2F0aW9uaWQYBCABKAMSDAoEdGlt", 
+            "ZRgFIAEoAxI1CgZzdGF0dXMYBiABKA4yJS5CaW9GYWNlU2VydmljZS5WaXNp", 
+            "dG9yLlZpc2l0b3JTdGF0dXMSKAoHZGJzdGF0ZRgHIAEoDjIXLkJpb0ZhY2VT", 
+            "ZXJ2aWNlLkRiU3RhdGUiKAoNVmlzaXRvclN0YXR1cxILCgdTdWNjZXNzEAAS", 
+            "CgoGRmFpbGVkEAEiNQoKUGVyc29uTGlzdBInCgdwZXJzb25zGAEgAygLMhYu", 
+            "QmlvRmFjZVNlcnZpY2UuUGVyc29uIjIKCVBob3RvTGlzdBIlCgZwaG90b3MY", 
+            "ASADKAsyFS5CaW9GYWNlU2VydmljZS5QaG90byI4CgtWaXNpdG9yTGlzdBIp", 
+            "Cgh2aXNpdG9ycxgBIAMoCzIXLkJpb0ZhY2VTZXJ2aWNlLlZpc2l0b3IiOwoM", 
+            "TG9jYXRpb25MaXN0EisKCWxvY2F0aW9ucxgBIAMoCzIYLkJpb0ZhY2VTZXJ2", 
+            "aWNlLkxvY2F0aW9uIkgKEEFjY2Vzc0RldmljZUxpc3QSNAoOYWNjZXNzX2Rl", 
+            "dmljZXMYASADKAsyHC5CaW9GYWNlU2VydmljZS5BY2Nlc3NEZXZpY2UiLwoI", 
+            "Q2FyZExpc3QSIwoFY2FyZHMYASADKAsyFC5CaW9GYWNlU2VydmljZS5DYXJk", 
+            "IksKEUNhcHR1cmVEZXZpY2VMaXN0EjYKD2NhcHR1cmVfZGV2aWNlcxgBIAMo", 
+            "CzIdLkJpb0ZhY2VTZXJ2aWNlLkNhcHR1cmVEZXZpY2UipwMKClJlc3VsdFBh", 
+            "aXISCgoCaWQYASABKAMSJgoFc3RhdGUYAiABKA4yFy5CaW9GYWNlU2Vydmlj", 
+            "ZS5EYlN0YXRlEiwKBnN0YXR1cxgDIAEoDjIcLkJpb0ZhY2VTZXJ2aWNlLlJl", 
+            "c3VsdFN0YXR1cxInCgdwZXJzb25zGAQgAygLMhYuQmlvRmFjZVNlcnZpY2Uu", 
+            "UGVyc29uEikKCHZpc2l0b3JzGAUgAygLMhcuQmlvRmFjZVNlcnZpY2UuVmlz", 
+            "aXRvchIzCg1hY2Nlc3NEZXZpY2VzGAYgAygLMhwuQmlvRmFjZVNlcnZpY2Uu", 
+            "QWNjZXNzRGV2aWNlEisKCWxvY2F0aW9ucxgHIAMoCzIYLkJpb0ZhY2VTZXJ2", 
+            "aWNlLkxvY2F0aW9uEiMKBWNhcmRzGAggAygLMhQuQmlvRmFjZVNlcnZpY2Uu", 
+            "Q2FyZBI1Cg5jYXB0dXJlRGV2aWNlcxgJIAMoCzIdLkJpb0ZhY2VTZXJ2aWNl", 
+            "LkNhcHR1cmVEZXZpY2USJQoGcGhvdG9zGAogAygLMhUuQmlvRmFjZVNlcnZp", 
+            "Y2UuUGhvdG8iNAoGUmVzdWx0EioKBnN0YXR1cxgBIAMoCzIaLkJpb0ZhY2VT", 
+            "ZXJ2aWNlLlJlc3VsdFBhaXIicAoSRW5yb2xsbWVudEZlZWRiYWNrEhAKCHBy", 
+            "b2dyZXNzGAEgASgPEhEKCWV5ZXNmb3VuZBgCIAEoCBIPCgdzdWNjZXNzGAMg", 
+            "ASgIEiQKBXBob3RvGAQgASgLMhUuQmlvRmFjZVNlcnZpY2UuUGhvdG8ikAEK", 
+            "FFZlcmlmaWNhdGlvbkZlZWRiYWNrEj8KE2Vucm9sbG1lbnRfZmVlZGJhY2sY", 
+            "ASABKAsyIi5CaW9GYWNlU2VydmljZS5FbnJvbGxtZW50RmVlZGJhY2sSDQoF", 
+            "bWF0Y2gYAiABKAISKAoHdmlzaXRvchgDIAEoCzIXLkJpb0ZhY2VTZXJ2aWNl", 
+            "LlZpc2l0b3IiHAoNQ29tbWFuZFBlcnNvbhILCgNhbGwYASABKAgiHQoOQ29t", 
+            "bWFuZFZpc2l0b3ISCwoDYWxsGAEgASgIIh4KD0NvbW1hbmRMb2NhdGlvbhIL", 
+            "CgNhbGwYASABKAgiIgoTQ29tbWFuZEFjY2Vzc0RldmljZRILCgNhbGwYASAB", 
+            "KAgiGwoMQ29tbWFuZFBob3RvEgsKA2FsbBgBIAEoCCIjChRDb21tYW5kQ2Fw", 
+            "dHVyZURldmljZRILCgNhbGwYASABKAgiGgoLQ29tbWFuZENhcmQSCwoDYWxs", 
+            "GAEgASgIIswBCgdDb21tYW5kEjkKCmNvbW1hbmRfaWQYASABKA4yJS5CaW9G", 
+            "YWNlU2VydmljZS5Db21tYW5kLlNlcnZlckNvbW1hbmQihQEKDVNlcnZlckNv", 
+            "bW1hbmQSDQoJR2V0UGVyc29uEAASDgoKR2V0VmlzaXRvchABEgwKCEdldFBo", 
+            "b3RvEAISDwoLR2V0TG9jYXRpb24QAxITCg9HZXRBY2Nlc3NEZXZpY2UQBBIU", 
+            "ChBHZXRDYXB0dXJlRGV2aWNlEAUSCwoHR2V0Q2FyZBAGKjcKB0RiU3RhdGUS", 
+            "CAoETm9uZRAAEgoKBkluc2VydBABEgoKBlVwZGF0ZRACEgoKBlJlbW92ZRAD", 
+            "KicKDFJlc3VsdFN0YXR1cxILCgdTdWNjZXNzEAASCgoGRmFpbGVkEAEytQsK", 
+            "D0Jpb0ZhY2VEZXRlY3RvchJLCgxQZXJzb25TZWxlY3QSHS5CaW9GYWNlU2Vy", 
+            "dmljZS5Db21tYW5kUGVyc29uGhouQmlvRmFjZVNlcnZpY2UuUGVyc29uTGlz", 
+            "dCIAEkQKDFBlcnNvblVwZGF0ZRIaLkJpb0ZhY2VTZXJ2aWNlLlBlcnNvbkxp", 
+            "c3QaFi5CaW9GYWNlU2VydmljZS5SZXN1bHQiABJICgtQaG90b1NlbGVjdBIc", 
+            "LkJpb0ZhY2VTZXJ2aWNlLkNvbW1hbmRQaG90bxoZLkJpb0ZhY2VTZXJ2aWNl", 
+            "LlBob3RvTGlzdCIAEkIKC1Bob3RvVXBkYXRlEhkuQmlvRmFjZVNlcnZpY2Uu", 
+            "UGhvdG9MaXN0GhYuQmlvRmFjZVNlcnZpY2UuUmVzdWx0IgASTgoNVmlzaXRv", 
+            "clNlbGVjdBIeLkJpb0ZhY2VTZXJ2aWNlLkNvbW1hbmRWaXNpdG9yGhsuQmlv", 
+            "RmFjZVNlcnZpY2UuVmlzaXRvckxpc3QiABJGCg1WaXNpdG9yVXBkYXRlEhsu", 
+            "QmlvRmFjZVNlcnZpY2UuVmlzaXRvckxpc3QaFi5CaW9GYWNlU2VydmljZS5S", 
+            "ZXN1bHQiABJRCg5Mb2NhdGlvblNlbGVjdBIfLkJpb0ZhY2VTZXJ2aWNlLkNv", 
+            "bW1hbmRMb2NhdGlvbhocLkJpb0ZhY2VTZXJ2aWNlLkxvY2F0aW9uTGlzdCIA", 
+            "EkgKDkxvY2F0aW9uVXBkYXRlEhwuQmlvRmFjZVNlcnZpY2UuTG9jYXRpb25M", 
+            "aXN0GhYuQmlvRmFjZVNlcnZpY2UuUmVzdWx0IgASXQoSQWNjZXNzRGV2aWNl", 
+            "U2VsZWN0EiMuQmlvRmFjZVNlcnZpY2UuQ29tbWFuZEFjY2Vzc0RldmljZRog", 
+            "LkJpb0ZhY2VTZXJ2aWNlLkFjY2Vzc0RldmljZUxpc3QiABJQChJBY2Nlc3NE", 
+            "ZXZpY2VVcGRhdGUSIC5CaW9GYWNlU2VydmljZS5BY2Nlc3NEZXZpY2VMaXN0", 
+            "GhYuQmlvRmFjZVNlcnZpY2UuUmVzdWx0IgASYAoTQ2FwdHVyZURldmljZVNl", 
+            "bGVjdBIkLkJpb0ZhY2VTZXJ2aWNlLkNvbW1hbmRDYXB0dXJlRGV2aWNlGiEu", 
+            "QmlvRmFjZVNlcnZpY2UuQ2FwdHVyZURldmljZUxpc3QiABJSChNDYXB0dXJl", 
+            "RGV2aWNlVXBkYXRlEiEuQmlvRmFjZVNlcnZpY2UuQ2FwdHVyZURldmljZUxp", 
+            "c3QaFi5CaW9GYWNlU2VydmljZS5SZXN1bHQiABJFCgpDYXJkU2VsZWN0Ehsu", 
+            "QmlvRmFjZVNlcnZpY2UuQ29tbWFuZENhcmQaGC5CaW9GYWNlU2VydmljZS5D", 
+            "YXJkTGlzdCIAEkAKCkNhcmRVcGRhdGUSGC5CaW9GYWNlU2VydmljZS5DYXJk", 
+            "TGlzdBoWLkJpb0ZhY2VTZXJ2aWNlLlJlc3VsdCIAElEKCkRldGVjdEZhY2US", 
+            "GC5CaW9GYWNlU2VydmljZS5CaW9JbWFnZRojLkJpb0ZhY2VTZXJ2aWNlLkRl", 
+            "dGVjdGVkT2JqZWN0c0luZm8iACgBMAESVAoKRW5yb2xsRmFjZRIeLkJpb0Zh", 
+            "Y2VTZXJ2aWNlLkVucm9sbG1lbnREYXRhGiIuQmlvRmFjZVNlcnZpY2UuRW5y", 
+            "b2xsbWVudEZlZWRiYWNrIgAwARJYCgpWZXJpZnlGYWNlEiAuQmlvRmFjZVNl", 
+            "cnZpY2UuVmVyaWZpY2F0aW9uRGF0YRokLkJpb0ZhY2VTZXJ2aWNlLlZlcmlm", 
+            "aWNhdGlvbkZlZWRiYWNrIgAwARJZCgxJZGVudGlmeUZhY2USHS5CaW9GYWNl", 
+            "U2VydmljZS5CaW9JbWFnZXNMaXN0GiYuQmlvRmFjZVNlcnZpY2UuSWRlbnRp", 
+            "ZmljYXRpb25GZWVkYmFjayIAMAFCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(new[] {typeof(global::BioFaceService.DbState), typeof(global::BioFaceService.ResultStatus), }, new pbr::GeneratedCodeInfo[] {
@@ -134,18 +150,17 @@ namespace BioFaceService {
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.DetectedObjectsInfo), new[]{ "Objects" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.BioImage), new[]{ "Description" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.BioImagesList), new[]{ "Images" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.EnrollmentFeedback), new[]{ "Progress", "Eyesfound", "Success" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.VerificationData), new[]{ "Images", "VerificationTarget" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.VerificationFeedback), new[]{ "EnrollmentFeedback", "Match" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.VerificationData), new[]{ "Images", "PersonId" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.EnrollmentData), new[]{ "Images", "PersonId" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.IdentificationScore), new[]{ "Score", "IdentificationTarget" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.IdentificationFeedback), new[]{ "EnrollmentFeedback", "Scores" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Person), new[]{ "Id", "Firstname", "Lastname", "Dateofbirth", "Gender", "Country", "City", "Thumbnail", "Comments", "Rights", "Email", "Dbstate" }, null, new[]{ typeof(global::BioFaceService.Person.Types.Gender), typeof(global::BioFaceService.Person.Types.Rights) }, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.AccessDevice), new[]{ "Id", "Locationid", "Portname", "Type" }, null, new[]{ typeof(global::BioFaceService.AccessDevice.Types.AccessDeviceType) }, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.CaptureDevice), new[]{ "Id", "Locationid", "Devicename" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Card), new[]{ "Id", "Personid", "UniqueNumber" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Location), new[]{ "Id", "LocationName", "Desctiption" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Photo), new[]{ "Id", "Personid", "Type", "FirLocation", "FileLocation" }, null, new[]{ typeof(global::BioFaceService.Photo.Types.PhotoSizeType) }, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Visitor), new[]{ "Id", "Personid", "Photoid", "Locationid", "Time", "Status" }, null, new[]{ typeof(global::BioFaceService.Visitor.Types.VisitorStatus) }, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.AccessDevice), new[]{ "Id", "Locationid", "Portname", "Type", "Dbstate" }, null, new[]{ typeof(global::BioFaceService.AccessDevice.Types.AccessDeviceType) }, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.CaptureDevice), new[]{ "Id", "Locationid", "Devicename", "Dbstate" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Card), new[]{ "Id", "Personid", "UniqueNumber", "Dbstate" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Location), new[]{ "Id", "LocationName", "Desctription", "Dbstate" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Photo), new[]{ "Id", "Personid", "Type", "FirLocation", "FileLocation", "Dbstate" }, null, new[]{ typeof(global::BioFaceService.Photo.Types.PhotoSizeType) }, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Visitor), new[]{ "Id", "Personid", "Photoid", "Locationid", "Time", "Status", "Dbstate" }, null, new[]{ typeof(global::BioFaceService.Visitor.Types.VisitorStatus) }, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.PersonList), new[]{ "Persons" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.PhotoList), new[]{ "Photos" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.VisitorList), new[]{ "Visitors" }, null, null, null),
@@ -153,8 +168,10 @@ namespace BioFaceService {
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.AccessDeviceList), new[]{ "AccessDevices" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.CardList), new[]{ "Cards" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.CaptureDeviceList), new[]{ "CaptureDevices" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.ResultPair), new[]{ "Id", "State", "Status" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.ResultPair), new[]{ "Id", "State", "Status", "Persons", "Visitors", "AccessDevices", "Locations", "Cards", "CaptureDevices", "Photos" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.Result), new[]{ "Status" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.EnrollmentFeedback), new[]{ "Progress", "Eyesfound", "Success", "Photo" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.VerificationFeedback), new[]{ "EnrollmentFeedback", "Match", "Visitor" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.CommandPerson), new[]{ "All" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.CommandVisitor), new[]{ "All" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioFaceService.CommandLocation), new[]{ "All" }, null, null, null),
@@ -923,166 +940,12 @@ namespace BioFaceService {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class EnrollmentFeedback : pb::IMessage<EnrollmentFeedback> {
-    private static readonly pb::MessageParser<EnrollmentFeedback> _parser = new pb::MessageParser<EnrollmentFeedback>(() => new EnrollmentFeedback());
-    public static pb::MessageParser<EnrollmentFeedback> Parser { get { return _parser; } }
-
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[6]; }
-    }
-
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    public EnrollmentFeedback() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    public EnrollmentFeedback(EnrollmentFeedback other) : this() {
-      progress_ = other.progress_;
-      eyesfound_ = other.eyesfound_;
-      success_ = other.success_;
-    }
-
-    public EnrollmentFeedback Clone() {
-      return new EnrollmentFeedback(this);
-    }
-
-    public const int ProgressFieldNumber = 1;
-    private int progress_;
-    public int Progress {
-      get { return progress_; }
-      set {
-        progress_ = value;
-      }
-    }
-
-    public const int EyesfoundFieldNumber = 2;
-    private bool eyesfound_;
-    public bool Eyesfound {
-      get { return eyesfound_; }
-      set {
-        eyesfound_ = value;
-      }
-    }
-
-    public const int SuccessFieldNumber = 3;
-    private bool success_;
-    public bool Success {
-      get { return success_; }
-      set {
-        success_ = value;
-      }
-    }
-
-    public override bool Equals(object other) {
-      return Equals(other as EnrollmentFeedback);
-    }
-
-    public bool Equals(EnrollmentFeedback other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Progress != other.Progress) return false;
-      if (Eyesfound != other.Eyesfound) return false;
-      if (Success != other.Success) return false;
-      return true;
-    }
-
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Progress != 0) hash ^= Progress.GetHashCode();
-      if (Eyesfound != false) hash ^= Eyesfound.GetHashCode();
-      if (Success != false) hash ^= Success.GetHashCode();
-      return hash;
-    }
-
-    public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
-    }
-
-    public void WriteTo(pb::CodedOutputStream output) {
-      if (Progress != 0) {
-        output.WriteRawTag(13);
-        output.WriteSFixed32(Progress);
-      }
-      if (Eyesfound != false) {
-        output.WriteRawTag(16);
-        output.WriteBool(Eyesfound);
-      }
-      if (Success != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(Success);
-      }
-    }
-
-    public int CalculateSize() {
-      int size = 0;
-      if (Progress != 0) {
-        size += 1 + 4;
-      }
-      if (Eyesfound != false) {
-        size += 1 + 1;
-      }
-      if (Success != false) {
-        size += 1 + 1;
-      }
-      return size;
-    }
-
-    public void MergeFrom(EnrollmentFeedback other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Progress != 0) {
-        Progress = other.Progress;
-      }
-      if (other.Eyesfound != false) {
-        Eyesfound = other.Eyesfound;
-      }
-      if (other.Success != false) {
-        Success = other.Success;
-      }
-    }
-
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            input.SkipLastField();
-            break;
-          case 13: {
-            Progress = input.ReadSFixed32();
-            break;
-          }
-          case 16: {
-            Eyesfound = input.ReadBool();
-            break;
-          }
-          case 24: {
-            Success = input.ReadBool();
-            break;
-          }
-        }
-      }
-    }
-
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class VerificationData : pb::IMessage<VerificationData> {
     private static readonly pb::MessageParser<VerificationData> _parser = new pb::MessageParser<VerificationData>(() => new VerificationData());
     public static pb::MessageParser<VerificationData> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[7]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[6]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1097,7 +960,7 @@ namespace BioFaceService {
 
     public VerificationData(VerificationData other) : this() {
       Images = other.images_ != null ? other.Images.Clone() : null;
-      verificationTarget_ = other.verificationTarget_;
+      personId_ = other.personId_;
     }
 
     public VerificationData Clone() {
@@ -1113,12 +976,12 @@ namespace BioFaceService {
       }
     }
 
-    public const int VerificationTargetFieldNumber = 2;
-    private string verificationTarget_ = "";
-    public string VerificationTarget {
-      get { return verificationTarget_; }
+    public const int PersonIdFieldNumber = 2;
+    private long personId_;
+    public long PersonId {
+      get { return personId_; }
       set {
-        verificationTarget_ = pb::Preconditions.CheckNotNull(value, "value");
+        personId_ = value;
       }
     }
 
@@ -1134,14 +997,14 @@ namespace BioFaceService {
         return true;
       }
       if (!object.Equals(Images, other.Images)) return false;
-      if (VerificationTarget != other.VerificationTarget) return false;
+      if (PersonId != other.PersonId) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
       if (images_ != null) hash ^= Images.GetHashCode();
-      if (VerificationTarget.Length != 0) hash ^= VerificationTarget.GetHashCode();
+      if (PersonId != 0L) hash ^= PersonId.GetHashCode();
       return hash;
     }
 
@@ -1154,9 +1017,9 @@ namespace BioFaceService {
         output.WriteRawTag(10);
         output.WriteMessage(Images);
       }
-      if (VerificationTarget.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(VerificationTarget);
+      if (PersonId != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(PersonId);
       }
     }
 
@@ -1165,8 +1028,8 @@ namespace BioFaceService {
       if (images_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Images);
       }
-      if (VerificationTarget.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(VerificationTarget);
+      if (PersonId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(PersonId);
       }
       return size;
     }
@@ -1181,8 +1044,8 @@ namespace BioFaceService {
         }
         Images.MergeFrom(other.Images);
       }
-      if (other.VerificationTarget.Length != 0) {
-        VerificationTarget = other.VerificationTarget;
+      if (other.PersonId != 0L) {
+        PersonId = other.PersonId;
       }
     }
 
@@ -1200,8 +1063,8 @@ namespace BioFaceService {
             input.ReadMessage(images_);
             break;
           }
-          case 18: {
-            VerificationTarget = input.ReadString();
+          case 16: {
+            PersonId = input.ReadInt64();
             break;
           }
         }
@@ -1211,71 +1074,71 @@ namespace BioFaceService {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class VerificationFeedback : pb::IMessage<VerificationFeedback> {
-    private static readonly pb::MessageParser<VerificationFeedback> _parser = new pb::MessageParser<VerificationFeedback>(() => new VerificationFeedback());
-    public static pb::MessageParser<VerificationFeedback> Parser { get { return _parser; } }
+  public sealed partial class EnrollmentData : pb::IMessage<EnrollmentData> {
+    private static readonly pb::MessageParser<EnrollmentData> _parser = new pb::MessageParser<EnrollmentData>(() => new EnrollmentData());
+    public static pb::MessageParser<EnrollmentData> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[8]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[7]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
-    public VerificationFeedback() {
+    public EnrollmentData() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
-    public VerificationFeedback(VerificationFeedback other) : this() {
-      EnrollmentFeedback = other.enrollmentFeedback_ != null ? other.EnrollmentFeedback.Clone() : null;
-      match_ = other.match_;
+    public EnrollmentData(EnrollmentData other) : this() {
+      Images = other.images_ != null ? other.Images.Clone() : null;
+      personId_ = other.personId_;
     }
 
-    public VerificationFeedback Clone() {
-      return new VerificationFeedback(this);
+    public EnrollmentData Clone() {
+      return new EnrollmentData(this);
     }
 
-    public const int EnrollmentFeedbackFieldNumber = 1;
-    private global::BioFaceService.EnrollmentFeedback enrollmentFeedback_;
-    public global::BioFaceService.EnrollmentFeedback EnrollmentFeedback {
-      get { return enrollmentFeedback_; }
+    public const int ImagesFieldNumber = 1;
+    private global::BioFaceService.BioImagesList images_;
+    public global::BioFaceService.BioImagesList Images {
+      get { return images_; }
       set {
-        enrollmentFeedback_ = value;
+        images_ = value;
       }
     }
 
-    public const int MatchFieldNumber = 2;
-    private float match_;
-    public float Match {
-      get { return match_; }
+    public const int PersonIdFieldNumber = 2;
+    private long personId_;
+    public long PersonId {
+      get { return personId_; }
       set {
-        match_ = value;
+        personId_ = value;
       }
     }
 
     public override bool Equals(object other) {
-      return Equals(other as VerificationFeedback);
+      return Equals(other as EnrollmentData);
     }
 
-    public bool Equals(VerificationFeedback other) {
+    public bool Equals(EnrollmentData other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(EnrollmentFeedback, other.EnrollmentFeedback)) return false;
-      if (Match != other.Match) return false;
+      if (!object.Equals(Images, other.Images)) return false;
+      if (PersonId != other.PersonId) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (enrollmentFeedback_ != null) hash ^= EnrollmentFeedback.GetHashCode();
-      if (Match != 0F) hash ^= Match.GetHashCode();
+      if (images_ != null) hash ^= Images.GetHashCode();
+      if (PersonId != 0L) hash ^= PersonId.GetHashCode();
       return hash;
     }
 
@@ -1284,39 +1147,39 @@ namespace BioFaceService {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (enrollmentFeedback_ != null) {
+      if (images_ != null) {
         output.WriteRawTag(10);
-        output.WriteMessage(EnrollmentFeedback);
+        output.WriteMessage(Images);
       }
-      if (Match != 0F) {
-        output.WriteRawTag(21);
-        output.WriteFloat(Match);
+      if (PersonId != 0L) {
+        output.WriteRawTag(16);
+        output.WriteInt64(PersonId);
       }
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (enrollmentFeedback_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(EnrollmentFeedback);
+      if (images_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Images);
       }
-      if (Match != 0F) {
-        size += 1 + 4;
+      if (PersonId != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(PersonId);
       }
       return size;
     }
 
-    public void MergeFrom(VerificationFeedback other) {
+    public void MergeFrom(EnrollmentData other) {
       if (other == null) {
         return;
       }
-      if (other.enrollmentFeedback_ != null) {
-        if (enrollmentFeedback_ == null) {
-          enrollmentFeedback_ = new global::BioFaceService.EnrollmentFeedback();
+      if (other.images_ != null) {
+        if (images_ == null) {
+          images_ = new global::BioFaceService.BioImagesList();
         }
-        EnrollmentFeedback.MergeFrom(other.EnrollmentFeedback);
+        Images.MergeFrom(other.Images);
       }
-      if (other.Match != 0F) {
-        Match = other.Match;
+      if (other.PersonId != 0L) {
+        PersonId = other.PersonId;
       }
     }
 
@@ -1328,14 +1191,14 @@ namespace BioFaceService {
             input.SkipLastField();
             break;
           case 10: {
-            if (enrollmentFeedback_ == null) {
-              enrollmentFeedback_ = new global::BioFaceService.EnrollmentFeedback();
+            if (images_ == null) {
+              images_ = new global::BioFaceService.BioImagesList();
             }
-            input.ReadMessage(enrollmentFeedback_);
+            input.ReadMessage(images_);
             break;
           }
-          case 21: {
-            Match = input.ReadFloat();
+          case 16: {
+            PersonId = input.ReadInt64();
             break;
           }
         }
@@ -1350,7 +1213,7 @@ namespace BioFaceService {
     public static pb::MessageParser<IdentificationScore> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[9]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[8]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1478,7 +1341,7 @@ namespace BioFaceService {
     public static pb::MessageParser<IdentificationFeedback> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[10]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[9]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1604,7 +1467,7 @@ namespace BioFaceService {
     public static pb::MessageParser<Person> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[11]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[10]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2010,7 +1873,7 @@ namespace BioFaceService {
     public static pb::MessageParser<AccessDevice> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[12]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[11]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2028,6 +1891,7 @@ namespace BioFaceService {
       locationid_ = other.locationid_;
       portname_ = other.portname_;
       type_ = other.type_;
+      dbstate_ = other.dbstate_;
     }
 
     public AccessDevice Clone() {
@@ -2070,6 +1934,15 @@ namespace BioFaceService {
       }
     }
 
+    public const int DbstateFieldNumber = 5;
+    private global::BioFaceService.DbState dbstate_ = global::BioFaceService.DbState.None;
+    public global::BioFaceService.DbState Dbstate {
+      get { return dbstate_; }
+      set {
+        dbstate_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as AccessDevice);
     }
@@ -2085,6 +1958,7 @@ namespace BioFaceService {
       if (Locationid != other.Locationid) return false;
       if (Portname != other.Portname) return false;
       if (Type != other.Type) return false;
+      if (Dbstate != other.Dbstate) return false;
       return true;
     }
 
@@ -2094,6 +1968,7 @@ namespace BioFaceService {
       if (Locationid != 0L) hash ^= Locationid.GetHashCode();
       if (Portname.Length != 0) hash ^= Portname.GetHashCode();
       if (Type != global::BioFaceService.AccessDevice.Types.AccessDeviceType.DeviceNone) hash ^= Type.GetHashCode();
+      if (Dbstate != global::BioFaceService.DbState.None) hash ^= Dbstate.GetHashCode();
       return hash;
     }
 
@@ -2118,6 +1993,10 @@ namespace BioFaceService {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) Dbstate);
+      }
     }
 
     public int CalculateSize() {
@@ -2133,6 +2012,9 @@ namespace BioFaceService {
       }
       if (Type != global::BioFaceService.AccessDevice.Types.AccessDeviceType.DeviceNone) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
+      }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbstate);
       }
       return size;
     }
@@ -2152,6 +2034,9 @@ namespace BioFaceService {
       }
       if (other.Type != global::BioFaceService.AccessDevice.Types.AccessDeviceType.DeviceNone) {
         Type = other.Type;
+      }
+      if (other.Dbstate != global::BioFaceService.DbState.None) {
+        Dbstate = other.Dbstate;
       }
     }
 
@@ -2178,6 +2063,10 @@ namespace BioFaceService {
             type_ = (global::BioFaceService.AccessDevice.Types.AccessDeviceType) input.ReadEnum();
             break;
           }
+          case 40: {
+            dbstate_ = (global::BioFaceService.DbState) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -2202,7 +2091,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CaptureDevice> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[13]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[12]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2219,6 +2108,7 @@ namespace BioFaceService {
       id_ = other.id_;
       locationid_ = other.locationid_;
       devicename_ = other.devicename_;
+      dbstate_ = other.dbstate_;
     }
 
     public CaptureDevice Clone() {
@@ -2252,6 +2142,15 @@ namespace BioFaceService {
       }
     }
 
+    public const int DbstateFieldNumber = 4;
+    private global::BioFaceService.DbState dbstate_ = global::BioFaceService.DbState.None;
+    public global::BioFaceService.DbState Dbstate {
+      get { return dbstate_; }
+      set {
+        dbstate_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as CaptureDevice);
     }
@@ -2266,6 +2165,7 @@ namespace BioFaceService {
       if (Id != other.Id) return false;
       if (Locationid != other.Locationid) return false;
       if (Devicename != other.Devicename) return false;
+      if (Dbstate != other.Dbstate) return false;
       return true;
     }
 
@@ -2274,6 +2174,7 @@ namespace BioFaceService {
       if (Id != 0L) hash ^= Id.GetHashCode();
       if (Locationid != 0L) hash ^= Locationid.GetHashCode();
       if (Devicename.Length != 0) hash ^= Devicename.GetHashCode();
+      if (Dbstate != global::BioFaceService.DbState.None) hash ^= Dbstate.GetHashCode();
       return hash;
     }
 
@@ -2294,6 +2195,10 @@ namespace BioFaceService {
         output.WriteRawTag(26);
         output.WriteString(Devicename);
       }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) Dbstate);
+      }
     }
 
     public int CalculateSize() {
@@ -2306,6 +2211,9 @@ namespace BioFaceService {
       }
       if (Devicename.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Devicename);
+      }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbstate);
       }
       return size;
     }
@@ -2322,6 +2230,9 @@ namespace BioFaceService {
       }
       if (other.Devicename.Length != 0) {
         Devicename = other.Devicename;
+      }
+      if (other.Dbstate != global::BioFaceService.DbState.None) {
+        Dbstate = other.Dbstate;
       }
     }
 
@@ -2344,6 +2255,10 @@ namespace BioFaceService {
             Devicename = input.ReadString();
             break;
           }
+          case 32: {
+            dbstate_ = (global::BioFaceService.DbState) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -2356,7 +2271,7 @@ namespace BioFaceService {
     public static pb::MessageParser<Card> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[14]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[13]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2373,6 +2288,7 @@ namespace BioFaceService {
       id_ = other.id_;
       personid_ = other.personid_;
       uniqueNumber_ = other.uniqueNumber_;
+      dbstate_ = other.dbstate_;
     }
 
     public Card Clone() {
@@ -2406,6 +2322,15 @@ namespace BioFaceService {
       }
     }
 
+    public const int DbstateFieldNumber = 4;
+    private global::BioFaceService.DbState dbstate_ = global::BioFaceService.DbState.None;
+    public global::BioFaceService.DbState Dbstate {
+      get { return dbstate_; }
+      set {
+        dbstate_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Card);
     }
@@ -2420,6 +2345,7 @@ namespace BioFaceService {
       if (Id != other.Id) return false;
       if (Personid != other.Personid) return false;
       if (UniqueNumber != other.UniqueNumber) return false;
+      if (Dbstate != other.Dbstate) return false;
       return true;
     }
 
@@ -2428,6 +2354,7 @@ namespace BioFaceService {
       if (Id != 0L) hash ^= Id.GetHashCode();
       if (Personid != 0L) hash ^= Personid.GetHashCode();
       if (UniqueNumber.Length != 0) hash ^= UniqueNumber.GetHashCode();
+      if (Dbstate != global::BioFaceService.DbState.None) hash ^= Dbstate.GetHashCode();
       return hash;
     }
 
@@ -2448,6 +2375,10 @@ namespace BioFaceService {
         output.WriteRawTag(26);
         output.WriteString(UniqueNumber);
       }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) Dbstate);
+      }
     }
 
     public int CalculateSize() {
@@ -2460,6 +2391,9 @@ namespace BioFaceService {
       }
       if (UniqueNumber.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(UniqueNumber);
+      }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbstate);
       }
       return size;
     }
@@ -2476,6 +2410,9 @@ namespace BioFaceService {
       }
       if (other.UniqueNumber.Length != 0) {
         UniqueNumber = other.UniqueNumber;
+      }
+      if (other.Dbstate != global::BioFaceService.DbState.None) {
+        Dbstate = other.Dbstate;
       }
     }
 
@@ -2498,6 +2435,10 @@ namespace BioFaceService {
             UniqueNumber = input.ReadString();
             break;
           }
+          case 32: {
+            dbstate_ = (global::BioFaceService.DbState) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -2510,7 +2451,7 @@ namespace BioFaceService {
     public static pb::MessageParser<Location> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[15]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[14]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2526,7 +2467,8 @@ namespace BioFaceService {
     public Location(Location other) : this() {
       id_ = other.id_;
       locationName_ = other.locationName_;
-      desctiption_ = other.desctiption_;
+      desctription_ = other.desctription_;
+      dbstate_ = other.dbstate_;
     }
 
     public Location Clone() {
@@ -2551,12 +2493,21 @@ namespace BioFaceService {
       }
     }
 
-    public const int DesctiptionFieldNumber = 3;
-    private string desctiption_ = "";
-    public string Desctiption {
-      get { return desctiption_; }
+    public const int DesctriptionFieldNumber = 3;
+    private string desctription_ = "";
+    public string Desctription {
+      get { return desctription_; }
       set {
-        desctiption_ = pb::Preconditions.CheckNotNull(value, "value");
+        desctription_ = pb::Preconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    public const int DbstateFieldNumber = 4;
+    private global::BioFaceService.DbState dbstate_ = global::BioFaceService.DbState.None;
+    public global::BioFaceService.DbState Dbstate {
+      get { return dbstate_; }
+      set {
+        dbstate_ = value;
       }
     }
 
@@ -2573,7 +2524,8 @@ namespace BioFaceService {
       }
       if (Id != other.Id) return false;
       if (LocationName != other.LocationName) return false;
-      if (Desctiption != other.Desctiption) return false;
+      if (Desctription != other.Desctription) return false;
+      if (Dbstate != other.Dbstate) return false;
       return true;
     }
 
@@ -2581,7 +2533,8 @@ namespace BioFaceService {
       int hash = 1;
       if (Id != 0L) hash ^= Id.GetHashCode();
       if (LocationName.Length != 0) hash ^= LocationName.GetHashCode();
-      if (Desctiption.Length != 0) hash ^= Desctiption.GetHashCode();
+      if (Desctription.Length != 0) hash ^= Desctription.GetHashCode();
+      if (Dbstate != global::BioFaceService.DbState.None) hash ^= Dbstate.GetHashCode();
       return hash;
     }
 
@@ -2598,9 +2551,13 @@ namespace BioFaceService {
         output.WriteRawTag(18);
         output.WriteString(LocationName);
       }
-      if (Desctiption.Length != 0) {
+      if (Desctription.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(Desctiption);
+        output.WriteString(Desctription);
+      }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) Dbstate);
       }
     }
 
@@ -2612,8 +2569,11 @@ namespace BioFaceService {
       if (LocationName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(LocationName);
       }
-      if (Desctiption.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Desctiption);
+      if (Desctription.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Desctription);
+      }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbstate);
       }
       return size;
     }
@@ -2628,8 +2588,11 @@ namespace BioFaceService {
       if (other.LocationName.Length != 0) {
         LocationName = other.LocationName;
       }
-      if (other.Desctiption.Length != 0) {
-        Desctiption = other.Desctiption;
+      if (other.Desctription.Length != 0) {
+        Desctription = other.Desctription;
+      }
+      if (other.Dbstate != global::BioFaceService.DbState.None) {
+        Dbstate = other.Dbstate;
       }
     }
 
@@ -2649,7 +2612,11 @@ namespace BioFaceService {
             break;
           }
           case 26: {
-            Desctiption = input.ReadString();
+            Desctription = input.ReadString();
+            break;
+          }
+          case 32: {
+            dbstate_ = (global::BioFaceService.DbState) input.ReadEnum();
             break;
           }
         }
@@ -2664,7 +2631,7 @@ namespace BioFaceService {
     public static pb::MessageParser<Photo> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[16]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[15]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2683,6 +2650,7 @@ namespace BioFaceService {
       type_ = other.type_;
       firLocation_ = other.firLocation_;
       fileLocation_ = other.fileLocation_;
+      dbstate_ = other.dbstate_;
     }
 
     public Photo Clone() {
@@ -2734,6 +2702,15 @@ namespace BioFaceService {
       }
     }
 
+    public const int DbstateFieldNumber = 6;
+    private global::BioFaceService.DbState dbstate_ = global::BioFaceService.DbState.None;
+    public global::BioFaceService.DbState Dbstate {
+      get { return dbstate_; }
+      set {
+        dbstate_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Photo);
     }
@@ -2750,6 +2727,7 @@ namespace BioFaceService {
       if (Type != other.Type) return false;
       if (FirLocation != other.FirLocation) return false;
       if (FileLocation != other.FileLocation) return false;
+      if (Dbstate != other.Dbstate) return false;
       return true;
     }
 
@@ -2760,6 +2738,7 @@ namespace BioFaceService {
       if (Type != global::BioFaceService.Photo.Types.PhotoSizeType.Full) hash ^= Type.GetHashCode();
       if (FirLocation.Length != 0) hash ^= FirLocation.GetHashCode();
       if (FileLocation.Length != 0) hash ^= FileLocation.GetHashCode();
+      if (Dbstate != global::BioFaceService.DbState.None) hash ^= Dbstate.GetHashCode();
       return hash;
     }
 
@@ -2788,6 +2767,10 @@ namespace BioFaceService {
         output.WriteRawTag(42);
         output.WriteString(FileLocation);
       }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        output.WriteRawTag(48);
+        output.WriteEnum((int) Dbstate);
+      }
     }
 
     public int CalculateSize() {
@@ -2806,6 +2789,9 @@ namespace BioFaceService {
       }
       if (FileLocation.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(FileLocation);
+      }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbstate);
       }
       return size;
     }
@@ -2828,6 +2814,9 @@ namespace BioFaceService {
       }
       if (other.FileLocation.Length != 0) {
         FileLocation = other.FileLocation;
+      }
+      if (other.Dbstate != global::BioFaceService.DbState.None) {
+        Dbstate = other.Dbstate;
       }
     }
 
@@ -2858,6 +2847,10 @@ namespace BioFaceService {
             FileLocation = input.ReadString();
             break;
           }
+          case 48: {
+            dbstate_ = (global::BioFaceService.DbState) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -2881,7 +2874,7 @@ namespace BioFaceService {
     public static pb::MessageParser<Visitor> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[17]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[16]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2901,6 +2894,7 @@ namespace BioFaceService {
       locationid_ = other.locationid_;
       time_ = other.time_;
       status_ = other.status_;
+      dbstate_ = other.dbstate_;
     }
 
     public Visitor Clone() {
@@ -2961,6 +2955,15 @@ namespace BioFaceService {
       }
     }
 
+    public const int DbstateFieldNumber = 7;
+    private global::BioFaceService.DbState dbstate_ = global::BioFaceService.DbState.None;
+    public global::BioFaceService.DbState Dbstate {
+      get { return dbstate_; }
+      set {
+        dbstate_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Visitor);
     }
@@ -2978,6 +2981,7 @@ namespace BioFaceService {
       if (Locationid != other.Locationid) return false;
       if (Time != other.Time) return false;
       if (Status != other.Status) return false;
+      if (Dbstate != other.Dbstate) return false;
       return true;
     }
 
@@ -2989,6 +2993,7 @@ namespace BioFaceService {
       if (Locationid != 0L) hash ^= Locationid.GetHashCode();
       if (Time != 0L) hash ^= Time.GetHashCode();
       if (Status != global::BioFaceService.Visitor.Types.VisitorStatus.Success) hash ^= Status.GetHashCode();
+      if (Dbstate != global::BioFaceService.DbState.None) hash ^= Dbstate.GetHashCode();
       return hash;
     }
 
@@ -3021,6 +3026,10 @@ namespace BioFaceService {
         output.WriteRawTag(48);
         output.WriteEnum((int) Status);
       }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) Dbstate);
+      }
     }
 
     public int CalculateSize() {
@@ -3042,6 +3051,9 @@ namespace BioFaceService {
       }
       if (Status != global::BioFaceService.Visitor.Types.VisitorStatus.Success) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
+      }
+      if (Dbstate != global::BioFaceService.DbState.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbstate);
       }
       return size;
     }
@@ -3067,6 +3079,9 @@ namespace BioFaceService {
       }
       if (other.Status != global::BioFaceService.Visitor.Types.VisitorStatus.Success) {
         Status = other.Status;
+      }
+      if (other.Dbstate != global::BioFaceService.DbState.None) {
+        Dbstate = other.Dbstate;
       }
     }
 
@@ -3101,6 +3116,10 @@ namespace BioFaceService {
             status_ = (global::BioFaceService.Visitor.Types.VisitorStatus) input.ReadEnum();
             break;
           }
+          case 56: {
+            dbstate_ = (global::BioFaceService.DbState) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -3124,7 +3143,7 @@ namespace BioFaceService {
     public static pb::MessageParser<PersonList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[18]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[17]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3218,7 +3237,7 @@ namespace BioFaceService {
     public static pb::MessageParser<PhotoList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[19]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[18]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3312,7 +3331,7 @@ namespace BioFaceService {
     public static pb::MessageParser<VisitorList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[20]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[19]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3406,7 +3425,7 @@ namespace BioFaceService {
     public static pb::MessageParser<LocationList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[21]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[20]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3500,7 +3519,7 @@ namespace BioFaceService {
     public static pb::MessageParser<AccessDeviceList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[22]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[21]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3594,7 +3613,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CardList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[23]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[22]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3688,7 +3707,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CaptureDeviceList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[24]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[23]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3782,7 +3801,7 @@ namespace BioFaceService {
     public static pb::MessageParser<ResultPair> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[25]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[24]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3799,6 +3818,13 @@ namespace BioFaceService {
       id_ = other.id_;
       state_ = other.state_;
       status_ = other.status_;
+      persons_ = other.persons_.Clone();
+      visitors_ = other.visitors_.Clone();
+      accessDevices_ = other.accessDevices_.Clone();
+      locations_ = other.locations_.Clone();
+      cards_ = other.cards_.Clone();
+      captureDevices_ = other.captureDevices_.Clone();
+      photos_ = other.photos_.Clone();
     }
 
     public ResultPair Clone() {
@@ -3832,6 +3858,62 @@ namespace BioFaceService {
       }
     }
 
+    public const int PersonsFieldNumber = 4;
+    private static readonly pb::FieldCodec<global::BioFaceService.Person> _repeated_persons_codec
+        = pb::FieldCodec.ForMessage(34, global::BioFaceService.Person.Parser);
+    private readonly pbc::RepeatedField<global::BioFaceService.Person> persons_ = new pbc::RepeatedField<global::BioFaceService.Person>();
+    public pbc::RepeatedField<global::BioFaceService.Person> Persons {
+      get { return persons_; }
+    }
+
+    public const int VisitorsFieldNumber = 5;
+    private static readonly pb::FieldCodec<global::BioFaceService.Visitor> _repeated_visitors_codec
+        = pb::FieldCodec.ForMessage(42, global::BioFaceService.Visitor.Parser);
+    private readonly pbc::RepeatedField<global::BioFaceService.Visitor> visitors_ = new pbc::RepeatedField<global::BioFaceService.Visitor>();
+    public pbc::RepeatedField<global::BioFaceService.Visitor> Visitors {
+      get { return visitors_; }
+    }
+
+    public const int AccessDevicesFieldNumber = 6;
+    private static readonly pb::FieldCodec<global::BioFaceService.AccessDevice> _repeated_accessDevices_codec
+        = pb::FieldCodec.ForMessage(50, global::BioFaceService.AccessDevice.Parser);
+    private readonly pbc::RepeatedField<global::BioFaceService.AccessDevice> accessDevices_ = new pbc::RepeatedField<global::BioFaceService.AccessDevice>();
+    public pbc::RepeatedField<global::BioFaceService.AccessDevice> AccessDevices {
+      get { return accessDevices_; }
+    }
+
+    public const int LocationsFieldNumber = 7;
+    private static readonly pb::FieldCodec<global::BioFaceService.Location> _repeated_locations_codec
+        = pb::FieldCodec.ForMessage(58, global::BioFaceService.Location.Parser);
+    private readonly pbc::RepeatedField<global::BioFaceService.Location> locations_ = new pbc::RepeatedField<global::BioFaceService.Location>();
+    public pbc::RepeatedField<global::BioFaceService.Location> Locations {
+      get { return locations_; }
+    }
+
+    public const int CardsFieldNumber = 8;
+    private static readonly pb::FieldCodec<global::BioFaceService.Card> _repeated_cards_codec
+        = pb::FieldCodec.ForMessage(66, global::BioFaceService.Card.Parser);
+    private readonly pbc::RepeatedField<global::BioFaceService.Card> cards_ = new pbc::RepeatedField<global::BioFaceService.Card>();
+    public pbc::RepeatedField<global::BioFaceService.Card> Cards {
+      get { return cards_; }
+    }
+
+    public const int CaptureDevicesFieldNumber = 9;
+    private static readonly pb::FieldCodec<global::BioFaceService.CaptureDevice> _repeated_captureDevices_codec
+        = pb::FieldCodec.ForMessage(74, global::BioFaceService.CaptureDevice.Parser);
+    private readonly pbc::RepeatedField<global::BioFaceService.CaptureDevice> captureDevices_ = new pbc::RepeatedField<global::BioFaceService.CaptureDevice>();
+    public pbc::RepeatedField<global::BioFaceService.CaptureDevice> CaptureDevices {
+      get { return captureDevices_; }
+    }
+
+    public const int PhotosFieldNumber = 10;
+    private static readonly pb::FieldCodec<global::BioFaceService.Photo> _repeated_photos_codec
+        = pb::FieldCodec.ForMessage(82, global::BioFaceService.Photo.Parser);
+    private readonly pbc::RepeatedField<global::BioFaceService.Photo> photos_ = new pbc::RepeatedField<global::BioFaceService.Photo>();
+    public pbc::RepeatedField<global::BioFaceService.Photo> Photos {
+      get { return photos_; }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as ResultPair);
     }
@@ -3846,6 +3928,13 @@ namespace BioFaceService {
       if (Id != other.Id) return false;
       if (State != other.State) return false;
       if (Status != other.Status) return false;
+      if(!persons_.Equals(other.persons_)) return false;
+      if(!visitors_.Equals(other.visitors_)) return false;
+      if(!accessDevices_.Equals(other.accessDevices_)) return false;
+      if(!locations_.Equals(other.locations_)) return false;
+      if(!cards_.Equals(other.cards_)) return false;
+      if(!captureDevices_.Equals(other.captureDevices_)) return false;
+      if(!photos_.Equals(other.photos_)) return false;
       return true;
     }
 
@@ -3854,6 +3943,13 @@ namespace BioFaceService {
       if (Id != 0L) hash ^= Id.GetHashCode();
       if (State != global::BioFaceService.DbState.None) hash ^= State.GetHashCode();
       if (Status != global::BioFaceService.ResultStatus.Success) hash ^= Status.GetHashCode();
+      hash ^= persons_.GetHashCode();
+      hash ^= visitors_.GetHashCode();
+      hash ^= accessDevices_.GetHashCode();
+      hash ^= locations_.GetHashCode();
+      hash ^= cards_.GetHashCode();
+      hash ^= captureDevices_.GetHashCode();
+      hash ^= photos_.GetHashCode();
       return hash;
     }
 
@@ -3874,6 +3970,13 @@ namespace BioFaceService {
         output.WriteRawTag(24);
         output.WriteEnum((int) Status);
       }
+      persons_.WriteTo(output, _repeated_persons_codec);
+      visitors_.WriteTo(output, _repeated_visitors_codec);
+      accessDevices_.WriteTo(output, _repeated_accessDevices_codec);
+      locations_.WriteTo(output, _repeated_locations_codec);
+      cards_.WriteTo(output, _repeated_cards_codec);
+      captureDevices_.WriteTo(output, _repeated_captureDevices_codec);
+      photos_.WriteTo(output, _repeated_photos_codec);
     }
 
     public int CalculateSize() {
@@ -3887,6 +3990,13 @@ namespace BioFaceService {
       if (Status != global::BioFaceService.ResultStatus.Success) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
+      size += persons_.CalculateSize(_repeated_persons_codec);
+      size += visitors_.CalculateSize(_repeated_visitors_codec);
+      size += accessDevices_.CalculateSize(_repeated_accessDevices_codec);
+      size += locations_.CalculateSize(_repeated_locations_codec);
+      size += cards_.CalculateSize(_repeated_cards_codec);
+      size += captureDevices_.CalculateSize(_repeated_captureDevices_codec);
+      size += photos_.CalculateSize(_repeated_photos_codec);
       return size;
     }
 
@@ -3903,6 +4013,13 @@ namespace BioFaceService {
       if (other.Status != global::BioFaceService.ResultStatus.Success) {
         Status = other.Status;
       }
+      persons_.Add(other.persons_);
+      visitors_.Add(other.visitors_);
+      accessDevices_.Add(other.accessDevices_);
+      locations_.Add(other.locations_);
+      cards_.Add(other.cards_);
+      captureDevices_.Add(other.captureDevices_);
+      photos_.Add(other.photos_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -3924,6 +4041,34 @@ namespace BioFaceService {
             status_ = (global::BioFaceService.ResultStatus) input.ReadEnum();
             break;
           }
+          case 34: {
+            persons_.AddEntriesFrom(input, _repeated_persons_codec);
+            break;
+          }
+          case 42: {
+            visitors_.AddEntriesFrom(input, _repeated_visitors_codec);
+            break;
+          }
+          case 50: {
+            accessDevices_.AddEntriesFrom(input, _repeated_accessDevices_codec);
+            break;
+          }
+          case 58: {
+            locations_.AddEntriesFrom(input, _repeated_locations_codec);
+            break;
+          }
+          case 66: {
+            cards_.AddEntriesFrom(input, _repeated_cards_codec);
+            break;
+          }
+          case 74: {
+            captureDevices_.AddEntriesFrom(input, _repeated_captureDevices_codec);
+            break;
+          }
+          case 82: {
+            photos_.AddEntriesFrom(input, _repeated_photos_codec);
+            break;
+          }
         }
       }
     }
@@ -3936,7 +4081,7 @@ namespace BioFaceService {
     public static pb::MessageParser<Result> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[26]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[25]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4025,12 +4170,364 @@ namespace BioFaceService {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class EnrollmentFeedback : pb::IMessage<EnrollmentFeedback> {
+    private static readonly pb::MessageParser<EnrollmentFeedback> _parser = new pb::MessageParser<EnrollmentFeedback>(() => new EnrollmentFeedback());
+    public static pb::MessageParser<EnrollmentFeedback> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[26]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public EnrollmentFeedback() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public EnrollmentFeedback(EnrollmentFeedback other) : this() {
+      progress_ = other.progress_;
+      eyesfound_ = other.eyesfound_;
+      success_ = other.success_;
+      Photo = other.photo_ != null ? other.Photo.Clone() : null;
+    }
+
+    public EnrollmentFeedback Clone() {
+      return new EnrollmentFeedback(this);
+    }
+
+    public const int ProgressFieldNumber = 1;
+    private int progress_;
+    public int Progress {
+      get { return progress_; }
+      set {
+        progress_ = value;
+      }
+    }
+
+    public const int EyesfoundFieldNumber = 2;
+    private bool eyesfound_;
+    public bool Eyesfound {
+      get { return eyesfound_; }
+      set {
+        eyesfound_ = value;
+      }
+    }
+
+    public const int SuccessFieldNumber = 3;
+    private bool success_;
+    public bool Success {
+      get { return success_; }
+      set {
+        success_ = value;
+      }
+    }
+
+    public const int PhotoFieldNumber = 4;
+    private global::BioFaceService.Photo photo_;
+    public global::BioFaceService.Photo Photo {
+      get { return photo_; }
+      set {
+        photo_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as EnrollmentFeedback);
+    }
+
+    public bool Equals(EnrollmentFeedback other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Progress != other.Progress) return false;
+      if (Eyesfound != other.Eyesfound) return false;
+      if (Success != other.Success) return false;
+      if (!object.Equals(Photo, other.Photo)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Progress != 0) hash ^= Progress.GetHashCode();
+      if (Eyesfound != false) hash ^= Eyesfound.GetHashCode();
+      if (Success != false) hash ^= Success.GetHashCode();
+      if (photo_ != null) hash ^= Photo.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Progress != 0) {
+        output.WriteRawTag(13);
+        output.WriteSFixed32(Progress);
+      }
+      if (Eyesfound != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(Eyesfound);
+      }
+      if (Success != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(Success);
+      }
+      if (photo_ != null) {
+        output.WriteRawTag(34);
+        output.WriteMessage(Photo);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Progress != 0) {
+        size += 1 + 4;
+      }
+      if (Eyesfound != false) {
+        size += 1 + 1;
+      }
+      if (Success != false) {
+        size += 1 + 1;
+      }
+      if (photo_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Photo);
+      }
+      return size;
+    }
+
+    public void MergeFrom(EnrollmentFeedback other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Progress != 0) {
+        Progress = other.Progress;
+      }
+      if (other.Eyesfound != false) {
+        Eyesfound = other.Eyesfound;
+      }
+      if (other.Success != false) {
+        Success = other.Success;
+      }
+      if (other.photo_ != null) {
+        if (photo_ == null) {
+          photo_ = new global::BioFaceService.Photo();
+        }
+        Photo.MergeFrom(other.Photo);
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 13: {
+            Progress = input.ReadSFixed32();
+            break;
+          }
+          case 16: {
+            Eyesfound = input.ReadBool();
+            break;
+          }
+          case 24: {
+            Success = input.ReadBool();
+            break;
+          }
+          case 34: {
+            if (photo_ == null) {
+              photo_ = new global::BioFaceService.Photo();
+            }
+            input.ReadMessage(photo_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class VerificationFeedback : pb::IMessage<VerificationFeedback> {
+    private static readonly pb::MessageParser<VerificationFeedback> _parser = new pb::MessageParser<VerificationFeedback>(() => new VerificationFeedback());
+    public static pb::MessageParser<VerificationFeedback> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[27]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public VerificationFeedback() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public VerificationFeedback(VerificationFeedback other) : this() {
+      EnrollmentFeedback = other.enrollmentFeedback_ != null ? other.EnrollmentFeedback.Clone() : null;
+      match_ = other.match_;
+      Visitor = other.visitor_ != null ? other.Visitor.Clone() : null;
+    }
+
+    public VerificationFeedback Clone() {
+      return new VerificationFeedback(this);
+    }
+
+    public const int EnrollmentFeedbackFieldNumber = 1;
+    private global::BioFaceService.EnrollmentFeedback enrollmentFeedback_;
+    public global::BioFaceService.EnrollmentFeedback EnrollmentFeedback {
+      get { return enrollmentFeedback_; }
+      set {
+        enrollmentFeedback_ = value;
+      }
+    }
+
+    public const int MatchFieldNumber = 2;
+    private float match_;
+    public float Match {
+      get { return match_; }
+      set {
+        match_ = value;
+      }
+    }
+
+    public const int VisitorFieldNumber = 3;
+    private global::BioFaceService.Visitor visitor_;
+    public global::BioFaceService.Visitor Visitor {
+      get { return visitor_; }
+      set {
+        visitor_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as VerificationFeedback);
+    }
+
+    public bool Equals(VerificationFeedback other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(EnrollmentFeedback, other.EnrollmentFeedback)) return false;
+      if (Match != other.Match) return false;
+      if (!object.Equals(Visitor, other.Visitor)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (enrollmentFeedback_ != null) hash ^= EnrollmentFeedback.GetHashCode();
+      if (Match != 0F) hash ^= Match.GetHashCode();
+      if (visitor_ != null) hash ^= Visitor.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (enrollmentFeedback_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(EnrollmentFeedback);
+      }
+      if (Match != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Match);
+      }
+      if (visitor_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Visitor);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (enrollmentFeedback_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(EnrollmentFeedback);
+      }
+      if (Match != 0F) {
+        size += 1 + 4;
+      }
+      if (visitor_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Visitor);
+      }
+      return size;
+    }
+
+    public void MergeFrom(VerificationFeedback other) {
+      if (other == null) {
+        return;
+      }
+      if (other.enrollmentFeedback_ != null) {
+        if (enrollmentFeedback_ == null) {
+          enrollmentFeedback_ = new global::BioFaceService.EnrollmentFeedback();
+        }
+        EnrollmentFeedback.MergeFrom(other.EnrollmentFeedback);
+      }
+      if (other.Match != 0F) {
+        Match = other.Match;
+      }
+      if (other.visitor_ != null) {
+        if (visitor_ == null) {
+          visitor_ = new global::BioFaceService.Visitor();
+        }
+        Visitor.MergeFrom(other.Visitor);
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            if (enrollmentFeedback_ == null) {
+              enrollmentFeedback_ = new global::BioFaceService.EnrollmentFeedback();
+            }
+            input.ReadMessage(enrollmentFeedback_);
+            break;
+          }
+          case 21: {
+            Match = input.ReadFloat();
+            break;
+          }
+          case 26: {
+            if (visitor_ == null) {
+              visitor_ = new global::BioFaceService.Visitor();
+            }
+            input.ReadMessage(visitor_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class CommandPerson : pb::IMessage<CommandPerson> {
     private static readonly pb::MessageParser<CommandPerson> _parser = new pb::MessageParser<CommandPerson>(() => new CommandPerson());
     public static pb::MessageParser<CommandPerson> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[27]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[28]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4132,7 +4629,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CommandVisitor> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[28]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[29]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4234,7 +4731,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CommandLocation> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[29]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[30]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4336,7 +4833,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CommandAccessDevice> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[30]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[31]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4438,7 +4935,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CommandPhoto> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[31]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[32]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4540,7 +5037,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CommandCaptureDevice> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[32]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[33]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4642,7 +5139,7 @@ namespace BioFaceService {
     public static pb::MessageParser<CommandCard> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[33]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[34]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4744,7 +5241,7 @@ namespace BioFaceService {
     public static pb::MessageParser<Command> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[34]; }
+      get { return global::BioFaceService.BiofaceService.Descriptor.MessageTypes[35]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {

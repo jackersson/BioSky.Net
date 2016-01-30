@@ -21,6 +21,14 @@ using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
+
+  public enum RingStatus
+  {
+    None,
+    Medium,
+    High
+  };
+
   public class ImageViewModel : Screen, IImageUpdatable
   {
     public ImageViewModel()
@@ -41,6 +49,42 @@ namespace BioModule.ViewModels
         Zoom(viewWidth, viewHeight);
         SetImageFromFile(openFileDialog.FileName);
       }      
+    }
+
+    //Usage
+    /*
+
+       ProgressRingVisibility = false;
+      ProgressRingImageVisibility = false;
+      ProgressRingTextVisibility = true;
+      ProgressRingText = "0%";
+      ProgressRingStatus = RingStatus.None;
+  */
+
+
+    public async void ProgressStatus()
+    {
+      ProgressRingVisibility = true;
+      ProgressRingTextVisibility = true;
+      ProgressRingImageVisibility = false;
+
+      for (int i = 1; i != 101; ++i)
+      {
+        ProgressRingText = i + "%";
+        if (i < 50)
+          ProgressRingStatus = RingStatus.None;
+        if (i == 100)
+        {
+          ProgressRingStatus = RingStatus.Medium;
+          ProgressRingTextVisibility = false;
+          ProgressRingImageVisibility = true;
+          ProgressRingIconSource = ResourceLoader.OkIconSource;
+          await Task.Delay(2000);
+          ProgressRingIconSource = ResourceLoader.CancelIconSource;
+        }
+
+        await Task.Delay(50);
+      }
     }
 
     private void SetImageFromFile(string fileName)
@@ -231,6 +275,97 @@ namespace BioModule.ViewModels
         catch (TaskCanceledException ex)
         {
           Console.WriteLine(ex.Message);
+        }
+      }
+    }
+
+
+    //*********************************************ProgressRing**************************************************************
+
+
+    private bool _progressRingVisibility;
+    public bool ProgressRingVisibility
+    {
+      get { return _progressRingVisibility; }
+      set
+      {
+        if (_progressRingVisibility != value)
+        {
+          _progressRingVisibility = value;
+          NotifyOfPropertyChange(() => ProgressRingVisibility);
+        }
+      }
+    }
+
+    private RingStatus _progressRingStatus;
+    public RingStatus ProgressRingStatus
+    {
+      get { return _progressRingStatus; }
+      set
+      {
+        if (_progressRingStatus != value)
+        {
+          _progressRingStatus = value;
+          NotifyOfPropertyChange(() => ProgressRingStatus);
+        }
+      }
+    }
+
+    private string _progressRingText;
+    public string ProgressRingText
+    {
+      get { return _progressRingText; }
+      set
+      {
+        if (_progressRingText != value)
+        {
+          _progressRingText = value;
+          NotifyOfPropertyChange(() => ProgressRingText);
+        }
+      }
+    }
+
+    private bool _progressRingTextVisibility;
+    public bool ProgressRingTextVisibility
+    {
+      get { return _progressRingTextVisibility; }
+      set
+      {
+        if (_progressRingTextVisibility != value)
+        {
+          _progressRingTextVisibility = value;
+          NotifyOfPropertyChange(() => ProgressRingTextVisibility);
+        }
+      }
+    }
+
+    private bool _progressRingImageVisibility;
+    public bool ProgressRingImageVisibility
+    {
+      get { return _progressRingImageVisibility; }
+      set
+      {
+        if (_progressRingImageVisibility != value)
+        {
+          _progressRingImageVisibility = value;
+          NotifyOfPropertyChange(() => ProgressRingImageVisibility);
+        }
+      }
+    }
+
+    private BitmapSource _progressRingIconSource;
+    public BitmapSource ProgressRingIconSource
+    {
+      get
+      {
+        return _progressRingIconSource;
+      }
+      set
+      {
+        if (_progressRingIconSource != value)
+        {
+          _progressRingIconSource = value;
+          NotifyOfPropertyChange(() => ProgressRingIconSource);
         }
       }
     }

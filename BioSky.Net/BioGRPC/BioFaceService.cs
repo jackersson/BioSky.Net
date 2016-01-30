@@ -68,7 +68,8 @@ namespace BioGRPC
     }
 
     public async Task Enroll(BioImagesList imageList)
-    {      
+    {    
+      /*  
       try
       {
        
@@ -90,6 +91,7 @@ namespace BioGRPC
         Log("RPC failed " + e);
         throw;
       }
+      */
     }
 
     /*
