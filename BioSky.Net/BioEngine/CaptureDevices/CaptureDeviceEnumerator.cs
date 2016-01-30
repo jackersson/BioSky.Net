@@ -17,7 +17,7 @@ namespace BioEngine.CaptureDevices
   {
      public CaptureDeviceEnumerator() : base()
     {
-      _captureDevicesNames = new AsyncObservableCollection<FilterInfo>();
+      _captureDevicesNames = new AsyncObservableCollection<string>();
     }
 
     public override void Run()
@@ -51,12 +51,12 @@ namespace BioEngine.CaptureDevices
     {
       if (_actualCaptureDevices.Count > 0)
       {
-        foreach (FilterInfo deviceName in _captureDevicesNames.ToArray())
+        foreach (string deviceName in _captureDevicesNames.ToArray())
         {
           bool exists = false;
           foreach (FilterInfo dN in _actualCaptureDevices)
           {
-            if (deviceName == dN)
+            if (deviceName == dN.Name)
             {
               exists = true;
               break;
@@ -68,24 +68,25 @@ namespace BioEngine.CaptureDevices
       }
       foreach (FilterInfo deviceName in _actualCaptureDevices)
       {
-        if (!_captureDevicesNames.Contains(deviceName))
-          _captureDevicesNames.Add(deviceName);
+        if (!_captureDevicesNames.Contains(deviceName.Name))
+          _captureDevicesNames.Add(deviceName.Name);
       }
     }
 
 
     public FilterInfo CaptureDeviceConnected(string deviceName)
     {
-      foreach (FilterInfo fi in CaptureDevicesNames )
+      ActualCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+      foreach (FilterInfo fi in ActualCaptureDevices)
       {
         if (fi.Name == deviceName)
           return fi;
-      }
+      }      
       return null;
     }
 
-    private AsyncObservableCollection<FilterInfo> _captureDevicesNames;
-    public AsyncObservableCollection<FilterInfo> CaptureDevicesNames
+    private AsyncObservableCollection<string> _captureDevicesNames;
+    public AsyncObservableCollection<string> CaptureDevicesNames
     {
       get { return _captureDevicesNames; }
       set

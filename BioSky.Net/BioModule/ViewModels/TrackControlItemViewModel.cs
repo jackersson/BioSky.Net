@@ -13,7 +13,7 @@ using BioContracts;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using BioModule.Utils;
-
+using System.Drawing;
 
 namespace BioModule.ViewModels
 {
@@ -22,26 +22,32 @@ namespace BioModule.ViewModels
   {
     private readonly IBioSkyNetRepository _database;
 
+    public TrackControlItemViewModel(IProcessorLocator locator)
+    {      
+      Initialize(locator);      
+    }
 
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
-    {
+    {     
+      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       
-      UserVerified = true;
-      UserVerificationIconVisible = false;
-      CardDetectedIconVisible = false;      
+      Initialize(locator);
 
-      _visitorsView = new VisitorsViewModel(locator);
-      _imageView    = new ImageViewModel();
+      if ( location != null )
+       Update(location);
+    }
 
+    private void Initialize(IProcessorLocator locator)
+    {
       DisplayName = "Location";
 
-      //_database = locator.GetProcessor<IBioSkyNetRepository>();
+      UserVerified = true;
+      UserVerificationIconVisible = false;
+      CardDetectedIconVisible = false;
 
-      //_database.
-
-      
-
-       Update(location);
+      _visitorsView = new VisitorsViewModel(locator);
+      ImageView = new ImageViewModel();
     }
 
     public void Update(TrackLocation trackLocation)
@@ -50,7 +56,23 @@ namespace BioModule.ViewModels
         return;
 
       CurrentLocation = trackLocation;
+
+      _captureDeviceEngine.Subscribe(OnNewFrame, trackLocation.CaptureDeviceName) ;
       _visitorsView.Update();
+
+      string accessDeviceName = trackLocation.AccessDeviceName;
+      if (!_accessDeviceEngine.HasObserver(this, accessDeviceName))
+        _accessDeviceEngine.Subscribe(this, accessDeviceName);
+
+      AccessDeviceOK = _accessDeviceEngine.AccessDeviceActive(accessDeviceName);    
+    }
+
+    private void OnNewFrame(object sender, ref Bitmap bitmap)
+    {
+      if (bitmap == null)
+        return;
+      
+      ImageView.UpdateImage(ref bitmap);
     }
 
     private VisitorsViewModel _visitorsView;
@@ -72,6 +94,14 @@ namespace BioModule.ViewModels
     public ImageViewModel ImageView
     {
       get { return _imageView; }
+      set
+      {
+        if ( _imageView != value)
+        {
+          _imageView = value;
+          NotifyOfPropertyChange(() => ImageView);
+        }
+      }
     }
 
     public void OnChecked(object name)
@@ -154,18 +184,30 @@ namespace BioModule.ViewModels
 
     public void OnNext(AccessDeviceActivity value)
     {
-      throw new NotImplementedException();
+      AccessDeviceOK = true;
+
+      if (value.Data != null)
+      {
+        CardDetectedIconVisible = true;
+      }
+      else
+        CardDetectedIconVisible = false;
     }
 
     public void OnError(Exception error)
     {
-      throw new NotImplementedException();
+      AccessDeviceOK = false;
+      UserVerificationIconVisible = false;
+      CardDetectedIconVisible = false;
     }
 
     public void OnCompleted()
     {
       throw new NotImplementedException();
-    }     
+    }
+
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+    private readonly IAccessDeviceEngine  _accessDeviceEngine ;
 
     //**************************************************** UI **********************************************
     public BitmapSource OkIconSource

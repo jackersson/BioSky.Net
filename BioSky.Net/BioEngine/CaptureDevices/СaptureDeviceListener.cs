@@ -50,7 +50,7 @@ namespace BioEngine.CaptureDevices
     private void OnNewFrame( Bitmap bmp )
     {
       if (NewFrame != null)
-        NewFrame(this, bmp);
+        NewFrame(this, ref bmp);
     }
 
     private void _videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -80,8 +80,7 @@ namespace BioEngine.CaptureDevices
         }        
         Thread.Sleep(2000);
       }
-
-      Console.WriteLine("Stop");
+      
     }
 
     private void ReleaseVideoDevice()
@@ -90,8 +89,10 @@ namespace BioEngine.CaptureDevices
         return;
 
       _videoSource.SignalToStop();
-      _videoSource.WaitForStop();
-      _videoSource.Stop();
+
+      for (int i = 0; (i < 50) && (_videoSource.IsRunning); i++)      
+        Thread.Sleep(100);       
+      
       _videoSource = null;
     }
 
@@ -107,38 +108,5 @@ namespace BioEngine.CaptureDevices
       ReleaseVideoDevice();
       base.Stop();
     }
-        
-    /*
-    private void VideoSource_NewFrame(object sender, AForge.Video.NewFrameEventArgs eventArgs)
-    {
-     
-      Bitmap newFrame = (Bitmap)eventArgs.Frame.Clone();
-      if (newFrame != null)
-      {
-        IntPtr hBitMap = newFrame.GetHbitmap();
-        UpdateImage(System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitMap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()));
-
-        if (_enroll)
-        {
-          byte[] bytes = ImageToByte2(newFrame);
-          Google.Protobuf.ByteString bs = Google.Protobuf.ByteString.CopyFrom(bytes);
-          BioFaceService.BioImage imageRequest = new BioFaceService.BioImage() { Description = bs };
-          _processingImages.Images.Add(imageRequest);
-
-          if (_processingImages.Images.Count >= 4)
-          {
-            _enroll = false;
-            await _bioFaceServiceManager.FaceClient.EnrollFace(_processingImages);
-          }
-        }
-
-      }
-      
-     }
-  */
-
-
-
-
   }
 }

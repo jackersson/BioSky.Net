@@ -48,7 +48,7 @@ namespace BioEngine.CaptureDevices
       return false;
     }
 
-    public AsyncObservableCollection<FilterInfo> GetCaptureDevicesNames()
+    public AsyncObservableCollection<string> GetCaptureDevicesNames()
     {
       return _captureDeviceEnumerator.CaptureDevicesNames;
     }
@@ -58,6 +58,13 @@ namespace BioEngine.CaptureDevices
       СaptureDeviceListener listener;
       if (_captureDevices.TryGetValue(cameraName, out listener))      
         listener.NewFrame += eventListener;      
+    }
+
+    public void Unsubscribe(FrameEventHandler eventListener, string cameraName)
+    {
+      СaptureDeviceListener listener;
+      if (_captureDevices.TryGetValue(cameraName, out listener))
+        listener.NewFrame -= eventListener;
     }
 
 

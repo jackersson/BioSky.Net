@@ -220,6 +220,7 @@
     <Compile Include="Utils\BioStatusResource.cs" />
     <Compile Include="Utils\ComboBoxItemTemplateSelector.cs" />
     <Compile Include="Utils\FastMethodInvoker.cs" />
+    <Compile Include="Utils\IImageUpdatable.cs" />
     <Compile Include="Utils\ViewModelSelector.cs" />
     <Compile Include="ViewModels\AboutDialogViewModel.cs" />
     <Compile Include="ViewModels\CaptureDeviceItemViewModel.cs" />
@@ -552,6 +553,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\loader.PNG" />
+    <None Include="Resources\loadphotos.png" />
+    <None Include="Resources\screenshot.png" />
     <Content Include="Resources\tracking.png" />
   </ItemGroup>
   <ItemGroup>

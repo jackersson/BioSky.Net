@@ -146,7 +146,8 @@ namespace BioModule.Utils
       if (value != null)
       {
         Location location = _database.GetLocationByID((long)value);
-        return location.LocationName;
+       
+        return ( location != null ) ? location.LocationName : "";
       }
       return null;
     }

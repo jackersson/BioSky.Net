@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using BioContracts;
 using BioFaceService;
 using BioModule.Utils;
+using System.Windows;
 
 namespace BioModule.ViewModels
 {
@@ -190,21 +191,14 @@ namespace BioModule.ViewModels
     }
 
     public void AddNewCard()
-    {
-      /*
-      if (UserCards.Contains(DetectedCard))
-      {
-        MessageBox.Show("Card is Already in Use");
-        return;
-      }
-
-      Card newCard = new Card() { CardID = DetectedCard.CardID, UserID = DetectedCard.UserID };
-      UserCards.Add(DetectedCard);
+    {               
+      Card newCard = new Card(DetectedCard);
+      UserCards.Add(newCard);
 
       _dataChanged = true;
-      //_bioEngine.Database().AddCard(newCard);
+     
       NotifyOfPropertyChange(() => UserCards);
-      */
+      
     }
 
     public bool AnyCardDetected
@@ -247,15 +241,25 @@ namespace BioModule.ViewModels
       if (!_dataChanged)
         return;
 
+
+
+
+      //DetectedCard
+
       //_bioEngine.Database().UpdateCards(UserCards, _user);
 
       //foreach ( Card card in UserCards)
-        //_bioEngine.Database().AddCard(card);
+      //_bioEngine.Database().AddCard(card);
       /*string cardNumbers = "";
       foreach (Card cardNumber in UserCards )      
         cardNumbers += cardNumber + ",";
 
       return cardNumbers;*/
+    }
+
+    public void Remove()
+    {
+
     }
 
     public void OnNext(AccessDeviceActivity value)
@@ -268,15 +272,41 @@ namespace BioModule.ViewModels
         for ( int i = 0; i < value.Data.Length; ++i )        
           _detectedCard.UniqueNumber += value.Data[i];
 
-/*
-        Card card = _bioEngine.Database().GetCards().Where(x => x.User == _user).First();
+        Card card = _bioEngine.Database().GetCardByNumber(_detectedCard.UniqueNumber);
+        CanAddNewCard = true;
         if (card != null)
-          CardState = "Card is already used";
-        else
-          CardState = "Card is avaliable to use";
-          */
-        DetectedCard = _detectedCard;       
-      }       
+        {
+          Person person = _bioEngine.Database().GetPersonByID(card.Personid);
+          if (person == null)          
+            CardState = "Card is avaliable to use";
+          else
+          {
+            CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
+            CanAddNewCard = false;
+          }
+        }      
+
+
+
+        DetectedCard = _detectedCard;
+
+        if (UserCards.Contains(DetectedCard))
+          CanAddNewCard = false;
+      }
+    }
+
+    private bool _canAddNewCard;
+    public bool CanAddNewCard
+    {
+      get { return _canAddNewCard; }
+      set
+      {
+        if (_canAddNewCard != value)
+        {
+          _canAddNewCard = value;
+          NotifyOfPropertyChange(() => CanAddNewCard);
+        }
+      }
     }
 
     public void OnError(Exception error)

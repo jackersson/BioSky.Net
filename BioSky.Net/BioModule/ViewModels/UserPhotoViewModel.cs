@@ -14,45 +14,232 @@ using System.IO;
 using AForge.Video.DirectShow;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using System.Drawing;
+using BioModule.Utils;
+
+using BioFaceService;
+using BioContracts.Services;
+using Microsoft.Win32;
 
 namespace BioModule.ViewModels
 {
+
+  public class Enroller
+  {
+    private BioImagesList _bioImagesList = new BioImagesList();
+    public Enroller( IProcessorLocator locator)
+    {
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+    }
+
+    private void Reset()
+    {
+      _busy = false;
+      _bioImagesList.Images.Clear();
+    }
+
+
+    public void Start( Bitmap bitmap)
+    {
+      if (_busy)
+        return;
+
+      Reset();
+
+      _busy = true;
+      BioImage image = ImageToBioImage(bitmap);
+      _bioImagesList.Images.Add(image);
+
+      EnrollRequest();
+    }
+
+    public void Start( string captureDeviceName )
+    {
+      if (_busy)
+        return;
+
+      _captureDeviceName = captureDeviceName;
+
+      Reset();
+      _busy = true;
+
+      _captureDeviceEngine.Subscribe(CollectCapturedFrame, captureDeviceName);
+    }
+
+    public byte[] ImageToByte(Image img)
+    {
+      byte[] byteArray = new byte[0];
+      using (MemoryStream stream = new MemoryStream())
+      {
+        img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+        stream.Close();
+
+        byteArray = stream.ToArray();
+      }
+      return byteArray;
+    }
+
+    private Google.Protobuf.ByteString ImageToByteString(Image img)
+    {
+      byte[] bytes = ImageToByte(img);
+      return Google.Protobuf.ByteString.CopyFrom(bytes);
+    }
+
+    private BioImage ImageToBioImage(Image img)
+    {
+      Google.Protobuf.ByteString description = ImageToByteString(img);
+      return new BioImage() { Description = description };
+    }
+
+    private void CollectCapturedFrame(object sender, ref Bitmap bitmap)
+    {      
+      BioImage image = ImageToBioImage(bitmap);
+      _bioImagesList.Images.Add(image);
+
+      if (_bioImagesList.Images.Count > MAX_ENROLL_IMAGES_COUNT)
+      {        
+        _captureDeviceEngine.Unsubscribe(CollectCapturedFrame, _captureDeviceName);
+        EnrollRequest();
+      }
+    }
+
+    private async void EnrollRequest()
+    {
+      IServiceManager bioService = _locator.GetProcessor<IServiceManager>();
+      await bioService.FaceService.Enroll(_bioImagesList);
+
+      _busy = false;
+    }
+
+    private string    _captureDeviceName;
+    private const int MAX_ENROLL_IMAGES_COUNT = 1;
+
+    private bool _busy = false;
+
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+    private readonly IProcessorLocator    _locator            ;
+  }
+
   public class UserPhotoViewModel : Screen
   {
-    public UserPhotoViewModel(IBioEngine bioEngine, IScreen screen)
+    public UserPhotoViewModel(IBioEngine bioEngine, IImageUpdatable imageViewer, IProcessorLocator locator)
     {
-      _bioEngine = bioEngine;
-      _screen = screen;
-
+      _locator             = locator;
+      _bioEngine           = bioEngine;
+      _imageViewer         = imageViewer;
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      
       DisplayName = "Photo";
 
-      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
-      CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
+      _enroller = new Enroller(locator);
 
+      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();    
+    }
+
+    protected override void OnActivate()
+    {
+      CaptureDeviceConnected = false;
+   
+      CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
+      base.OnActivate();
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
       CaptureDeviceConnected = false;
 
-      _robotImages = new ObservableCollection<Uri>();
-      DirectoryInfo robotImageDir = new DirectoryInfo(@"C:\Users\Spark\Downloads\CustomItemsPanel\CustomItemsPanel\CustomItemsPanel\Robots");
-      foreach (FileInfo robotImageFile in robotImageDir.GetFiles("*.jpg"))
-      {
-        Uri uri = new Uri(robotImageFile.FullName);
+      if (ActiveCaptureDevice != null)
+        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);
 
-        RobotImages.Add(uri);
-      }
-      // BitmapSource _logoListIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.tracking);
-      //BitmapSource _logoListIconSource2 = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.add_user);
+      SelectedCaptureDevice = null;
+      _imageViewer.Clear();
 
-      //RobotImages.Add(_logoListIconSource);
-      //RobotImages.Add(_logoListIconSource2);
+      CaptureDevicesNames.CollectionChanged -= CaptureDevicesNames_CollectionChanged;
+
+      base.OnDeactivate(close);
     }
 
     public void OnSelectionChange()
     {
-      if (SelectedItem != null)
+      if (SelectedItem != null)      
+        _imageViewer.UpdateImage(SelectedItem);       
+    }
+
+    private void OnNewFrame(object sender, ref Bitmap bitmap)
+    {
+      if (bitmap == null)
+        return;
+
+      CaptureDeviceConnected = true;
+
+      _imageViewer.UpdateImage(ref bitmap);     
+    }
+
+    public void Subscribe()
+    {
+      CaptureDeviceConnected = false;
+      if (SelectedCaptureDevice == null)       
+        return;      
+
+      if (ActiveCaptureDevice != null)      
+        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);           
+
+      ActiveCaptureDevice = SelectedCaptureDevice;
+
+      if (!_captureDeviceEngine.CaptureDeviceActive(ActiveCaptureDevice))      
+        _captureDeviceEngine.Add(ActiveCaptureDevice);      
+      
+      _captureDeviceEngine.Subscribe(OnNewFrame, ActiveCaptureDevice);
+    }
+
+    public void EnrollFromCamera()
+    {
+      // Console.Write("Enroll Camera");
+      if (CaptureDeviceConnected)
+        _enroller.Start(ActiveCaptureDevice);
+    }
+
+    public void UploadClick()
+    {
+
+      OpenFileDialog openFileDialog = new OpenFileDialog();
+      openFileDialog.Multiselect = false;
+      openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+      openFileDialog.InitialDirectory = Environment.CurrentDirectory;
+
+      if (openFileDialog.ShowDialog() == true)
       {
-        MethodInfo method = _screen.GetType().GetMethod("UpdatePhoto");
-        if (method != null)
-          method.Invoke(_screen, new object[] { SelectedItem });
+        string filename = openFileDialog.FileName;
+        if (File.Exists(filename))
+        {
+          Bitmap bmp = (Bitmap)Image.FromFile(filename);        
+          _enroller.Start(bmp);
+        }        
+      }
+    }
+
+    public void EnrollFromPhoto()
+    {
+      UploadClick();
+    }
+
+    public void DeletePhoto()
+    {
+      Console.Write("Delete Photos");
+    }    
+
+    private string _activeCaptureDevice;
+    public string ActiveCaptureDevice
+    {
+      get { return _activeCaptureDevice; }
+      set
+      {
+        if (_activeCaptureDevice != value)
+        {
+          _activeCaptureDevice = value;
+
+          NotifyOfPropertyChange(() => ActiveCaptureDevice);
+        }
       }
     }
 
@@ -89,11 +276,12 @@ namespace BioModule.ViewModels
     private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => CaptureDevicesNames);
-      NotifyOfPropertyChange(() => AvaliableDevicesCount);
+      if(ActiveCaptureDevice == null)
+        NotifyOfPropertyChange(() => AvaliableDevicesCount);
     }
 
-    private AsyncObservableCollection<FilterInfo> _captureDevicesNames;
-    public AsyncObservableCollection<FilterInfo> CaptureDevicesNames
+    private AsyncObservableCollection<string> _captureDevicesNames;
+    public AsyncObservableCollection<string> CaptureDevicesNames
     {
       get { return _captureDevicesNames; }
       set
@@ -112,16 +300,18 @@ namespace BioModule.ViewModels
       get { return String.Format("Available Devices ({0})", _captureDevicesNames.Count); }
     }
 
-    private string _selectedAccessDevice;
+    private string _selectedCaptureDevice;
     public string SelectedCaptureDevice
     {
-      get { return _selectedAccessDevice; }
+      get { return _selectedCaptureDevice; }
       set
       {
-        if (_selectedAccessDevice != value)
+        if (_selectedCaptureDevice != value)
         {
-          _selectedAccessDevice = value;
-          NotifyOfPropertyChange(() => SelectedCaptureDevice);          
+          _selectedCaptureDevice = value;
+          NotifyOfPropertyChange(() => SelectedCaptureDevice);
+
+          Subscribe();
         }
       }
     }
@@ -143,9 +333,12 @@ namespace BioModule.ViewModels
     public BitmapSource CaptureDeviceConnectedIcon
     {
       get { return CaptureDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
-    }  
+    }
 
-    private readonly IBioEngine _bioEngine;
-    private readonly IScreen _screen;
+    private readonly Enroller             _enroller           ;
+    private readonly IProcessorLocator    _locator            ;
+    private readonly IBioEngine           _bioEngine          ;
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+    private readonly IImageUpdatable      _imageViewer        ;
   }
 }

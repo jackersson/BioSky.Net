@@ -25,6 +25,7 @@ namespace BioContracts
     Location GetLocationByID(long id);
     Photo GetPhotoByID(long id);
     Visitor GetVisitorByID(long id);
+    Card GetCardByNumber(string number);
 
     PersonList Persons
     {

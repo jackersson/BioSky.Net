@@ -36,19 +36,19 @@ namespace BioModule.ViewModels
       DisplayName = "Tracking";
 
       _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
-      
 
-/*
-      foreach (TrackLocation location in TrackControlItems)
-      {
-        if (location.ScreenViewModel == null)
-          location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
-      }*/
 
-      Items.Add(new TrackControlItemViewModel(_locator, null));
+      /*
+            foreach (TrackLocation location in TrackControlItems)
+            {
+              if (location.ScreenViewModel == null)
+                location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
+            }*/
+
+      Items.Add(new TrackControlItemViewModel(_locator));
       Items.Add(new VisitorsViewModel(_locator));
 
-      ActiveItem = Items[0];
+      ActiveItem = Items[1];
       OpenTab();
 
       //OnChecked();
@@ -70,7 +70,8 @@ namespace BioModule.ViewModels
     }*/
     public void OpenTab()
     {
-      ActiveItem.Activate();
+      if ( ActiveItem != null)
+        ActiveItem.Activate();
     }
 
     public void TrackLocations_CollectionChanged(object sender, EventArgs args)
@@ -80,9 +81,11 @@ namespace BioModule.ViewModels
         if (location.ScreenViewModel == null )
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);         
       }
-
-      object it = Items[0];
-     _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { TrackControlItems[0] });
+      
+      Items[0] = (TrackControlItemViewModel)TrackControlItems[0].ScreenViewModel;
+      ActiveItem = Items[0];
+      OpenTab();
+     // _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { TrackControlItems[0] });
 
     }
 
@@ -135,8 +138,8 @@ namespace BioModule.ViewModels
       if (SelectedTrackLocation == null)
         return;
 
-      object it = Items[0];
-      _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { SelectedTrackLocation });
+      //object it = Items[0];
+     // _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { SelectedTrackLocation });
     }
 
     public void ShowLocationFlayout()

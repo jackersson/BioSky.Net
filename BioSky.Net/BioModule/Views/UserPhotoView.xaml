@@ -31,18 +31,34 @@
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
+        
+        <Button Width="48" Height="48" Grid.Column="2" 
+                Style="{DynamicResource MetroCircleButtonStyle}" 
+                Grid.Row="0"               
+                ToolTip="Enroll from Camera"
+                cal:Message.Attach="[Event Click]=[Action EnrollFromCamera]"               
+                >
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}" 
+                   Height="24" Width="24" />
+        </Button>
 
         <Button Width="48" Height="48" Grid.Column="3" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Row="0"               
-                ToolTip="Add Photo"
-                cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
+                ToolTip="Enroll from image file"
+                cal:Message.Attach="[Event Click]=[Action EnrollFromPhoto]"               
                 >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Height="32" Width="32" />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}"
+                   Height="24" Width="24" />
         </Button>
 
-        <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="0"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" />
+        <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                cal:Message.Attach="[Event Click]=[Action DeletePhoto]"
+                >
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}"
+                   Height="32" Width="32" />
         </Button>
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
@@ -73,15 +89,8 @@
                   Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" 
-                  Grid.Row="0" 
-                  Grid.Column="1">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid Background="Transparent">
-                        <TextBlock Text="{Binding Name, Mode=OneWay}" />
-                    </Grid>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
+                  Grid.Row="0"                    
+                  Grid.Column="1">            
         </ComboBox>
 
         <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" 

@@ -15,6 +15,7 @@ namespace BioData
     private Dictionary<long, Person>   personSet;
     private Dictionary<long, Location> locationSet;
     private Dictionary<long, Visitor>  visitorSet;
+    private Dictionary<string, Card>   cardSet;
 
 
     //public event EventHandler DataChanged;
@@ -79,6 +80,7 @@ namespace BioData
       personSet   = new Dictionary<long, Person>();
       locationSet = new Dictionary<long, Location>();
       visitorSet  = new Dictionary<long, Visitor>();
+      cardSet     = new Dictionary<string, Card>();
     }
 
     public Photo GetPhotoByID( long id )
@@ -106,6 +108,13 @@ namespace BioData
       Location location;
       bool flag = locationSet.TryGetValue(id, out location);
       return location;
+    }
+
+    public Card GetCardByNumber(string number)
+    {
+      Card card;
+      bool flag = cardSet.TryGetValue(number, out card);
+      return card;
     }
 
 
@@ -192,6 +201,12 @@ namespace BioData
           _cards = value;
           NotifyOfPropertyChange(() => Cards);
           OnCardsChanged();
+
+          foreach (Card card in Cards.Cards)
+          {
+            if (!cardSet.ContainsKey(card.UniqueNumber))
+              cardSet.Add(card.UniqueNumber, card);
+          }
         }
       }
     }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public delegate void FrameEventHandler(object sender, Bitmap bitmap);
+  public delegate void FrameEventHandler(object sender, ref Bitmap bitmap);
   public interface ICaptureDeviceEngine
   {
 
@@ -25,9 +25,9 @@ namespace BioContracts
 
 
     void Subscribe(FrameEventHandler eventListener, string cameraName);
-    
 
+    void Unsubscribe(FrameEventHandler eventListener, string cameraName);
 
-    AsyncObservableCollection<FilterInfo> GetCaptureDevicesNames();
+    AsyncObservableCollection<string> GetCaptureDevicesNames();
   }
 }

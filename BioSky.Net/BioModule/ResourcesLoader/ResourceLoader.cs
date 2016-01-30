@@ -13,14 +13,18 @@ namespace BioModule.ResourcesLoader
 
   public static class BitmapConversion
   {
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+    public static extern bool DeleteObject(IntPtr hObject);
     public static BitmapSource BitmapToBitmapSource(Bitmap source)
     {
-     
-      return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                    source.GetHbitmap(),
-                    IntPtr.Zero,
-                    Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
+      IntPtr hBitMap = source.GetHbitmap();
+      BitmapSource bmp = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap( hBitMap
+                                                                                     , IntPtr.Zero
+                                                                                     , Int32Rect.Empty
+                                                                                     , BitmapSizeOptions.FromEmptyOptions());
+      DeleteObject(hBitMap);
+
+      return bmp;
     }
   }
     
@@ -49,6 +53,8 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _refreshIconSource;
 
     private static BitmapSource _uploadIconSource;
+    private static BitmapSource _enrollFromPhotoIconSource;
+    private static BitmapSource _enrollFromCaptureDeviceSource;
 
     private static BitmapSource _addUserIconSource;
     private static BitmapSource _addLocationIconSource;
@@ -158,6 +164,27 @@ namespace BioModule.ResourcesLoader
         return _uploadIconSource;
       }
     }
+
+    public static BitmapSource EnrollFromPhotoIconSource
+    {
+      get
+      {
+        if (_enrollFromPhotoIconSource == null)
+          _enrollFromPhotoIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.loadphotos);
+        return _enrollFromPhotoIconSource;
+      }
+    }
+
+    public static BitmapSource EnrollFromCaptureDeviceIconSource
+    {
+      get
+      {
+        if (_enrollFromCaptureDeviceSource == null)
+          _enrollFromCaptureDeviceSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.screenshot);
+        return _enrollFromCaptureDeviceSource;
+      }
+    }
+
 
 
 

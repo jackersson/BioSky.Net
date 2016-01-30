@@ -38,7 +38,7 @@ namespace BioModule.ViewModels
 
       Items.Add(new UserInformationViewModel    ());
       Items.Add(new UserContactlessCardViewModel(bioEngine, _locator));
-      Items.Add(new UserPhotoViewModel          (bioEngine, CurrentImageView));
+      Items.Add(new UserPhotoViewModel          (bioEngine, CurrentImageView, _locator));
      
       ActiveItem = Items[0];
       OpenTab();

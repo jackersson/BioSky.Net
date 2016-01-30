@@ -16,10 +16,12 @@ using System.Drawing;
 using MahApps.Metro.Controls;
 using BioData;
 using BioFaceService;
+using System.Windows.Threading;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
-  public class ImageViewModel : Screen
+  public class ImageViewModel : Screen, IImageUpdatable
   {
     public ImageViewModel()
     {
@@ -61,7 +63,7 @@ namespace BioModule.ViewModels
       //SetImageFromFile(User.Photo);
     }
 
-    public void UpdatePhoto(Uri uriSource)
+    public void UpdateImage(Uri uriSource)
     {
       SetImageFromFile(uriSource.OriginalString);
     }
@@ -189,6 +191,23 @@ namespace BioModule.ViewModels
       }
     }
 
+    
+
+    public void UpdateImage(ref Bitmap img)
+    {
+      if (img == null)
+        return;
+            
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
+      newFrame.Freeze();
+      CurrentImageSource = newFrame;        
+    }
+
+    public void Clear()
+    {
+      CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
+    }
+
 
     private BitmapSource _currentImageSource;
     public BitmapSource CurrentImageSource
@@ -199,12 +218,19 @@ namespace BioModule.ViewModels
         return _currentImageSource; 
       
       }
-      set
+      private set
       {
-        if (_currentImageSource != value)
+        try
         {
-          _currentImageSource = value;
-          NotifyOfPropertyChange(() => CurrentImageSource);
+          if (_currentImageSource != value)
+          {
+            _currentImageSource = value;
+            NotifyOfPropertyChange(() => CurrentImageSource);
+          }
+        }
+        catch (TaskCanceledException ex)
+        {
+          Console.WriteLine(ex.Message);
         }
       }
     }

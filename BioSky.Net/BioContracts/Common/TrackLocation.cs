@@ -16,7 +16,8 @@ namespace BioContracts
       _database            = locator.GetProcessor<IBioSkyNetRepository>();
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _bioService          = locator.GetProcessor<IServiceManager>();
-     // _database.AccessDevicesChanged  += _database_AccessDevicesChanged;
+
+      _database.AccessDevicesChanged += _database_AccessDevicesChanged;
      _database.CaptureDevicesChanged += _database_CaptureDevicesChanged;  
 
       Update(location);
@@ -29,7 +30,10 @@ namespace BioContracts
                                             .ToList();
 
       foreach (CaptureDevice cd in capture_devices)
+      {
         _captureDeviceEngine.Add(cd.Devicename);
+        CaptureDeviceName = cd.Devicename;
+      }     
     }
 
     private void _database_AccessDevicesChanged(object sender, EventArgs e)
@@ -38,9 +42,39 @@ namespace BioContracts
                                          .Where(ad => ad.Locationid == _location.Id)
                                          .ToList();
 
-      //foreach (AccessDevice ac in access_devices)      
-       // _accessDeviceEngine.Add(ac.Portname);
+      foreach (AccessDevice ac in access_devices)
+      {
+        _accessDeviceEngine.Add(ac.Portname);
+        AccessDeviceName = ac.Portname;
+      }
     }
+
+    private string _captureDeviceName;
+    public string CaptureDeviceName
+    {
+      get { return _captureDeviceName; }
+      set
+      {
+        if (_captureDeviceName != value )
+        {
+          _captureDeviceName = value;          
+        }
+      }
+    }
+
+    private string _accessDeviceName;
+    public string AccessDeviceName
+    {
+      get { return _accessDeviceName; }
+      set
+      {
+        if (_accessDeviceName != value)
+        {
+          _accessDeviceName = value;
+        }
+      }
+    }
+
 
     public void Update(Location location)
     {
@@ -78,20 +112,6 @@ namespace BioContracts
       get { return _location.LocationName; }
     }
 
-    /*
-    private bool _isChecked;
-
-    public bool IsChecked
-    {
-      get { return _isChecked; }
-      set
-      {
-        if (_isChecked == value)
-          return;
-        _isChecked = value;
-      }
-    }
-    */
     private Location _location;
     private readonly IAccessDeviceEngine  _accessDeviceEngine;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
