@@ -18,9 +18,7 @@ using System.Diagnostics;
 namespace BioAccessDevice
 {
   public class AccessDeviceListener : Threadable, IObservable<AccessDeviceActivity>
-  {
-    Stopwatch timer = new Stopwatch();
-    long timeDallasKeyLastDetected;
+  {  
     public AccessDeviceListener( string portName ) : base()
     {
       _serialPort          = new SerialPort();

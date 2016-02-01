@@ -40,8 +40,8 @@ namespace BioModule.ViewModels
 
       LocationId = -1;
 
-      _database.PhotoEventChanged += _database_DataChanged;
-      _database.VisitorChanged += _database_Visitors_DataChanged;   
+      _database.PhotoHolder.DataChanged   += RefreshData;
+      _database.VisitorHolder.DataChanged += RefreshData;   
     } 
 
     public void OnDataContextChanged()
@@ -49,25 +49,15 @@ namespace BioModule.ViewModels
       ImageView = new ImageViewModel();
     }
     protected override void OnActivate()
-    {
-      Visitors = null;
-      Visitors = _database.Visitors;
-      GetLastVisitor();
+    {      
       base.OnActivate();
+      RefreshData();
     }
-
-    private void _database_DataChanged(bool flag)
-    {
-      if (!IsActive)
-        return;
-      Visitors = null;
-      Visitors = _database.Visitors;
-      GetLastVisitor();
-    }
-    private void _database_Visitors_DataChanged(object sender, EventArgs e)
+    
+    private void RefreshData()
     {
       Visitors = null;
-      Visitors = _database.Visitors;
+      Visitors = _database.VisitorHolder.Data;
       GetLastVisitor();
     }
 
@@ -91,28 +81,6 @@ namespace BioModule.ViewModels
       }
     }
 
-/*
-    private void OnPersonsChanged(VisitorList visitors)
-    {
-      Visitors.Clear();
-
-      foreach (Visitor item in visitors.Visitors)
-      {
-        if (LocationId != -1 && LocationId != item.Locationid)
-          continue;
-
-        if (Visitors.Contains(item))
-          return;
-        
-        Visitors.Add(item);
-      }
-
-      if(Visitors.Count != 0)
-      {
-        LastVisitor = Visitors[Visitors.Count - 1];
-      }
-
-    }*/
 
     public void Update()
     {
@@ -231,22 +199,29 @@ namespace BioModule.ViewModels
 
       if(SelectedItemIds.Count == 1)
       {
-        Visitor visitor = _bioEngine.Database().GetVisitorByID(SelectedItemIds[0]);
-        if (visitor == null)
-          return;
-        Person person = _bioEngine.Database().GetPersonByID(visitor.Personid);
-        if (person == null)
-          return;
-        Photo photo = _bioEngine.Database().GetPhotoByID(person.Thumbnail);
-        if (photo == null)
-          return;
+        Visitor visitor = null;
+        bool visitorExists = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(SelectedItemIds[0], out visitor);
+        if (visitorExists)
+        {
+          Person person = null;
+          bool personExists = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
+          if ( personExists )
+          {
+            Photo photo = null;
+            bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(person.Thumbnail, out photo);
+            if ( photoExists )
+            {
+              /*
+              string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + person.Id;
 
-        string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + person.Id;
-
-        Uri uri = new Uri(personFolder +"\\" + photo.FileLocation);
-        if(uri == null)
-          return;
-        ImageView.UpdateImage(uri);
+              Uri uri = new Uri(personFolder + "\\" + photo.FileLocation);
+              if (uri == null)
+                return;
+              ImageView.UpdateImage(uri);
+              */
+            }
+          }
+        }   
       }
     }
     public void OnMouseRightButtonDown(Visitor visitor)
@@ -255,13 +230,22 @@ namespace BioModule.ViewModels
       SelectedItem = visitor;
     }
     public void ShowUserPage()
-    {      
-      foreach (long item in SelectedItemIds)
+    {
+      foreach (long id in SelectedItemIds)
       {
-        Visitor loc = _bioEngine.Database().GetVisitorByID(item);
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
-                             , new object[] { _bioEngine.Database().GetPersonByID(loc.Personid) });
-      }       
+
+        Visitor visitor = null;
+        bool visitorFound = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(id, out visitor);
+
+        if (visitorFound)
+        {
+          Person person = null;
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(id, out person);
+          _selector.ShowContent(ShowableContentControl.TabControlContent
+                               , ViewModelsID.UserPage
+                               , new object[] { person });
+        }
+      }
     }
 
     private readonly IProcessorLocator    _locator   ;

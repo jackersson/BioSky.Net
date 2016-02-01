@@ -18,6 +18,7 @@ using BioModule.Utils;
 using System.Windows.Controls;
 using Google.Protobuf.Collections;
 using System.Reflection;
+using BioFaceService;
 
 namespace BioModule.ViewModels
 {
@@ -126,7 +127,13 @@ namespace BioModule.ViewModels
 
     public void ShowLocationFlayout()
     {
-      _selector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings, new object[] {  _bioEngine.Database().GetLocationByID(SelectedTrackLocation.LocationID) });
+      long id = SelectedTrackLocation.LocationID;
+      Location location = null;
+      bool visitorFound = _bioEngine.Database().LocationHolder.DataSet.TryGetValue(id, out location);
+
+      _selector.ShowContent( ShowableContentControl.FlyoutControlContent
+                           , ViewModelsID.LocationSettings
+                           , new object[] { location });
     }    
 
     private readonly IProcessorLocator _locator      ;    

@@ -18,7 +18,7 @@ using System.Drawing;
 namespace BioModule.ViewModels
 {
 
-  public class TrackControlItemViewModel : Screen
+  public class TrackControlItemViewModel : Conductor<IScreen>.Collection.AllActive
   {
     
     public TrackControlItemViewModel(IProcessorLocator locator)
@@ -37,6 +37,13 @@ namespace BioModule.ViewModels
        Update(location);
     }
 
+    protected override void OnActivate()
+    {
+      if (_visitorsView != null)
+        ActivateItem(_visitorsView);
+      base.OnActivate();
+    }
+
     private void Initialize(IProcessorLocator locator)
     {
       DisplayName = "Location";
@@ -46,6 +53,9 @@ namespace BioModule.ViewModels
       CardDetectedIconVisible = false;
 
       _visitorsView = new VisitorsViewModel(locator);
+
+      Items.Add(_visitorsView);
+
       ImageView = new ImageViewModel();
     }
 

@@ -44,37 +44,28 @@ namespace BioModule.ViewModels
 
       _selectedItemIds = new ObservableCollection<long>();
 
-      _database.PersonChanged += _database_Persons_DataChanged;
+      _database.PersonHolder.DataChanged += RefreshData;      
+      _database.PhotoHolder.DataChanged  += RefreshData;
 
       IsDeleteButtonEnabled = false;
-
-      _database.PhotoEventChanged += _database_DataChanged;      
     }
 
-    private void _database_Persons_DataChanged(object sender, EventArgs e)
-    {
-      Users = null;
-      Users = _database.Persons;
-    }
-
-    public void Update()
-    {
-      NotifyOfPropertyChange(() => Users);
-    }
-    protected override void OnActivate()
-    {
-      Users = null;
-      Users = _database.Persons;      
-      base.OnActivate();
-    }
-    private void _database_DataChanged(bool flag)
+    private void RefreshData()
     {
       if (!IsActive)
         return;
-      Users = null;
-      Users = _database.Persons;      
-    }
 
+      Users = null;
+      Users = _database.PersonHolder.Data;
+    }   
+
+    
+    protected override void OnActivate()
+    {          
+      base.OnActivate();
+      RefreshData();
+    }
+  
     private ObservableCollection<Person> _users;
     public ObservableCollection<Person> Users
     {
@@ -192,6 +183,7 @@ namespace BioModule.ViewModels
 
     public async Task UserUpdatePerformer(DbState state)
     {
+      /*
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
       if (result == true)
       {
@@ -211,10 +203,12 @@ namespace BioModule.ViewModels
 
         await _bioService.DatabaseService.PersonUpdateRequest(personList);
       }
+      */
     }
 
     private void PersonUpdateResultProcessing(PersonList list, Result result)
     {
+      /*
       _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonsUpdated;
 
       string message = "";
@@ -235,7 +229,8 @@ namespace BioModule.ViewModels
         
       }
 
-      MessageBox.Show(message);     
+      MessageBox.Show(message);  
+      */   
     }
 
     private void DatabaseService_PersonsUpdated(PersonList list, Result result)
@@ -292,13 +287,22 @@ namespace BioModule.ViewModels
 
     public void ShowUserPage(bool isExistingUser)
     {
+      //TODO refactor
       if (!isExistingUser)
         _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { null });
       else
       {
-        foreach (long item in SelectedItemIds)
+        foreach (long id in SelectedItemIds)
         {
-          _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { _bioEngine.Database().GetPersonByID(item)});
+          Person person = null;
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(id, out person);
+
+          if (personFound)
+          {
+            _selector.ShowContent( ShowableContentControl.TabControlContent
+                                 , ViewModelsID.UserPage
+                                 , new object[] { person });
+          }
         }
       }
 
