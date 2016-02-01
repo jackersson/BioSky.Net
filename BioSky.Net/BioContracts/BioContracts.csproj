@@ -130,6 +130,7 @@
     <Compile Include="Abstracts\Threadable.cs" />
     <Compile Include="AccessDevice\AccessDeviceActivity.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Common\TrackLocationAccessDeviceObserver.cs" />
     <Compile Include="IAccessDeviceEngine.cs" />
     <Compile Include="IBioEngine.cs" />
     <Compile Include="IBioShell.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="IBioStarter.cs" />
     <Compile Include="ICaptureDeviceEngine.cs" />
     <Compile Include="IEntityFrameworkConnectionBuilder.cs" />
+    <Compile Include="IHolder.cs" />
     <Compile Include="IProcessorLocator.cs" />
     <Compile Include="IServiceManager.cs" />
     <Compile Include="IShowableContent.cs" />

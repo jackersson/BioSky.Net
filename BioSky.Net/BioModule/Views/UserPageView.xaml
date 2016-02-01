@@ -41,8 +41,8 @@
         </Grid.RowDefinitions>
         
         <TabControl Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
-                    VerticalAlignment="Stretch" ItemsSource="{Binding Items}" Grid.ColumnSpan="4"                
-                    SelectedItem="{Binding ActiveItem}"
+                    VerticalAlignment="Stretch" ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="4"                
+                    SelectedItem="{Binding ActiveItem, UpdateSourceTrigger=PropertyChanged}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"
                     >
             <TabControl.Resources>
@@ -50,7 +50,7 @@
                     <local:UserInformationView x:Name="ActiveItem"></local:UserInformationView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserContactlessCardViewModel}">
-                    <local:UserContactlessCardView x:Name="ActiveItem"></local:UserContactlessCardView>
+                    <local:UserContactlessCardView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserContactlessCardView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPhotoViewModel}">
                     <local:UserPhotoView x:Name="ActiveItem"></local:UserPhotoView>
@@ -64,7 +64,7 @@
             </TabControl.ItemTemplate> 
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding }" ></ContentControl>
+                    <ContentControl Content="{Binding}" ></ContentControl>
                 </DataTemplate>
             </TabControl.ContentTemplate>
             <TabControl.ItemContainerStyle>

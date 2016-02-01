@@ -18,10 +18,9 @@ using System.Drawing;
 namespace BioModule.ViewModels
 {
 
-  public class TrackControlItemViewModel : Screen, IObserver<AccessDeviceActivity>
+  public class TrackControlItemViewModel : Screen
   {
-    private readonly IBioSkyNetRepository _database;
-
+    
     public TrackControlItemViewModel(IProcessorLocator locator)
     {      
       Initialize(locator);      
@@ -57,16 +56,17 @@ namespace BioModule.ViewModels
 
       CurrentLocation = trackLocation;
 
+      CurrentLocation.PropertyChanged += CurrentLocation_PropertyChanged; ;
+
       _captureDeviceEngine.Subscribe(OnNewFrame, trackLocation.CaptureDeviceName) ;
       _visitorsView.Update();
-
-      string accessDeviceName = trackLocation.AccessDeviceName;
-      if (!_accessDeviceEngine.HasObserver(this, accessDeviceName))
-        _accessDeviceEngine.Subscribe(this, accessDeviceName);
-
-      AccessDeviceOK = _accessDeviceEngine.AccessDeviceActive(accessDeviceName);    
     }
 
+    private void CurrentLocation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+      NotifyOfPropertyChange(() => OkIconSource);
+    }
+    
     private void OnNewFrame(object sender, ref Bitmap bitmap)
     {
       if (bitmap == null)
@@ -104,14 +104,11 @@ namespace BioModule.ViewModels
       }
     }
 
-    public void OnChecked(object name)
-    {
-      Console.WriteLine(name);
-    }
+
     private bool _accessDeviceOK;
     public bool AccessDeviceOK
     {
-      get { return _accessDeviceOK; }
+      get { return _accessDeviceOK; }      
       set {
         if ( _accessDeviceOK != value )
         {
@@ -120,6 +117,7 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => OkIconSource);         
         }
       }
+      
     }
 
     private bool _userVerified;
@@ -178,32 +176,9 @@ namespace BioModule.ViewModels
         {
           _location = value;
           NotifyOfPropertyChange(() => CurrentLocation);
+          NotifyOfPropertyChange(() => AccessDeviceOK );
         }
       }
-    }
-
-    public void OnNext(AccessDeviceActivity value)
-    {
-      AccessDeviceOK = true;
-
-      if (value.Data != null)
-      {
-        CardDetectedIconVisible = true;
-      }
-      else
-        CardDetectedIconVisible = false;
-    }
-
-    public void OnError(Exception error)
-    {
-      AccessDeviceOK = false;
-      UserVerificationIconVisible = false;
-      CardDetectedIconVisible = false;
-    }
-
-    public void OnCompleted()
-    {
-      throw new NotImplementedException();
     }
 
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
@@ -212,7 +187,13 @@ namespace BioModule.ViewModels
     //**************************************************** UI **********************************************
     public BitmapSource OkIconSource
     {
-      get { return AccessDeviceOK ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
+      get
+      {
+        if (CurrentLocation == null)
+          return ResourceLoader.ErrorIconSource;
+        else
+          return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;       
+      }
     }
 
     public BitmapSource VerificationIconSource

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BioContracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace BioAccessDevice.Interfaces
   {
     T GetCommand<T>() where T : ICommand, new();
 
-    object GetCommand(string commandName);
+    object GetCommand(AccessDeviceCommands commandID);
 
   }
 }

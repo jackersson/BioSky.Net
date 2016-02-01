@@ -16,10 +16,11 @@ using System.Windows.Data;
 using System.Reflection;
 using System.Globalization;
 using BioFaceService;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 { 
-  public class UserInformationViewModel : Screen
+  public class UserInformationViewModel : Screen, IUpdatable
   {    
     public UserInformationViewModel()
     {           
@@ -30,6 +31,11 @@ namespace BioModule.ViewModels
     public void Update( Person user)
     {
       User = user;      
+    }
+
+    public void Apply()
+    {
+      
     }
 
     public List<string> GenderSources

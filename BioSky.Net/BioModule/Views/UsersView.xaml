@@ -47,6 +47,7 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid 
+            
             BorderThickness="1" 
                   Grid.Column="0" HorizontalAlignment="Stretch" 
             Grid.ColumnSpan="5"

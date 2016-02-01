@@ -9,10 +9,13 @@ using BioContracts;
 using BioFaceService;
 using BioModule.Utils;
 using System.Windows;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace BioModule.ViewModels
 {
-  public class UserContactlessCardViewModel : Screen, IObserver<AccessDeviceActivity>
+
+  public class UserContactlessCardViewModel : Screen, IObserver<AccessDeviceActivity>, IUpdatable
   {
     public UserContactlessCardViewModel(IBioEngine bioEngine, IProcessorLocator locator)
     {
@@ -35,7 +38,9 @@ namespace BioModule.ViewModels
 
       _userCards = new ObservableCollection<Card>();
 
-      UserCards = _bioEngine.Database().Cards;
+      
+
+      //UserCards = _bioEngine.Database().Cards;
 
      
     }    
@@ -75,7 +80,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private bool _dataChanged;
+   // private bool _dataChanged;
     
     private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
@@ -175,29 +180,37 @@ namespace BioModule.ViewModels
     {
       _user = user;
 
-      //_detectedCard.Personid = _user.;
-
-      _dataChanged = false;
-
-      /*
+      //_dataChanged = false;
+      
       _userCards.Clear();
 
-      IEnumerable<Card> cards = _bioEngine.Database().GetCards().Where(x => x.User == _user);
+      _detectedCard.Personid = _user.Id;
 
-      foreach (Card card in cards)
-        _userCards.Add(card);
-      */
+
+      foreach (Card card in _bioEngine.Database().CardHolder.Data)
+      {
+        if ( card.Personid == _user.Id)
+          _userCards.Add(card);
+      } 
+      
     }
 
     public void AddNewCard()
-    {               
+    {
+      if (!CanAddNewCard)
+        return;
+
+      DetectedCard.Dbstate = DbState.Insert;
+
       Card newCard = new Card(DetectedCard);
       UserCards.Add(newCard);
 
-      _dataChanged = true;
+      //_dataChanged = true;
      
       NotifyOfPropertyChange(() => UserCards);
-      
+
+      CanAddNewCard = false;
+
     }
 
     public bool AnyCardDetected
@@ -208,16 +221,9 @@ namespace BioModule.ViewModels
     private ObservableCollection<Card> _userCards;
     public ObservableCollection<Card> UserCards
     {
-      get {
-
-        if ( _user != null  )
-        {
-          //_user.Id
-          return _userCards;
-        }
-        
-        return _userCards;
-      
+      get
+      {             
+        return _userCards;      
       }
       set
       {
@@ -244,31 +250,70 @@ namespace BioModule.ViewModels
       }
     }
 
-    public void Apply()
-    {
+    public async Task CardUpdatePerformer()
+    {             
+      CardList cardList = new CardList();
+      foreach (Card card in UserCards)
+      {
+        if (card.Dbstate != DbState.None)
+          cardList.Cards.Add(card);
+      }       
 
-      if (!_dataChanged)
-        return;
+       _bioService.DatabaseService.CardUpdated += DatabaseService_CardUpdated;
 
-
-
-
-      //DetectedCard
-
-      //_bioEngine.Database().UpdateCards(UserCards, _user);
-
-      //foreach ( Card card in UserCards)
-      //_bioEngine.Database().AddCard(card);
-      /*string cardNumbers = "";
-      foreach (Card cardNumber in UserCards )      
-        cardNumbers += cardNumber + ",";
-
-      return cardNumbers;*/
+       await _bioService.DatabaseService.CardUpdateRequest(cardList);      
     }
 
-    public void Remove()
+    private void DatabaseService_CardUpdated(CardList list, Result result)
     {
+      PersonUpdateResultProcessing(list, result);
 
+    }
+
+    private void PersonUpdateResultProcessing(CardList list, Result result)
+    {
+      /*
+      _bioService.DatabaseService.CardUpdated -= DatabaseService_CardUpdated;
+      
+      IBioSkyNetRepository database = _locator.GetProcessor<IBioSkyNetRepository>();
+        
+      string message = "";
+
+      foreach (ResultPair rp in result.Status)
+      {
+        Card card = null;
+        if (rp.Status == ResultStatus.Success)
+        {
+          if (rp.State == DbState.Insert)
+            card = rp.Card;
+          else
+            card = list.Cards.Where(x => x.Id == rp.Id).FirstOrDefault();
+
+          database.UpdateCardFromServer(card);
+
+        }
+        else
+        {
+          if (rp.State == DbState.Insert)
+            message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";
+        }
+
+        if (card != null)
+          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";        
+      }
+      */
+      //MessageBox.Show(message);      
+    }
+
+    public async void Apply()
+    {
+      await CardUpdatePerformer();
+
+    }
+
+    public async void Remove()
+    {
+      await CardUpdatePerformer();
     }
 
     public void OnNext(AccessDeviceActivity value)
@@ -281,21 +326,22 @@ namespace BioModule.ViewModels
         for ( int i = 0; i < value.Data.Length; ++i )        
           _detectedCard.UniqueNumber += value.Data[i];
 
-        Card card = _bioEngine.Database().GetCardByNumber(_detectedCard.UniqueNumber);
         CanAddNewCard = true;
-        if (card != null)
+
+        Card card;
+        bool cardFound = _bioEngine.Database().CardHolder.DataSet.TryGetValue(_detectedCard.UniqueNumber, out card);       
+        if (cardFound)
         {
-          Person person = _bioEngine.Database().GetPersonByID(card.Personid);
-          if (person == null)          
+          Person person;
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(card.Personid, out person);
+          if (personFound)          
             CardState = "Card is avaliable to use";
           else
           {
             CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
             CanAddNewCard = false;
           }
-        }      
-
-
+        }
 
         DetectedCard = _detectedCard;
 

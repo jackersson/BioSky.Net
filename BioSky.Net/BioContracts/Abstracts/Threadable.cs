@@ -28,11 +28,11 @@ namespace BioContracts.Abstract
 
 
     public void Start()
-    {
+    {     
       ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadProcedure), this);
     }
 
-    public void Stop()
+    public virtual void Stop()
     {
       _cancelationToken.Cancel();
 

@@ -16,7 +16,8 @@
 
     <UserControl.Resources>        
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
-        <utils:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" /> 
+        <utils:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
     </UserControl.Resources>
 
     <Grid>
@@ -38,11 +39,13 @@
         <Button Width="48" Height="48" Grid.Column="3" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Row="1" Grid.RowSpan="3"
-                IsEnabled="{Binding AnyCardDetected}"
+                Visibility="{Binding CanAddNewCard, Converter={StaticResource BooleanToVisibilityConverter}}"
+                
                 ToolTip="Add Card"
                 cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
                 >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Height="32" Width="32" />
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}"
+                   Height="32" Width="32" />
         </Button>
 
         <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">

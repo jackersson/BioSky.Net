@@ -21,6 +21,7 @@ using BioContracts;
 using BioFaceService;
 using Google.Protobuf.Collections;
 using System.Collections;
+using Google.Protobuf;
 
 namespace BioModule.ViewModels
 {
@@ -36,15 +37,19 @@ namespace BioModule.ViewModels
       _bioService = _locator.GetProcessor<IServiceManager>();
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      _visitors         = new ObservableCollection<Visitor>();
+     // _visitors         = new ObservableCollection<IMessage>();
       _selectedItemIds  = new ObservableCollection<long>();
+
+      //_visitors.Add(new Visitor() { Personid = 1, Locationid = 1, Time = 121421424 });
+
+      Visitors = _visitors;
 
       LocationId = -1;
 
-      Visitors = _database.Visitors;
+      //Visitors = _database.Visitors;
 
-      if (Visitors.Count != 0)
-        LastVisitor = Visitors[Visitors.Count - 1];    
+      //if (Visitors.Count != 0)
+        //LastVisitor = Visitors[Visitors.Count - 1];    
     }
 
 /*
@@ -75,8 +80,8 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => Visitors);
     }
     
-    private ObservableCollection<Visitor> _visitors;
-    public ObservableCollection<Visitor> Visitors
+    private ObservableCollection<IMessage> _visitors;
+    public ObservableCollection<IMessage> Visitors
     {
       get { return _visitors; }
       set
@@ -192,11 +197,20 @@ namespace BioModule.ViewModels
     }
     public void ShowUserPage()
     {      
-      foreach (long item in SelectedItemIds)
+      foreach (long id in SelectedItemIds)
       {
-        Visitor loc = _bioEngine.Database().GetVisitorByID(item);
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
-                             , new object[] { _bioEngine.Database().GetPersonByID(loc.Personid) });
+
+        Visitor visitor = null;
+        bool visitorFound  = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(id, out visitor);
+
+        if (visitorFound)
+        {
+          Person person = null;
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(id, out person);
+          _selector.ShowContent( ShowableContentControl.TabControlContent
+                               , ViewModelsID.UserPage
+                               , new object[] { person });
+        }                            
       }       
     }
 

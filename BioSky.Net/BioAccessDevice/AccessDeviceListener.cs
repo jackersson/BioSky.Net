@@ -13,12 +13,14 @@ using BioAccessDevice.Commands;
 using System.Threading;
 using System.IO.Ports;
 using BioContracts.Abstract;
+using System.Diagnostics;
 
 namespace BioAccessDevice
 {
   public class AccessDeviceListener : Threadable, IObservable<AccessDeviceActivity>
   {
-
+    Stopwatch timer = new Stopwatch();
+    long timeDallasKeyLastDetected;
     public AccessDeviceListener( string portName ) : base()
     {
       _serialPort          = new SerialPort();
@@ -43,10 +45,10 @@ namespace BioAccessDevice
         _commands.Enqueue(command);      
     }
 
-    public void Enqueque(string commandName)
+    public void Enqueque(AccessDeviceCommands commandName)
     {
-      string type = "BioAccessDevice.Commands." + commandName;      
-      Enqueque((AccessDeviceCommand)_commandFactory.GetCommand(type));      
+     // string type = "BioAccessDevice.Commands." + commandName;      
+      Enqueque((AccessDeviceCommand)_commandFactory.GetCommand(commandName));      
     }
 
     public void Clear()
@@ -76,8 +78,14 @@ namespace BioAccessDevice
       {
         _serialPort.Open();
 
+        Enqueque(AccessDeviceCommands.CommandReset);
+        Enqueque(AccessDeviceCommands.CommandReady);
+
         AccessDeviceActivity notification = new AccessDeviceActivity();
         Notify(new AccessDeviceActivity() { CommandID = AccessDeviceCommands.CommandReady });
+
+
+
         return true;
       }
       catch (Exception exeption)
@@ -88,10 +96,17 @@ namespace BioAccessDevice
 
     }
 
+    public override void Stop()
+    {
+      Clear();
+      Enqueque(AccessDeviceCommands.CommandReset);    
+      base.Stop();
+    }
+
     public override void Run()
     {
       Open();
-      Active = true; // _serialPort.IsOpen;
+      Active = true; 
 
       while (Active)
       {
@@ -99,19 +114,16 @@ namespace BioAccessDevice
         if (Dequeue(out command))
         {
          
-          Thread.Sleep(1000);
+          Thread.Sleep(200);
 
-          //Console.WriteLine("Command Execution");
+         
           if ( command.Execute(ref _serialPort) )
-          {
-            //Console.WriteLine("Start Command Notifying");
+          {            
             AccessDeviceCommands commandID;
             Enum.TryParse(command.GetType().Name, out commandID);
 
-            AccessDeviceActivity notification = new AccessDeviceActivity();
-            Notify(new AccessDeviceActivity() { CommandID = commandID, Data = command.Message() });
-            //Console.WriteLine(notification.Data == null ? "Get data null" : "Get Data ok");
-            //Console.WriteLine("Finish Command Notifying");
+            AccessDeviceActivity notification = new AccessDeviceActivity();          
+            Notify(new AccessDeviceActivity() { CommandID = commandID, Data = command.Message() });          
           }
           else
           {
@@ -122,17 +134,15 @@ namespace BioAccessDevice
               Open();
             }            
           }
-        }
-
-        if ( CancellationTokenResult.IsCancellationRequested )
-        {
-          Console.WriteLine("Canselation requested");
-          break;          
-        }        
+        }  
+        
+        if ( CancellationTokenResult.IsCancellationRequested)
+          break;                    
       }
 
       _serialPort.Close();
       Clear();
+
 
     }
 
@@ -143,7 +153,7 @@ namespace BioAccessDevice
         while (_commands.IsEmpty)
         {
           Thread.Sleep(100);
-          Enqueque(_commandFactory.GetCommand<CommandDallasKey>());
+          Enqueque(AccessDeviceCommands.CommandDallasKey);          
         }     
         
         return _commands.TryDequeue(out command);
@@ -180,6 +190,14 @@ namespace BioAccessDevice
     {
       if (!HasObserver(observer))
         _observers.Add(observer);
+
+      return new Unsubscriber(_observers, observer);
+    }
+
+    public IDisposable Unsubscribe(IObserver<AccessDeviceActivity> observer)
+    {
+      if (HasObserver(observer))
+        _observers.Remove(observer);
 
       return new Unsubscriber(_observers, observer);
     }

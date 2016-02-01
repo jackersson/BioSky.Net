@@ -15,7 +15,9 @@ namespace BioGRPC
 {
   public class BioDatabaseService : IDatabaseService
   {
-    public event PersonUpdateHandler PersonUpdated;
+    public event PersonUpdateHandler   PersonUpdated ;
+    public event CardUpdateHandler     CardUpdated   ;
+    public event VisitorUpdateHandler  VisitorUpdated;
 
     public BioDatabaseService(IProcessorLocator locator, BioFaceDetector.IBioFaceDetectorClient client)
     {
@@ -30,13 +32,25 @@ namespace BioGRPC
       if (PersonUpdated != null)
         PersonUpdated(list, result);
     }
-    
+
+    private void OnCardUpdated(CardList list, Result result)
+    {
+      if (CardUpdated != null)
+        CardUpdated(list, result);
+    }
+
+    private void OnVisitorUpdated(VisitorList list, Result result)
+    {
+      if (VisitorUpdated != null)
+        VisitorUpdated(list, result);
+    }
+
     public async Task CaptureDeviceRequest(CommandCaptureDevice command)
     {
       try
       {
         CaptureDeviceList call = await _client.CaptureDeviceSelectAsync(command);
-        _database.UpdateCaptureDeviceSet(call);
+        _database.CaptureDeviceHolder.Update(call.CaptureDevices);
         Console.WriteLine(call.ToString());
 
       }
@@ -52,7 +66,7 @@ namespace BioGRPC
       try
       {
         AccessDeviceList call = await _client.AccessDeviceSelectAsync(command);
-        _database.UpdateAccessDeviceSet(call);
+        _database.AccessDeviceHolder.Update(call.AccessDevices);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -67,7 +81,7 @@ namespace BioGRPC
       try
       {
         LocationList call = await _client.LocationSelectAsync(command);
-        _database.UpdateLocationSet(call);
+        _database.LocationHolder.Update(call.Locations);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -82,7 +96,7 @@ namespace BioGRPC
       try
       {
         PhotoList call = await _client.PhotoSelectAsync(command);
-        _database.UpdatePhotoSet(call);
+        _database.PhotoHolder.Update(call.Photos);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -97,7 +111,7 @@ namespace BioGRPC
       try
       {
         CardList call = await _client.CardSelectAsync(command);
-        _database.UpdateCardSet(call);
+        _database.CardHolder.Update(call.Cards);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -112,7 +126,7 @@ namespace BioGRPC
       try
       {
         VisitorList call = await _client.VisitorSelectAsync(command);
-        _database.UpdateVisitorSet(call);
+        _database.VisitorHolder.Update(call.Visitors);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -127,7 +141,7 @@ namespace BioGRPC
       try
       {
         PersonList call = await _client.PersonSelectAsync(command);
-        _database.UpdatePersonSet(call);
+        _database.PersonHolder.Update(call.Persons);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -142,13 +156,7 @@ namespace BioGRPC
       try
       {
         Result call = await _client.PersonUpdateAsync(list);        
-        //Console.WriteLine(call.ToString());
-
-        OnPersonUpdated(list, call);
-
-        //foreach (ResultPair ss in call.Status)        
-          //Console.WriteLine(ss.Status);         
-        
+        OnPersonUpdated(list, call);       
       }
       catch (RpcException e)
       {
@@ -157,6 +165,36 @@ namespace BioGRPC
       }
     }
 
+
+    public async Task CardUpdateRequest(CardList list)
+    {
+      try
+      {
+        Result call = await _client.CardUpdateAsync(list);
+        OnCardUpdated(list, call);
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task VisitorUpdateRequest(VisitorList list)
+    {
+      try
+      {
+        Result call = await _client.VisitorUpdateAsync(list);
+        //_database.Update<>()
+
+        OnVisitorUpdated(list, call);
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
 
     private void Log(string s, params object[] args)
     {

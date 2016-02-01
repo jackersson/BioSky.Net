@@ -29,12 +29,13 @@ namespace BioModule.ViewModels
       DevicesInList = new DragablListBoxViewModel(removeDragable);
       DevicesInList.ItemRemoved += DevicesList.ItemDropped;
 
-      foreach (CaptureDevice item in _bioEngine.Database().CaptureDevices)
+      /*
+      foreach (CaptureDevice item in _bioEngine.Database().CaptureDeviceHolder.Data)
       {
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
         AddToGeneralDeviceList(dragableItem);
       }
-      
+      */
   
     }
 

@@ -76,10 +76,10 @@ namespace BioModule.Utils
     }
     public ConverterInitializer( IBioSkyNetRepository database )
     {
-      PhotoIDConverter                  = new ConvertPhotoIdToImage          (database);
-      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database);
-      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database);
-      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database);
+      PhotoIDConverter                  = new ConvertPhotoIdToImage          (database.PhotoHolder);
+      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database.PersonHolder);
+      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database.PersonHolder);
+      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database.LocationHolder);
     }
   }
   public class ConvertLongToDateTime : IValueConverter
@@ -104,20 +104,21 @@ namespace BioModule.Utils
   }
   public class ConvertPhotoIdToImage : IValueConverter
   {
-    public ConvertPhotoIdToImage( IBioSkyNetRepository database )
+    public ConvertPhotoIdToImage(IHolder<Photo, long> photoHolder)
     {
-      _database = database;
+      _photoHolder = photoHolder;
     }
 
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
-        Photo photo = _database.GetPhotoByID((long)value);
-
+        Photo photo = null;
+        bool photoFound = _photoHolder.DataSet.TryGetValue((long)value, out photo);
+                
         string addr = Directory.GetCurrentDirectory();
 
-        if (photo != null && File.Exists(photo.FileLocation))
+        if (photoFound && File.Exists(photo.FileLocation))
         {
           BitmapSource img = new BitmapImage(new Uri(addr + "\\" + photo.FileLocation, UriKind.RelativeOrAbsolute));
           return img;
@@ -131,23 +132,23 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
 
-    private readonly IBioSkyNetRepository _database;
+    private readonly IHolder<Photo, long> _photoHolder;
   }
 
   public class ConvertLocationIdToLocationname : IValueConverter
   {
-    public ConvertLocationIdToLocationname(IBioSkyNetRepository database)
+    public ConvertLocationIdToLocationname(IHolder<Location, long> locationHolder)
     {
-      _database = database;
+      _locationHolder = locationHolder;
     }
 
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
-        Location location = _database.GetLocationByID((long)value);
-       
-        return ( location != null ) ? location.LocationName : "";
+        Location location = null;
+        bool locationFound = _locationHolder.DataSet.TryGetValue((long)value, out location);      
+        return (locationFound) ? location.LocationName : "";
       }
       return null;
     }
@@ -156,22 +157,23 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
 
-    private readonly IBioSkyNetRepository _database;
+    private readonly IHolder<Location, long> _locationHolder;
   }
 
   public class ConvertPersonIdToFirstname : IValueConverter
   {
-    public ConvertPersonIdToFirstname(IBioSkyNetRepository database)
+    public ConvertPersonIdToFirstname(IHolder<Person, long> personHolder)
     {
-      _database = database;
+      _personHolder = personHolder;
     }
 
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
-        Person person = _database.GetPersonByID((long)value);
-        if (person != null)
+        Person person = null;
+        bool personFound = _personHolder.DataSet.TryGetValue((long)value, out person);
+        if (personFound)
           return person.Firstname;
       }
       return null;
@@ -181,22 +183,23 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
 
-    private readonly IBioSkyNetRepository _database;
+    private readonly IHolder<Person, long> _personHolder;
   }
 
   public class ConvertPersonIdToLastname : IValueConverter
   {
-    public ConvertPersonIdToLastname(IBioSkyNetRepository database)
+    public ConvertPersonIdToLastname(IHolder<Person, long> personHolder)
     {
-      _database = database;
+      _personHolder = personHolder;
     }
 
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
-        Person person = _database.GetPersonByID((long)value);
-        if (person != null)
+        Person person = null;
+        bool personFound = _personHolder.DataSet.TryGetValue((long)value, out person);
+        if (personFound)
           return person.Lastname;
       }
       return null;
@@ -206,7 +209,7 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
 
-    private readonly IBioSkyNetRepository _database;
+    private readonly IHolder<Person, long> _personHolder;
   }
 
   public class ConvertPhotoPathToImage : IValueConverter

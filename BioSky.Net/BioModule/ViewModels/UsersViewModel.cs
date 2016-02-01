@@ -46,7 +46,7 @@ namespace BioModule.ViewModels
 
       IsDeleteButtonEnabled = false;
 
-      Users = _database.Persons;
+      //Users = _database.Persons;
     }    
 
     private ObservableCollection<Person> _users;
@@ -166,6 +166,7 @@ namespace BioModule.ViewModels
 
     public async Task UserUpdatePerformer(DbState state)
     {
+      /*
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
       if (result == true)
       {
@@ -185,10 +186,12 @@ namespace BioModule.ViewModels
 
         await _bioService.DatabaseService.PersonUpdateRequest(personList);
       }
+      */
     }
 
     private void PersonUpdateResultProcessing(PersonList list, Result result)
     {
+      /*
       _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonsUpdated;
 
       string message = "";
@@ -209,7 +212,8 @@ namespace BioModule.ViewModels
         
       }
 
-      MessageBox.Show(message);     
+      MessageBox.Show(message);  
+      */   
     }
 
     private void DatabaseService_PersonsUpdated(PersonList list, Result result)

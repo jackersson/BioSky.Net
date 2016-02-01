@@ -75,7 +75,7 @@ namespace BioAccessDevice
       AccessDeviceListener listener;
       if (_accessDevices.TryGetValue(portName, out listener))
       {        
-        listener.Enqueque(command.ToString());
+        listener.Enqueque(command);
       }
     }
 
@@ -85,6 +85,15 @@ namespace BioAccessDevice
       if (_accessDevices.TryGetValue(portName, out listener))
       {
         listener.Subscribe(observer);
+      }
+    }
+
+    public void Unsubscribe(System.IObserver<AccessDeviceActivity> observer, string portName)
+    {
+      AccessDeviceListener listener;
+      if (_accessDevices.TryGetValue(portName, out listener))
+      {
+        listener.Unsubscribe(observer);
       }
     }
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using BioAccessDevice.Abstract;
-
+using System.Diagnostics;
 
 namespace BioAccessDevice.Commands
 {
@@ -17,8 +17,8 @@ namespace BioAccessDevice.Commands
       _actualResponse         = new byte[DALLASKEY_COMMAND_RESPONSE_BYTES_COUNT];
       _noCardDetectedResponse = new byte[] { (byte)AccessDeviceCommandID.READ_DALLAS_KEY, 0, 0, 15, 15, 15, 15
                                                                                               , 15, 15, 15, 15
-                                                                                              , 15, 15, 15, 15
-                                                                                                      ,  3,  8 };
+                                                                                              , 15, 15, 15, 15              
+                                                                                              ,  3,  8 };      
     }   
 
     public override bool Validate()
@@ -28,15 +28,22 @@ namespace BioAccessDevice.Commands
 
 
       bool flag = commandEquality && checkResponseSumValid;
-      if (flag)
+     
+      if (flag && (( timer.ElapsedMilliseconds > DALLASKEY_COMMAND_DELAY && timer.IsRunning) || !timer.IsRunning) )
       {
         byte[] dallasKey = GetDallayKey();
         
         _response = dallasKey;
-        //Console.WriteLine(_response != null ? "Set" : "Null");
-        //Console.WriteLine(_response != null ? _response.ToString() : "");
+
+        timer.Reset();
+        timer.Start();
+        
+        Console.WriteLine(_response != null ? _response.ToString() : "");
       }
-     // Console.WriteLine("End validatin");
+
+      if (timer.ElapsedMilliseconds > DALLASKEY_COMMAND_DELAY)
+        timer.Stop();
+
       return flag;
     }
 
@@ -56,5 +63,9 @@ namespace BioAccessDevice.Commands
     private byte[] _noCardDetectedResponse;
 
     private const short DALLASKEY_COMMAND_RESPONSE_BYTES_COUNT = 17;
+
+    private const int DALLASKEY_COMMAND_DELAY = 2000;
+
+    private Stopwatch timer = new Stopwatch();
   }
 }

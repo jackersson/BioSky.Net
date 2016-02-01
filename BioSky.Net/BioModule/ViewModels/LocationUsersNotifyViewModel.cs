@@ -28,14 +28,14 @@ namespace BioModule.ViewModels
       UsersList       = new DragablListBoxViewModel(disabledDragable);
       UsersNotifyList = new DragablListBoxViewModel(removeDragable);
       UsersNotifyList.ItemRemoved += UsersList.ItemDropped;
-
+      /*
 
       foreach (Person item in _bioEngine.Database().Persons)
       {
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Firstname + " " + item.Lastname };
         AddToGeneralDeviceList(dragableItem);
       }
-
+      */
     }
 
     public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)

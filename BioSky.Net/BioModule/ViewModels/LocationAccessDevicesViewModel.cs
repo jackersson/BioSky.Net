@@ -43,16 +43,12 @@ namespace BioModule.ViewModels
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
 
-      foreach(AccessDevice item in _bioEngine.Database().AccessDevices)
+      foreach(AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
       {
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
         AddToGeneralDeviceList(dragableItem);
       }
-
-
     }    
-
-
 
     public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)
     {

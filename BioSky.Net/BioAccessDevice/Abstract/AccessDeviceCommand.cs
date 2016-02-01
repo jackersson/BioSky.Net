@@ -46,7 +46,7 @@ namespace BioAccessDevice.Abstract
         return false;
       }
 
-      //_response = null;
+      _response = null;
 
       try
       {

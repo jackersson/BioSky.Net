@@ -29,6 +29,7 @@ namespace BioModule.ViewModels
     private BioImagesList _bioImagesList = new BioImagesList();
     public Enroller( IProcessorLocator locator)
     {
+      _locator = locator;
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
     }
 
@@ -120,7 +121,7 @@ namespace BioModule.ViewModels
     private readonly IProcessorLocator    _locator            ;
   }
 
-  public class UserPhotoViewModel : Screen
+  public class UserPhotoViewModel : Screen, IUpdatable
   {
     public UserPhotoViewModel(IBioEngine bioEngine, IImageUpdatable imageViewer, IProcessorLocator locator)
     {
@@ -278,6 +279,11 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => CaptureDevicesNames);
       if(ActiveCaptureDevice == null)
         NotifyOfPropertyChange(() => AvaliableDevicesCount);
+    }
+
+    public void Apply()
+    {
+     
     }
 
     private AsyncObservableCollection<string> _captureDevicesNames;

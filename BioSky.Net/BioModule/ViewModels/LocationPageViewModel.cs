@@ -44,7 +44,7 @@ namespace BioModule.ViewModels
       if (location != null)
         CurrentLocation = location;
       else
-        CurrentLocation = new Location() { LocationName = "", Desctription = "" };
+        CurrentLocation = new Location() { LocationName = "", Description = "" };
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });    

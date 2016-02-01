@@ -6,15 +6,29 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.Collections.ObjectModel;
+using Google.Protobuf;
 
 namespace BioContracts
 {
   //delegate void DataChangedHandler(object sender);
 
   public interface IBioSkyNetRepository
-  {   
-   
+  {
+    IHolder<Visitor, long> VisitorHolder {  get;  }
 
+    IHolder<Location, long> LocationHolder { get; }
+
+    IHolder<Photo, long> PhotoHolder { get; }
+
+    IHolder<CaptureDevice, long> CaptureDeviceHolder  { get; }
+
+    IHolder<AccessDevice, long> AccessDeviceHolder  { get;  }
+
+    IHolder<Card, string> CardHolder  { get; }
+
+    IHolder<Person, long> PersonHolder { get; }
+
+    /*
    event EventHandler AccessDevicesChanged;
    event EventHandler CaptureDevicesChanged;
    event EventHandler CardsChanged;
@@ -39,14 +53,17 @@ namespace BioContracts
 
 
     void UpdatePerson(Person person, DbState state);
+    void UpdateCardFromServer(Card card);
 
     ObservableCollection<Person> Persons { get; }
-    ObservableCollection<Visitor> Visitors { get; }
+    ObservableCollection<IMessage> Visitors { get; }
     ObservableCollection<Location> Locations { get; }
     ObservableCollection<AccessDevice> AccessDevices { get; }
     ObservableCollection<CaptureDevice> CaptureDevices { get; }
     ObservableCollection<Photo> Photos { get; }
     ObservableCollection<Card> Cards { get; }
+
+  */
 
   }
 }

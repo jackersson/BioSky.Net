@@ -1,5 +1,8 @@
-﻿using BioFaceService;
+﻿using BioContracts.Common;
+using BioFaceService;
+using Caliburn.Micro;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,25 +10,27 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public class TrackLocation
-  {
-
+  public class TrackLocation : PropertyChangedBase
+  {    
     public TrackLocation(IProcessorLocator locator, Location location)
     {
+      _locator = locator;
       _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
       _database            = locator.GetProcessor<IBioSkyNetRepository>();
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _bioService          = locator.GetProcessor<IServiceManager>();
 
-      _database.AccessDevicesChanged += _database_AccessDevicesChanged;
-     _database.CaptureDevicesChanged += _database_CaptureDevicesChanged;  
+      _accessDevices = new Dictionary<string, TrackLocationAccessDeviceObserver>();
+
+      _database.AccessDeviceHolder.DataChanged  += AccessDevicesRepository_DataChanged;
+      _database.CaptureDeviceHolder.DataChanged += CaptureDeviceHolder_DataChanged; ;  
 
       Update(location);
     }
 
-    private void _database_CaptureDevicesChanged(object sender, EventArgs e)
+    private void CaptureDeviceHolder_DataChanged()
     {
-      List<CaptureDevice> capture_devices = _database.CaptureDevices
+      List<CaptureDevice> capture_devices = _database.CaptureDeviceHolder.Data
                                             .Where(cap => cap.Locationid == _location.Id)
                                             .ToList();
 
@@ -33,20 +38,61 @@ namespace BioContracts
       {
         _captureDeviceEngine.Add(cd.Devicename);
         CaptureDeviceName = cd.Devicename;
-      }     
+      }
     }
 
-    private void _database_AccessDevicesChanged(object sender, EventArgs e)
+    private void AccessDevicesRepository_DataChanged()
     {
-      List<AccessDevice> access_devices = _database.AccessDevices
-                                         .Where(ad => ad.Locationid == _location.Id)
-                                         .ToList();
+      List<AccessDevice> access_devices = _database.AccessDeviceHolder.Data
+                                          .Where(ad => ad.Locationid == _location.Id)
+                                          .ToList();
 
       foreach (AccessDevice ac in access_devices)
-      {
-        _accessDeviceEngine.Add(ac.Portname);
-        AccessDeviceName = ac.Portname;
+      {        
+        TrackLocationAccessDeviceObserver observer = new TrackLocationAccessDeviceObserver(_locator, ac);
+        observer.AccessDeviceState += OnAccessDeviceStateChanged;
+        observer.CardDetected += OnCardDetected;
+        _accessDevices.Add(ac.Portname, observer);
       }
+    }
+
+    private void OnAccessDeviceStateChanged(bool status )
+    {
+      AccessDevicesStatus = status;      
+    }
+
+    private void OnCardDetected(string cardNumber)
+    {
+      Card card;
+      bool cardFound = _database.CardHolder.DataSet.TryGetValue(cardNumber, out card);
+      
+          
+      
+      Visitor visitor = new Visitor() { Locationid = _location.Id
+                                      , Dbstate = DbState.Insert
+                                      , Time = DateTime.Now.Ticks
+                                      , Status = Visitor.Types.VisitorStatus.Failed
+                                      , Personid = 0
+                                      , Photoid  = 0 };
+      
+      if (cardFound)
+      {
+        Person person;
+        bool personFound = _database.PersonHolder.DataSet.TryGetValue(card.Personid, out person);
+        if (personFound)
+        {
+          //_accessDeviceEngine.Execute(AccessDeviceCommands.CommandAccess, _accessDevice.Portname);
+                  
+          visitor.Personid = person.Id;
+          visitor.Status   = Visitor.Types.VisitorStatus.Success;
+        }
+      }
+
+      //_bioService.DatabaseService.CardUpdated += DatabaseService_CardUpdated;
+
+     // await _bioService.DatabaseService.CardUpdateRequest(cardList);
+
+      //_accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);      
     }
 
     private string _captureDeviceName;
@@ -62,19 +108,21 @@ namespace BioContracts
       }
     }
 
-    private string _accessDeviceName;
-    public string AccessDeviceName
+    
+    private bool _accessDevicesStatus;
+    public bool AccessDevicesStatus
     {
-      get { return _accessDeviceName; }
+      get { return _accessDevicesStatus; }
       set
       {
-        if (_accessDeviceName != value)
+        if (_accessDevicesStatus != value)
         {
-          _accessDeviceName = value;
+          _accessDevicesStatus = value;
+          NotifyOfPropertyChange(() => AccessDevicesStatus);    
         }
       }
     }
-
+    
 
     public void Update(Location location)
     {
@@ -86,25 +134,28 @@ namespace BioContracts
       get { return _location.Id; }
     }
 
+
+    //TODO make it once in Engine - not HERE
     public async void Start()
-    {      
-      
-      if (_database.AccessDevices.Count <= 0)
+    {         
+      if (_database.AccessDeviceHolder.Data.Count <= 0)
         await _bioService.DatabaseService.AccessDeviceRequest(new CommandAccessDevice());
       else
-        _database_AccessDevicesChanged(null, null);
+        AccessDevicesRepository_DataChanged();
 
-      if (_database.CaptureDevices.Count <= 0)
+      if (_database.CaptureDeviceHolder.Data.Count <= 0)
         await _bioService.DatabaseService.CaptureDeviceRequest(new CommandCaptureDevice());
       else
-        _database_CaptureDevicesChanged(null, null);
-       
-
+        CaptureDeviceHolder_DataChanged();  
     }
    
     public void Stop()
     {
-      //_accessDeviceEngine.Remove(_location.Devices_IN_);
+      foreach (KeyValuePair<string, TrackLocationAccessDeviceObserver> ac in _accessDevices)
+      {       
+        ac.Value.AccessDeviceState -= OnAccessDeviceStateChanged;
+        _accessDevices.Remove(ac.Key);
+      }
     }
     
     public object ScreenViewModel { get; set; }
@@ -114,11 +165,14 @@ namespace BioContracts
       get { return _location.LocationName; }
     }
 
+    private Dictionary<string, TrackLocationAccessDeviceObserver> _accessDevices;
+
     private Location _location;
-    private readonly IAccessDeviceEngine  _accessDeviceEngine;
+    private readonly IAccessDeviceEngine  _accessDeviceEngine ;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
-    private readonly IServiceManager      _bioService;
-    private readonly IBioSkyNetRepository _database;
+    private readonly IServiceManager      _bioService         ;
+    private readonly IBioSkyNetRepository _database           ;
+    private readonly IProcessorLocator    _locator            ;
     
   }
 }

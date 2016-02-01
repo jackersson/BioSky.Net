@@ -27,6 +27,7 @@ namespace BioContracts
 
     void Subscribe(System.IObserver<AccessDeviceActivity> observer, string portName);
 
+    void Unsubscribe(System.IObserver<AccessDeviceActivity> observer, string portName);
     void Stop();
   }
 }

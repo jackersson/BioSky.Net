@@ -34,7 +34,12 @@ namespace BioShell
       Console.WriteLine("Exit");
       IBioStarter starter = _container.Resolve<IBioStarter>();
       if (starter != null)
+      {
+       // Thread.Sleep(1000);
         starter.Stop();
+      }
+
+      Thread.Sleep(5000);
     }
 
     protected override void OnStartup(object sender, StartupEventArgs e)

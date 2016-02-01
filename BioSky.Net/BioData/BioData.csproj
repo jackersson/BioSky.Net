@@ -146,6 +146,14 @@
   <ItemGroup>
     <Compile Include="BioDataInstaller.cs" />
     <Compile Include="BioSkyNetRepository.cs" />
+    <Compile Include="Holders\AccessDeviceHolder.cs" />
+    <Compile Include="Holders\Base\HolderBase.cs" />
+    <Compile Include="Holders\CaptureDeviceHolder.cs" />
+    <Compile Include="Holders\CardHolder.cs" />
+    <Compile Include="Holders\LocationHolder.cs" />
+    <Compile Include="Holders\PersonHolder.cs" />
+    <Compile Include="Holders\PhotoHolder.cs" />
+    <Compile Include="Holders\VisitorHolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -50,6 +50,8 @@ namespace BioModule.ViewModels
       DisplayName = "Add New User";
     }
 
+   
+
     public void Update(Person user)
     {
       if (user != null)
@@ -122,12 +124,18 @@ namespace BioModule.ViewModels
 
     public async void Apply()
     {
+
+      foreach (IUpdatable scrn in Items)
+        scrn.Apply();
+
       await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);
+           
     }
 
    
     private Person PersonUpdateResultProcessing(PersonList list, Result result, Person personToUpdate)
     {
+      /*
       _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonUpdated;
 
       IBioSkyNetRepository database = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -163,7 +171,7 @@ namespace BioModule.ViewModels
       }
 
       MessageBox.Show(message);
-
+      */
       return personToUpdate;
     }
 
