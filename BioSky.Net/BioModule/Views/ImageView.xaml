@@ -68,10 +68,10 @@
                 <Ellipse.Style>
                     <Style TargetType="Ellipse">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="None">
+                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="false">
                                 <Setter Property="Fill" Value="#FF02B3FF"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="Medium">
+                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="true">
                                 <Setter Property="Fill" Value="White"/>
                             </DataTrigger>                           
                         </Style.Triggers>

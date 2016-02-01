@@ -18,7 +18,7 @@
         <utils:NullImageConverter x:Key="NullImageConverter"/>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid x:Name="GridLayout">
         <Grid.RowDefinitions>
             <RowDefinition Height="48"/>
             <RowDefinition Height="4"/>
@@ -65,13 +65,13 @@
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
                  Grid.Row="5" Margin="0, 5, 0, 0"                
                  SelectedItem="{Binding SelectedItem}"
-                 ItemsSource="{Binding RobotImages}"  
+                 ItemsSource="{Binding PersonImages}"  
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
                  cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChange]"
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="4" CornerRadius="5" Margin="6">
+                    <Border BorderBrush="Black" BorderThickness="4" CornerRadius="5" Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
                         <Image Source="{Binding Mode=OneWay, Converter={StaticResource NullImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
                     </Border>
                 </DataTemplate>

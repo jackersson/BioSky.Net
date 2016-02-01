@@ -18,13 +18,20 @@ using System.Drawing;
 namespace BioModule.ViewModels
 {
 
-  public class TrackControlItemViewModel : Screen, IObserver<AccessDeviceActivity>
+  public class TrackControlItemViewModel : Conductor<IScreen>.Collection.AllActive, IObserver<AccessDeviceActivity>
   {
     private readonly IBioSkyNetRepository _database;
 
     public TrackControlItemViewModel(IProcessorLocator locator)
     {      
       Initialize(locator);      
+    }
+
+    protected override void OnActivate()
+    {
+      if (_visitorsView != null)
+        ActivateItem(_visitorsView);
+      base.OnActivate();
     }
 
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
@@ -47,6 +54,9 @@ namespace BioModule.ViewModels
       CardDetectedIconVisible = false;
 
       _visitorsView = new VisitorsViewModel(locator);
+
+      Items.Add(_visitorsView);
+
       ImageView = new ImageViewModel();
     }
 

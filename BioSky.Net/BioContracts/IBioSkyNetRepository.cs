@@ -9,11 +9,13 @@ using System.Collections.ObjectModel;
 
 namespace BioContracts
 {
-  //delegate void DataChangedHandler(object sender);
 
+  public delegate void PhotoChangedEventHandler( bool changed);
+  
   public interface IBioSkyNetRepository
-  {   
-   
+  {
+
+    event PhotoChangedEventHandler PhotoEventChanged;
 
    event EventHandler AccessDevicesChanged;
    event EventHandler CaptureDevicesChanged;
@@ -35,8 +37,7 @@ namespace BioContracts
     void UpdateAccessDeviceSet(AccessDeviceList AccessDevices);
     void UpdateCaptureDeviceSet(CaptureDeviceList CaptureDevices);
     void UpdatePhotoSet(PhotoList Photos);
-    void UpdateCardSet(CardList Cards);
-
+    void UpdateCardSet(CardList Cards);    
 
     void UpdatePerson(Person person, DbState state);
 
@@ -47,6 +48,8 @@ namespace BioContracts
     ObservableCollection<CaptureDevice> CaptureDevices { get; }
     ObservableCollection<Photo> Photos { get; }
     ObservableCollection<Card> Cards { get; }
+
+    string PersonsFolderAddress { get; }
 
   }
 }

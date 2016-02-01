@@ -8,6 +8,8 @@ using Caliburn.Micro;
 
 using System.Collections.ObjectModel;
 
+using System.IO;
+
 namespace BioData
 {
   public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
@@ -19,11 +21,10 @@ namespace BioData
     private Dictionary<long, Visitor>       visitorSet      ;
     private Dictionary<long, AccessDevice>  accessDeviceSet ;
     private Dictionary<long, CaptureDevice> captureDeviceSet;
-    private Dictionary<string, Card>          cardSet         ;        
+    private Dictionary<string, Card>        cardSet         ;
 
 
-    //public event EventHandler DataChanged;
-
+    public event PhotoChangedEventHandler PhotoEventChanged;
 
     public event EventHandler AccessDevicesChanged;
     public event EventHandler CaptureDevicesChanged;
@@ -32,6 +33,12 @@ namespace BioData
     public event EventHandler VisitorChanged;
     public event EventHandler LocationChanged;
     public event EventHandler PhotoChanged;
+
+    public void OnDataChanged()
+    {
+      if (PhotoEventChanged != null)
+        PhotoEventChanged(true);
+    }
 
     public void OnAccessDevicesChanged()
     {
@@ -87,6 +94,57 @@ namespace BioData
       captureDeviceSet = new Dictionary<long, CaptureDevice>();
       cardSet          = new Dictionary<string, Card>();
       photoSet         = new Dictionary<long, Photo>();
+
+      string mediaParametr = "MEDIA_PATHWAY:";
+      string mediaPath = GetConfigFile(mediaParametr);
+
+      if (mediaPath == null)      
+        MediaFolderAddress = AppDomain.CurrentDomain.BaseDirectory + "\\media";
+
+      MediaFolderAddress = mediaPath + "\\media";
+      PersonsFolderAddress = MediaFolderAddress + "\\persons";
+    }
+
+    public string GetConfigFile(string parametr)
+    {
+      string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
+      FileInfo configFile = new FileInfo(path);
+
+      if (!configFile.Exists)
+      {
+        //Create a file to write to.
+        using (StreamWriter streamWriter = configFile.CreateText())
+        {
+          streamWriter.WriteLine(parametr);
+        }
+      }
+
+      using (StreamReader sr = new StreamReader(path))
+      {
+        bool hasParametr = false;
+        string sub;
+        while (!sr.EndOfStream)
+        {
+          var line = sr.ReadLine();
+          if (!hasParametr)
+          {
+            if (line.StartsWith(parametr))
+            {
+              hasParametr = true;
+              if (line.Length == parametr.Length)
+              {
+                Console.WriteLine("Path is not set");
+                return null;
+              }
+
+              sub = line.Substring(parametr.Length, line.Length - parametr.Length);
+              Console.WriteLine(sub);
+              return (sub);
+            }
+          }
+        }
+      }
+      return null;
     }
 
     public Photo GetPhotoByID( long id )
@@ -132,6 +190,8 @@ namespace BioData
         if (!personSet.ContainsKey(pers.Id))
           personSet.Add(pers.Id, pers);        
       }
+      NotifyOfPropertyChange(() => Persons);
+      OnPersonChanged();
     }
     public void UpdateVisitorSet(VisitorList list)
     {
@@ -142,6 +202,8 @@ namespace BioData
         if (!visitorSet.ContainsKey(pers.Id))
           visitorSet.Add(pers.Id, pers);
       }
+      NotifyOfPropertyChange(() => Visitors);
+      OnVisitorChanged();
     }
 
     public void UpdateAccessDeviceSet(AccessDeviceList list)
@@ -153,6 +215,8 @@ namespace BioData
         if (!accessDeviceSet.ContainsKey(dev.Id))
           accessDeviceSet.Add(dev.Id, dev);
       }
+      NotifyOfPropertyChange(() => AccessDevices);
+      OnAccessDevicesChanged();
     }
     public void UpdateCaptureDeviceSet(CaptureDeviceList list)
     {
@@ -163,6 +227,8 @@ namespace BioData
         if (!captureDeviceSet.ContainsKey(dev.Id))
           captureDeviceSet.Add(dev.Id, dev);
       }
+      NotifyOfPropertyChange(() => CaptureDevices);
+      OnCaptureDevicesChanged();
     }
     public void UpdateCardSet(CardList list)
     {
@@ -173,6 +239,9 @@ namespace BioData
         if (!cardSet.ContainsKey(card.UniqueNumber))
           cardSet.Add(card.UniqueNumber, card);
       }
+
+      NotifyOfPropertyChange(() => Cards);
+      OnCardsChanged();
     }
     public void UpdateLocationSet(LocationList list)
     {
@@ -185,16 +254,18 @@ namespace BioData
         if (!locationSet.ContainsKey(location.Id))
           locationSet.Add(location.Id, location);
       }
+      NotifyOfPropertyChange(() => Locations);
     }
     public void UpdatePhotoSet(PhotoList list)
     {
       Photos = new ObservableCollection<Photo>(list.Photos);
-
       foreach (Photo photo in list.Photos)
       {
         if (!photoSet.ContainsKey(photo.Id))
           photoSet.Add(photo.Id, photo);
       }
+      NotifyOfPropertyChange(() => Photos);
+      OnDataChanged();
     }   
 
     private void AddPerson(Person person)
@@ -332,7 +403,35 @@ namespace BioData
         if (_photos != value)
         {
           _photos = value;
-          NotifyOfPropertyChange(() => Photos);
+          NotifyOfPropertyChange(() => Photos);                
+        }
+      }
+    }
+
+    private string _mediaFolderAddress;
+    public string MediaFolderAddress
+    {
+      get { return _mediaFolderAddress; }
+      private set
+      {
+        if (_mediaFolderAddress != value)
+        {
+          _mediaFolderAddress = value;
+          NotifyOfPropertyChange(() => MediaFolderAddress);
+        }
+      }
+    }
+
+    private string _personsFolderAddress;
+    public string PersonsFolderAddress
+    {
+      get { return _personsFolderAddress; }
+      private set
+      {
+        if (_personsFolderAddress != value)
+        {
+          _personsFolderAddress = value;
+          NotifyOfPropertyChange(() => PersonsFolderAddress);
         }
       }
     }

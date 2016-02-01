@@ -17,10 +17,11 @@ using System.Windows.Data;
 using BioModule.Utils;
 using System.Windows.Controls;
 using Google.Protobuf.Collections;
+using System.Reflection;
 
 namespace BioModule.ViewModels
 {
-  public class TrackControlViewModel : Conductor<IScreen>.Collection.OneActive
+  public class TrackControlViewModel : Screen
   {
     public TrackControlViewModel( IProcessorLocator locator)
     {
@@ -31,49 +32,20 @@ namespace BioModule.ViewModels
 
       _methodInvoker = new FastMethodInvoker();
 
+      TrackTabControlView = new TrackTabControlViewModel(_locator);
+
       _visitorsView = new VisitorsViewModel(locator);
+
 
       DisplayName = "Tracking";
 
       _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
-
-
-      /*
-            foreach (TrackLocation location in TrackControlItems)
-            {
-              if (location.ScreenViewModel == null)
-                location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
-            }*/
-
-      Items.Add(new TrackControlItemViewModel(_locator));
-      Items.Add(new VisitorsViewModel(_locator));
-
-      ActiveItem = Items[1];
-      OpenTab();
-
-      //OnChecked();
     }
 
-
-
-/*
-    public void Update(TrackLocation trackLocation)
+    protected override void OnActivate()
     {
-      if (trackLocation == null)
-        return;
-
-      Items.Add(new TrackControlItemViewModel(_locator, trackLocation));
-      Items.Add(new VisitorsViewModel(_locator));
-
-      ActiveItem = Items[0];
-      OpenTab();
-    }*/
-    public void OpenTab()
-    {
-      if ( ActiveItem != null)
-        ActiveItem.Activate();
+      _visitorsView.Update();
     }
-
     public void TrackLocations_CollectionChanged(object sender, EventArgs args)
     {
       foreach (TrackLocation location in TrackControlItems)
@@ -81,11 +53,9 @@ namespace BioModule.ViewModels
         if (location.ScreenViewModel == null )
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);         
       }
-      
-      Items[0] = (TrackControlItemViewModel)TrackControlItems[0].ScreenViewModel;
-      ActiveItem = Items[0];
-      OpenTab();
-     // _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { TrackControlItems[0] });
+
+      if (SelectedTrackLocation == null)
+        TrackTabControlView.Update(TrackControlItems[0]);
 
     }
 
@@ -103,6 +73,7 @@ namespace BioModule.ViewModels
         if (_selectedTrackLocation == value)
           return;
         _selectedTrackLocation = value;
+        TrackTabControlView.Update(_selectedTrackLocation);
         NotifyOfPropertyChange(() => SelectedTrackLocation);       
       }
     }  
@@ -111,6 +82,20 @@ namespace BioModule.ViewModels
     public VisitorsViewModel VisitorsView
     {
       get { return _visitorsView; }
+    }
+
+    private TrackTabControlViewModel _trackTabControlView;
+    public TrackTabControlViewModel TrackTabControlView
+    {
+      get { return _trackTabControlView; }
+      set
+      {
+        if (_trackTabControlView != value)
+        {
+          _trackTabControlView = value;
+          NotifyOfPropertyChange(() => TrackTabControlView);
+        }
+      }
     }
 
     private bool _canOpenSettings;
@@ -137,9 +122,6 @@ namespace BioModule.ViewModels
     {
       if (SelectedTrackLocation == null)
         return;
-
-      //object it = Items[0];
-     // _methodInvoker.InvokeMethod(it.GetType(), "Update", it, new object[] { SelectedTrackLocation });
     }
 
     public void ShowLocationFlayout()

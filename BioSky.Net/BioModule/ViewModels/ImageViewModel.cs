@@ -21,19 +21,16 @@ using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
-
-  public enum RingStatus
-  {
-    None,
-    Medium,
-    High
-  };
-
   public class ImageViewModel : Screen, IImageUpdatable
   {
     public ImageViewModel()
     {
       ZoomToFitState = true;
+
+      ProgressRingVisibility = false;
+      ProgressRingImageVisibility = false;
+      ProgressRingTextVisibility = true;
+      ProgressRingText = "0%";
     }  
  
     public void UploadClick(double viewWidth, double viewHeight)
@@ -49,42 +46,6 @@ namespace BioModule.ViewModels
         Zoom(viewWidth, viewHeight);
         SetImageFromFile(openFileDialog.FileName);
       }      
-    }
-
-    //Usage
-    /*
-
-       ProgressRingVisibility = false;
-      ProgressRingImageVisibility = false;
-      ProgressRingTextVisibility = true;
-      ProgressRingText = "0%";
-      ProgressRingStatus = RingStatus.None;
-  */
-
-
-    public async void ProgressStatus()
-    {
-      ProgressRingVisibility = true;
-      ProgressRingTextVisibility = true;
-      ProgressRingImageVisibility = false;
-
-      for (int i = 1; i != 101; ++i)
-      {
-        ProgressRingText = i + "%";
-        if (i < 50)
-          ProgressRingStatus = RingStatus.None;
-        if (i == 100)
-        {
-          ProgressRingStatus = RingStatus.Medium;
-          ProgressRingTextVisibility = false;
-          ProgressRingImageVisibility = true;
-          ProgressRingIconSource = ResourceLoader.OkIconSource;
-          await Task.Delay(2000);
-          ProgressRingIconSource = ResourceLoader.CancelIconSource;
-        }
-
-        await Task.Delay(50);
-      }
     }
 
     private void SetImageFromFile(string fileName)
@@ -103,6 +64,7 @@ namespace BioModule.ViewModels
     public void Update(Person user )
     {
       User = user;
+      
       //TODO User photo
       //SetImageFromFile(User.Photo);
     }
@@ -282,7 +244,35 @@ namespace BioModule.ViewModels
 
     //*********************************************ProgressRing**************************************************************
 
+    public async void ShowProgress(int progress, bool status)
+    {
+      ProgressRingVisibility = true;
+      ProgressRingTextVisibility = true;
+      ProgressRingImageVisibility = false;
+      ProgressRingStatus = false;
 
+      ProgressRingText = progress + "%";
+      if (progress == 100)
+      {
+        ProgressRingTextVisibility = false;
+        ProgressRingImageVisibility = true;
+        ProgressRingStatus = true;
+
+        if(status)
+          ProgressRingIconSource = ResourceLoader.OkIconSource;
+        else
+          ProgressRingIconSource = ResourceLoader.CancelIconSource;
+
+        await Task.Delay(3000);
+      }
+
+
+
+   
+      
+
+    }
+   
     private bool _progressRingVisibility;
     public bool ProgressRingVisibility
     {
@@ -297,8 +287,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private RingStatus _progressRingStatus;
-    public RingStatus ProgressRingStatus
+    private bool _progressRingStatus;
+    public bool ProgressRingStatus
     {
       get { return _progressRingStatus; }
       set

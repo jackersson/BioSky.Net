@@ -120,6 +120,7 @@ namespace BioModule.ViewModels
     private readonly IProcessorLocator    _locator            ;
   }
 
+  //********************************UserPhotoViewModel**************************************************************************
   public class UserPhotoViewModel : Screen
   {
     public UserPhotoViewModel(IBioEngine bioEngine, IImageUpdatable imageViewer, IProcessorLocator locator)
@@ -127,13 +128,35 @@ namespace BioModule.ViewModels
       _locator             = locator;
       _bioEngine           = bioEngine;
       _imageViewer         = imageViewer;
-      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-      
+      _captureDeviceEngine = _locator.GetProcessor<ICaptureDeviceEngine>();
+      _database            = _locator.GetProcessor<IBioSkyNetRepository>();
+
       DisplayName = "Photo";
 
       _enroller = new Enroller(locator);
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();    
+    }
+
+
+    public void Update(Person person)
+    {
+      if (person == null)
+        return;
+
+      _person = person;
+
+      
+      string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + _person.Id;
+      System.IO.Directory.CreateDirectory(personFolder);
+
+      _personImages = new ObservableCollection<Uri>();
+      DirectoryInfo personImageDir = new DirectoryInfo(personFolder);
+      foreach (FileInfo personImageFile in personImageDir.GetFiles("*.jpg"))
+      {
+        Uri uri = new Uri(personImageFile.FullName);
+        PersonImages.Add(uri);
+      }
     }
 
     protected override void OnActivate()
@@ -243,17 +266,17 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<Uri> _robotImages;
-    public ObservableCollection<Uri> RobotImages
+    private ObservableCollection<Uri> _personImages;
+    public ObservableCollection<Uri> PersonImages
     {
-      get { return _robotImages; }
+      get { return _personImages; }
       set
       {
-        if (_robotImages != value)
+        if (_personImages != value)
         {
-          _robotImages = value;
+          _personImages = value;
 
-          NotifyOfPropertyChange(() => RobotImages);
+          NotifyOfPropertyChange(() => PersonImages);
         }
       }
     }
@@ -269,6 +292,20 @@ namespace BioModule.ViewModels
           _selectedItem = value;
 
           NotifyOfPropertyChange(() => SelectedItem);
+        }
+      }
+    }
+
+    private Person _person;
+    private Person Person
+    {
+      get { return _person; }
+      set
+      {
+        if (_person != value)
+        {
+          _person = value;
+          NotifyOfPropertyChange(() => Person);
         }
       }
     }
@@ -340,5 +377,6 @@ namespace BioModule.ViewModels
     private readonly IBioEngine           _bioEngine          ;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IImageUpdatable      _imageViewer        ;
+    private readonly IBioSkyNetRepository _database;
   }
 }

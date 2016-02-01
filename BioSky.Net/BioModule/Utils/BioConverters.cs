@@ -113,11 +113,16 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
+
         Photo photo = _database.GetPhotoByID((long)value);
+        if (photo == null)
+          return null;
 
-        string addr = Directory.GetCurrentDirectory();
+        string addr = _database.PersonsFolderAddress + "\\" + photo.Personid;
 
-        if (photo != null && File.Exists(photo.FileLocation))
+        System.IO.Directory.CreateDirectory(addr);
+
+        if (photo != null && File.Exists(addr + "\\" + photo.FileLocation))
         {
           BitmapSource img = new BitmapImage(new Uri(addr + "\\" + photo.FileLocation, UriKind.RelativeOrAbsolute));
           return img;

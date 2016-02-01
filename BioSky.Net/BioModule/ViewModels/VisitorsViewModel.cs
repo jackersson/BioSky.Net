@@ -36,15 +36,59 @@ namespace BioModule.ViewModels
       _bioService = _locator.GetProcessor<IServiceManager>();
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      _visitors         = new ObservableCollection<Visitor>();
-      _selectedItemIds  = new ObservableCollection<long>();
+      _selectedItemIds = new ObservableCollection<long>();
 
       LocationId = -1;
 
-      Visitors = _database.Visitors;
+      _database.PhotoEventChanged += _database_DataChanged;
+      _database.VisitorChanged += _database_Visitors_DataChanged;   
+    } 
 
+    public void OnDataContextChanged()
+    {
+      ImageView = new ImageViewModel();
+    }
+    protected override void OnActivate()
+    {
+      Visitors = null;
+      Visitors = _database.Visitors;
+      GetLastVisitor();
+      base.OnActivate();
+    }
+
+    private void _database_DataChanged(bool flag)
+    {
+      if (!IsActive)
+        return;
+      Visitors = null;
+      Visitors = _database.Visitors;
+      GetLastVisitor();
+    }
+    private void _database_Visitors_DataChanged(object sender, EventArgs e)
+    {
+      Visitors = null;
+      Visitors = _database.Visitors;
+      GetLastVisitor();
+    }
+
+    private void GetLastVisitor()
+    {
       if (Visitors.Count != 0)
-        LastVisitor = Visitors[Visitors.Count - 1];    
+        LastVisitor = Visitors[Visitors.Count - 1];
+    }
+
+    private ImageViewModel _imageView;
+    public ImageViewModel ImageView
+    {
+      get { return _imageView; }
+      set
+      {
+        if (_imageView != value)
+        {
+          _imageView = value;
+          NotifyOfPropertyChange(() => ImageView);
+        }
+      }
     }
 
 /*
@@ -183,6 +227,26 @@ namespace BioModule.ViewModels
       foreach (long item in SelectedItemIds)
       {
         Console.WriteLine(item);
+      }
+
+      if(SelectedItemIds.Count == 1)
+      {
+        Visitor visitor = _bioEngine.Database().GetVisitorByID(SelectedItemIds[0]);
+        if (visitor == null)
+          return;
+        Person person = _bioEngine.Database().GetPersonByID(visitor.Personid);
+        if (person == null)
+          return;
+        Photo photo = _bioEngine.Database().GetPhotoByID(person.Thumbnail);
+        if (photo == null)
+          return;
+
+        string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + person.Id;
+
+        Uri uri = new Uri(personFolder +"\\" + photo.FileLocation);
+        if(uri == null)
+          return;
+        ImageView.UpdateImage(uri);
       }
     }
     public void OnMouseRightButtonDown(Visitor visitor)

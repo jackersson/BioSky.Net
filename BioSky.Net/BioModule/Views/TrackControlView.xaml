@@ -162,42 +162,9 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
             
-        </DataGrid> 
+        </DataGrid>
 
-        <TabControl Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"
-                    Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="0,2,5,0"
-                    VerticalAlignment="Stretch" ItemsSource="{Binding Items}"               
-                    SelectedItem="{Binding ActiveItem}"
-                    cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"                    
-                    BorderThickness="2"
-                    >
-            <TabControl.Resources>
-                <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
-                    <ContentControl x:Name="ActiveItem" 
-                              cal:View.Context="Detailed"                                    
-                              cal:View.Model="{Binding}"                              
-                                 >
-                    </ContentControl> 
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
-                    <ContentControl x:Name="ActiveItem" 
-                              cal:View.Context="Detailed"                                    
-                              cal:View.Model="{Binding}"                              
-                                 >
-                    </ContentControl>
-                </DataTemplate>
-            </TabControl.Resources>
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock
-        				Text="{Binding DisplayName}" FontSize="14" />
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <ContentControl Content="{Binding}" ></ContentControl>
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
+        <local:TrackTabControlView  DataContext="{Binding TrackTabControlView}" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        </local:TrackTabControlView>
     </Grid>
 </UserControl>
