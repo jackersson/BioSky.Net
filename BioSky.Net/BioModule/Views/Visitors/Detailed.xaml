@@ -11,12 +11,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             mc:Ignorable="d" 
              
-             d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
-             >
-
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400"              
+             >  
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -33,131 +32,127 @@
     </UserControl.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
-        </Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>       
+        
+        <Grid x:Name="GridLayout" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
+            </Grid.ColumnDefinitions>
 
-        <DataGrid 
-                  BorderThickness="1" 
-                  Grid.Column="0" HorizontalAlignment="Stretch" 
-                  Grid.ColumnSpan="5"
-                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
-                  ItemsSource="{Binding Visitors}"                
-                  GridLinesVisibility="All"
-                  AutoGenerateColumns="False"
-                  CanUserSortColumns="True" CanUserAddRows="False"
-                  materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                  materialDesign:DataGridAssist.ColumnHeaderPadding="8"              
-                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
-                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"              
-                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
-                                      [Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]">
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Status}" Value="Success">
-                            <Setter Property="Background" Value="#66EAFFEA"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Status}" Value="Failed">
-                            <Setter Property="Background" Value="#4CFFECEC"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.RowStyle>
 
-            <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"                                        
-                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"                                        
-                                        RenderOptions.ClearTypeHint="Enabled"
-                                        TextOptions.TextFormattingMode="Display"                                        
-                                        >
-                    <DataGridCheckBoxColumn.Header>
-                        <!--padding to allow hit test to pass thru for sorting -->
-                        <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
-                            <CheckBox HorizontalAlignment="Center"                                               
-                                              DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                              IsChecked="{Binding IsAllItemsSelected}" />
-                        </Border>
-                    </DataGridCheckBoxColumn.Header>
-                </DataGridCheckBoxColumn>
 
-                <DataGridTemplateColumn Header="User" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="5" Margin="2">
-                                    <Image Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
-                                       Stretch="Fill" Width="50" Height="50"/>
-                                </Border>
-                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}" HorizontalAlignment="Center"></TextBlock>
-                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" HorizontalAlignment="Center"></TextBlock>                             
-                            </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Header="Photo" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding User.Photo, Converter={StaticResource ConvertPhotoPathToImage}}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTextColumn Header="Info"         IsReadOnly="True" Binding="{Binding User.Firstname}"/>
-                <DataGridTextColumn Header="Location"     IsReadOnly="True" Binding="{Binding Locationid, Converter={x:Static utils:ConverterInitializer.LocationIdToLocationnameConverter}}"/>
-                <DataGridTextColumn Header="Time"         IsReadOnly="True" Binding="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}"/>
-                
-            </DataGrid.Columns>
-
-            <DataGrid.ContextMenu >
-                <ContextMenu x:Name="VisitorContextMenu" IsEnabled="True" >
-                    <MenuItem Header="Open in New Tab"  
+            <ListBox Grid.Column="0" HorizontalAlignment="Stretch" 
+                 Grid.ColumnSpan="5" BorderThickness="1"
+                 Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"                   
+                 SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
+                 ItemsSource="{Binding Visitors}" 
+                 SelectionMode="Extended"
+                 ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
+                 cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
+                                     [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)]"
+                 >
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
+                            <StackPanel.ContextMenu>
+                                <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                    <MenuItem Header="Open in New Tab"  
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
                               />
-                    <MenuItem Header="Remove" 
+                                    <MenuItem Header="Remove" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
                               />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
+                                </ContextMenu>
+                            </StackPanel.ContextMenu>
+                            <Image Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                                       Stretch="Fill" Width="128" Height="128"/>
+                            <StackPanel Width="128" Orientation="Horizontal" >
+                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}"
+                                   HorizontalAlignment="Left" Foreground="#FF5E82A8" FontWeight="Bold"></TextBlock>
+                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" 
+                                   HorizontalAlignment="Right" Foreground="#FF5E82A8" FontWeight="Bold" Margin="5,0,0,0"></TextBlock>
+                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="104" />
+                                    <ColumnDefinition Width="24"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Width="104" Text="{Binding Locationid, Converter={x:Static utils:ConverterInitializer.LocationIdToLocationnameConverter}}" TextWrapping="Wrap" 
+                                   HorizontalAlignment="Left" Foreground="Gray"></TextBlock>
+                                    <TextBlock Text="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}" HorizontalAlignment="Left" 
+                                   Foreground="Gray" FontSize="11" FontWeight="SemiBold"></TextBlock>
+                                </StackPanel>
+                                <Image Grid.Column="1" Width="24" Height="24" VerticalAlignment="Bottom">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Status}" Value="Success">
+                                                    <Setter Property="Source" Value="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                                    <Setter Property="Source" Value="{Binding Source={StaticResource ResourceLoader}, Path=ErrorIconSource}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Grid>
 
-        </DataGrid>
-
-        <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+            
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
                 ToolTip="Delete"
                 >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
-        </Button>
+                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
+            </Button>
 
-        <TextBox  Margin="0, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   
+            <TextBox  Margin="0, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   
                   Grid.ColumnSpan="2"
                          Controls:TextBoxHelper.Watermark="Search..."
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
                          Controls:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCmd, Mode=OneWay}">
-            <TextBox.Style>
-                <Style TargetType="{x:Type TextBox}"
+                <TextBox.Style>
+                    <Style TargetType="{x:Type TextBox}"
                                BasedOn="{StaticResource SearchMetroTextBox}">
-                    <Style.Triggers>
-                        <Trigger Property="Controls:TextBoxHelper.HasText"
+                        <Style.Triggers>
+                            <Trigger Property="Controls:TextBoxHelper.HasText"
                                          Value="True">
-                            <Setter Property="Controls:TextBoxHelper.ButtonTemplate"
+                                <Setter Property="Controls:TextBoxHelper.ButtonTemplate"
                                             Value="{DynamicResource ChromelessButtonTemplate}" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+        </Grid>
+        <Grid Margin="0,5,0,0"  cal:Message.Attach="[Event Loaded] = [Action OnDataContextChanged()]">
+            <local:ImageView                    
+                    DataContext="{Binding ImageView}">
+                </local:ImageView>            
+        </Grid>
     </Grid>
 </UserControl>

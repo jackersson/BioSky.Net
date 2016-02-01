@@ -235,6 +235,7 @@
     <Compile Include="ViewModels\LoginDialogViewModel.cs" />
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
+    <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
     <Compile Include="ViewModels\YesNoDialogViewModel.cs" />
     <Compile Include="Views\AboutDialogView.xaml.cs">
@@ -300,6 +301,9 @@
     </Compile>
     <Compile Include="Views\TrackControlView.xaml.cs">
       <DependentUpon>TrackControlView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrackTabControlView.xaml.cs">
+      <DependentUpon>TrackTabControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserContactlessCardView.xaml.cs">
       <DependentUpon>UserContactlessCardView.xaml</DependentUpon>
@@ -415,6 +419,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TrackControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TrackTabControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

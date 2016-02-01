@@ -11,9 +11,10 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
-             d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
+             
              >
 
 
@@ -43,7 +44,9 @@
                 </Grid.ColumnDefinitions>
 
                 <Image  Grid.Column="0" Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
-                                       Stretch="Fill" Width="50" Height="50"/>
+                         Stretch="Fill" Width="50" Height="50">                   
+
+                </Image>
 
                 <StackPanel Margin="5,-4,0,0" Grid.Column="1">
                     <TextBlock>Last Activity</TextBlock>

@@ -70,10 +70,12 @@
 
 
 
-        <dragablz:TabablzControl Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
+        <dragablz:TabablzControl x:Name="MyTabview" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
                                  SelectedItem="{Binding ActiveItem}"    
                                  ItemsSource="{Binding Items}"
-                                 AllowDrop="True" ShowDefaultCloseButton="True">
+                                 AllowDrop="True" ShowDefaultCloseButton="True"
+                                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged()]"                                 
+                                 >
             <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">
                     <local:UsersView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}">

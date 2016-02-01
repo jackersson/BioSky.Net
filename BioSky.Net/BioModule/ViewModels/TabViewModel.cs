@@ -41,6 +41,14 @@ namespace BioModule.ViewModels
       _methodInvoker.InvokeMethod(tabType, "Update", ActiveItem, args);      
     }
 
+    public void OnSelectionChanged()
+    {
+      ActiveItem.Activate();
+    }
+
+
+
+
     private FastMethodInvoker _methodInvoker;
     private IProcessorLocator _locator ;
   }

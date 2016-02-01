@@ -25,9 +25,8 @@ namespace BioModule.ViewModels
     public UserInformationViewModel()
     {           
       DisplayName = "Information";     
-    }    
-
-    
+    }
+        
     public void Update( Person user)
     {
       User = user;      

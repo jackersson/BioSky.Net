@@ -44,10 +44,36 @@ namespace BioModule.ViewModels
 
       _selectedItemIds = new ObservableCollection<long>();
 
+      _database.PersonChanged += _database_Persons_DataChanged;
+
       IsDeleteButtonEnabled = false;
 
-      //Users = _database.Persons;
-    }    
+      _database.PhotoEventChanged += _database_DataChanged;      
+    }
+
+    private void _database_Persons_DataChanged(object sender, EventArgs e)
+    {
+      Users = null;
+      Users = _database.Persons;
+    }
+
+    public void Update()
+    {
+      NotifyOfPropertyChange(() => Users);
+    }
+    protected override void OnActivate()
+    {
+      Users = null;
+      Users = _database.Persons;      
+      base.OnActivate();
+    }
+    private void _database_DataChanged(bool flag)
+    {
+      if (!IsActive)
+        return;
+      Users = null;
+      Users = _database.Persons;      
+    }
 
     private ObservableCollection<Person> _users;
     public ObservableCollection<Person> Users
@@ -166,7 +192,6 @@ namespace BioModule.ViewModels
 
     public async Task UserUpdatePerformer(DbState state)
     {
-      /*
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
       if (result == true)
       {
@@ -186,12 +211,10 @@ namespace BioModule.ViewModels
 
         await _bioService.DatabaseService.PersonUpdateRequest(personList);
       }
-      */
     }
 
     private void PersonUpdateResultProcessing(PersonList list, Result result)
     {
-      /*
       _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonsUpdated;
 
       string message = "";
@@ -212,8 +235,7 @@ namespace BioModule.ViewModels
         
       }
 
-      MessageBox.Show(message);  
-      */   
+      MessageBox.Show(message);     
     }
 
     private void DatabaseService_PersonsUpdated(PersonList list, Result result)
@@ -258,6 +280,16 @@ namespace BioModule.ViewModels
       SelectedItem = user;
     }
 
+    public void OnMouseDoubleClick(Person user)
+    {
+      if(user != null)
+      {
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
+                             , new object[] { user });
+      }
+    }
+
+
     public void ShowUserPage(bool isExistingUser)
     {
       if (!isExistingUser)
@@ -266,7 +298,7 @@ namespace BioModule.ViewModels
       {
         foreach (long item in SelectedItemIds)
         {
-          _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { Users.Where(x => x.Id == (long)item).FirstOrDefault() });
+          _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { _bioEngine.Database().GetPersonByID(item)});
         }
       }
 
