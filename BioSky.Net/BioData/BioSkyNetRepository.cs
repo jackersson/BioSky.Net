@@ -23,6 +23,8 @@ namespace BioData
     AccessDeviceHolder  _accessDeviceHolder ;
     PhotoHolder         _photoHolder        ;
 
+    ILocalStorage       _localStorage       ;
+
     public BioSkyNetRepository()
     {
       _visitorHolder       = new VisitorHolder      ();
@@ -33,116 +35,52 @@ namespace BioData
       _accessDeviceHolder  = new AccessDeviceHolder ();
       _photoHolder         = new PhotoHolder        ();
 
-      string mediaParametr = "MEDIA_PATHWAY:";
-      string mediaPath = GetConfigFile(mediaParametr);
+      _localStorage        = new BioLocalStorage();
 
-      if (mediaPath == null)      
-        LocalStoragePath = AppDomain.CurrentDomain.BaseDirectory;    
+    
     }
 
-    IHolder<Visitor, long> IBioSkyNetRepository.VisitorHolder
+    public IHolder<Visitor, long> VisitorHolder
     {
       get { return _visitorHolder; }
     }
 
-    IHolder<AccessDevice, long> IBioSkyNetRepository.AccessDeviceHolder
+    public IHolder<AccessDevice, long> AccessDeviceHolder
     {
       get { return _accessDeviceHolder; }
     }
 
-    IHolder<Location, long> IBioSkyNetRepository.LocationHolder
+    public IHolder<Location, long> LocationHolder
     {
       get { return _locationHolder; }
     }
 
-    IHolder<Photo, long> IBioSkyNetRepository.PhotoHolder
+    public IHolder<Photo, long> PhotoHolder
     {
       get { return _photoHolder; }
     }
 
-    IHolder<Person, long> IBioSkyNetRepository.PersonHolder
+    public IHolder<Person, long> PersonHolder
     {
       get { return _personHolder; }
     }
 
-    IHolder<CaptureDevice, long> IBioSkyNetRepository.CaptureDeviceHolder
+    public IHolder<CaptureDevice, long> CaptureDeviceHolder
     {
       get { return _captureDeviceHolder; }
     }
 
-    IHolder<Card, string> IBioSkyNetRepository.CardHolder
+    public IHolder<Card, string> CardHolder
     {
       get { return _cardHolder; }
     }
 
-    //TODO to Utils not Repository
-    public string GetConfigFile(string parametr)
+    public ILocalStorage LocalStorage
     {
-      string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
-      FileInfo configFile = new FileInfo(path);
-
-      if (!configFile.Exists)
-      {
-        //Create a file to write to.
-        using (StreamWriter streamWriter = configFile.CreateText())
-        {
-          streamWriter.WriteLine(parametr);
-        }
-      }
-
-      using (StreamReader sr = new StreamReader(path))
-      {
-        bool hasParametr = false;
-        string sub;
-        while (!sr.EndOfStream)
-        {
-          var line = sr.ReadLine();
-          if (!hasParametr)
-          {
-            if (line.StartsWith(parametr))
-            {
-              hasParametr = true;
-              if (line.Length == parametr.Length)
-              {
-                Console.WriteLine("Path is not set");
-                return null;
-              }
-
-              sub = line.Substring(parametr.Length, line.Length - parametr.Length);
-              Console.WriteLine(sub);
-              return (sub);
-            }
-          }
-        }
-      }
-      return null;
+      get { return _localStorage;  }
     }
 
-    private string _localStoragePath;
-    public string LocalStoragePath
-    {
-      get { return _localStoragePath; }
-      set
-      {
-        if (_localStoragePath != value)
-        {
-          _localStoragePath = value;
-          NotifyOfPropertyChange(() => LocalStoragePath);
-          NotifyOfPropertyChange(() => MediaFolderAddress);
-          NotifyOfPropertyChange(() => PersonsFolderAddress);
-        }
-      }
-    }
-
-    public string MediaFolderAddress
-    {
-      get { return _localStoragePath + "\\media"; }      
-    }
-
-    public string PersonsFolderAddress
-    {
-      get { return MediaFolderAddress + "\\persons"; }    
-    }
+   
 
   }
 }

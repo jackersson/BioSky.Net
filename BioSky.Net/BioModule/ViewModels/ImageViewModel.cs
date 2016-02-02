@@ -25,12 +25,7 @@ namespace BioModule.ViewModels
   {
     public ImageViewModel()
     {
-      ZoomToFitState = true;
-
-      ProgressRingVisibility = false;
-      ProgressRingImageVisibility = false;
-      ProgressRingTextVisibility = true;
-      ProgressRingText = "0%";
+      ZoomToFitState = true;   
     }  
  
     public void UploadClick(double viewWidth, double viewHeight)
@@ -244,33 +239,40 @@ namespace BioModule.ViewModels
 
     //*********************************************ProgressRing**************************************************************
 
+
+      //TODO refactor as soon as possible (To difficult to understand)
     public async void ShowProgress(int progress, bool status)
     {
-      ProgressRingVisibility = true;
-      ProgressRingTextVisibility = true;
-      ProgressRingImageVisibility = false;
-      ProgressRingStatus = false;
+      ProgressRingVisibility         = true ;
+      ProgressRingTextVisibility     = true ;
+      ProgressRingImageVisibility    = false ;
+      ProgressRingStatus             = true ;
+      ProgressRingProgressVisibility = true ;
 
       ProgressRingText = progress + "%";
       if (progress == 100)
       {
         ProgressRingTextVisibility = false;
         ProgressRingImageVisibility = true;
-        ProgressRingStatus = true;
+        ProgressRingStatus = false;
+        ProgressRingProgressVisibility = false;
 
-        if(status)
-          ProgressRingIconSource = ResourceLoader.OkIconSource;
-        else
-          ProgressRingIconSource = ResourceLoader.CancelIconSource;
+        ProgressRingIconSource = status ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
 
         await Task.Delay(3000);
-      }
-
-
-
-   
+        ProgressRingVisibility = false;
+      } 
       
 
+    }
+
+    private void Show(bool show = true)
+    {
+      ProgressRingVisibility         = false;
+      ProgressRingImageVisibility    = false;
+      ProgressRingTextVisibility     = true ;
+      ProgressRingProgressVisibility = true ;
+      ProgressRingText = "0%";
     }
    
     private bool _progressRingVisibility;
@@ -339,6 +341,20 @@ namespace BioModule.ViewModels
         {
           _progressRingImageVisibility = value;
           NotifyOfPropertyChange(() => ProgressRingImageVisibility);
+        }
+      }
+    }
+
+    private bool _progressRingProgressVisibility;
+    public bool ProgressRingProgressVisibility
+    {
+      get { return _progressRingProgressVisibility; }
+      set
+      {
+        if (_progressRingProgressVisibility != value)
+        {
+          _progressRingProgressVisibility = value;
+          NotifyOfPropertyChange(() => ProgressRingProgressVisibility);
         }
       }
     }

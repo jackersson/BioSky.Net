@@ -240,7 +240,7 @@ namespace BioModule.ViewModels
         if (visitorFound)
         {
           Person person = null;
-          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(id, out person);
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Id, out person);
           _selector.ShowContent(ShowableContentControl.TabControlContent
                                , ViewModelsID.UserPage
                                , new object[] { person });

@@ -10,6 +10,9 @@ namespace BioModule.Utils
   public interface IImageUpdatable
   {
 
+    //TODO not here - as separate element
+    void ShowProgress(int progress, bool status);
+
     void UpdateImage(ref Bitmap img);
 
     void UpdateImage(Uri uriSource);

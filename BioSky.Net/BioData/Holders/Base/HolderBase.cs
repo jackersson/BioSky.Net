@@ -16,12 +16,12 @@ namespace BioData.Holders.Base
   {    
     public HolderBase()
     {
-      _data    = new ObservableCollection<TValue>();
+      _data    = new AsyncObservableCollection<TValue>();
       _dataSet = new Dictionary<TKey, TValue>();
     }
 
-    private ObservableCollection<TValue> _data;
-    public ObservableCollection<TValue> Data
+    private AsyncObservableCollection<TValue> _data;
+    public AsyncObservableCollection<TValue> Data
     {
       get { return _data; }
       private set
@@ -46,27 +46,24 @@ namespace BioData.Holders.Base
     }
 
 
-    public virtual void Update(IEnumerable list, Result result)
+    public virtual void Update(IList<TValue> list, Result result)
     {
-      Console.WriteLine("On update");
-
+      Console.WriteLine("On update");  
       OnDataChanged();
+      OnDataUpdated(list, result);
     }
 
     public void Update(IList<TValue> list)
     {
-      Data = new ObservableCollection<TValue>(list);
+      Data = new AsyncObservableCollection<TValue>(list);
       UpdateDataSet(list);
-      OnDataChanged();
+      OnDataChanged();      
     }
 
-    protected virtual void UpdateDataSet(IList<TValue> list)
-    {
-
-    }
+    protected virtual void UpdateDataSet(IList<TValue> list) {  }
 
     protected void UpdateItem(TValue obj, TKey key, DbState state)
-    {
+    {      
       switch (state)
       {
         case DbState.Insert:
@@ -88,7 +85,7 @@ namespace BioData.Holders.Base
     private void Add(TValue obj, TKey key)
     {     
       Data.Add(obj);
-      AddToDataSet(obj, key);
+      AddToDataSet(obj, key);   
     }
 
     protected void AddToDataSet(TValue obj, TKey key)
@@ -115,6 +112,13 @@ namespace BioData.Holders.Base
         DataChanged();
     }
 
-    public event DataChangedHandler DataChanged;
+    protected void OnDataUpdated(IList<TValue> list, Result result)
+    {
+      if (DataUpdated != null)
+        DataUpdated(list, result);
+    }
+
+    public event DataChangedHandler         DataChanged;
+    public event DataUpdatedHandler<TValue> DataUpdated;
   }
 }

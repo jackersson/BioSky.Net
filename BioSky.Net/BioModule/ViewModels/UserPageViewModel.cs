@@ -33,6 +33,7 @@ namespace BioModule.ViewModels
 
       IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
       _bioService = _locator.GetProcessor<IServiceManager>();
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
       CurrentImageView = new ImageViewModel();
 
@@ -69,6 +70,7 @@ namespace BioModule.ViewModels
             Firstname = ""
           , Lastname = ""
           , Thumbnail = 0
+          , Dbstate = DbState.Insert
           , Gender = BioFaceService.Person.Types.Gender.Male
           , Rights = BioFaceService.Person.Types.Rights.Operator
         };
@@ -112,75 +114,33 @@ namespace BioModule.ViewModels
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
       if (result == true)
       {
+
         _user.Dbstate = state;
+
         PersonList personList = new PersonList();
         personList.Persons.Add(_user);
 
-        _bioService.DatabaseService.PersonUpdated += DatabaseService_PersonUpdated;
+        _database.PersonHolder.DataUpdated += PersonHolder_DataUpdated;
 
         await _bioService.DatabaseService.PersonUpdateRequest(personList);
       }     
     }
 
+    //TODO show that person updated
+    private void PersonHolder_DataUpdated(IList<Person> list, Result result)
+    {
+      _database.PersonHolder.DataUpdated -= PersonHolder_DataUpdated;
+      MessageBox.Show("Person Updated");
+    }
+
     public async void Apply()
     {
+      foreach (IUpdatable updatableScreen in Items)
+        updatableScreen.Apply();
 
-      foreach (IUpdatable scrn in Items)
-        scrn.Apply();
-
-      await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);
-           
+      await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);           
     }
 
-   
-    private Person PersonUpdateResultProcessing(PersonList list, Result result, Person personToUpdate)
-    {
-      /*
-      _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonUpdated;
-
-      IBioSkyNetRepository database = _locator.GetProcessor<IBioSkyNetRepository>();
-
-      string message = "";
-
-      foreach (ResultPair rp in result.Status)
-      {
-        Person person = null;
-        if (rp.Status == ResultStatus.Success )
-        {
-          if (rp.State == DbState.Insert)
-          {
-            person = personToUpdate;
-            person.Id = rp.Id;
-          }
-          else          
-            person = list.Persons.Where(x => x.Id == rp.Id).FirstOrDefault();       
-
-          database.UpdatePerson(person, rp.State);
-     
-        }
-        else
-        {
-          if (rp.State == DbState.Insert)
-            message += rp.Status.ToString() + " " + rp.State.ToString() + " " + personToUpdate.Firstname + " " + personToUpdate.Lastname + "\n";
-        }
-
-        if (person != null )
-          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + person.Firstname + " " + person.Lastname + "\n";
-
-        personToUpdate = person;
-      }
-
-      MessageBox.Show(message);
-      */
-      return personToUpdate;
-    }
-
-    private void DatabaseService_PersonUpdated( PersonList list, Result result)
-    {
-      Person person = PersonUpdateResultProcessing(list, result, _user);
-      Update(person);      
-    }
-   
     private Person _user;
 
     private readonly FastMethodInvoker _methodInvoker;
@@ -190,6 +150,8 @@ namespace BioModule.ViewModels
     private IWindowManager _windowManager;
 
     private UserPageMode  _userPageMode ;
+
+    private IBioSkyNetRepository _database;
 
     private readonly IServiceManager _bioService ;
     

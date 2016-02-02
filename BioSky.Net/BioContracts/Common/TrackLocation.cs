@@ -20,7 +20,8 @@ namespace BioContracts
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _bioService          = locator.GetProcessor<IServiceManager>();
 
-      _accessDevices = new Dictionary<string, TrackLocationAccessDeviceObserver>();
+      _accessDevices  = new Dictionary<string, TrackLocationAccessDeviceObserver>();
+      _captureDevices = new Dictionary<string, TrackLocationCaptureDeviceObserver>();
 
       _database.AccessDeviceHolder.DataChanged  += AccessDevicesRepository_DataChanged;
       _database.CaptureDeviceHolder.DataChanged += CaptureDeviceHolder_DataChanged; ;  
@@ -36,7 +37,8 @@ namespace BioContracts
 
       foreach (CaptureDevice cd in capture_devices)
       {
-        _captureDeviceEngine.Add(cd.Devicename);
+        TrackLocationCaptureDeviceObserver observer = new TrackLocationCaptureDeviceObserver(_locator, cd);
+        _captureDevices.Add(cd.Devicename, observer);
         CaptureDeviceName = cd.Devicename;
       }
     }
@@ -61,13 +63,13 @@ namespace BioContracts
       AccessDevicesStatus = status;      
     }
 
-    private void OnCardDetected(string cardNumber)
+    private async void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
     {
       Card card;
       bool cardFound = _database.CardHolder.DataSet.TryGetValue(cardNumber, out card);
-      
-          
-      
+
+
+      VisitorList list = new VisitorList();
       Visitor visitor = new Visitor() { Locationid = _location.Id
                                       , Dbstate = DbState.Insert
                                       , Time = DateTime.Now.Ticks
@@ -81,18 +83,20 @@ namespace BioContracts
         bool personFound = _database.PersonHolder.DataSet.TryGetValue(card.Personid, out person);
         if (personFound)
         {
-          //_accessDeviceEngine.Execute(AccessDeviceCommands.CommandAccess, _accessDevice.Portname);
+
+          sender.Success();       
                   
           visitor.Personid = person.Id;
           visitor.Status   = Visitor.Types.VisitorStatus.Success;
         }
+       
       }
+      
+      sender.Failed();
+     
+      list.Visitors.Add(visitor);
+      await _bioService.DatabaseService.VisitorUpdateRequest(list);
 
-      //_bioService.DatabaseService.CardUpdated += DatabaseService_CardUpdated;
-
-     // await _bioService.DatabaseService.CardUpdateRequest(cardList);
-
-      //_accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);      
     }
 
     private string _captureDeviceName;
@@ -165,7 +169,8 @@ namespace BioContracts
       get { return _location.LocationName; }
     }
 
-    private Dictionary<string, TrackLocationAccessDeviceObserver> _accessDevices;
+    private Dictionary<string, TrackLocationAccessDeviceObserver>  _accessDevices ;
+    private Dictionary<string, TrackLocationCaptureDeviceObserver> _captureDevices;
 
     private Location _location;
     private readonly IAccessDeviceEngine  _accessDeviceEngine ;

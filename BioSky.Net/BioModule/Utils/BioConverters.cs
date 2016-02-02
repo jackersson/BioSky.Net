@@ -119,7 +119,7 @@ namespace BioModule.Utils
         string addr = Directory.GetCurrentDirectory();
 
         if (photoFound && File.Exists(photo.FileLocation))
-        {
+        {         
           BitmapSource img = new BitmapImage(new Uri(addr + "\\" + photo.FileLocation, UriKind.RelativeOrAbsolute));
           return img;
         }

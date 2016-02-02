@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BioContracts.Common
 {
   public delegate void StateEventHandler  (bool status   );
-  public delegate void CardEventHandler(string visitor);
+  public delegate void CardEventHandler   (TrackLocationAccessDeviceObserver sender, string cardNumber);
 
   public class TrackLocationAccessDeviceObserver : IObserver<AccessDeviceActivity>
   {
@@ -30,16 +30,28 @@ namespace BioContracts.Common
       _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);
     }
 
+    public void Success()
+    {
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandAccess, _accessDevice.Portname);
+    }
+
+    public void Failed()
+    {
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);
+    }
+
     private void OnAccessDeviceStateChanged( bool status = true)
     {
       if (AccessDeviceState != null)
         AccessDeviceState(status);
     }
 
-    private void OnCardDetectedd(string cardNumber)
+    private void OnCardDetected(string cardNumber)
     {
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReset, _accessDevice.Portname);
+
       if (CardDetected != null)
-        CardDetected(cardNumber);
+        CardDetected(this, cardNumber);
     }
 
     public void OnCompleted()
@@ -64,22 +76,7 @@ namespace BioContracts.Common
       for (int i = 0; i < value.Data.Length; ++i)
         cardNumber += value.Data[i];
 
-      CardDetected(cardNumber);
-
-      /*
-      Card card = _database.GetCardByNumber(cardNumber);
-      if (card != null)
-      {
-        Person person = _database.GetPersonByID(card.Personid);
-        if (person != null)
-        {
-          _accessDeviceEngine.Execute(AccessDeviceCommands.CommandAccess, _accessDevice.Portname);
-         
-        }        
-
-      }
-      */
-      //_accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);      
+      OnCardDetected(cardNumber);     
     }
 
     public void Stop()

@@ -10,12 +10,14 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
+  public delegate void DataUpdatedHandler<T>( IList<T> list, Result result);
   public delegate void DataChangedHandler();
   public interface IHolder<TValue, TKey>
   {
-    event DataChangedHandler DataChanged;
+    event DataUpdatedHandler<TValue> DataUpdated;
+    event DataChangedHandler         DataChanged;
 
-    ObservableCollection<TValue> Data
+    AsyncObservableCollection<TValue> Data
     { get; }
 
     Dictionary<TKey, TValue> DataSet
@@ -23,7 +25,7 @@ namespace BioContracts
 
     void Update(IList<TValue> objects);
 
-    void Update(IEnumerable objects, Result result);
+    void Update(IList<TValue> objects, Result result);
   }
 
 }

@@ -62,6 +62,9 @@ namespace BioEngine.CaptureDevices
 
     public void Unsubscribe(FrameEventHandler eventListener, string cameraName)
     {
+      if (cameraName == null)
+        return;
+
       СaptureDeviceListener listener;
       if (_captureDevices.TryGetValue(cameraName, out listener))
         listener.NewFrame -= eventListener;

@@ -20,106 +20,12 @@ using BioModule.Utils;
 using BioFaceService;
 using BioContracts.Services;
 using Microsoft.Win32;
+using BioContracts.Common;
 
 namespace BioModule.ViewModels
 {
 
-  public class Enroller
-  {
-    private BioImagesList _bioImagesList = new BioImagesList();
-    public Enroller( IProcessorLocator locator)
-    {
-      _locator = locator;
-      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-    }
-
-    private void Reset()
-    {
-      _busy = false;
-      _bioImagesList.Images.Clear();
-    }
-
-
-    public void Start( Bitmap bitmap)
-    {
-      if (_busy)
-        return;
-
-      Reset();
-
-      _busy = true;
-      BioImage image = ImageToBioImage(bitmap);
-      _bioImagesList.Images.Add(image);
-
-      EnrollRequest();
-    }
-
-    public void Start( string captureDeviceName )
-    {
-      if (_busy)
-        return;
-
-      _captureDeviceName = captureDeviceName;
-
-      Reset();
-      _busy = true;
-
-      _captureDeviceEngine.Subscribe(CollectCapturedFrame, captureDeviceName);
-    }
-
-    public byte[] ImageToByte(Image img)
-    {
-      byte[] byteArray = new byte[0];
-      using (MemoryStream stream = new MemoryStream())
-      {
-        img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-        stream.Close();
-
-        byteArray = stream.ToArray();
-      }
-      return byteArray;
-    }
-
-    private Google.Protobuf.ByteString ImageToByteString(Image img)
-    {
-      byte[] bytes = ImageToByte(img);
-      return Google.Protobuf.ByteString.CopyFrom(bytes);
-    }
-
-    private BioImage ImageToBioImage(Image img)
-    {
-      Google.Protobuf.ByteString description = ImageToByteString(img);
-      return new BioImage() { Description = description };
-    }
-
-    private void CollectCapturedFrame(object sender, ref Bitmap bitmap)
-    {      
-      BioImage image = ImageToBioImage(bitmap);
-      _bioImagesList.Images.Add(image);
-
-      if (_bioImagesList.Images.Count > MAX_ENROLL_IMAGES_COUNT)
-      {        
-        _captureDeviceEngine.Unsubscribe(CollectCapturedFrame, _captureDeviceName);
-        EnrollRequest();
-      }
-    }
-
-    private async void EnrollRequest()
-    {
-      IServiceManager bioService = _locator.GetProcessor<IServiceManager>();
-      await bioService.FaceService.Enroll(_bioImagesList);
-
-      _busy = false;
-    }
-
-    private string    _captureDeviceName;
-    private const int MAX_ENROLL_IMAGES_COUNT = 1;
-
-    private bool _busy = false;
-
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;
-    private readonly IProcessorLocator    _locator            ;
-  }
+ 
 
   public class UserPhotoViewModel : Screen, IUpdatable
   {
@@ -132,9 +38,34 @@ namespace BioModule.ViewModels
       
       DisplayName = "Photo";
 
-      _enroller = new Enroller(locator);
+      _serviceManager = locator.GetProcessor<IServiceManager>();
+
+      UserImages = new ObservableCollection<Uri>();
+
+      _enroller = new Enroller(_captureDeviceEngine, _serviceManager);
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();    
+    }
+
+    public void Update(Person user)
+    {
+      if (user == null)
+        return;
+
+      _user = user;
+
+
+      string personFolder = _bioEngine.Database().LocalStorage.PersonsStoragePath + "\\" + _user.Id;
+      Directory.CreateDirectory(personFolder);
+
+      UserImages.Clear();
+      DirectoryInfo personImageDir = new DirectoryInfo(personFolder);
+      foreach (FileInfo personImageFile in personImageDir.GetFiles("*.jpg"))
+      {
+        Uri uri = new Uri(personImageFile.FullName);
+        UserImages.Add(uri);
+      }
+      
     }
 
     protected override void OnActivate()
@@ -195,9 +126,56 @@ namespace BioModule.ViewModels
 
     public void EnrollFromCamera()
     {
-      // Console.Write("Enroll Camera");
+     
       if (CaptureDeviceConnected)
-        _enroller.Start(ActiveCaptureDevice);
+      {
+        _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
+        EnrollmentData data = new EnrollmentData();
+        _enroller.Start(ActiveCaptureDevice, data);
+      }       
+    }
+
+    private void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
+    {
+      if (feedback.Progress == 100)
+      {
+        _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
+        BioImage image = _enroller.GetImage();
+        Photo feedbackPhoto = feedback.Photo;
+        
+
+        if ( image != null && feedbackPhoto != null )
+        {
+          PhotoList photoList = new PhotoList();          
+          Photo photo = new Photo() { Dbstate      = DbState.Insert
+                                    , Description  = image.Description
+                                    , FileLocation = feedbackPhoto.FileLocation
+                                    , FirLocation  = feedbackPhoto.FirLocation
+                                    , Personid     = _user.Id
+                                    , Type = Photo.Types.PhotoSizeType.Full
+                                    };
+
+          photoList.Photos.Add(photo);
+
+
+          string savePath = _bioEngine.Database().LocalStorage.LocalStoragePath +  "\\" + feedbackPhoto.FileLocation;
+          Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+          
+
+          byte[] data = image.Description.ToByteArray();
+          var fs = new BinaryWriter(new FileStream(savePath, FileMode.CreateNew, FileAccess.Write));
+          fs.Write(data);
+          fs.Close();
+
+          _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+        }        
+       
+      }
+      if (_imageViewer != null)
+        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
+      
+
+      Console.WriteLine(feedback);
     }
 
     public void UploadClick()
@@ -214,7 +192,7 @@ namespace BioModule.ViewModels
         if (File.Exists(filename))
         {
           Bitmap bmp = (Bitmap)Image.FromFile(filename);        
-          _enroller.Start(bmp);
+          //_enroller.Start(bmp);
         }        
       }
     }
@@ -244,17 +222,17 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<Uri> _robotImages;
-    public ObservableCollection<Uri> RobotImages
+    private ObservableCollection<Uri> _userImages;
+    public ObservableCollection<Uri> UserImages
     {
-      get { return _robotImages; }
+      get { return _userImages; }
       set
       {
-        if (_robotImages != value)
+        if (_userImages != value)
         {
-          _robotImages = value;
+          _userImages = value;
 
-          NotifyOfPropertyChange(() => RobotImages);
+          NotifyOfPropertyChange(() => UserImages);
         }
       }
     }
@@ -336,15 +314,31 @@ namespace BioModule.ViewModels
       }
     }
 
+    private Person _user;
+    private Person User
+    {
+      get { return _user; }
+      set
+      {
+        if (_user != value)
+        {
+          _user = value;
+          NotifyOfPropertyChange(() => User);
+        }
+      }
+    }
+
     public BitmapSource CaptureDeviceConnectedIcon
     {
       get { return CaptureDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
     }
+
 
     private readonly Enroller             _enroller           ;
     private readonly IProcessorLocator    _locator            ;
     private readonly IBioEngine           _bioEngine          ;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IImageUpdatable      _imageViewer        ;
+    private readonly IServiceManager      _serviceManager     ;
   }
 }

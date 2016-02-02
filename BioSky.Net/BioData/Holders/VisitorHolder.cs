@@ -25,46 +25,8 @@ namespace BioData.Holders
         AddToDataSet(visitor, visitor.Id);
     }
 
-  }
-  /*
-
-  //public delegate void VisitorHolderChanged(string message);
-  public class VisitorHolde :  //: PropertyChangedBase, IHolder<Visitor, long>
-  {
-    public VisitorHolder()
+    public override void Update(IList<Visitor> list, Result result)
     {
-      _data = new ObservableCollection<IMessage>();
-      _dataSet = new Dictionary<long, Visitor>();
-    }
-    
-    private ObservableCollection<IMessage> _data;
-    public ObservableCollection<IMessage> Data
-    {
-      get { return _data; }
-      private set
-      {
-        if (_data != value)
-        {
-          _data = value;
-          NotifyOfPropertyChange(() => Data);
-        }
-      }
-    }
-
-    private Dictionary<long, Visitor> _dataSet;
-    public Dictionary<long, Visitor> DataSet
-    {
-      get { return _dataSet; }
-      private set
-      {
-        if (_dataSet != value)        
-          _dataSet = value;             
-      }
-    }
-    
-    
-    public void Update(IEnumerable list, Result result)
-    {    
       foreach (ResultPair currentResult in result.Status)
       {
         Visitor visitor = null;
@@ -72,72 +34,17 @@ namespace BioData.Holders
         {
           if (currentResult.State == DbState.Insert)
             visitor = currentResult.Visitor;
+          else
+            visitor = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
 
-          //foreach (Visitor v in list)
-          //{
-          //  list.
-         // }
-          //else
-          //visitor = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
-
-          UpdateItem(visitor);
+          if (visitor != null)
+          {
+            visitor.Dbstate = DbState.None;
+            UpdateItem(visitor, visitor.Id, currentResult.State);
+          }
         }
-        else        
-          Console.WriteLine("Failed to update");      
-      }     
-    }  
-    
-    public void Update(IList<Visitor> list)
-    {
-      Data = new ObservableCollection<IMessage>(list);
-
-      foreach (Visitor pers in list)
-      {        
-        if (!_dataSet.ContainsKey(pers.Id))
-          _dataSet.Add(pers.Id, pers);
       }
-    }    
-  
-    private void Add(Visitor visitor)
-    {
-      long id = visitor.Id;
-      Data.Add(visitor);
-      if (!_dataSet.ContainsKey(id))
-        _dataSet.Add(id, visitor);
+      base.Update(list, result);
     }
-
-    private void Update(Visitor visitor)
-    {
-      long id = visitor.Id;
-      if (_dataSet.ContainsKey(id))
-        _dataSet[id] = visitor;
-    }
-
-    private void Remove(Visitor visitor)
-    {
-      _dataSet.Remove(visitor.Id);
-      Data.Remove(visitor);
-    }
-
-    private void UpdateItem(Visitor visitor)
-    {
-      switch (visitor.Dbstate)
-      {
-        case DbState.Insert:
-          Add(visitor);
-          break;
-
-        case DbState.Update:
-          Update(visitor);
-          break;
-
-        case DbState.Remove:
-          Remove(visitor);
-          break;
-      }
-
-      NotifyOfPropertyChange(() => Data);
-    }
-    */
-  //}
+  }  
 }

@@ -37,12 +37,6 @@ namespace BioModule.ViewModels
       CardState = "Card number";
 
       _userCards = new ObservableCollection<Card>();
-
-      
-
-      //UserCards = _bioEngine.Database().Cards;
-
-     
     }    
 
 
@@ -178,21 +172,15 @@ namespace BioModule.ViewModels
 
     public void Update(Person user)
     {
-      _user = user;
-
-      //_dataChanged = false;
+      _user = user;   
       
       _userCards.Clear();
-
       _detectedCard.Personid = _user.Id;
-
-
       foreach (Card card in _bioEngine.Database().CardHolder.Data)
       {
         if ( card.Personid == _user.Id)
           _userCards.Add(card);
-      } 
-      
+      }       
     }
 
     public void AddNewCard()
@@ -204,9 +192,7 @@ namespace BioModule.ViewModels
 
       Card newCard = new Card(DetectedCard);
       UserCards.Add(newCard);
-
-      //_dataChanged = true;
-     
+           
       NotifyOfPropertyChange(() => UserCards);
 
       CanAddNewCard = false;
@@ -221,10 +207,7 @@ namespace BioModule.ViewModels
     private ObservableCollection<Card> _userCards;
     public ObservableCollection<Card> UserCards
     {
-      get
-      {             
-        return _userCards;      
-      }
+      get { return _userCards; }
       set
       {
         if ( _userCards != value )
@@ -257,53 +240,19 @@ namespace BioModule.ViewModels
       {
         if (card.Dbstate != DbState.None)
           cardList.Cards.Add(card);
-      }       
+      }
 
-       _bioService.DatabaseService.CardUpdated += DatabaseService_CardUpdated;
+      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; ;
 
        await _bioService.DatabaseService.CardUpdateRequest(cardList);      
     }
 
-    private void DatabaseService_CardUpdated(CardList list, Result result)
+    private void CardHolder_DataUpdated(System.Collections.Generic.IList<Card> list, Result result)
     {
-      PersonUpdateResultProcessing(list, result);
+      Console.WriteLine("Data Updated");
+    }   
 
-    }
-
-    private void PersonUpdateResultProcessing(CardList list, Result result)
-    {
-      /*
-      _bioService.DatabaseService.CardUpdated -= DatabaseService_CardUpdated;
-      
-      IBioSkyNetRepository database = _locator.GetProcessor<IBioSkyNetRepository>();
-        
-      string message = "";
-
-      foreach (ResultPair rp in result.Status)
-      {
-        Card card = null;
-        if (rp.Status == ResultStatus.Success)
-        {
-          if (rp.State == DbState.Insert)
-            card = rp.Card;
-          else
-            card = list.Cards.Where(x => x.Id == rp.Id).FirstOrDefault();
-
-          database.UpdateCardFromServer(card);
-
-        }
-        else
-        {
-          if (rp.State == DbState.Insert)
-            message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";
-        }
-
-        if (card != null)
-          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";        
-      }
-      */
-      //MessageBox.Show(message);      
-    }
+  
 
     public async void Apply()
     {

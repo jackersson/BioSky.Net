@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BioDataInstaller.cs" />
+    <Compile Include="BioLocalStorage.cs" />
     <Compile Include="BioSkyNetRepository.cs" />
     <Compile Include="Holders\AccessDeviceHolder.cs" />
     <Compile Include="Holders\Base\HolderBase.cs" />

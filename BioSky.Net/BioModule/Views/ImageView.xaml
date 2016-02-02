@@ -14,6 +14,7 @@
 
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
     </UserControl.Resources>
 
 
@@ -46,69 +47,42 @@
             </Grid>
         </Border>
 
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Column="0" Grid.ColumnSpan="4">
-            <Grid.Style>
-                <Style TargetType="Grid">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ProgressRingVisibility}" Value="false">
-                            <Setter Property="Visibility" Value="Hidden"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding ProgressRingVisibility}" Value="true">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
-            <Controls:ProgressRing Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Bottom"></Controls:ProgressRing>
+        <Grid HorizontalAlignment="Center" 
+              Visibility="{ Binding ProgressRingVisibility
+                          , Converter={StaticResource BooleanToVisibilityConverter}}"             
+              VerticalAlignment="Top" 
+              Grid.Column="0" Grid.ColumnSpan="4">
+         
+            <Controls:ProgressRing Grid.ColumnSpan="4" HorizontalAlignment="Center" 
+                                   Visibility="{Binding ProgressRingProgressVisibility
+                                  , Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   VerticalAlignment="Bottom">             
+
+            </Controls:ProgressRing>
 
             <Ellipse Grid.ColumnSpan="4" Width="44" Height="44" 
                  StrokeThickness="1"
                  Margin="0,0,0,9" 
+                 Fill="#FF02B3FF"
+                 Visibility="{Binding ProgressRingStatus
+                            , Converter={StaticResource BooleanToVisibilityConverter}}"
                  HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                <Ellipse.Style>
-                    <Style TargetType="Ellipse">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="false">
-                                <Setter Property="Fill" Value="#FF02B3FF"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ProgressRingStatus}" Value="true">
-                                <Setter Property="Fill" Value="White"/>
-                            </DataTrigger>                           
-                        </Style.Triggers>
-                    </Style>
-                </Ellipse.Style>
+             
             </Ellipse>
 
             <TextBlock Text="{Binding ProgressRingText}"   Grid.ColumnSpan="4" HorizontalAlignment="Center" 
                  Margin="0,0,0,23" 
                    VerticalAlignment="Bottom" Foreground="#FF0A3B4F" FontWeight="Bold" 
+                       Visibility="{Binding ProgressRingTextVisibility
+                            , Converter={StaticResource BooleanToVisibilityConverter}}"
                    >
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ProgressRingTextVisibility}" Value="false">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ProgressRingTextVisibility}" Value="true">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
+              
             </TextBlock>
-            <Image Source="{Binding ProgressRingIconSource}" Width="40" Height="40">
-                <Image.Style>
-                    <Style TargetType="Image">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ProgressRingImageVisibility}" Value="false">
-                                <Setter Property="Visibility" Value="Hidden"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ProgressRingImageVisibility}" Value="true">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Image.Style>
+            <Image Source="{Binding ProgressRingIconSource}" Width="40" Height="40"
+                   Visibility="{Binding ProgressRingImageVisibility
+                            , Converter={StaticResource BooleanToVisibilityConverter}}"
+                   
+                   >                
             </Image>
         </Grid>
 

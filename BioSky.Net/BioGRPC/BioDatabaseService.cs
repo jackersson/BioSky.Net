@@ -14,11 +14,7 @@ using System.Collections.ObjectModel;
 namespace BioGRPC
 {
   public class BioDatabaseService : IDatabaseService
-  {
-    public event PersonUpdateHandler   PersonUpdated ;
-    public event CardUpdateHandler     CardUpdated   ;
-    public event VisitorUpdateHandler  VisitorUpdated;
-
+  { 
     public BioDatabaseService(IProcessorLocator locator, BioFaceDetector.IBioFaceDetectorClient client)
     {
       _client    = client;
@@ -27,32 +23,15 @@ namespace BioGRPC
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
     }
     
-    private void OnPersonUpdated(PersonList list, Result result)
-    {
-      if (PersonUpdated != null)
-        PersonUpdated(list, result);
-    }
-
-    private void OnCardUpdated(CardList list, Result result)
-    {
-      if (CardUpdated != null)
-        CardUpdated(list, result);
-    }
-
-    private void OnVisitorUpdated(VisitorList list, Result result)
-    {
-      if (VisitorUpdated != null)
-        VisitorUpdated(list, result);
-    }
-
+   
     public async Task CaptureDeviceRequest(CommandCaptureDevice command)
     {
       try
       {
         CaptureDeviceList call = await _client.CaptureDeviceSelectAsync(command);
         _database.CaptureDeviceHolder.Update(call.CaptureDevices);
-        Console.WriteLine(call.ToString());
 
+        Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
       {
@@ -67,6 +46,7 @@ namespace BioGRPC
       {
         AccessDeviceList call = await _client.AccessDeviceSelectAsync(command);
         _database.AccessDeviceHolder.Update(call.AccessDevices);
+
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -82,6 +62,7 @@ namespace BioGRPC
       {
         LocationList call = await _client.LocationSelectAsync(command);
         _database.LocationHolder.Update(call.Locations);
+
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -97,6 +78,7 @@ namespace BioGRPC
       {
         PhotoList call = await _client.PhotoSelectAsync(command);
         _database.PhotoHolder.Update(call.Photos);
+
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -112,6 +94,7 @@ namespace BioGRPC
       {
         CardList call = await _client.CardSelectAsync(command);
         _database.CardHolder.Update(call.Cards);
+
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -127,6 +110,7 @@ namespace BioGRPC
       {
         VisitorList call = await _client.VisitorSelectAsync(command);
         _database.VisitorHolder.Update(call.Visitors);
+
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -142,6 +126,7 @@ namespace BioGRPC
       {
         PersonList call = await _client.PersonSelectAsync(command);
         _database.PersonHolder.Update(call.Persons);
+
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
@@ -155,8 +140,8 @@ namespace BioGRPC
     {
       try
       {
-        Result call = await _client.PersonUpdateAsync(list);        
-        OnPersonUpdated(list, call);       
+        Result call = await _client.PersonUpdateAsync(list);
+        _database.PersonHolder.Update(list.Persons, call);      
       }
       catch (RpcException e)
       {
@@ -171,7 +156,7 @@ namespace BioGRPC
       try
       {
         Result call = await _client.CardUpdateAsync(list);
-        OnCardUpdated(list, call);
+        _database.CardHolder.Update(list.Cards, call);        
       }
       catch (RpcException e)
       {
@@ -185,9 +170,63 @@ namespace BioGRPC
       try
       {
         Result call = await _client.VisitorUpdateAsync(list);
-        //_database.Update<>()
+        _database.VisitorHolder.Update(list.Visitors, call);        
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
 
-        OnVisitorUpdated(list, call);
+    public async Task LocationUpdateRequest(LocationList list)
+    {
+      try
+      {
+        Result call = await _client.LocationUpdateAsync(list);
+        _database.LocationHolder.Update(list.Locations, call);
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task AccessDeviceUpdateRequest(AccessDeviceList list)
+    {
+      try
+      {
+        Result call = await _client.AccessDeviceUpdateAsync(list);
+        _database.AccessDeviceHolder.Update(list.AccessDevices, call);
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task CaptureDeviceUpdateRequest(CaptureDeviceList list)
+    {
+      try
+      {
+        Result call = await _client.CaptureDeviceUpdateAsync(list);
+        _database.CaptureDeviceHolder.Update(list.CaptureDevices, call);
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task PhotoUpdateRequest(PhotoList list)
+    {
+      try
+      {
+        Result call = await _client.PhotoUpdateAsync(list);
+        _database.PhotoHolder.Update(list.Photos, call);
       }
       catch (RpcException e)
       {

@@ -46,8 +46,7 @@ namespace BioGRPC
     public async Task Verify(VerificationData verificationData)
     {
       try
-      {
-       
+      {       
         using (var call = _client.VerifyFace(verificationData))
         { 
           var responseStream = call.ResponseStream;
@@ -67,13 +66,13 @@ namespace BioGRPC
       }
     }
 
-    public async Task Enroll(BioImagesList imageList)
-    {    
-      /*  
+    public async Task Enroll(EnrollmentData enrollmentData)
+    {          
       try
       {
-       
-        using (var call = _client.EnrollFace(imageList))
+        //TODO try to use only images
+
+        using (var call = _client.EnrollFace(enrollmentData))
         {
           var responseStream = call.ResponseStream;        
 
@@ -82,7 +81,7 @@ namespace BioGRPC
             EnrollmentFeedback feature = responseStream.Current;            
             Console.WriteLine("");
             Console.WriteLine(feature.ToString());
-            EnrollFeedback(this, feature);
+            OnEnrollFeedback(feature);
           }      
         }
       }
@@ -90,77 +89,22 @@ namespace BioGRPC
       {
         Log("RPC failed " + e);
         throw;
-      }
-      */
+      }     
     }
+    
 
-    /*
-    public async Task DetectFace(byte[] bytes)
+    
+   // public delegate void EnrollFeedbackEventHandler(object sender, EnrollmentFeedback  feedback   );
+
+ 
+    public event EnrollFeedbackEventHandler EnrollFeedbackChanged;
+
+
+    protected virtual void OnEnrollFeedback(EnrollmentFeedback feedback)
     {
-      try
-      {
-        Google.Protobuf.ByteString bs = Google.Protobuf.ByteString.CopyFrom(bytes);
-
-        BioImage imageRequest = new BioImage() { Description = bs };
-        _imageRequests.Clear();
-
-        _imageRequests.Add(imageRequest);
-
-        System.Threading.CancellationToken token = new System.Threading.CancellationToken();
-        using (var call = client.DetectFace())
-        {
-
-          var responseReaderTask = Task.Run(async () =>
-          {
-            while (await call.ResponseStream.MoveNext(token))
-            {
-              var note = call.ResponseStream.Current;
-              OnFaceDetected(note);
-              foreach (ObjectInfo oi in note.Objects)
-                Log("Got objects info \"{0}\"  {1}", oi.Confidence, oi.RotationAngle);
-            }
-          });
-
-          foreach (BioImage image in _imageRequests)
-          {
-            Log("Sending image ");
-
-            await call.RequestStream.WriteAsync(image);            
-          }
-
-
-          await call.RequestStream.CompleteAsync();
-          await responseReaderTask;
-
-          Log("Finished RouteChat");
-        }
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
+      if (EnrollFeedbackChanged != null)
+        EnrollFeedbackChanged(this, feedback);
     }
-    */
-
-    public delegate void FaceDetectedEventHandler  (object sender, DetectedObjectsInfo objectsInfo);
-    public delegate void EnrollFeedbackEventHandler(object sender, EnrollmentFeedback  feedback   );
-
-    public event FaceDetectedEventHandler   FaceDetected;
-    public event EnrollFeedbackEventHandler EnrollFeedback;
-
-    protected virtual void OnFaceDetected(DetectedObjectsInfo objectsInfo)
-    {
-      if (FaceDetected != null)
-        FaceDetected(this, objectsInfo);
-    }
-
-    protected virtual void OnEnrollFeedback(EnrollmentFeedback objectsInfo)
-    {
-      if (EnrollFeedback != null)
-        EnrollFeedback(this, objectsInfo);
-    }
-
 
     private void Log(string s, params object[] args)
     {

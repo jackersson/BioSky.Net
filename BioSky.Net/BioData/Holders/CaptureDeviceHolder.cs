@@ -18,5 +18,27 @@ namespace BioData.Holders
         AddToDataSet(captureDevice, captureDevice.Id);
     }
 
+    public override void Update(IList<CaptureDevice> list, Result result)
+    {
+      foreach (ResultPair currentResult in result.Status)
+      {
+        CaptureDevice captureDevice = null;
+        if (currentResult.Status == ResultStatus.Success)
+        {
+          if (currentResult.State == DbState.Insert)
+            captureDevice = currentResult.CaptureDevice;
+          else
+            captureDevice = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
+
+          if (captureDevice != null)
+          {
+            captureDevice.Dbstate = DbState.None;
+            UpdateItem(captureDevice, captureDevice.Id, currentResult.State);
+          }
+        }
+      }
+      base.Update(list, result);
+    }
+
   }
 }

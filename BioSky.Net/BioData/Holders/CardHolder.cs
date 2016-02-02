@@ -16,7 +16,30 @@ namespace BioData.Holders
     {
       foreach (Card card in list)        
         AddToDataSet(card, card.UniqueNumber);        
-    } 
+    }
+
+    public override void Update(IList<Card> list, Result result)
+    {
+      foreach (ResultPair currentResult in result.Status)
+      {
+        Card card = null;
+        if (currentResult.Status == ResultStatus.Success)
+        {
+          if (currentResult.State == DbState.Insert)
+            card = currentResult.Card;
+          else
+            card = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
+
+          if (card != null)
+          {
+            card.Dbstate = DbState.None;
+            UpdateItem(card, card.UniqueNumber, currentResult.State);
+          }
+        }
+      }
+      base.Update(list, result);
+    }
+
 
   }
 }

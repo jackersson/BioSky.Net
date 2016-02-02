@@ -7,21 +7,17 @@ using System.Threading.Tasks;
 
 namespace BioContracts.Services
 {
-  public delegate void PersonUpdateHandler (PersonList list , Result result);
-
-  public delegate void CardUpdateHandler   (CardList list   , Result result);
-
-  public delegate void VisitorUpdateHandler(VisitorList list, Result result);
 
   public interface IDatabaseService
-  {
-    event PersonUpdateHandler  PersonUpdated ;
-    event CardUpdateHandler    CardUpdated   ;
-    event VisitorUpdateHandler VisitorUpdated;
-
+  {   
     Task CaptureDeviceRequest(CommandCaptureDevice command);
-    Task AccessDeviceRequest(CommandAccessDevice command);   
+    Task CaptureDeviceUpdateRequest(CaptureDeviceList list);
+
+    Task AccessDeviceRequest(CommandAccessDevice command);
+    Task AccessDeviceUpdateRequest(AccessDeviceList list);
+
     Task PhotoRequest       (CommandPhoto command);
+    Task PhotoUpdateRequest(PhotoList list);
 
     Task CardRequest        (CommandCard command);
     Task CardUpdateRequest  (CardList list);
@@ -34,5 +30,6 @@ namespace BioContracts.Services
 
     Task LocationRequest(CommandLocation command);
 
+    Task LocationUpdateRequest(LocationList list);
   }
 }
