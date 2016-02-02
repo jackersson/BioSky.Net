@@ -69,10 +69,9 @@ namespace BioModule.ViewModels
         {
             Firstname = ""
           , Lastname = ""
-          , Thumbnail = 0
-          , Dbstate = DbState.Insert
-          , Gender = BioFaceService.Person.Types.Gender.Male
-          , Rights = BioFaceService.Person.Types.Rights.Operator
+          , Thumbnail = 0       
+          , Gender = Person.Types.Gender.Male
+          , Rights = Person.Types.Rights.Operator
           , Dbstate = DbState.Insert
         };
 

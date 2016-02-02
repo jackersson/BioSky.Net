@@ -52,6 +52,10 @@ namespace BioModule.ViewModels
       if (user == null)
         return;
 
+      if (user.Dbstate == DbState.Insert)
+        return;
+
+      IsEnabled = true;   
       _user = user;
 
 
@@ -95,6 +99,20 @@ namespace BioModule.ViewModels
     {
       if (SelectedItem != null)      
         _imageViewer.UpdateImage(SelectedItem);       
+    }
+
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+      get { return _isEnabled; }
+      set
+      {
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
+      }
     }
 
     private void OnNewFrame(object sender, ref Bitmap bitmap)

@@ -76,7 +76,7 @@ namespace BioModule.Utils
     }
     public ConverterInitializer( IBioSkyNetRepository database )
     {
-      PhotoIDConverter                  = new ConvertPhotoIdToImage          (database.PhotoHolder);
+      PhotoIDConverter                  = new ConvertPhotoIdToImage          (database );
       PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database.PersonHolder);
       PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database.PersonHolder);
       LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database.LocationHolder);
@@ -104,9 +104,10 @@ namespace BioModule.Utils
   }
   public class ConvertPhotoIdToImage : IValueConverter
   {
-    public ConvertPhotoIdToImage(IHolder<Photo, long> photoHolder)
+    public ConvertPhotoIdToImage(IBioSkyNetRepository database)
     {
-      _photoHolder = photoHolder;
+      _database = database;
+      _photoHolder = _database.PhotoHolder;
     }
 
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -116,12 +117,14 @@ namespace BioModule.Utils
         Photo photo = null;
         bool photoFound = _photoHolder.DataSet.TryGetValue((long)value, out photo);
                 
-        string addr = Directory.GetCurrentDirectory();
-
-        if (photoFound && File.Exists(photo.FileLocation))
-        {         
-          BitmapSource img = new BitmapImage(new Uri(addr + "\\" + photo.FileLocation, UriKind.RelativeOrAbsolute));
-          return img;
+        if (photoFound) 
+        {
+          string fullFilePathway = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
+          if ( File.Exists(fullFilePathway) )
+          {
+            BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));
+            return img;
+          }          
         }
 
       }
@@ -131,7 +134,7 @@ namespace BioModule.Utils
     {
       throw new NotImplementedException();
     }
-
+    private readonly IBioSkyNetRepository _database;
     private readonly IHolder<Photo, long> _photoHolder;
   }
 

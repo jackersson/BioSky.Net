@@ -25,32 +25,17 @@ namespace BioData
     private string _localStoragePath;
     public string LocalStoragePath
     {
-      get
-      {
-        return _localStoragePath;
-      }
+      get { return _localStoragePath; }
       set
       {
         if (_localStoragePath != value)
         {
           _localStoragePath = value;
-          NotifyOfPropertyChange(() => LocalStoragePath);
-          NotifyOfPropertyChange(() => MediaStoragePath);
-          NotifyOfPropertyChange(() => PersonsStoragePath);
+          NotifyOfPropertyChange(() => LocalStoragePath); 
         }
       }
     }
-
-    public string MediaStoragePath
-    {
-      get { return _localStoragePath + "\\media"; }
-    }
-
-    public string PersonsStoragePath
-    {
-      get { return MediaStoragePath + "\\person"; }
-    }   
-
+  
     //TODO to Utils not Repository
     private string GetConfigFile(string parametr)
     {

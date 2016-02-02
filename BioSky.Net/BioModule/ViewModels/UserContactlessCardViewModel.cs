@@ -272,58 +272,22 @@ namespace BioModule.ViewModels
     }
 
     public async Task CardUpdatePerformer()
-    {             
+    {
       CardList cardList = new CardList();
       foreach (Card card in UserCards)
       {
         if (card.Dbstate != DbState.None)
           cardList.Cards.Add(card);
-      }       
-
-       _bioService.DatabaseService.CardUpdated += DatabaseService_CardUpdated;
-
-       await _bioService.DatabaseService.CardUpdateRequest(cardList);      
-    }
-
-    private void DatabaseService_CardUpdated(CardList list, Result result)
-    {
-      PersonUpdateResultProcessing(list, result);
-
-    }
-
-    private void PersonUpdateResultProcessing(CardList list, Result result)
-    {
-      /*
-      _bioService.DatabaseService.CardUpdated -= DatabaseService_CardUpdated;
-      
-      IBioSkyNetRepository database = _locator.GetProcessor<IBioSkyNetRepository>();
-        
-      string message = "";
-
-      foreach (ResultPair rp in result.Status)
-      {
-        Card card = null;
-        if (rp.Status == ResultStatus.Success)
-        {
-          if (rp.State == DbState.Insert)
-            card = rp.Card;
-          else
-            card = list.Cards.Where(x => x.Id == rp.Id).FirstOrDefault();
-
-          database.UpdateCardFromServer(card);
-
-        }
-        else
-        {
-          if (rp.State == DbState.Insert)
-            message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";
-        }
-
-        if (card != null)
-          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";        
       }
-      */
-      //MessageBox.Show(message);      
+
+      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; ;
+
+      await _bioService.DatabaseService.CardUpdateRequest(cardList);
+    }
+    
+    private void CardHolder_DataUpdated(System.Collections.Generic.IList<Card> list, Result result)
+    {
+      Console.WriteLine("Data Updated");
     }
 
     public async void Apply()
