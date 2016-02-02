@@ -82,25 +82,25 @@ namespace BioData.Holders.Base
       NotifyOfPropertyChange(() => Data);
     }
 
-    private void Add(TValue obj, TKey key)
+    protected virtual void Add(TValue obj, TKey key)
     {     
       Data.Add(obj);
       AddToDataSet(obj, key);   
     }
 
-    protected void AddToDataSet(TValue obj, TKey key)
+    protected virtual void AddToDataSet(TValue obj, TKey key)
     {
       if (!_dataSet.ContainsKey(key))
         _dataSet.Add(key, obj);
     }
 
-    private void Update(TValue obj, TKey key)
+    protected virtual void Update(TValue obj, TKey key)
     {      
       if (_dataSet.ContainsKey(key))
         _dataSet[key] = obj;
     }
 
-    private void Remove(TValue obj, TKey key)
+    protected virtual void Remove(TValue obj, TKey key)
     {
       _dataSet.Remove(key);
       Data.Remove(obj);

@@ -132,6 +132,7 @@
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\TrackLocationAccessDeviceObserver.cs" />
     <Compile Include="Common\TrackLocationCaptureDeviceObserver.cs" />
+    <Compile Include="Holders\IPhotoHolder.cs" />
     <Compile Include="IAccessDeviceEngine.cs" />
     <Compile Include="IBioEngine.cs" />
     <Compile Include="IBioShell.cs" />

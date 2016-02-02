@@ -35,7 +35,7 @@ namespace BioModule.ViewModels
       _bioEngine           = bioEngine;
       _imageViewer         = imageViewer;
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-      
+      _database            = _locator.GetProcessor<IBioSkyNetRepository>();
       DisplayName = "Photo";
 
       _serviceManager = locator.GetProcessor<IServiceManager>();
@@ -44,7 +44,9 @@ namespace BioModule.ViewModels
 
       _enroller = new Enroller(_captureDeviceEngine, _serviceManager);
 
-      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();    
+      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
+
+      _database.PhotoHolder.DataChanged += RefreshData;
     }
 
     public void Update(Person user)
@@ -58,20 +60,24 @@ namespace BioModule.ViewModels
       IsEnabled = true;   
       _user = user;
 
-
-      string personFolder = _bioEngine.Database().LocalStorage.PersonsStoragePath + "\\" + _user.Id;
-      Directory.CreateDirectory(personFolder);
-
-      UserImages.Clear();
-      DirectoryInfo personImageDir = new DirectoryInfo(personFolder);
-      foreach (FileInfo personImageFile in personImageDir.GetFiles("*.jpg"))
-      {
-        Uri uri = new Uri(personImageFile.FullName);
-        UserImages.Add(uri);
-      }
-      
+      RefreshData();      
     }
+    private void RefreshData()
+    {
+      string personFolder = _database.LocalStorage.LocalStoragePath;
 
+      DirectoryInfo personImageDir = new DirectoryInfo(personFolder);
+
+      _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
+
+      foreach (FileInfo personImageFile in personImageDir.GetFiles("*.jpg"))
+      {        
+        Uri uri = new Uri(personImageFile.FullName);
+       
+        if (!UserImages.Contains(uri))
+          UserImages.Add(uri);
+      }
+    }
     protected override void OnActivate()
     {
       CaptureDeviceConnected = false;
@@ -358,5 +364,6 @@ namespace BioModule.ViewModels
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IImageUpdatable      _imageViewer        ;
     private readonly IServiceManager      _serviceManager     ;
+    private readonly IBioSkyNetRepository _database           ;
   }
 }

@@ -11,6 +11,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using BioData.Holders;
 
+using BioContracts.Holders;
+
 namespace BioData
 {
   public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
@@ -34,8 +36,7 @@ namespace BioData
       _captureDeviceHolder = new CaptureDeviceHolder();
       _accessDeviceHolder  = new AccessDeviceHolder ();
       _photoHolder         = new PhotoHolder        ();
-
-      _localStorage        = new BioLocalStorage();
+      _localStorage        = new BioLocalStorage    ();
 
     
     }
@@ -80,6 +81,11 @@ namespace BioData
       get { return _localStorage;  }
     }
 
+
+    public IPhotoHolder PhotoHolderByPerson 
+    {
+      get { return _photoHolder;  }
+    }
    
 
   }
