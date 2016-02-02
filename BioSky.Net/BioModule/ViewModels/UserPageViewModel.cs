@@ -43,7 +43,7 @@ namespace BioModule.ViewModels
      
       ActiveItem = Items[0];
       OpenTab();
-
+      
       _methodInvoker = new FastMethodInvoker();
 
       
@@ -73,6 +73,7 @@ namespace BioModule.ViewModels
           , Dbstate = DbState.Insert
           , Gender = BioFaceService.Person.Types.Gender.Male
           , Rights = BioFaceService.Person.Types.Rights.Operator
+          , Dbstate = DbState.Insert
         };
 
         _userPageMode = UserPageMode.NewUser;

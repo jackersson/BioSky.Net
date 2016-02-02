@@ -36,6 +36,10 @@ namespace BioModule.ViewModels
       if ( location != null )
        Update(location);
     }
+    public void OnDataContextChanged()
+    {
+      ImageView = new ImageViewModel();      
+    }
 
     protected override void OnActivate()
     {
@@ -56,7 +60,6 @@ namespace BioModule.ViewModels
 
       Items.Add(_visitorsView);
 
-      ImageView = new ImageViewModel();
     }
 
     public void Update(TrackLocation trackLocation)

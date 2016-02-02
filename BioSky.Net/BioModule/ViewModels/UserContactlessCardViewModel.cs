@@ -37,7 +37,27 @@ namespace BioModule.ViewModels
       CardState = "Card number";
 
       _userCards = new ObservableCollection<Card>();
-    }    
+
+      IsEnabled = false;
+
+      //UserCards = _bioEngine.Database().Cards;
+
+     
+    }
+
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+      get { return _isEnabled; }
+      set
+      {
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
+      }
+    }
 
 
 /*
@@ -172,15 +192,28 @@ namespace BioModule.ViewModels
 
     public void Update(Person user)
     {
-      _user = user;   
-      
+      if (user == null)
+        return;    
+
+      if (user.Dbstate == DbState.Insert)
+        return;
+
+      IsEnabled = true;
+
+      _user = user;
+
+      //_dataChanged = false;
+
       _userCards.Clear();
+
       _detectedCard.Personid = _user.Id;
+
+
       foreach (Card card in _bioEngine.Database().CardHolder.Data)
       {
-        if ( card.Personid == _user.Id)
+        if (card.Personid == _user.Id)
           _userCards.Add(card);
-      }       
+      }     
     }
 
     public void AddNewCard()
@@ -192,7 +225,9 @@ namespace BioModule.ViewModels
 
       Card newCard = new Card(DetectedCard);
       UserCards.Add(newCard);
-           
+
+      //_dataChanged = true;
+     
       NotifyOfPropertyChange(() => UserCards);
 
       CanAddNewCard = false;
@@ -207,7 +242,10 @@ namespace BioModule.ViewModels
     private ObservableCollection<Card> _userCards;
     public ObservableCollection<Card> UserCards
     {
-      get { return _userCards; }
+      get
+      {             
+        return _userCards;      
+      }
       set
       {
         if ( _userCards != value )
@@ -240,19 +278,53 @@ namespace BioModule.ViewModels
       {
         if (card.Dbstate != DbState.None)
           cardList.Cards.Add(card);
-      }
+      }       
 
-      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; ;
+       _bioService.DatabaseService.CardUpdated += DatabaseService_CardUpdated;
 
        await _bioService.DatabaseService.CardUpdateRequest(cardList);      
     }
 
-    private void CardHolder_DataUpdated(System.Collections.Generic.IList<Card> list, Result result)
+    private void DatabaseService_CardUpdated(CardList list, Result result)
     {
-      Console.WriteLine("Data Updated");
-    }   
+      PersonUpdateResultProcessing(list, result);
 
-  
+    }
+
+    private void PersonUpdateResultProcessing(CardList list, Result result)
+    {
+      /*
+      _bioService.DatabaseService.CardUpdated -= DatabaseService_CardUpdated;
+      
+      IBioSkyNetRepository database = _locator.GetProcessor<IBioSkyNetRepository>();
+        
+      string message = "";
+
+      foreach (ResultPair rp in result.Status)
+      {
+        Card card = null;
+        if (rp.Status == ResultStatus.Success)
+        {
+          if (rp.State == DbState.Insert)
+            card = rp.Card;
+          else
+            card = list.Cards.Where(x => x.Id == rp.Id).FirstOrDefault();
+
+          database.UpdateCardFromServer(card);
+
+        }
+        else
+        {
+          if (rp.State == DbState.Insert)
+            message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";
+        }
+
+        if (card != null)
+          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + card.UniqueNumber + "\n";        
+      }
+      */
+      //MessageBox.Show(message);      
+    }
 
     public async void Apply()
     {

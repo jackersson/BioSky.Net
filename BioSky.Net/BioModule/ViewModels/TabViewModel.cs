@@ -43,7 +43,8 @@ namespace BioModule.ViewModels
 
     public void OnSelectionChanged()
     {
-      ActiveItem.Activate();
+      if (ActiveItem != null)
+        ActiveItem.Activate();
     }
 
 

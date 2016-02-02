@@ -24,12 +24,13 @@ namespace BioModule.ViewModels
   {    
     public UserInformationViewModel()
     {           
-      DisplayName = "Information";     
+      DisplayName = "Information";
+      IsEnabled = true;
     }
         
     public void Update( Person user)
     {
-      User = user;      
+      User = user;
     }
 
     public void Apply()
@@ -59,6 +60,20 @@ namespace BioModule.ViewModels
          NotifyOfPropertyChange(() => GenderSources);
           NotifyOfPropertyChange(() => User);
        }
+      }
+    }
+
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+      get { return _isEnabled; }
+      set
+      {
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;          
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
       }
     } 
     

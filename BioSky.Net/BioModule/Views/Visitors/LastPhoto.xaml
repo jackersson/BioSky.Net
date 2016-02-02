@@ -11,6 +11,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"             
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
@@ -29,10 +30,13 @@
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
+         
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
+
+
         <StackPanel DataContext="{Binding LastVisitor, UpdateSourceTrigger=PropertyChanged}">
             <Grid Margin="5,5,5,5" >
                 <Grid.RowDefinitions>
@@ -60,5 +64,6 @@
                 </StackPanel>
             </Grid>
         </StackPanel>
+          
     </Grid>
 </UserControl>
