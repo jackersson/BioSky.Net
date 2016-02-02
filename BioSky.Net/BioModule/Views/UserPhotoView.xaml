@@ -65,7 +65,7 @@
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
                  Grid.Row="5" Margin="0, 5, 0, 0"                
                  SelectedItem="{Binding SelectedItem}"
-                 ItemsSource="{Binding PersonImages}"  
+                 ItemsSource="{Binding UserImages}"  
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
                  cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChange]"
                  >

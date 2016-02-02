@@ -57,6 +57,8 @@ namespace BioModule.ViewModels
 
       if (SelectedTrackLocation == null)      
         TrackTabControlView.Update(TrackControlItems[0]);
+
+      TrackTabControlView.Update(SelectedTrackLocation);
     }
 
     public ObservableCollection<TrackLocation> TrackControlItems

@@ -40,13 +40,14 @@ namespace BioModule.ViewModels
 
       _serviceManager = locator.GetProcessor<IServiceManager>();
 
-      UserImages = new ObservableCollection<Uri>();
+      UserImages = new AsyncObservableCollection<Uri>();
 
       _enroller = new Enroller(_captureDeviceEngine, _serviceManager);
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
 
       _database.PhotoHolder.DataChanged += RefreshData;
+      _database.PhotoHolder.DataUpdated += RefreshDataOnUpdate;
     }
 
     public void Update(Person user)
@@ -64,25 +65,49 @@ namespace BioModule.ViewModels
     }
     private void RefreshData()
     {
-      string personFolder = _database.LocalStorage.LocalStoragePath;
+      //string personFolder = _database.LocalStorage.LocalStoragePath;
+      string personFolder = "D:\\";
+
 
       DirectoryInfo personImageDir = new DirectoryInfo(personFolder);
 
-      _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
+      IList <Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
 
-      foreach (FileInfo personImageFile in personImageDir.GetFiles("*.jpg"))
-      {        
-        Uri uri = new Uri(personImageFile.FullName);
-       
-        if (!UserImages.Contains(uri))
+      if (list == null)
+        return;
+
+      UserImages.Clear();
+      foreach (Photo personPhoto in list)
+      {
+        if ( File.Exists(personFolder + "\\" + personPhoto.FileLocation) )
+        {
+          Uri uri = new Uri(personFolder + "\\" + personPhoto.FileLocation);
+          Uri uri2 = new Uri(personFolder + "\\" + personPhoto.FileLocation);
+          if(uri.OriginalString == uri2.OriginalString)
+          {
+            Console.WriteLine(true);
+          }
           UserImages.Add(uri);
+        }
       }
+    }
+
+    private void RefreshDataOnUpdate(IList<Photo> list, Result result)
+    {
+      string personFolder = "D:\\";
+
+      foreach (Photo personPhoto in list)
+      {
+        Uri uri = new Uri(personFolder + "\\" + personPhoto.FileLocation);
+        UserImages.Add(uri);      
+      }
+
     }
     protected override void OnActivate()
     {
       CaptureDeviceConnected = false;
-   
       CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
+      RefreshData();
       base.OnActivate();
     }
 
@@ -159,7 +184,7 @@ namespace BioModule.ViewModels
       }       
     }
 
-    private void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
+    private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
     {
       if (feedback.Progress == 100)
       {
@@ -191,7 +216,7 @@ namespace BioModule.ViewModels
           fs.Write(data);
           fs.Close();
 
-          _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+          await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
         }        
        
       }
@@ -246,8 +271,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<Uri> _userImages;
-    public ObservableCollection<Uri> UserImages
+    private AsyncObservableCollection<Uri> _userImages;
+    public AsyncObservableCollection<Uri> UserImages
     {
       get { return _userImages; }
       set

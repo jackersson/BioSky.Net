@@ -85,9 +85,9 @@ namespace BioModule.ViewModels
     {
       NotifyOfPropertyChange(() => Visitors);
     }
-    
-    private ObservableCollection<Visitor> _visitors;
-    public ObservableCollection<Visitor> Visitors
+
+    private AsyncObservableCollection<Visitor> _visitors;
+    public AsyncObservableCollection<Visitor> Visitors
     {
       get { return _visitors; }
       set
@@ -239,7 +239,7 @@ namespace BioModule.ViewModels
         if (visitorFound)
         {
           Person person = null;
-          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Id, out person);
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
           _selector.ShowContent(ShowableContentControl.TabControlContent
                                , ViewModelsID.UserPage
                                , new object[] { person });

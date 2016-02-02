@@ -99,7 +99,7 @@
         </Button>
        
         <local:ImageView  Content="{Binding CurrentImageView}" Grid.Column="0"
-                          HorizontalAlignment="Stretch"  
+                          HorizontalAlignment="Stretch"  Margin="0,0,0,5"
                           VerticalAlignment="Stretch"                     
                           Grid.RowSpan="6">
             <local:ImageView.Resources>

@@ -66,8 +66,8 @@ namespace BioModule.ViewModels
       RefreshData();
     }
   
-    private ObservableCollection<Person> _users;
-    public ObservableCollection<Person> Users
+    private AsyncObservableCollection<Person> _users;
+    public AsyncObservableCollection<Person> Users
     {
       get { return _users; }
       set

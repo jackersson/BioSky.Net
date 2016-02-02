@@ -25,7 +25,8 @@ namespace BioModule.ViewModels
   {
     public ImageViewModel()
     {
-      ZoomToFitState = true;   
+      ZoomToFitState = true;
+      CurrentImageUri = null;   
     }  
  
     public void UploadClick(double viewWidth, double viewHeight)
@@ -67,14 +68,29 @@ namespace BioModule.ViewModels
     public void UpdateImage(Uri uriSource)
     {
       SetImageFromFile(uriSource.OriginalString);
+      CurrentImageUri = uriSource; 
     }
 
     public void CancelClick(double viewWidth, double viewHeight)
     {
       CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
       Zoom(viewWidth, viewHeight);
+      CurrentImageUri = null;
     }
 
+    private Uri _currentImageUri;
+    public Uri CurrentImageUri
+    {
+      get { return _currentImageUri; }
+      set
+      {
+        if (_currentImageUri != value)
+        {
+          _currentImageUri = value;
+          NotifyOfPropertyChange(() => CurrentImageUri);
+        }
+      }
+    }
     public void Zoom(double viewWidth, double viewHeight)
     {
       _imageViewWidth  = viewWidth;
