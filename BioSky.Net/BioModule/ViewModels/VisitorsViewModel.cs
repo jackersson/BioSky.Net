@@ -57,10 +57,9 @@ namespace BioModule.ViewModels
     private void RefreshData()
     {
       Visitors = null;
-      Visitors = _database.VisitorHolder.Data;
+      Visitors = _database.VisitorHolder.Data;    
       GetLastVisitor();
     }
-
     private void GetLastVisitor()
     {
       if (Visitors.Count != 0)

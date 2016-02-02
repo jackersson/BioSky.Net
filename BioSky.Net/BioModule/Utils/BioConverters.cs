@@ -116,9 +116,9 @@ namespace BioModule.Utils
         Photo photo = null;
         bool photoFound = _photoHolder.DataSet.TryGetValue((long)value, out photo);
                 
-        string addr = Directory.GetCurrentDirectory();
+        string addr = "D:\\media\\persons\\1";
 
-        if (photoFound && File.Exists(photo.FileLocation))
+        if (photoFound && File.Exists(addr + "\\" + photo.FileLocation))
         {
           BitmapSource img = new BitmapImage(new Uri(addr + "\\" + photo.FileLocation, UriKind.RelativeOrAbsolute));
           return img;
@@ -176,7 +176,7 @@ namespace BioModule.Utils
         if (personFound)
           return person.Firstname;
       }
-      return null;
+      return "---";
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
@@ -202,7 +202,7 @@ namespace BioModule.Utils
         if (personFound)
           return person.Lastname;
       }
-      return null;
+      return "---";
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {

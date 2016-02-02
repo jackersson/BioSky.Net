@@ -24,10 +24,10 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid  cal:Message.Attach="[Event Loaded] = [Action OnDataContextChanged()]">
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="155"/>
+            <ColumnDefinition Width="165"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -83,7 +83,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="48"/>
             </Grid.RowDefinitions>
-            <ContentControl Width="155" Grid.Row="1" cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
+            <ContentControl Width="165" Grid.Row="1" Margin="0,1,0,0" cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
         </Grid>
 
     </Grid>

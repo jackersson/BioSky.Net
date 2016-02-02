@@ -11,6 +11,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"             
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"              
@@ -29,6 +30,11 @@
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <CollectionViewSource Source="{Binding Visitors}" x:Key="SortedVisitors">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="Time" Direction="Descending"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -51,7 +57,7 @@
                  Grid.ColumnSpan="5"                 
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
-                 ItemsSource="{Binding Visitors}" 
+                 ItemsSource="{Binding Source={StaticResource SortedVisitors}}" 
                  SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];

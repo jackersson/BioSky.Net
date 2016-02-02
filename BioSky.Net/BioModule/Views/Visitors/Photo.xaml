@@ -11,6 +11,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"             
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"            
              d:DesignHeight="400" d:DesignWidth="400"
@@ -31,78 +32,85 @@
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <CollectionViewSource Source="{Binding Visitors}" x:Key="SortedVisitors">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="Time" Direction="Descending"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid x:Name="GridLayout">
         <Grid.RowDefinitions>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>   
 
-        <DataGrid 
+        <ListBox 
             BorderThickness="1" 
                   Grid.Column="0" HorizontalAlignment="Stretch" 
             Grid.ColumnSpan="5"
                   Margin="2,1,0,0" VerticalAlignment="Stretch"            
-                  ItemsSource="{Binding Visitors}"                
-                  GridLinesVisibility="None"
-                  AutoGenerateColumns="False"
-                  HeadersVisibility ="None" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  CanUserSortColumns="True" CanUserAddRows="False"
-                  materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                  materialDesign:DataGridAssist.ColumnHeaderPadding="8"              
-                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
+                  ItemsSource="{Binding Source={StaticResource SortedVisitors}}" 
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"           
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"              
                   cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                       [Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]">
 
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="User" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <StackPanel.Style>
-                                    <Style TargetType="StackPanel">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Status}" Value="Success">
-                                                <Setter Property="Background" Value="#7FEAFFEA"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Status}" Value="Failed">
-                                                <Setter Property="Background" Value="#33FFECEC"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </StackPanel.Style>
-                            <Grid Margin="5,5,5,5" >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+            <ListBox.ItemTemplate>
+                <DataTemplate>                        
+                    <StackPanel Margin="-20,0,0,0" Tag="{Binding DataContext, ElementName=GridLayout}">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Open in New Tab"  
+                              IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
+                              cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
+                              />
+                                <MenuItem Header="Remove" 
+                              IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
+                              cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
+                              />
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="Success">
+                                        <Setter Property="Background" Value="#7FEAFFEA"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                        <Setter Property="Background" Value="#33FFECEC"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Grid Margin="5,5,5,5" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
 
-                                    <Image Grid.Column="0" Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                            <Image Grid.Column="0" Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
                                        Stretch="Fill" Width="50" Height="50"/>
 
-                                <StackPanel Margin="5,-4,0,0" Grid.Column="1">
-                                        <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" 
+                            <StackPanel Margin="-10,-4,0,0" Grid.Column="1">
+                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" 
                                                HorizontalAlignment="Left" Foreground="#FF5E82A8" FontWeight="Bold" ></TextBlock>
-                                        <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}" 
+                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}" 
                                                HorizontalAlignment="Left" Foreground="#FF5E82A8" FontWeight="Bold" ></TextBlock>
-                                        <TextBlock Text="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}" 
+                                <TextBlock Text="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}" 
                                                HorizontalAlignment="Left" Foreground="Gray" FontSize="11" FontWeight="SemiBold" ></TextBlock>
 
-                                    </StackPanel>
-                            </Grid>
                             </StackPanel>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
+                        </Grid>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
 
-            <DataGrid.ContextMenu >
+            <ListBox.ContextMenu >
                 <ContextMenu x:Name="VisitorContextMenu" IsEnabled="True" >
                     <MenuItem Header="Open in New Tab"  
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
@@ -113,7 +121,7 @@
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
                               />
                 </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>        
+            </ListBox.ContextMenu>
+        </ListBox>
     </Grid>
 </UserControl>

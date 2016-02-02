@@ -45,7 +45,7 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      _visitorsView.Update();
+      _visitorsView.Update();      
     }
     public void TrackLocations_CollectionChanged(object sender, EventArgs args)
     {
@@ -55,9 +55,8 @@ namespace BioModule.ViewModels
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);         
       }
 
-      if (SelectedTrackLocation == null)
+      if (SelectedTrackLocation == null)      
         TrackTabControlView.Update(TrackControlItems[0]);
-
     }
 
     public ObservableCollection<TrackLocation> TrackControlItems
@@ -123,6 +122,8 @@ namespace BioModule.ViewModels
     {
       if (SelectedTrackLocation == null)
         return;
+
+      TrackTabControlView.Update(SelectedTrackLocation);
     }
 
     public void ShowLocationFlayout()

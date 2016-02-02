@@ -37,7 +37,9 @@ namespace BioData
       string mediaPath = GetConfigFile(mediaParametr);
 
       if (mediaPath == null)      
-        LocalStoragePath = AppDomain.CurrentDomain.BaseDirectory;    
+        LocalStoragePath = AppDomain.CurrentDomain.BaseDirectory;
+
+      LocalStoragePath = mediaPath;
     }
 
     IHolder<Visitor, long> IBioSkyNetRepository.VisitorHolder

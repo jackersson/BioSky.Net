@@ -38,12 +38,26 @@ namespace BioModule.ViewModels
 
       _userCards = new ObservableCollection<Card>();
 
-      
+      IsEnabled = false;
 
       //UserCards = _bioEngine.Database().Cards;
 
      
-    }    
+    }
+
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+      get { return _isEnabled; }
+      set
+      {
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
+      }
+    }
 
 
 /*
@@ -178,10 +192,18 @@ namespace BioModule.ViewModels
 
     public void Update(Person user)
     {
+      if (user == null)
+        return;    
+
+      if (user.Dbstate == DbState.Insert)
+        return;
+
+      IsEnabled = true;
+
       _user = user;
 
       //_dataChanged = false;
-      
+
       _userCards.Clear();
 
       _detectedCard.Personid = _user.Id;
@@ -189,10 +211,9 @@ namespace BioModule.ViewModels
 
       foreach (Card card in _bioEngine.Database().CardHolder.Data)
       {
-        if ( card.Personid == _user.Id)
+        if (card.Personid == _user.Id)
           _userCards.Add(card);
-      } 
-      
+      }     
     }
 
     public void AddNewCard()

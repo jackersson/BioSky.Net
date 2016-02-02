@@ -14,11 +14,17 @@
 
     <UserControl.Resources>
         <ResourceDictionary>            
-                <resloader:ResourceLoader x:Key="ResourceLoader"/>                
-                <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+                <ResourceDictionary>
+                    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource MetroTabItem}">
+                        <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>                       
+                    </Style>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+            
+        </ResourceDictionary>        
     </UserControl.Resources>
 
     <Grid>
@@ -41,9 +47,11 @@
         </Grid.RowDefinitions>
         
         <TabControl Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
-                    VerticalAlignment="Stretch" ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="4"                
+                    VerticalAlignment="Stretch" 
+                    ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="4"                
                     SelectedItem="{Binding ActiveItem, UpdateSourceTrigger=PropertyChanged}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"
+                    Style="{StaticResource MetroTabControl}"
                     >
             <TabControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
@@ -67,6 +75,7 @@
                     <ContentControl Content="{Binding}" ></ContentControl>
                 </DataTemplate>
             </TabControl.ContentTemplate>
+            
         </TabControl>
 
 

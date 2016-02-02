@@ -131,6 +131,7 @@ namespace BioModule.ViewModels
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       
       DisplayName = "Photo";
+      IsEnabled   = false  ;
 
       _enroller = new Enroller(locator);
 
@@ -200,6 +201,44 @@ namespace BioModule.ViewModels
         _enroller.Start(ActiveCaptureDevice);
     }
 
+    public void Update(Person person)
+    {
+      if (person == null)
+        return;
+
+      if (person.Dbstate == DbState.Insert)
+        return;
+
+      IsEnabled = true;
+      _person = person;
+
+
+     /* string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + _person.Id;
+      System.IO.Directory.CreateDirectory(personFolder);
+
+      _personImages = new ObservableCollection<Uri>();
+      DirectoryInfo personImageDir = new DirectoryInfo(personFolder);
+      foreach (FileInfo personImageFile in personImageDir.GetFiles("*.jpg"))
+      {
+        Uri uri = new Uri(personImageFile.FullName);
+        PersonImages.Add(uri);
+      }*/
+    }
+
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+      get { return _isEnabled; }
+      set
+      {
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
+      }
+    }
+
     public void UploadClick()
     {
 
@@ -244,17 +283,32 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<Uri> _robotImages;
-    public ObservableCollection<Uri> RobotImages
+    private Person _person;
+    public Person Person
     {
-      get { return _robotImages; }
+      get { return _person; }
       set
       {
-        if (_robotImages != value)
+        if (_person != value)
         {
-          _robotImages = value;
+          _person = value;
 
-          NotifyOfPropertyChange(() => RobotImages);
+          NotifyOfPropertyChange(() => Person);
+        }
+      }
+    }
+
+    private ObservableCollection<Uri> _personImages;
+    public ObservableCollection<Uri> PersonImages
+    {
+      get { return _personImages; }
+      set
+      {
+        if (_personImages != value)
+        {
+          _personImages = value;
+
+          NotifyOfPropertyChange(() => PersonImages);
         }
       }
     }
