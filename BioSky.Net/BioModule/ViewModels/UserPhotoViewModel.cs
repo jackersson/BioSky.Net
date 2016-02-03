@@ -58,7 +58,7 @@ namespace BioModule.ViewModels
       IsEnabled = true;   
       _user = user;
 
-
+      /*
       string personFolder = _bioEngine.Database().LocalStorage.PersonsStoragePath + "\\" + _user.Id;
       Directory.CreateDirectory(personFolder);
 
@@ -69,7 +69,7 @@ namespace BioModule.ViewModels
         Uri uri = new Uri(personImageFile.FullName);
         UserImages.Add(uri);
       }
-      
+      */
     }
 
     protected override void OnActivate()
