@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 using System.Collections.ObjectModel;
 using BioContracts;
-using BioFaceService;
+using BioService;
 using BioModule.Utils;
 using System.Windows;
 using System.Threading.Tasks;

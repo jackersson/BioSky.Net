@@ -14,7 +14,7 @@ using BioModule.DragDrop;
 using System.Windows.Data;
 using System.Windows.Controls;
 using System.Windows.Media;
-using BioFaceService;
+using BioService;
 
 using Google.Protobuf.Collections;
 using BioContracts;

@@ -15,7 +15,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.Reflection;
 using System.Globalization;
-using BioFaceService;
+using BioService;
 using BioModule.Utils;
 
 namespace BioModule.ViewModels
@@ -40,12 +40,12 @@ namespace BioModule.ViewModels
 
     public List<string> GenderSources
     {
-      get { return Enum.GetNames(typeof(BioFaceService.Person.Types.Gender)).ToList(); }
+      get { return Enum.GetNames(typeof(BioService.Person.Types.Gender)).ToList(); }
     }
 
     public List<string> RightsSources
     {
-      get { return Enum.GetNames(typeof(BioFaceService.Person.Types.Rights)).ToList(); }
+      get { return Enum.GetNames(typeof(BioService.Person.Types.Rights)).ToList(); }
     }
 
     private Person _user;

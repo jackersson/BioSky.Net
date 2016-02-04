@@ -1,4 +1,4 @@
-﻿using BioFaceService;
+﻿using BioService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +7,16 @@ using System.Threading.Tasks;
 
 namespace BioContracts.Services
 {
-  public delegate void EnrollFeedbackEventHandler(object sender, EnrollmentFeedback feedback);
+  public delegate void EnrollFeedbackEventHandler      (object sender, EnrollmentFeedback   feedback);
+  public delegate void VerificationFeedbackEventHandler(object sender, VerificationFeedback feedback);
   public interface IFaceService
   {
-    event EnrollFeedbackEventHandler EnrollFeedbackChanged;
+    event EnrollFeedbackEventHandler       EnrollFeedbackChanged;
+    event VerificationFeedbackEventHandler VerifyFeedbackChanged;
 
-    Task Identify(BioImagesList    image_list);
+    Task Configurate(IServiceConfiguration configuration);
+
+    //Task Identify(BioImagesList    image_list);
     Task Verify  (VerificationData verificationData);
     Task Enroll  (EnrollmentData enrollmentData);    
   }

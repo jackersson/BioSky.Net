@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 using BioModule.DragDrop;
 using BioContracts;
-using BioFaceService;
+using BioService;
 
 namespace BioModule.ViewModels
 {

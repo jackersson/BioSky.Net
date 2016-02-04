@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using BioContracts;
-using BioFaceService;
+using BioService;
 using Grpc.Core;
 using BioContracts.Services;
-
-using System.Collections.ObjectModel;
 
 namespace BioGRPC
 {
   public class BioDatabaseService : IDatabaseService
   { 
-    public BioDatabaseService(IProcessorLocator locator, BioFaceDetector.IBioFaceDetectorClient client)
+    public BioDatabaseService(IProcessorLocator locator, BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
     {
       _client    = client;
       _locator   = locator;
@@ -245,8 +240,8 @@ namespace BioGRPC
       Console.WriteLine(s);
     }
 
-    private readonly IProcessorLocator                      _locator;
-    private readonly BioFaceDetector.IBioFaceDetectorClient _client;
-    private readonly IBioSkyNetRepository                   _database; 
+    private readonly IProcessorLocator                                      _locator;
+    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
+    private readonly IBioSkyNetRepository                                   _database; 
   }
 }

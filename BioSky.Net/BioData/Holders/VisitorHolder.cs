@@ -1,6 +1,6 @@
 ﻿using BioContracts;
 using BioData.Holders.Base;
-using BioFaceService;
+using BioService;
 using Caliburn.Micro;
 using Google.Protobuf;
 using Google.Protobuf.Collections;

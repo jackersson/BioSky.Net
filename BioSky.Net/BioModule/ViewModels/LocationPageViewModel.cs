@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using BioData;
-using BioFaceService;
+using BioService;
 using BioModule.Utils;
 using BioContracts;
 

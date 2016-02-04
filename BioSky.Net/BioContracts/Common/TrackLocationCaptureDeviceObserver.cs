@@ -1,4 +1,4 @@
-﻿using BioFaceService;
+﻿using BioService;
 using Google.Protobuf.Collections;
 using System;
 using System.Collections.Generic;
@@ -44,12 +44,13 @@ namespace BioContracts.Common
       if (bitmap == null)
         return;
 
-      BioImage image = _utils.ImageToBioImage(bitmap);
+      Google.Protobuf.ByteString description = _utils.ImageToByteString(bitmap);
+      Photo image = new Photo() { Description = description };
       UpdateData(image);
 
     }
 
-    protected virtual void UpdateData( BioImage image )
+    protected virtual void UpdateData( Photo image )
     {
 
     }
@@ -113,25 +114,58 @@ namespace BioContracts.Common
       base.PerformRequest();
     }
 
-    public BioImage GetImage()
+    public Photo GetImage()
     {
-      if (_data.Images == null)
-        _data.Images = new BioImagesList();
-      RepeatedField<BioImage> images = _data.Images.Images;
-      return images[0];
+      if (_data != null && _data.Images.Count > 0)
+        return _data.Images[0];
+      else
+        return null;
     }
 
-    protected override void UpdateData(BioImage image)
+    protected override void UpdateData(Photo item)
     {
-      if (_data.Images == null)
-        _data.Images = new BioImagesList();
-      RepeatedField<BioImage> images = _data.Images.Images;
-      images.Add(image);
+      RepeatedField<Photo> images = _data.Images;
+      images.Add(item);    
       Check(images.Count);
     }
 
     private readonly IServiceManager _bioService;
-  } 
+  }
+
+
+  public class Verifyer : BiometricPerformerBase<VerificationData>
+  {
+
+    public Verifyer( ICaptureDeviceEngine captureDeviceEngine
+                   , IServiceManager bioService) 
+                   : base(captureDeviceEngine)
+    {
+      _bioService = bioService;
+    }
+
+    protected async override void PerformRequest()
+    {
+      await _bioService.FaceService.Verify(_data);
+      base.PerformRequest();
+    }
+
+    public Photo GetImage()
+    {
+      if (_data != null && _data.Images.Count > 0)
+        return _data.Images[0];
+      else
+        return null;
+    }
+
+    protected override void UpdateData(Photo item)
+    {
+      RepeatedField<Photo> images = _data.Images;
+      images.Add(item);
+      Check(images.Count);
+    }
+
+    private readonly IServiceManager _bioService;
+  }
 
 
   public class TrackLocationCaptureDeviceObserver
@@ -178,12 +212,6 @@ namespace BioContracts.Common
     {
       byte[] bytes = ImageToByte(img);      
       return Google.Protobuf.ByteString.CopyFrom(bytes);
-    }
-
-    public BioImage ImageToBioImage(Image img)
-    {
-      Google.Protobuf.ByteString description = ImageToByteString(img);
-      return new BioImage() { Description = description };
     }
   }
 }

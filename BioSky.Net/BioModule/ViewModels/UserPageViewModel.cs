@@ -15,7 +15,8 @@ using BioData;
 using System.Reflection;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
-using BioFaceService;
+using BioService;
+using System.IO;
 
 namespace BioModule.ViewModels
 {
@@ -59,7 +60,20 @@ namespace BioModule.ViewModels
       {
         _user = user.Clone();
         _userPageMode = UserPageMode.ExistingUser;
-     
+
+
+        string personFolder = "D:\\";
+        Photo photo = null;
+        bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnail, out photo);
+
+        if ( photoExists )
+        {
+          if (File.Exists(personFolder + "\\" + photo.FileLocation))
+          {
+            Uri uri = new Uri(personFolder + "\\" + photo.FileLocation);
+            CurrentImageView.UpdateImage(uri);
+          }
+        }
 
         DisplayName = (_user.Firstname + " " + _user.Lastname);
       }
@@ -117,6 +131,23 @@ namespace BioModule.ViewModels
 
         _user.Dbstate = state;
 
+        if (CurrentImageView.CurrentImageUri != null)
+        {
+          IList<Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
+
+          string personFolder = "D:\\";
+
+          foreach (Photo personPhoto in list)
+          {
+            Uri uri = new Uri(personFolder + "\\" + personPhoto.FileLocation);
+            if (uri.OriginalString == CurrentImageView.CurrentImageUri.OriginalString)
+            {
+              _user.Thumbnail = personPhoto.Id;
+            }
+          }     
+
+        }
+
         PersonList personList = new PersonList();
         personList.Persons.Add(_user);
 
@@ -128,9 +159,13 @@ namespace BioModule.ViewModels
 
     //TODO show that person updated
     private void PersonHolder_DataUpdated(IList<Person> list, Result result)
-    {
+    {      
       _database.PersonHolder.DataUpdated -= PersonHolder_DataUpdated;
-      MessageBox.Show("Person Updated");
+      
+      foreach(Person person in list)
+      {
+        MessageBox.Show("User " + person.Firstname + " " + person.Lastname + "\n" + result + " Updated");
+      }
     }
 
     public async void Apply()

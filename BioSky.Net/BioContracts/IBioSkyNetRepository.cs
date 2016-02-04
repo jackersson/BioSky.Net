@@ -1,4 +1,4 @@
-﻿using BioFaceService;
+﻿using BioService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using System.Collections.ObjectModel;
 using Google.Protobuf;
+
+using BioContracts.Holders;
 
 namespace BioContracts
 {  
@@ -25,6 +27,8 @@ namespace BioContracts
     IHolder<Card, string> CardHolder  { get; }
 
     IHolder<Person, long> PersonHolder { get; }
+
+    IPhotoHolder PhotoHolderByPerson { get;  }
 
     ILocalStorage LocalStorage  { get; }
 

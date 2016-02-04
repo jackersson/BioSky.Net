@@ -18,7 +18,7 @@ using BioModule.Utils;
 using System.Windows.Controls;
 using Google.Protobuf.Collections;
 using System.Reflection;
-using BioFaceService;
+using BioService;
 
 namespace BioModule.ViewModels
 {
@@ -57,6 +57,8 @@ namespace BioModule.ViewModels
 
       if (SelectedTrackLocation == null)      
         TrackTabControlView.Update(TrackControlItems[0]);
+
+      TrackTabControlView.Update(SelectedTrackLocation);
     }
 
     public ObservableCollection<TrackLocation> TrackControlItems

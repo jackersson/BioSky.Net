@@ -1,5 +1,5 @@
 ﻿using BioContracts.Common;
-using BioFaceService;
+using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections;
@@ -71,11 +71,11 @@ namespace BioContracts
 
       VisitorList list = new VisitorList();
       Visitor visitor = new Visitor() { Locationid = _location.Id
-                                      , Dbstate = DbState.Insert
-                                      , Time = DateTime.Now.Ticks
-                                      , Status = Visitor.Types.VisitorStatus.Failed
-                                      , Personid = 0
-                                      , Photoid  = 0 };
+                                      , Dbstate    = DbState.Insert
+                                      , Time       = DateTime.Now.Ticks
+                                      , Status     = ResultStatus.Failed
+                                      , Personid   = 0
+                                      , Photoid    = 0 };
       
       if (cardFound)
       {
@@ -87,7 +87,7 @@ namespace BioContracts
           sender.Success();       
                   
           visitor.Personid = person.Id;
-          visitor.Status   = Visitor.Types.VisitorStatus.Success;
+          visitor.Status   = ResultStatus.Success;
         }
        
       }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using BioContracts;
 using BioData;
 using System.Collections.ObjectModel;
-using BioFaceService;
+using BioService;
 
 namespace BioEngine
 {

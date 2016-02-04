@@ -1,4 +1,4 @@
-﻿using BioFaceService;
+﻿using BioService;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
@@ -11,14 +11,34 @@ using BioContracts.Services;
 
 namespace BioGRPC
 {
-  public class BioFaceService : IFaceService
+  public class BioFacialService : IFaceService
   {
-    public BioFaceService( IProcessorLocator locator, BioFaceDetector.IBioFaceDetectorClient client )
+    public BioFacialService( IProcessorLocator locator
+                           , BiometricFacialSevice.IBiometricFacialSeviceClient client )
     {
       _locator = locator;
       _client = client;
     }
 
+    public async Task Configurate( IServiceConfiguration configuration )
+    {
+      try
+      {
+        ServerConfiguration config = new ServerConfiguration();
+        config.Address             = configuration.DatabaseService;
+
+        Response call = await _client.ConfigurateAsync(config);
+        Console.WriteLine(call.ToString());
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+  
+
+    /*
     public async Task Identify(BioImagesList image_list)
     {
       try
@@ -42,7 +62,7 @@ namespace BioGRPC
         throw;
       }
     }
-    
+    */
     public async Task Verify(VerificationData verificationData)
     {
       try
@@ -56,6 +76,7 @@ namespace BioGRPC
             VerificationFeedback feature = responseStream.Current;          
             Console.WriteLine("");           
             Console.WriteLine(feature.ToString());
+            OnVerifyFeedback(feature);
           }          
         }
       }
@@ -92,18 +113,20 @@ namespace BioGRPC
       }     
     }
     
-
-    
-   // public delegate void EnrollFeedbackEventHandler(object sender, EnrollmentFeedback  feedback   );
-
- 
-    public event EnrollFeedbackEventHandler EnrollFeedbackChanged;
-
+        
+    public event EnrollFeedbackEventHandler       EnrollFeedbackChanged;
+    public event VerificationFeedbackEventHandler VerifyFeedbackChanged;
 
     protected virtual void OnEnrollFeedback(EnrollmentFeedback feedback)
     {
       if (EnrollFeedbackChanged != null)
         EnrollFeedbackChanged(this, feedback);
+    }
+
+    protected virtual void OnVerifyFeedback(VerificationFeedback feedback)
+    {
+      if (VerifyFeedbackChanged != null)
+        VerifyFeedbackChanged(this, feedback);
     }
 
     private void Log(string s, params object[] args)
@@ -116,7 +139,7 @@ namespace BioGRPC
       Console.WriteLine(s);
     }
 
-    private readonly BioFaceDetector.IBioFaceDetectorClient _client;
+    private readonly BiometricFacialSevice.IBiometricFacialSeviceClient _client;
     private readonly IProcessorLocator _locator;
 
   }

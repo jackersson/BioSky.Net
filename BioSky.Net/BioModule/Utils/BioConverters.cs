@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
-//using static BioFaceService.Person.Types;
+//using static BioService.Person.Types;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows;
 using BioContracts;
-using BioFaceService;
+using BioService;
 
 namespace BioModule.Utils
 {
@@ -237,10 +237,10 @@ namespace BioModule.Utils
     }
   }
 
-  public class StringToGenderConverter : StringToEnumConverter<BioFaceService.Person.Types.Gender>
+  public class StringToGenderConverter : StringToEnumConverter<BioService.Person.Types.Gender>
   { }
 
-  public class StringToRightsConverter : StringToEnumConverter<BioFaceService.Person.Types.Rights>
+  public class StringToRightsConverter : StringToEnumConverter<BioService.Person.Types.Rights>
   { }
 
   public class StringToEnumConverter<TEnum> : IValueConverter
