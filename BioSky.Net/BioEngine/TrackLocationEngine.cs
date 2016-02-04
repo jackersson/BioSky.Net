@@ -17,7 +17,7 @@ namespace BioEngine
     public TrackLocationEngine(  IProcessorLocator locator )      
     {     
       _locator = locator;
-      _trackLocations = new ObservableCollection<TrackLocation>();
+      _trackLocations = new AsyncObservableCollection<TrackLocation>();
            
       _locator.GetProcessor<IBioSkyNetRepository>().LocationHolder.DataChanged += LocationViewModel_DataChanged;
         
@@ -43,8 +43,8 @@ namespace BioEngine
       }     
     }
 
-    private ObservableCollection<TrackLocation> _trackLocations;
-    public ObservableCollection<TrackLocation> TrackLocations
+    private AsyncObservableCollection<TrackLocation> _trackLocations;
+    public AsyncObservableCollection<TrackLocation> TrackLocations
     {
      get { return _trackLocations; }
     }

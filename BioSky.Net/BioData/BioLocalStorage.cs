@@ -19,7 +19,9 @@ namespace BioData
       string mediaPath = GetConfigFile(mediaParametr);
 
       if (mediaPath == null)      
-        LocalStoragePath = "F:\\GRPCs\\ClientFolder";  
+        LocalStoragePath = "F:\\GRPCs\\ClientFolder";
+
+      LocalStoragePath = mediaPath;
     }
 
     private string _localStoragePath;

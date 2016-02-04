@@ -28,6 +28,7 @@ namespace BioEngine
     {
       try
       {
+        
         BioFaceService.CommandPerson commandPerson = new BioFaceService.CommandPerson();
         await _serviceManager.DatabaseService.PersonRequest(commandPerson);
 
@@ -45,7 +46,7 @@ namespace BioEngine
 
         BioFaceService.CommandLocation commandLocation = new BioFaceService.CommandLocation();
         await _serviceManager.DatabaseService.LocationRequest(commandLocation);
-
+        
         BioFaceService.CommandPhoto commandPhoto = new BioFaceService.CommandPhoto();
         await _serviceManager.DatabaseService.PhotoRequest(commandPhoto);
         

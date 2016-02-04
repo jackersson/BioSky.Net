@@ -108,25 +108,31 @@ namespace BioModule.Utils
     {
       _database = database;
       _photoHolder = _database.PhotoHolder;
+      _personHolder = _database.PersonHolder;
     }
 
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
-        Photo photo = null;
-        bool photoFound = _photoHolder.DataSet.TryGetValue((long)value, out photo);
-                
-        if (photoFound) 
+        Person person = null;
+        bool personFound = _personHolder.DataSet.TryGetValue((long)value, out person);
+        
+        if(person != null)
         {
-          string fullFilePathway = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
-          if ( File.Exists(fullFilePathway) )
-          {
-            BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));
-            return img;
-          }          
-        }
+          Photo photo = null;
+          bool photoFound = _photoHolder.DataSet.TryGetValue(person.Thumbnail, out photo);
 
+          if (photoFound)
+          {
+            string fullFilePathway = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
+            if (File.Exists(fullFilePathway))
+            {
+              BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));
+              return img;
+            }
+          }
+        }
       }
       return ResourceLoader.UserDefaultImageIconSource;
     }
@@ -134,8 +140,9 @@ namespace BioModule.Utils
     {
       throw new NotImplementedException();
     }
-    private readonly IBioSkyNetRepository _database;
-    private readonly IHolder<Photo, long> _photoHolder;
+    private readonly IBioSkyNetRepository  _database    ;
+    private readonly IHolder<Photo, long>  _photoHolder ;
+    private readonly IHolder<Person, long> _personHolder;
   }
 
   public class ConvertLocationIdToLocationname : IValueConverter

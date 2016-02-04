@@ -53,6 +53,8 @@ namespace BioModule.ViewModels
         //TODO User photo
         //User. = fileName;
         Zoom(_imageViewWidth, _imageViewHeight);
+        CurrentImageBitmap = bmp;
+        CurrentImageUri = null;
       }
     }
 
@@ -67,8 +69,12 @@ namespace BioModule.ViewModels
 
     public void UpdateImage(Uri uriSource)
     {
-      SetImageFromFile(uriSource.OriginalString);
-      CurrentImageUri = uriSource; 
+      if (uriSource != null)
+      {
+        SetImageFromFile(uriSource.OriginalString);
+        CurrentImageUri = uriSource;
+        CurrentImageBitmap = null;
+      }
     }
 
     public void CancelClick(double viewWidth, double viewHeight)
@@ -76,6 +82,20 @@ namespace BioModule.ViewModels
       CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
       Zoom(viewWidth, viewHeight);
       CurrentImageUri = null;
+    }
+
+    private Bitmap _currentImageBitmap;
+    public Bitmap CurrentImageBitmap
+    {
+      get { return _currentImageBitmap; }
+      set
+      {
+        if (_currentImageBitmap != value)
+        {
+          _currentImageBitmap = value;
+          NotifyOfPropertyChange(() => CurrentImageBitmap);
+        }
+      }
     }
 
     private Uri _currentImageUri;

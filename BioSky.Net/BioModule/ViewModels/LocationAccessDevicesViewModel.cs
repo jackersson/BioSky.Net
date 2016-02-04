@@ -18,10 +18,11 @@ using BioFaceService;
 
 using Google.Protobuf.Collections;
 using BioContracts;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
-  public class LocationAccessDevicesViewModel : Screen
+  public class LocationAccessDevicesViewModel : Screen, IUpdatable
   {
     public LocationAccessDevicesViewModel(IProcessorLocator locator)
     {
@@ -42,12 +43,9 @@ namespace BioModule.ViewModels
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
+      _bioEngine.Database().PersonHolder.DataChanged += RefreshData;
 
-      foreach(AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
-      {
-        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
-        AddToGeneralDeviceList(dragableItem);
-      }
+      RefreshData();
     }    
 
     public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)
@@ -60,46 +58,38 @@ namespace BioModule.ViewModels
       DevicesList.Add(newItem);
     }
 
-
-    //TODO not smart way (Consider to search items once)
-   /* private void OnAccessDevicesChanged( AccessDeviceList accessDevices )
+    public void RefreshData()
     {
       DevicesInList.Clear();
       DevicesOutList.Clear();
       DevicesList.Clear();
 
-      if (_location == null)
-        return;
-
-      foreach (AccessDevice item in accessDevices.AccessDevices)
+      foreach (AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
       {
-        if (item.Locationid != _location.Id && item.Type != AccessDevice.Types.AccessDeviceType.DeviceNone)
-          continue;
-
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
 
-        / *
-        if (DevicesList.ContainsItem(dragableItem))        
-          continue;        
-          * /
-
-
-        switch (item.Type)
+        if (_location == null)
+          continue;
+        
+        if(item.Locationid == _location.Id)
         {
-          case AccessDevice.Types.AccessDeviceType.DeviceIn:
-            DevicesInList.Add(dragableItem);
-            AddToGeneralDeviceList(dragableItem, false);
-            break;
-          case AccessDevice.Types.AccessDeviceType.DeviceOut:
-            DevicesOutList.Add(dragableItem);
-            AddToGeneralDeviceList(dragableItem, false);
-            break;          
-          case AccessDevice.Types.AccessDeviceType.DeviceNone:           
-            AddToGeneralDeviceList(dragableItem, true);
-            break; 
+          switch (item.Type)
+          {
+            case AccessDevice.Types.AccessDeviceType.DeviceIn:
+              DevicesInList.Add(dragableItem);
+              AddToGeneralDeviceList(dragableItem, false);
+              break;
+            case AccessDevice.Types.AccessDeviceType.DeviceOut:
+              DevicesOutList.Add(dragableItem);
+              AddToGeneralDeviceList(dragableItem, false);
+              break;
+            case AccessDevice.Types.AccessDeviceType.DeviceNone:
+              AddToGeneralDeviceList(dragableItem, true);
+              break;
+          }
         }
       }
-    }*/
+    } 
    
     private DragablListBoxViewModel _devicesList;
     public DragablListBoxViewModel DevicesList
@@ -146,6 +136,11 @@ namespace BioModule.ViewModels
     public void Update(Location location)
     {
       _location = location;
+      RefreshData();
+    }
+    public void Apply()
+    {
+
     }
 
     private          Location          _location  ;

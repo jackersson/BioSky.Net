@@ -42,7 +42,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*"/>
             <ColumnDefinition Width="56"/>
-            <ColumnDefinition Width="62"/>
+            <ColumnDefinition Width="78"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
@@ -129,6 +129,7 @@
                  CanUserAddRows="False" CanUserDeleteRows="False"
                  ColumnWidth="600"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.CanContentScroll="False"
                  DataContext="{Binding Mode=OneWay}"
                  Grid.Column="2"  Grid.Row="2" Grid.ColumnSpan="4"  Grid.RowSpan="3" Margin="3,2,0,0"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];

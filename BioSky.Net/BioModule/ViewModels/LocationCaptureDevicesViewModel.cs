@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using BioModule.DragDrop;
 using BioContracts;
 using BioFaceService;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
-  public class LocationCaptureDevicesViewModel : Screen
+  public class LocationCaptureDevicesViewModel : Screen, IUpdatable
   {
     public LocationCaptureDevicesViewModel(IProcessorLocator locator)
     {
@@ -94,6 +95,10 @@ namespace BioModule.ViewModels
     public void Update(Location location)
     {
       _location = location;
+    }
+    public void Apply()
+    {
+
     }
 
     private          Location          _location  ;

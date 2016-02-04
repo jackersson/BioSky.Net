@@ -24,9 +24,6 @@ using BioContracts.Common;
 
 namespace BioModule.ViewModels
 {
-
- 
-
   public class UserPhotoViewModel : Screen, IUpdatable
   {
     public UserPhotoViewModel(IBioEngine bioEngine, IImageUpdatable imageViewer, IProcessorLocator locator)
@@ -48,8 +45,9 @@ namespace BioModule.ViewModels
 
       _database.PhotoHolder.DataChanged += RefreshData;
       _database.PhotoHolder.DataUpdated += RefreshDataOnUpdate;
-    }
+    }  
 
+    #region Update
     public void Update(Person user)
     {
       if (user == null)
@@ -58,35 +56,32 @@ namespace BioModule.ViewModels
       if (user.Dbstate == DbState.Insert)
         return;
 
-      IsEnabled = true;   
+      IsEnabled = true;
       _user = user;
 
-      RefreshData();      
+      RefreshData();
     }
+
+    #endregion
+
+    #region Database
     private void RefreshData()
     {
-      //string personFolder = _database.LocalStorage.LocalStoragePath;
-      string personFolder = "D:\\";
+      string personFolder = _database.LocalStorage.LocalStoragePath;
 
-
-      DirectoryInfo personImageDir = new DirectoryInfo(personFolder);
-
-      IList <Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
+      IList<Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
 
       if (list == null)
         return;
 
       UserImages.Clear();
+
       foreach (Photo personPhoto in list)
       {
-        if ( File.Exists(personFolder + "\\" + personPhoto.FileLocation) )
+        string fileLocation = personFolder + "\\" + personPhoto.FileLocation;
+        if (File.Exists(fileLocation))
         {
-          Uri uri = new Uri(personFolder + "\\" + personPhoto.FileLocation);
-          Uri uri2 = new Uri(personFolder + "\\" + personPhoto.FileLocation);
-          if(uri.OriginalString == uri2.OriginalString)
-          {
-            Console.WriteLine(true);
-          }
+          Uri uri = new Uri(fileLocation);
           UserImages.Add(uri);
         }
       }
@@ -94,14 +89,25 @@ namespace BioModule.ViewModels
 
     private void RefreshDataOnUpdate(IList<Photo> list, Result result)
     {
-      string personFolder = "D:\\";
+      /*
+            string personFolder = "D:\\";
 
-      foreach (Photo personPhoto in list)
-      {
-        Uri uri = new Uri(personFolder + "\\" + personPhoto.FileLocation);
-        UserImages.Add(uri);      
-      }
+            foreach (Photo personPhoto in list)
+            {
+              Uri uri = new Uri(personFolder + "\\" + personPhoto.FileLocation);
+              UserImages.Add(uri);      
+            }*/
 
+    }
+
+    #endregion
+
+    #region BioService
+    private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      NotifyOfPropertyChange(() => CaptureDevicesNames);
+      if (ActiveCaptureDevice == null)
+        NotifyOfPropertyChange(() => AvaliableDevicesCount);
     }
     protected override void OnActivate()
     {
@@ -125,65 +131,6 @@ namespace BioModule.ViewModels
 
       base.OnDeactivate(close);
     }
-
-    public void OnSelectionChange()
-    {
-      if (SelectedItem != null)      
-        _imageViewer.UpdateImage(SelectedItem);       
-    }
-
-    private bool _isEnabled;
-    public bool IsEnabled
-    {
-      get { return _isEnabled; }
-      set
-      {
-        if (_isEnabled != value)
-        {
-          _isEnabled = value;
-          NotifyOfPropertyChange(() => IsEnabled);
-        }
-      }
-    }
-
-    private void OnNewFrame(object sender, ref Bitmap bitmap)
-    {
-      if (bitmap == null)
-        return;
-
-      CaptureDeviceConnected = true;
-
-      _imageViewer.UpdateImage(ref bitmap);     
-    }
-
-    public void Subscribe()
-    {
-      CaptureDeviceConnected = false;
-      if (SelectedCaptureDevice == null)       
-        return;      
-
-      if (ActiveCaptureDevice != null)      
-        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);           
-
-      ActiveCaptureDevice = SelectedCaptureDevice;
-
-      if (!_captureDeviceEngine.CaptureDeviceActive(ActiveCaptureDevice))      
-        _captureDeviceEngine.Add(ActiveCaptureDevice);      
-      
-      _captureDeviceEngine.Subscribe(OnNewFrame, ActiveCaptureDevice);
-    }
-
-    public void EnrollFromCamera()
-    {
-     
-      if (CaptureDeviceConnected)
-      {
-        _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
-        EnrollmentData data = new EnrollmentData();
-        _enroller.Start(ActiveCaptureDevice, data);
-      }       
-    }
-
     private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
     {
       if (feedback.Progress == 100)
@@ -191,25 +138,32 @@ namespace BioModule.ViewModels
         _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
         BioImage image = _enroller.GetImage();
         Photo feedbackPhoto = feedback.Photo;
-        
 
-        if ( image != null && feedbackPhoto != null )
+
+        if (image != null && feedbackPhoto != null)
         {
-          PhotoList photoList = new PhotoList();          
-          Photo photo = new Photo() { Dbstate      = DbState.Insert
-                                    , Description  = image.Description
-                                    , FileLocation = feedbackPhoto.FileLocation
-                                    , FirLocation  = feedbackPhoto.FirLocation
-                                    , Personid     = _user.Id
-                                    , Type = Photo.Types.PhotoSizeType.Full
-                                    };
+          PhotoList photoList = new PhotoList();
+          Photo photo = new Photo()
+          {
+            Dbstate = DbState.Insert
+          ,
+            Description = image.Description
+          ,
+            FileLocation = feedbackPhoto.FileLocation
+          ,
+            FirLocation = feedbackPhoto.FirLocation
+          ,
+            Personid = _user.Id
+          ,
+            Type = Photo.Types.PhotoSizeType.Full
+          };
 
           photoList.Photos.Add(photo);
 
 
-          string savePath = _bioEngine.Database().LocalStorage.LocalStoragePath +  "\\" + feedbackPhoto.FileLocation;
+          string savePath = _bioEngine.Database().LocalStorage.LocalStoragePath + "\\" + feedbackPhoto.FileLocation;
           Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-          
+
 
           byte[] data = image.Description.ToByteArray();
           var fs = new BinaryWriter(new FileStream(savePath, FileMode.CreateNew, FileAccess.Write));
@@ -217,14 +171,66 @@ namespace BioModule.ViewModels
           fs.Close();
 
           await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
-        }        
-       
+        }
+
       }
       if (_imageViewer != null)
         _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
-      
+
 
       Console.WriteLine(feedback);
+    }
+    public void EnrollFromCamera()
+    {
+
+      if (CaptureDeviceConnected)
+      {
+        _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
+        EnrollmentData data = new EnrollmentData();
+        _enroller.Start(ActiveCaptureDevice, data);
+      }
+    }
+    public void Subscribe()
+    {
+      CaptureDeviceConnected = false;
+      if (SelectedCaptureDevice == null)
+        return;
+
+      if (ActiveCaptureDevice != null)
+        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);
+
+      ActiveCaptureDevice = SelectedCaptureDevice;
+
+      if (!_captureDeviceEngine.CaptureDeviceActive(ActiveCaptureDevice))
+        _captureDeviceEngine.Add(ActiveCaptureDevice);
+
+      _captureDeviceEngine.Subscribe(OnNewFrame, ActiveCaptureDevice);
+    }
+    private void OnNewFrame(object sender, ref Bitmap bitmap)
+    {
+      if (bitmap == null)
+        return;
+
+      CaptureDeviceConnected = true;
+
+      _imageViewer.UpdateImage(ref bitmap);
+    }
+
+    #endregion
+
+    #region Interface
+    public void Apply()
+    {
+
+    }
+    public void EnrollFromPhoto()
+    {
+      UploadClick();
+    }
+    public void OnSelectionChange()
+    {
+      if (SelectedItem != null)
+        _imageViewer.UpdateImage(SelectedItem);
     }
 
     public void UploadClick()
@@ -240,21 +246,42 @@ namespace BioModule.ViewModels
         string filename = openFileDialog.FileName;
         if (File.Exists(filename))
         {
-          Bitmap bmp = (Bitmap)Image.FromFile(filename);        
+          Bitmap bmp = (Bitmap)Image.FromFile(filename);
           //_enroller.Start(bmp);
-        }        
+        }
       }
     }
-
-    public void EnrollFromPhoto()
-    {
-      UploadClick();
-    }
-
     public void DeletePhoto()
     {
       Console.Write("Delete Photos");
-    }    
+    } 
+
+    #endregion
+
+    #region UI
+
+    public BitmapSource CaptureDeviceConnectedIcon
+    {
+      get { return CaptureDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
+    }
+    public string AvaliableDevicesCount
+    {
+      get { return String.Format("Available Devices ({0})", _captureDevicesNames.Count); }
+    }
+
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+      get { return _isEnabled; }
+      set
+      {
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
+      }
+    }
 
     private string _activeCaptureDevice;
     public string ActiveCaptureDevice
@@ -286,6 +313,21 @@ namespace BioModule.ViewModels
       }
     }
 
+    private AsyncObservableCollection<string> _captureDevicesNames;
+    public AsyncObservableCollection<string> CaptureDevicesNames
+    {
+      get { return _captureDevicesNames; }
+      set
+      {
+        if (_captureDevicesNames != value)
+        {
+          _captureDevicesNames = value;
+
+          NotifyOfPropertyChange(() => CaptureDevicesNames);
+        }
+      }
+    }
+
     private Uri _selectedItem;
     public Uri SelectedItem
     {
@@ -297,68 +339,6 @@ namespace BioModule.ViewModels
           _selectedItem = value;
 
           NotifyOfPropertyChange(() => SelectedItem);
-        }
-      }
-    }
-
-    private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-      NotifyOfPropertyChange(() => CaptureDevicesNames);
-      if(ActiveCaptureDevice == null)
-        NotifyOfPropertyChange(() => AvaliableDevicesCount);
-    }
-
-    public void Apply()
-    {
-     
-    }
-
-    private AsyncObservableCollection<string> _captureDevicesNames;
-    public AsyncObservableCollection<string> CaptureDevicesNames
-    {
-      get { return _captureDevicesNames; }
-      set
-      {
-        if (_captureDevicesNames != value)
-        {
-          _captureDevicesNames = value;
-
-          NotifyOfPropertyChange(() => CaptureDevicesNames  );          
-        }
-      }
-    }
-
-    public string AvaliableDevicesCount
-    {
-      get { return String.Format("Available Devices ({0})", _captureDevicesNames.Count); }
-    }
-
-    private string _selectedCaptureDevice;
-    public string SelectedCaptureDevice
-    {
-      get { return _selectedCaptureDevice; }
-      set
-      {
-        if (_selectedCaptureDevice != value)
-        {
-          _selectedCaptureDevice = value;
-          NotifyOfPropertyChange(() => SelectedCaptureDevice);
-
-          Subscribe();
-        }
-      }
-    }
-
-    private bool _captureDeviceConnected;
-    private bool CaptureDeviceConnected
-    {
-      get { return _captureDeviceConnected; }
-      set
-      {
-        if (_captureDeviceConnected != value)
-        {
-          _captureDeviceConnected = value;
-          NotifyOfPropertyChange(() => CaptureDeviceConnectedIcon);
         }
       }
     }
@@ -377,18 +357,49 @@ namespace BioModule.ViewModels
       }
     }
 
-    public BitmapSource CaptureDeviceConnectedIcon
+    private bool _captureDeviceConnected;
+    private bool CaptureDeviceConnected
     {
-      get { return CaptureDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
+      get { return _captureDeviceConnected; }
+      set
+      {
+        if (_captureDeviceConnected != value)
+        {
+          _captureDeviceConnected = value;
+          NotifyOfPropertyChange(() => CaptureDeviceConnectedIcon);
+        }
+      }
     }
 
+    private string _selectedCaptureDevice;
+    public string SelectedCaptureDevice
+    {
+      get { return _selectedCaptureDevice; }
+      set
+      {
+        if (_selectedCaptureDevice != value)
+        {
+          _selectedCaptureDevice = value;
+          NotifyOfPropertyChange(() => SelectedCaptureDevice);
 
-    private readonly Enroller             _enroller           ;
-    private readonly IProcessorLocator    _locator            ;
-    private readonly IBioEngine           _bioEngine          ;
+          Subscribe();
+        }
+      }
+    }
+
+    #endregion
+
+    #region Global Variables
+
+    private readonly Enroller _enroller;
+    private readonly IProcessorLocator _locator;
+    private readonly IBioEngine _bioEngine;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
-    private readonly IImageUpdatable      _imageViewer        ;
-    private readonly IServiceManager      _serviceManager     ;
-    private readonly IBioSkyNetRepository _database           ;
+    private readonly IImageUpdatable _imageViewer;
+    private readonly IServiceManager _serviceManager;
+    private readonly IBioSkyNetRepository _database;
+
+    #endregion
+
   }
 }

@@ -27,8 +27,8 @@ namespace BioData.Holders
       }
       else      
         _photos.Add(key, new List<Photo>());
-      
-      base.AddToDataSet(obj, key);
+
+      base.AddToDataSet(obj, obj.Id);
     }
 
     protected override void Update(Photo obj, long key)
@@ -44,7 +44,7 @@ namespace BioData.Holders
             photos[i] = obj;
         }
       }
-      base.Update(obj, key);
+      base.Update(obj, obj.Id);
     }
 
     protected override void Remove(Photo obj, long key)
@@ -54,7 +54,7 @@ namespace BioData.Holders
         IList<Photo> photos = _photos[key];
         photos.Remove(obj);      
       }
-      base.Remove(obj, key);
+      base.Remove(obj, obj.Id);
     }
 
     protected override void UpdateDataSet(IList<Photo> list)

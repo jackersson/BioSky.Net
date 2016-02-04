@@ -57,7 +57,9 @@ namespace BioData.Holders.Base
     {
       Data = new AsyncObservableCollection<TValue>(list);
       UpdateDataSet(list);
-      OnDataChanged();      
+      OnDataChanged();
+
+      Console.WriteLine(Data.Count + " " + DataSet.Count);
     }
 
     protected virtual void UpdateDataSet(IList<TValue> list) {  }

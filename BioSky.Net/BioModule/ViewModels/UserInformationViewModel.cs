@@ -27,22 +27,28 @@ namespace BioModule.ViewModels
       DisplayName = "Information";
       IsEnabled = true;
     }
-        
-    public void Update( Person user)
+
+    #region Update
+    public void Update(Person user)
     {
       User = user;
     }
 
+    #endregion
+
+    #region Interface
     public void Apply()
     {
-      
+
     }
 
+    #endregion
+
+    #region UI
     public List<string> GenderSources
     {
       get { return Enum.GetNames(typeof(BioFaceService.Person.Types.Gender)).ToList(); }
     }
-
     public List<string> RightsSources
     {
       get { return Enum.GetNames(typeof(BioFaceService.Person.Types.Rights)).ToList(); }
@@ -54,12 +60,12 @@ namespace BioModule.ViewModels
       get { return _user; }
       set
       {
-       if (_user != value)
-       {
-         _user = value;
-         NotifyOfPropertyChange(() => GenderSources);
+        if (_user != value)
+        {
+          _user = value;
+          NotifyOfPropertyChange(() => GenderSources);
           NotifyOfPropertyChange(() => User);
-       }
+        }
       }
     }
 
@@ -71,11 +77,12 @@ namespace BioModule.ViewModels
       {
         if (_isEnabled != value)
         {
-          _isEnabled = value;          
+          _isEnabled = value;
           NotifyOfPropertyChange(() => IsEnabled);
         }
       }
-    } 
-    
+    }
+
+    #endregion    
   }
 }
