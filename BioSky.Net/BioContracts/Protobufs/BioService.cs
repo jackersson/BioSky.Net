@@ -81,43 +81,46 @@ namespace BioService {
             "U2VydmljZS5FbnJvbGxtZW50RmVlZGJhY2sSDQoFbWF0Y2gYAiABKAIiHAoN", 
             "Q29tbWFuZFBlcnNvbhILCgNhbGwYASABKAgiHQoOQ29tbWFuZFZpc2l0b3IS", 
             "CwoDYWxsGAEgASgIIh4KD0NvbW1hbmRMb2NhdGlvbhILCgNhbGwYASABKAgi", 
-            "IgoTQ29tbWFuZEFjY2Vzc0RldmljZRILCgNhbGwYASABKAgiLQoMQ29tbWFu", 
-            "ZFBob3RvEgsKA2FsbBgBIAEoCBIQCghwZXJzb25pZBgCIAEoAyIjChRDb21t", 
-            "YW5kQ2FwdHVyZURldmljZRILCgNhbGwYASABKAgiGgoLQ29tbWFuZENhcmQS", 
-            "CwoDYWxsGAEgASgIIiYKE1NlcnZlckNvbmZpZ3VyYXRpb24SDwoHYWRkcmVz", 
-            "cxgBIAEoCSo3CgdEYlN0YXRlEggKBE5vbmUQABIKCgZJbnNlcnQQARIKCgZV", 
-            "cGRhdGUQAhIKCgZSZW1vdmUQAyolCg1QaG90b1NpemVUeXBlEggKBEZ1bGwQ", 
-            "ABIKCgZDcm9wZWQQASorCg9QaG90b09yaWdpblR5cGUSCgoGTG9hZGVkEAAS", 
-            "DAoIRGV0ZWN0ZWQQASonCgxSZXN1bHRTdGF0dXMSCwoHU3VjY2VzcxAAEgoK", 
-            "BkZhaWxlZBABMv8BChVCaW9tZXRyaWNGYWNpYWxTZXZpY2USRgoLQ29uZmln", 
-            "dXJhdGUSHy5CaW9TZXJ2aWNlLlNlcnZlckNvbmZpZ3VyYXRpb24aFC5CaW9T", 
-            "ZXJ2aWNlLlJlc3BvbnNlIgASTAoKRW5yb2xsRmFjZRIaLkJpb1NlcnZpY2Uu", 
-            "RW5yb2xsbWVudERhdGEaHi5CaW9TZXJ2aWNlLkVucm9sbG1lbnRGZWVkYmFj", 
-            "ayIAMAESUAoKVmVyaWZ5RmFjZRIcLkJpb1NlcnZpY2UuVmVyaWZpY2F0aW9u", 
-            "RGF0YRogLkJpb1NlcnZpY2UuVmVyaWZpY2F0aW9uRmVlZGJhY2siADABMu8H", 
-            "ChdCaW9tZXRyaWNEYXRhYmFzZVNldmljZRJDCgxQZXJzb25TZWxlY3QSGS5C", 
-            "aW9TZXJ2aWNlLkNvbW1hbmRQZXJzb24aFi5CaW9TZXJ2aWNlLlBlcnNvbkxp", 
-            "c3QiABI8CgxQZXJzb25VcGRhdGUSFi5CaW9TZXJ2aWNlLlBlcnNvbkxpc3Qa", 
-            "Ei5CaW9TZXJ2aWNlLlJlc3VsdCIAEkAKC1Bob3RvU2VsZWN0EhguQmlvU2Vy", 
-            "dmljZS5Db21tYW5kUGhvdG8aFS5CaW9TZXJ2aWNlLlBob3RvTGlzdCIAEjoK", 
-            "C1Bob3RvVXBkYXRlEhUuQmlvU2VydmljZS5QaG90b0xpc3QaEi5CaW9TZXJ2", 
-            "aWNlLlJlc3VsdCIAEkYKDVZpc2l0b3JTZWxlY3QSGi5CaW9TZXJ2aWNlLkNv", 
-            "bW1hbmRWaXNpdG9yGhcuQmlvU2VydmljZS5WaXNpdG9yTGlzdCIAEj4KDVZp", 
-            "c2l0b3JVcGRhdGUSFy5CaW9TZXJ2aWNlLlZpc2l0b3JMaXN0GhIuQmlvU2Vy", 
-            "dmljZS5SZXN1bHQiABJJCg5Mb2NhdGlvblNlbGVjdBIbLkJpb1NlcnZpY2Uu", 
-            "Q29tbWFuZExvY2F0aW9uGhguQmlvU2VydmljZS5Mb2NhdGlvbkxpc3QiABJA", 
-            "Cg5Mb2NhdGlvblVwZGF0ZRIYLkJpb1NlcnZpY2UuTG9jYXRpb25MaXN0GhIu", 
-            "QmlvU2VydmljZS5SZXN1bHQiABJVChJBY2Nlc3NEZXZpY2VTZWxlY3QSHy5C", 
-            "aW9TZXJ2aWNlLkNvbW1hbmRBY2Nlc3NEZXZpY2UaHC5CaW9TZXJ2aWNlLkFj", 
-            "Y2Vzc0RldmljZUxpc3QiABJIChJBY2Nlc3NEZXZpY2VVcGRhdGUSHC5CaW9T", 
-            "ZXJ2aWNlLkFjY2Vzc0RldmljZUxpc3QaEi5CaW9TZXJ2aWNlLlJlc3VsdCIA", 
-            "ElgKE0NhcHR1cmVEZXZpY2VTZWxlY3QSIC5CaW9TZXJ2aWNlLkNvbW1hbmRD", 
-            "YXB0dXJlRGV2aWNlGh0uQmlvU2VydmljZS5DYXB0dXJlRGV2aWNlTGlzdCIA", 
-            "EkoKE0NhcHR1cmVEZXZpY2VVcGRhdGUSHS5CaW9TZXJ2aWNlLkNhcHR1cmVE", 
-            "ZXZpY2VMaXN0GhIuQmlvU2VydmljZS5SZXN1bHQiABI9CgpDYXJkU2VsZWN0", 
-            "EhcuQmlvU2VydmljZS5Db21tYW5kQ2FyZBoULkJpb1NlcnZpY2UuQ2FyZExp", 
-            "c3QiABI4CgpDYXJkVXBkYXRlEhQuQmlvU2VydmljZS5DYXJkTGlzdBoSLkJp", 
-            "b1NlcnZpY2UuUmVzdWx0IgBCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
+            "IgoTQ29tbWFuZEFjY2Vzc0RldmljZRILCgNhbGwYASABKAgimgEKDENvbW1h", 
+            "bmRQaG90bxILCgNmaXIYASABKAgSEwoLZGVzY3JpcHRpb24YAiABKAgSKQoN", 
+            "dGFyZ2V0X3BlcnNvbhgDIAMoCzISLkJpb1NlcnZpY2UuUGVyc29uEhQKDHJl", 
+            "c3VsdF9jb3VudBgEIAEoAxInCgx0YXJnZXRfcGhvdG8YBSADKAsyES5CaW9T", 
+            "ZXJ2aWNlLlBob3RvIiMKFENvbW1hbmRDYXB0dXJlRGV2aWNlEgsKA2FsbBgB", 
+            "IAEoCCIaCgtDb21tYW5kQ2FyZBILCgNhbGwYASABKAgiJgoTU2VydmVyQ29u", 
+            "ZmlndXJhdGlvbhIPCgdhZGRyZXNzGAEgASgJKjcKB0RiU3RhdGUSCAoETm9u", 
+            "ZRAAEgoKBkluc2VydBABEgoKBlVwZGF0ZRACEgoKBlJlbW92ZRADKiUKDVBo", 
+            "b3RvU2l6ZVR5cGUSCAoERnVsbBAAEgoKBkNyb3BlZBABKisKD1Bob3RvT3Jp", 
+            "Z2luVHlwZRIKCgZMb2FkZWQQABIMCghEZXRlY3RlZBABKicKDFJlc3VsdFN0", 
+            "YXR1cxILCgdTdWNjZXNzEAASCgoGRmFpbGVkEAEy/wEKFUJpb21ldHJpY0Zh", 
+            "Y2lhbFNldmljZRJGCgtDb25maWd1cmF0ZRIfLkJpb1NlcnZpY2UuU2VydmVy", 
+            "Q29uZmlndXJhdGlvbhoULkJpb1NlcnZpY2UuUmVzcG9uc2UiABJMCgpFbnJv", 
+            "bGxGYWNlEhouQmlvU2VydmljZS5FbnJvbGxtZW50RGF0YRoeLkJpb1NlcnZp", 
+            "Y2UuRW5yb2xsbWVudEZlZWRiYWNrIgAwARJQCgpWZXJpZnlGYWNlEhwuQmlv", 
+            "U2VydmljZS5WZXJpZmljYXRpb25EYXRhGiAuQmlvU2VydmljZS5WZXJpZmlj", 
+            "YXRpb25GZWVkYmFjayIAMAEy7wcKF0Jpb21ldHJpY0RhdGFiYXNlU2V2aWNl", 
+            "EkMKDFBlcnNvblNlbGVjdBIZLkJpb1NlcnZpY2UuQ29tbWFuZFBlcnNvbhoW", 
+            "LkJpb1NlcnZpY2UuUGVyc29uTGlzdCIAEjwKDFBlcnNvblVwZGF0ZRIWLkJp", 
+            "b1NlcnZpY2UuUGVyc29uTGlzdBoSLkJpb1NlcnZpY2UuUmVzdWx0IgASQAoL", 
+            "UGhvdG9TZWxlY3QSGC5CaW9TZXJ2aWNlLkNvbW1hbmRQaG90bxoVLkJpb1Nl", 
+            "cnZpY2UuUGhvdG9MaXN0IgASOgoLUGhvdG9VcGRhdGUSFS5CaW9TZXJ2aWNl", 
+            "LlBob3RvTGlzdBoSLkJpb1NlcnZpY2UuUmVzdWx0IgASRgoNVmlzaXRvclNl", 
+            "bGVjdBIaLkJpb1NlcnZpY2UuQ29tbWFuZFZpc2l0b3IaFy5CaW9TZXJ2aWNl", 
+            "LlZpc2l0b3JMaXN0IgASPgoNVmlzaXRvclVwZGF0ZRIXLkJpb1NlcnZpY2Uu", 
+            "VmlzaXRvckxpc3QaEi5CaW9TZXJ2aWNlLlJlc3VsdCIAEkkKDkxvY2F0aW9u", 
+            "U2VsZWN0EhsuQmlvU2VydmljZS5Db21tYW5kTG9jYXRpb24aGC5CaW9TZXJ2", 
+            "aWNlLkxvY2F0aW9uTGlzdCIAEkAKDkxvY2F0aW9uVXBkYXRlEhguQmlvU2Vy", 
+            "dmljZS5Mb2NhdGlvbkxpc3QaEi5CaW9TZXJ2aWNlLlJlc3VsdCIAElUKEkFj", 
+            "Y2Vzc0RldmljZVNlbGVjdBIfLkJpb1NlcnZpY2UuQ29tbWFuZEFjY2Vzc0Rl", 
+            "dmljZRocLkJpb1NlcnZpY2UuQWNjZXNzRGV2aWNlTGlzdCIAEkgKEkFjY2Vz", 
+            "c0RldmljZVVwZGF0ZRIcLkJpb1NlcnZpY2UuQWNjZXNzRGV2aWNlTGlzdBoS", 
+            "LkJpb1NlcnZpY2UuUmVzdWx0IgASWAoTQ2FwdHVyZURldmljZVNlbGVjdBIg", 
+            "LkJpb1NlcnZpY2UuQ29tbWFuZENhcHR1cmVEZXZpY2UaHS5CaW9TZXJ2aWNl", 
+            "LkNhcHR1cmVEZXZpY2VMaXN0IgASSgoTQ2FwdHVyZURldmljZVVwZGF0ZRId", 
+            "LkJpb1NlcnZpY2UuQ2FwdHVyZURldmljZUxpc3QaEi5CaW9TZXJ2aWNlLlJl", 
+            "c3VsdCIAEj0KCkNhcmRTZWxlY3QSFy5CaW9TZXJ2aWNlLkNvbW1hbmRDYXJk", 
+            "GhQuQmlvU2VydmljZS5DYXJkTGlzdCIAEjgKCkNhcmRVcGRhdGUSFC5CaW9T", 
+            "ZXJ2aWNlLkNhcmRMaXN0GhIuQmlvU2VydmljZS5SZXN1bHQiAEIPCgdleC5n", 
+            "cnBjogIDUlRHYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(new[] {typeof(global::BioService.DbState), typeof(global::BioService.PhotoSizeType), typeof(global::BioService.PhotoOriginType), typeof(global::BioService.ResultStatus), }, new pbr::GeneratedCodeInfo[] {
@@ -146,7 +149,7 @@ namespace BioService {
             new pbr::GeneratedCodeInfo(typeof(global::BioService.CommandVisitor), new[]{ "All" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.CommandLocation), new[]{ "All" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.CommandAccessDevice), new[]{ "All" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.CommandPhoto), new[]{ "All", "Personid" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.CommandPhoto), new[]{ "Fir", "Description", "TargetPerson", "ResultCount", "TargetPhoto" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.CommandCaptureDevice), new[]{ "All" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.CommandCard), new[]{ "All" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.ServerConfiguration), new[]{ "Address" }, null, null, null)
@@ -4133,30 +4136,58 @@ namespace BioService {
     partial void OnConstruction();
 
     public CommandPhoto(CommandPhoto other) : this() {
-      all_ = other.all_;
-      personid_ = other.personid_;
+      fir_ = other.fir_;
+      description_ = other.description_;
+      targetPerson_ = other.targetPerson_.Clone();
+      resultCount_ = other.resultCount_;
+      targetPhoto_ = other.targetPhoto_.Clone();
     }
 
     public CommandPhoto Clone() {
       return new CommandPhoto(this);
     }
 
-    public const int AllFieldNumber = 1;
-    private bool all_;
-    public bool All {
-      get { return all_; }
+    public const int FirFieldNumber = 1;
+    private bool fir_;
+    public bool Fir {
+      get { return fir_; }
       set {
-        all_ = value;
+        fir_ = value;
       }
     }
 
-    public const int PersonidFieldNumber = 2;
-    private long personid_;
-    public long Personid {
-      get { return personid_; }
+    public const int DescriptionFieldNumber = 2;
+    private bool description_;
+    public bool Description {
+      get { return description_; }
       set {
-        personid_ = value;
+        description_ = value;
       }
+    }
+
+    public const int TargetPersonFieldNumber = 3;
+    private static readonly pb::FieldCodec<global::BioService.Person> _repeated_targetPerson_codec
+        = pb::FieldCodec.ForMessage(26, global::BioService.Person.Parser);
+    private readonly pbc::RepeatedField<global::BioService.Person> targetPerson_ = new pbc::RepeatedField<global::BioService.Person>();
+    public pbc::RepeatedField<global::BioService.Person> TargetPerson {
+      get { return targetPerson_; }
+    }
+
+    public const int ResultCountFieldNumber = 4;
+    private long resultCount_;
+    public long ResultCount {
+      get { return resultCount_; }
+      set {
+        resultCount_ = value;
+      }
+    }
+
+    public const int TargetPhotoFieldNumber = 5;
+    private static readonly pb::FieldCodec<global::BioService.Photo> _repeated_targetPhoto_codec
+        = pb::FieldCodec.ForMessage(42, global::BioService.Photo.Parser);
+    private readonly pbc::RepeatedField<global::BioService.Photo> targetPhoto_ = new pbc::RepeatedField<global::BioService.Photo>();
+    public pbc::RepeatedField<global::BioService.Photo> TargetPhoto {
+      get { return targetPhoto_; }
     }
 
     public override bool Equals(object other) {
@@ -4170,15 +4201,21 @@ namespace BioService {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (All != other.All) return false;
-      if (Personid != other.Personid) return false;
+      if (Fir != other.Fir) return false;
+      if (Description != other.Description) return false;
+      if(!targetPerson_.Equals(other.targetPerson_)) return false;
+      if (ResultCount != other.ResultCount) return false;
+      if(!targetPhoto_.Equals(other.targetPhoto_)) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (All != false) hash ^= All.GetHashCode();
-      if (Personid != 0L) hash ^= Personid.GetHashCode();
+      if (Fir != false) hash ^= Fir.GetHashCode();
+      if (Description != false) hash ^= Description.GetHashCode();
+      hash ^= targetPerson_.GetHashCode();
+      if (ResultCount != 0L) hash ^= ResultCount.GetHashCode();
+      hash ^= targetPhoto_.GetHashCode();
       return hash;
     }
 
@@ -4187,24 +4224,35 @@ namespace BioService {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (All != false) {
+      if (Fir != false) {
         output.WriteRawTag(8);
-        output.WriteBool(All);
+        output.WriteBool(Fir);
       }
-      if (Personid != 0L) {
+      if (Description != false) {
         output.WriteRawTag(16);
-        output.WriteInt64(Personid);
+        output.WriteBool(Description);
       }
+      targetPerson_.WriteTo(output, _repeated_targetPerson_codec);
+      if (ResultCount != 0L) {
+        output.WriteRawTag(32);
+        output.WriteInt64(ResultCount);
+      }
+      targetPhoto_.WriteTo(output, _repeated_targetPhoto_codec);
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (All != false) {
+      if (Fir != false) {
         size += 1 + 1;
       }
-      if (Personid != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Personid);
+      if (Description != false) {
+        size += 1 + 1;
       }
+      size += targetPerson_.CalculateSize(_repeated_targetPerson_codec);
+      if (ResultCount != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ResultCount);
+      }
+      size += targetPhoto_.CalculateSize(_repeated_targetPhoto_codec);
       return size;
     }
 
@@ -4212,12 +4260,17 @@ namespace BioService {
       if (other == null) {
         return;
       }
-      if (other.All != false) {
-        All = other.All;
+      if (other.Fir != false) {
+        Fir = other.Fir;
       }
-      if (other.Personid != 0L) {
-        Personid = other.Personid;
+      if (other.Description != false) {
+        Description = other.Description;
       }
+      targetPerson_.Add(other.targetPerson_);
+      if (other.ResultCount != 0L) {
+        ResultCount = other.ResultCount;
+      }
+      targetPhoto_.Add(other.targetPhoto_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -4228,11 +4281,23 @@ namespace BioService {
             input.SkipLastField();
             break;
           case 8: {
-            All = input.ReadBool();
+            Fir = input.ReadBool();
             break;
           }
           case 16: {
-            Personid = input.ReadInt64();
+            Description = input.ReadBool();
+            break;
+          }
+          case 26: {
+            targetPerson_.AddEntriesFrom(input, _repeated_targetPerson_codec);
+            break;
+          }
+          case 32: {
+            ResultCount = input.ReadInt64();
+            break;
+          }
+          case 42: {
+            targetPhoto_.AddEntriesFrom(input, _repeated_targetPhoto_codec);
             break;
           }
         }

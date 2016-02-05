@@ -157,6 +157,11 @@ namespace BioContracts.Common
         return null;
     }
 
+    public VerificationData GetData()
+    {
+      return _data;
+    }
+
     protected override void UpdateData(Photo item)
     {
       RepeatedField<Photo> images = _data.Images;

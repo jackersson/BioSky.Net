@@ -1,31 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Caliburn.Micro;
-
-using BioData;
 using BioContracts;
 
 using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
 using System.IO;
-using AForge.Video.DirectShow;
-using System.Collections.ObjectModel;
-using System.Reflection;
 using System.Drawing;
 using BioModule.Utils;
 
 using BioService;
-using BioContracts.Services;
 using Microsoft.Win32;
 using BioContracts.Common;
 
 namespace BioModule.ViewModels
 {
 
- 
+
 
   public class UserPhotoViewModel : Screen, IUpdatable
   {

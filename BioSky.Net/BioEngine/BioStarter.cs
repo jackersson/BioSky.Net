@@ -1,5 +1,6 @@
 ﻿using BioContracts;
 using BioGRPC;
+using Grpc.Core;
 using System;
 
 namespace BioEngine
@@ -22,7 +23,15 @@ namespace BioEngine
       
       RequestData();
 
-      await _serviceManager.FaceService.Configurate(configuration);
+      try
+      {
+        await _serviceManager.FaceService.Configurate(configuration);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine("RPC failed " + e);
+        throw;
+      }
     }
 
     public void Stop()
@@ -37,6 +46,7 @@ namespace BioEngine
     {
       try
       {
+        
         BioService.CommandPerson commandPerson = new BioService.CommandPerson();
         await _serviceManager.DatabaseService.PersonRequest(commandPerson);
 
@@ -54,7 +64,7 @@ namespace BioEngine
 
         BioService.CommandLocation commandLocation = new BioService.CommandLocation();
         await _serviceManager.DatabaseService.LocationRequest(commandLocation);
-
+        
         BioService.CommandPhoto commandPhoto = new BioService.CommandPhoto();
         await _serviceManager.DatabaseService.PhotoRequest(commandPhoto);
         

@@ -131,6 +131,17 @@ namespace BioGRPC
       }
     }
 
+    public async Task PersonUpdateRequest(Person person)
+    {
+      if (person == null)
+        return;
+
+      PersonList personList = new PersonList();
+      personList.Persons.Add(person);
+
+      await PersonUpdateRequest(personList);
+    }
+
     public async Task PersonUpdateRequest(PersonList list)
     {
       try
@@ -146,6 +157,17 @@ namespace BioGRPC
     }
 
 
+    public async Task CardUpdateRequest(Card card)
+    {
+      if (card == null)
+        return;
+
+      CardList cardList = new CardList();
+      cardList.Cards.Add(card);
+
+      await CardUpdateRequest(cardList);
+    }
+
     public async Task CardUpdateRequest(CardList list)
     {
       try
@@ -158,6 +180,16 @@ namespace BioGRPC
         Log("RPC failed " + e);
         throw;
       }
+    }
+    public async Task VisitorUpdateRequest(Visitor visitor)
+    {
+      if (visitor == null)
+        return;
+
+      VisitorList visitorList = new VisitorList();
+      visitorList.Visitors.Add(visitor);
+
+      await VisitorUpdateRequest(visitorList);
     }
 
     public async Task VisitorUpdateRequest(VisitorList list)
@@ -174,6 +206,18 @@ namespace BioGRPC
       }
     }
 
+
+    public async Task LocationUpdateRequest(Location location)
+    {
+      if (location == null)
+        return;
+
+      LocationList locationList = new LocationList();
+      locationList.Locations.Add(location);
+
+      await LocationUpdateRequest(locationList);
+    }
+
     public async Task LocationUpdateRequest(LocationList list)
     {
       try
@@ -186,6 +230,17 @@ namespace BioGRPC
         Log("RPC failed " + e);
         throw;
       }
+    }
+
+    public async Task AccessDeviceUpdateRequest(AccessDevice accessDevice)
+    {
+      if (accessDevice == null)
+        return;
+
+      AccessDeviceList accessDeviceList = new AccessDeviceList();
+      accessDeviceList.AccessDevices.Add(accessDevice);
+
+      await AccessDeviceUpdateRequest(accessDeviceList);
     }
 
     public async Task AccessDeviceUpdateRequest(AccessDeviceList list)
@@ -202,6 +257,17 @@ namespace BioGRPC
       }
     }
 
+    public async Task CaptureDeviceUpdateRequest(CaptureDevice captureDevice)
+    {
+      if (captureDevice == null)
+        return;
+
+      CaptureDeviceList captureDeviceList = new CaptureDeviceList();
+      captureDeviceList.CaptureDevices.Add(captureDevice);
+
+      await CaptureDeviceUpdateRequest(captureDeviceList);
+    }
+
     public async Task CaptureDeviceUpdateRequest(CaptureDeviceList list)
     {
       try
@@ -214,6 +280,17 @@ namespace BioGRPC
         Log("RPC failed " + e);
         throw;
       }
+    }
+
+    public async Task PhotoUpdateRequest(Photo photo)
+    {
+      if (photo == null)
+        return;
+
+      PhotoList photoList = new PhotoList();
+      photoList.Photos.Add(photo);
+
+      await PhotoUpdateRequest(photoList);
     }
 
     public async Task PhotoUpdateRequest(PhotoList list)

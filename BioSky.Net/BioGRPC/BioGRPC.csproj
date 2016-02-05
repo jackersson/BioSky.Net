@@ -130,6 +130,7 @@
     <Compile Include="BioFaceService.cs" />
     <Compile Include="BioGrpcInstaller.cs" />
     <Compile Include="BioServiceManager.cs" />
+    <Compile Include="ForeignUpdators\UpdatePairRequestWithDependency.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
       <Name>BioContracts</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
