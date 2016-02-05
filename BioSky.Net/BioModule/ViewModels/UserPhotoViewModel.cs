@@ -17,34 +17,38 @@ using System.Reflection;
 using System.Drawing;
 using BioModule.Utils;
 
-using BioFaceService;
+using BioService;
 using BioContracts.Services;
 using Microsoft.Win32;
 using BioContracts.Common;
+using System.Windows;
 
 namespace BioModule.ViewModels
 {
   public class UserPhotoViewModel : Screen, IUpdatable
   {
-    public UserPhotoViewModel(IBioEngine bioEngine, IImageUpdatable imageViewer, IProcessorLocator locator)
+    public UserPhotoViewModel( IBioEngine        bioEngine, IImageUpdatable imageViewer
+                             , IProcessorLocator locator  , IWindowManager  windowManager)
     {
       _locator             = locator;
       _bioEngine           = bioEngine;
       _imageViewer         = imageViewer;
+      _windowManager       = windowManager;
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
       DisplayName = "Photo";
 
       _serviceManager = locator.GetProcessor<IServiceManager>();
 
-      UserImages = new AsyncObservableCollection<Uri>();
+      UserImages = new AsyncObservableCollection<Photo>();
 
+      _bioUtils = new BioContracts.Common.BioImageUtils();
+      
       _enroller = new Enroller(_captureDeviceEngine, _serviceManager);
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
 
-      _database.PhotoHolder.DataChanged += RefreshData;
-      _database.PhotoHolder.DataUpdated += RefreshDataOnUpdate;
+      _database.PhotoHolder.DataChanged += RefreshData;      
     }  
 
     #region Update
@@ -67,8 +71,6 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
-      string personFolder = _database.LocalStorage.LocalStoragePath;
-
       IList<Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
 
       if (list == null)
@@ -76,33 +78,31 @@ namespace BioModule.ViewModels
 
       UserImages.Clear();
 
+      /*
       foreach (Photo personPhoto in list)
       {
-        string fileLocation = personFolder + "\\" + personPhoto.FileLocation;
-        if (File.Exists(fileLocation))
-        {
-          Uri uri = new Uri(fileLocation);
-          UserImages.Add(uri);
-        }
+        UserImages.Add(personPhoto);
       }
+       */
     }
 
-    private void RefreshDataOnUpdate(IList<Photo> list, Result result)
+    private void RefreshData(IList<Photo> list, Result result)
     {
+      if (list == null)
+        return;     
+
       /*
-            string personFolder = "D:\\";
-
-            foreach (Photo personPhoto in list)
-            {
-              Uri uri = new Uri(personFolder + "\\" + personPhoto.FileLocation);
-              UserImages.Add(uri);      
-            }*/
-
+      foreach (Photo personPhoto in list)
+      {
+        UserImages.Add(personPhoto);
+      }      
+       * */
     }
-
     #endregion
 
     #region BioService
+
+    #region CaptureDevices
     private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => CaptureDevicesNames);
@@ -131,58 +131,8 @@ namespace BioModule.ViewModels
 
       base.OnDeactivate(close);
     }
-    private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
-    {
-      if (feedback.Progress == 100)
-      {
-        _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
-        BioImage image = _enroller.GetImage();
-        Photo feedbackPhoto = feedback.Photo;
-
-
-        if (image != null && feedbackPhoto != null)
-        {
-          PhotoList photoList = new PhotoList();
-          Photo photo = new Photo()
-          {
-            Dbstate = DbState.Insert
-          ,
-            Description = image.Description
-          ,
-            FileLocation = feedbackPhoto.FileLocation
-          ,
-            FirLocation = feedbackPhoto.FirLocation
-          ,
-            Personid = _user.Id
-          ,
-            Type = Photo.Types.PhotoSizeType.Full
-          };
-
-          photoList.Photos.Add(photo);
-
-
-          string savePath = _bioEngine.Database().LocalStorage.LocalStoragePath + "\\" + feedbackPhoto.FileLocation;
-          Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-
-
-          byte[] data = image.Description.ToByteArray();
-          var fs = new BinaryWriter(new FileStream(savePath, FileMode.CreateNew, FileAccess.Write));
-          fs.Write(data);
-          fs.Close();
-
-          await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
-        }
-
-      }
-      if (_imageViewer != null)
-        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
-
-
-      Console.WriteLine(feedback);
-    }
     public void EnrollFromCamera()
     {
-
       if (CaptureDeviceConnected)
       {
         _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
@@ -215,6 +165,97 @@ namespace BioModule.ViewModels
 
       _imageViewer.UpdateImage(ref bitmap);
     }
+    #endregion  
+
+    private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
+    {
+      if (feedback.Progress == 100)
+      {
+        _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
+
+        NewPhoto = new Photo();
+        NewPhoto = _enroller.GetImage();
+        Photo feedbackPhoto = feedback.Photo;
+
+
+        if (NewPhoto != null && feedbackPhoto != null)
+        {
+          PhotoList photoList = new PhotoList();
+          feedbackPhoto.Dbstate = DbState.Insert;
+          feedbackPhoto.Description = NewPhoto.Description;
+          feedbackPhoto.Personid = _user.Id;
+          feedbackPhoto.Type = PhotoSizeType.Full;
+
+
+          photoList.Photos.Add(feedbackPhoto);
+
+          _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
+
+          await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+        }
+
+      }
+      if (_imageViewer != null)
+        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
+
+
+      Console.WriteLine(feedback);
+    }
+    private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
+    {
+      _database.PhotoHolder.DataUpdated -= PhotoHolder_DataUpdated;
+
+      Photo photo = null;      
+      foreach (ResultPair currentResult in result.Status)
+      {
+        if (currentResult.Status == ResultStatus.Success)
+        {
+          if (currentResult.State == DbState.Insert)
+          {
+            photo = currentResult.Photo;
+
+            if (photo != null)
+            {
+              string savePath = _bioEngine.Database().LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
+              Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+
+              byte[] data = NewPhoto.Description.ToByteArray();
+              var fs = new BinaryWriter(new FileStream(savePath, FileMode.CreateNew, FileAccess.Write));
+              fs.Write(data);
+              fs.Close(); 
+            }               
+          }
+          else if (currentResult.State == DbState.Remove)
+          {
+            string folderPath = _bioEngine.Database().LocalStorage.LocalStoragePath + "\\";
+
+            _imageViewer.UpdateImage(null, null);
+
+            foreach(Photo deletedPhoto in list)
+            {
+              UserImages.Remove(deletedPhoto);
+              
+              File.Delete(folderPath + deletedPhoto.FileLocation);
+              try
+              {
+                System.IO.File.Delete(folderPath + deletedPhoto.FileLocation);
+              }
+              catch (System.IO.IOException e)
+              {
+                Console.WriteLine(e.Message);
+                return;
+              }
+            }
+            
+            MessageBox.Show("Photo successfully Removed");
+          }
+          RefreshData();  
+        }
+      }
+    }
+
+    
+
 
     #endregion
 
@@ -230,12 +271,11 @@ namespace BioModule.ViewModels
     public void OnSelectionChange()
     {
       if (SelectedItem != null)
-        _imageViewer.UpdateImage(SelectedItem);
+        _imageViewer.UpdateImage(SelectedItem, _database.LocalStorage.LocalStoragePath);
     }
 
     public void UploadClick()
     {
-
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = false;
       openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -247,14 +287,65 @@ namespace BioModule.ViewModels
         if (File.Exists(filename))
         {
           Bitmap bmp = (Bitmap)Image.FromFile(filename);
-          //_enroller.Start(bmp);
+
+          Google.Protobuf.ByteString description = _bioUtils.ImageToByteString(bmp);
+
+          NewPhoto = new Photo()
+          {
+            Dbstate = DbState.Insert
+            , Description = description
+            , FileLocation = ""
+            , FirLocation = ""
+            , Personid = _user.Id
+            , Type = PhotoSizeType.Full
+          };
+
+          _imageViewer.UpdateImage(NewPhoto, filename);
+
+          PhotoList photoList = new PhotoList();
+          photoList.Photos.Add(NewPhoto);          
         }
       }
-    }
-    public void DeletePhoto()
+    }   
+   
+    public async void DeletePhoto()
     {
-      Console.Write("Delete Photos");
+      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+
+      if (result == true)
+      {
+        if (SelectedItem == null)
+          return;
+
+        SelectedItem.Dbstate = DbState.Remove;
+
+        PhotoList photoList = new PhotoList();
+        photoList.Photos.Add(SelectedItem);
+
+        _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
+
+        await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+      } 
     } 
+
+    public async void Remove(bool all)
+    {
+      if(all)
+      {
+        PhotoList photoList = new PhotoList();
+
+        foreach(Photo photo in UserImages)
+        {
+          photo.Dbstate = DbState.Remove;
+          photoList.Photos.Add(photo);
+        }
+
+        _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
+
+        await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+      }
+
+    }
 
     #endregion
 
@@ -298,6 +389,22 @@ namespace BioModule.ViewModels
       }
     }
 
+    private AsyncObservableCollection<Photo> _userImages;
+    public AsyncObservableCollection<Photo> UserImages
+    {
+      get { return _userImages; }
+      set
+      {
+        if (_userImages != value)
+        {
+          _userImages = value;
+
+          NotifyOfPropertyChange(() => UserImages);
+        }
+      }
+    }
+
+/*
     private AsyncObservableCollection<Uri> _userImages;
     public AsyncObservableCollection<Uri> UserImages
     {
@@ -311,7 +418,7 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => UserImages);
         }
       }
-    }
+    }*/
 
     private AsyncObservableCollection<string> _captureDevicesNames;
     public AsyncObservableCollection<string> CaptureDevicesNames
@@ -328,8 +435,23 @@ namespace BioModule.ViewModels
       }
     }
 
-    private Uri _selectedItem;
-    public Uri SelectedItem
+    private Photo _newPhoto;
+    public Photo NewPhoto
+    {
+      get { return _newPhoto; }
+      set
+      {
+        if (_newPhoto != value)
+        {
+          _newPhoto = value;
+
+          NotifyOfPropertyChange(() => NewPhoto);
+        }
+      }
+    }
+
+    private Photo _selectedItem;
+    public Photo SelectedItem
     {
       get { return _selectedItem; }
       set
@@ -391,13 +513,15 @@ namespace BioModule.ViewModels
 
     #region Global Variables
 
-    private readonly Enroller _enroller;
-    private readonly IProcessorLocator _locator;
-    private readonly IBioEngine _bioEngine;
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;
-    private readonly IImageUpdatable _imageViewer;
-    private readonly IServiceManager _serviceManager;
-    private readonly IBioSkyNetRepository _database;
+    private readonly Enroller                 _enroller           ;
+    private readonly IProcessorLocator        _locator            ;
+    private readonly IBioEngine               _bioEngine          ;
+    private readonly ICaptureDeviceEngine     _captureDeviceEngine;
+    private          IWindowManager           _windowManager      ;
+    private readonly IImageUpdatable          _imageViewer        ;
+    private readonly IServiceManager          _serviceManager     ;
+    private readonly IBioSkyNetRepository     _database           ;
+    private BioContracts.Common.BioImageUtils _bioUtils           ;
 
     #endregion
 

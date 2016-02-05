@@ -1,5 +1,5 @@
 ﻿using BioContracts;
-using BioFaceService;
+using BioService;
 using Caliburn.Micro;
 using Google.Protobuf;
 using System;

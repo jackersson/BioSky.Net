@@ -9,5 +9,6 @@ namespace BioModule.Utils
   public interface IUpdatable
   {
     void Apply();
+    void Remove(bool all);
   }
 }

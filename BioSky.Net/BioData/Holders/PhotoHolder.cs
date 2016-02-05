@@ -1,5 +1,5 @@
 ﻿using BioData.Holders.Base;
-using BioFaceService;
+using BioService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +19,15 @@ namespace BioData.Holders
        
 
     protected override void AddToDataSet(Photo obj, long key)
-    {           
-      if (_photos.ContainsKey(key))
+    {
+      long person_idkey = obj.Personid;
+      if (_photos.ContainsKey(person_idkey))
       {
         //TODO check photo type
-        _photos[key].Add(obj);
+        _photos[person_idkey].Add(obj);
       }
-      else      
-        _photos.Add(key, new List<Photo>());
+      else
+        _photos.Add(person_idkey, new List<Photo>());
 
       base.AddToDataSet(obj, obj.Id);
     }
@@ -49,9 +50,10 @@ namespace BioData.Holders
 
     protected override void Remove(Photo obj, long key)
     {
-      if (_photos.ContainsKey(key))
+      long person_idkey = obj.Personid;
+      if (_photos.ContainsKey(person_idkey))
       {
-        IList<Photo> photos = _photos[key];
+        IList<Photo> photos = _photos[person_idkey];
         photos.Remove(obj);      
       }
       base.Remove(obj, obj.Id);

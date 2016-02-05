@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 using System.Collections.ObjectModel;
 using BioContracts;
-using BioFaceService;
+using BioService;
 using BioModule.Utils;
 using System.Windows;
 using System.Threading.Tasks;
@@ -112,22 +112,45 @@ namespace BioModule.ViewModels
     #endregion
 
     #region BioService
-    public async Task CardUpdatePerformer()
+    public async Task CardUpdatePerformer(DbState dbState)
     {
       CardList cardList = new CardList();
-      foreach (Card card in UserCards)
+      if (dbState == DbState.None)
       {
-        if (card.Dbstate != DbState.None)
-          cardList.Cards.Add(card);
+        foreach (Card card in UserCards)
+        {
+          if (card.Dbstate != DbState.None)
+            cardList.Cards.Add(card);
+        }
+      }
+      else if (dbState == DbState.Remove)
+      {
+        selectedCard.Dbstate = DbState.Remove;
+        cardList.Cards.Add(selectedCard);       
       }
 
-      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; ;
+      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; 
 
       await _bioService.DatabaseService.CardUpdateRequest(cardList);
     }
     private void CardHolder_DataUpdated(System.Collections.Generic.IList<Card> list, Result result)
-    {
-      Console.WriteLine("Data Updated");
+    {      
+      _bioEngine.Database().CardHolder.DataUpdated -= CardHolder_DataUpdated; 
+
+      Card card = null;
+      foreach (ResultPair currentResult in result.Status)
+      {
+        if (currentResult.Status == ResultStatus.Success)
+        {
+          if (currentResult.State == DbState.Remove)
+          {
+            card = currentResult.Card;
+            Console.WriteLine("Card successfully Removed");
+          }
+          else
+            Console.WriteLine("Data Updated");
+        }
+      }
     }
 
     #endregion
@@ -135,18 +158,48 @@ namespace BioModule.ViewModels
     #region Interface
     public async void Apply()
     {
-      await CardUpdatePerformer();
-
+      await CardUpdatePerformer(DbState.None);
     }
 
-    public async void Remove()
+    public async void Remove(bool all)
     {
-      await CardUpdatePerformer();
+      if(!all)
+      {
+        if (selectedCard != null)
+          await CardUpdatePerformer(DbState.Remove);
+      }
+      else if(all)
+      {
+        CardList cardList = new CardList();
+        foreach(Card card in UserCards)
+        {
+          card.Dbstate = DbState.Remove;
+          cardList.Cards.Add(card);
+        }
+
+        _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated;
+
+        await _bioService.DatabaseService.CardUpdateRequest(cardList);
+      }
     }
 
     #endregion
 
     #region UI
+
+    private Card selectedCard;
+    public Card SelectedCard
+    {
+      get { return selectedCard; }
+      set
+      {
+        if (selectedCard != value)
+        {
+          selectedCard = value;
+          NotifyOfPropertyChange(() => SelectedCard);
+        }
+      }
+    }
 
     private bool _canAddNewCard;
     public bool CanAddNewCard

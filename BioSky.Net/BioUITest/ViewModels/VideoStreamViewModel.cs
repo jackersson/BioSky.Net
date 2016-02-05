@@ -63,21 +63,21 @@ namespace BioUITest.ViewModels
 
     private AForge.Video.IVideoSource videoSource;
 
-    //private BioServiceManager _bioFaceServiceManager;
+    //private BioServiceManager _BioServiceManager;
 
     public VideoStreamViewModel()
     {
       
       DevicesNames = new FilterInfoCollection(FilterCategory.VideoInputDevice);
       /*
-      _bioFaceServiceManager = new BioServiceManager();
-      _bioFaceServiceManager.Start();
+      _BioServiceManager = new BioServiceManager();
+      _BioServiceManager.Start();
 
-      _bioFaceServiceManager.FaceClient.FaceDetected += FaceClient_FaceDetected;
+      _BioServiceManager.FaceClient.FaceDetected += FaceClient_FaceDetected;
 
-      _bioFaceServiceManager.FaceClient.EnrollFeedback += FaceClient_EnrollFeedback; ;
+      _BioServiceManager.FaceClient.EnrollFeedback += FaceClient_EnrollFeedback; ;
 
-      _faces = new AsyncObservableCollection<BioFaceService.Rectangle>();
+      _faces = new AsyncObservableCollection<BioService.Rectangle>();
 
       // ItemTest = new ObservableCollection<ItemType>();
 
@@ -93,7 +93,7 @@ namespace BioUITest.ViewModels
 
       _faces = new AsyncObservableCollection<Rectangle>();
 
-      //_faces.Add(new BioFaceService.Rectangle() { FacePos = new BioFaceService.Point() { XPos = 1, YPos = 10 }, Height = 100, Width = 100 });
+      //_faces.Add(new BioService.Rectangle() { FacePos = new BioService.Point() { XPos = 1, YPos = 10 }, Height = 100, Width = 100 });
       _faces.Add(new Rectangle() { X = 1, Y = 10,  Height = 100, Width = 100 });
       Faces = _faces;
 
@@ -137,7 +137,7 @@ namespace BioUITest.ViewModels
       //ItemTest.Add(new ItemType() { ItemEnabled = true });
     }
 
-    private void FaceClient_EnrollFeedback(object sender, BioFaceService.EnrollmentFeedback feedback)
+    private void FaceClient_EnrollFeedback(object sender, BioService.EnrollmentFeedback feedback)
     {
       /*
       Progress = feedback.Progress;
@@ -149,24 +149,24 @@ namespace BioUITest.ViewModels
         ProgressInfo = "Enrollment procesing... " + (feedback.Eyesfound ? "Eyes found" : "");
         */
     }
+    /*
+   private void FaceClient_FaceDetected(object sender, BioService.DetectedObjectsInfo objectsInfo)
+   {
+    
+     _faces.Clear();
+     foreach (BioService.ObjectInfo oi in objectsInfo.Objects)
+     {
+       _faces.Add(oi.ObjectLocation);
 
-    private void FaceClient_FaceDetected(object sender, BioFaceService.DetectedObjectsInfo objectsInfo)
-    {
-      /*
-      _faces.Clear();
-      foreach (BioFaceService.ObjectInfo oi in objectsInfo.Objects)
-      {
-        _faces.Add(oi.ObjectLocation);
+       Console.WriteLine(oi.ObjectLocation.Width + " " + oi.ObjectLocation.Height + " " + oi.ObjectLocation.FacePos.XPos + " " + oi.ObjectLocation.FacePos.YPos);
+     }
 
-        Console.WriteLine(oi.ObjectLocation.Width + " " + oi.ObjectLocation.Height + " " + oi.ObjectLocation.FacePos.XPos + " " + oi.ObjectLocation.FacePos.YPos);
-      }
-
-      Faces = _faces;
-      */
-      //NotifyOfPropertyChange(() => Faces);
-    }
-
-    private FilterInfoCollection _devicesNames;
+     Faces = _faces;
+    
+    //NotifyOfPropertyChange(() => Faces);
+  }
+     */
+  private FilterInfoCollection _devicesNames;
     public FilterInfoCollection DevicesNames
     {
       get { return _devicesNames; }
@@ -390,13 +390,13 @@ namespace BioUITest.ViewModels
         {
           byte[] bytes = ImageToByte2(newFrame);
           Google.Protobuf.ByteString bs = Google.Protobuf.ByteString.CopyFrom(bytes);
-          BioFaceService.BioImage imageRequest = new BioFaceService.BioImage() { Description = bs };
+          BioService.BioImage imageRequest = new BioService.BioImage() { Description = bs };
           _processingImages.Images.Add(imageRequest);
 
           if (_processingImages.Images.Count >= 4)
           {
             _enroll = false;
-            await _bioFaceServiceManager.FaceClient.EnrollFace(_processingImages);
+            await _BioServiceManager.FaceClient.EnrollFace(_processingImages);
           }
         }
 
@@ -411,17 +411,17 @@ namespace BioUITest.ViewModels
       byte[] bytes = ImageToByte2(newFrame);
 
 
-      BioFaceService.BioImagesList imageList = new BioFaceService.BioImagesList();
+      BioService.BioImagesList imageList = new BioService.BioImagesList();
 
 
       Google.Protobuf.ByteString bs = Google.Protobuf.ByteString.CopyFrom(bytes);
 
-      BioFaceService.BioImage imageRequest = new BioFaceService.BioImage() { Description = bs };
+      BioService.BioImage imageRequest = new BioService.BioImage() { Description = bs };
       imageList.Images.Add(imageRequest);
       imageList.Images.Add(imageRequest);
 
-      // await _bioFaceServiceManager.FaceClient.Identify(imageList);
-      await _bioFaceServiceManager.FaceClient.Identify(imageList);
+      // await _BioServiceManager.FaceClient.Identify(imageList);
+      await _BioServiceManager.FaceClient.Identify(imageList);
       */
     //}
 
@@ -441,7 +441,7 @@ namespace BioUITest.ViewModels
     }
 
     
-    public async void Enroll()
+    public void Enroll()
     {
 
       VideoDetector vd = new VideoDetector();
@@ -454,40 +454,40 @@ namespace BioUITest.ViewModels
       //
     }
 
-    public async void PersonRequest()
+    public void PersonRequest()
     {
-      //BioFaceService.CommandPerson cmd = new BioFaceService.CommandPerson();
-      //await _bioFaceServiceManager.FaceClient.PersonRequest(cmd);
+      //BioService.CommandPerson cmd = new BioService.CommandPerson();
+      //await _BioServiceManager.FaceClient.PersonRequest(cmd);
     }
 
-    public async void VisitorRequest()
+    public void VisitorRequest()
     {
       /*
-      BioFaceService.CommandPerson cmd1 = new BioFaceService.CommandPerson();
-      await _bioFaceServiceManager.FaceClient.PersonRequest(cmd1);
+      BioService.CommandPerson cmd1 = new BioService.CommandPerson();
+      await _BioServiceManager.FaceClient.PersonRequest(cmd1);
 
-      BioFaceService.CommandVisitor cmd2 = new BioFaceService.CommandVisitor();
-      await _bioFaceServiceManager.FaceClient.VisitorRequest(cmd2);
+      BioService.CommandVisitor cmd2 = new BioService.CommandVisitor();
+      await _BioServiceManager.FaceClient.VisitorRequest(cmd2);
 
-      BioFaceService.CommandAccessDevice cmd3 = new BioFaceService.CommandAccessDevice();
-      await _bioFaceServiceManager.FaceClient.AccessDeviceRequest(cmd3);
+      BioService.CommandAccessDevice cmd3 = new BioService.CommandAccessDevice();
+      await _BioServiceManager.FaceClient.AccessDeviceRequest(cmd3);
 
-      BioFaceService.CommandCaptureDevice cmd4 = new BioFaceService.CommandCaptureDevice();
-      await _bioFaceServiceManager.FaceClient.CaptureDeviceRequest(cmd4);
+      BioService.CommandCaptureDevice cmd4 = new BioService.CommandCaptureDevice();
+      await _BioServiceManager.FaceClient.CaptureDeviceRequest(cmd4);
 
-      BioFaceService.CommandCard cmd5 = new BioFaceService.CommandCard();
-      await _bioFaceServiceManager.FaceClient.CardRequest(cmd5);
+      BioService.CommandCard cmd5 = new BioService.CommandCard();
+      await _BioServiceManager.FaceClient.CardRequest(cmd5);
 
-      BioFaceService.CommandLocation cmd6 = new BioFaceService.CommandLocation();
-      await _bioFaceServiceManager.FaceClient.LocationRequest(cmd6);
+      BioService.CommandLocation cmd6 = new BioService.CommandLocation();
+      await _BioServiceManager.FaceClient.LocationRequest(cmd6);
 
-      BioFaceService.CommandPhoto cmd7 = new BioFaceService.CommandPhoto();
-      await _bioFaceServiceManager.FaceClient.PhotoRequest(cmd7);
+      BioService.CommandPhoto cmd7 = new BioService.CommandPhoto();
+      await _BioServiceManager.FaceClient.PhotoRequest(cmd7);
       */
       //}
 
       //private bool _enroll = false;
-      // private BioFaceService.BioImagesList _processingImages = new BioFaceService.BioImagesList();
+      // private BioService.BioImagesList _processingImages = new BioService.BioImagesList();
 
 
       /*
@@ -498,25 +498,25 @@ namespace BioUITest.ViewModels
       byte[] bytes = ImageToByte2(newFrame);
 
 
-      BioFaceService.BioImagesList imageList = new BioFaceService.BioImagesList();
+      BioService.BioImagesList imageList = new BioService.BioImagesList();
 
 
       Google.Protobuf.ByteString bs = Google.Protobuf.ByteString.CopyFrom(bytes);
 
-      BioFaceService.BioImage imageRequest = new BioFaceService.BioImage() { Description = bs };
+      BioService.BioImage imageRequest = new BioService.BioImage() { Description = bs };
       imageList.Images.Add(imageRequest);
       imageList.Images.Add(imageRequest);
 
-      // await _bioFaceServiceManager.FaceClient.Identify(imageList);
-      await _bioFaceServiceManager.FaceClient.EnrollFace(imageList);
+      // await _BioServiceManager.FaceClient.Identify(imageList);
+      await _BioServiceManager.FaceClient.EnrollFace(imageList);
       /*
-      BioFaceService.VerificationData vd = new BioFaceService.VerificationData();
+      BioService.VerificationData vd = new BioService.VerificationData();
       vd.Images = imageList;
       vd.VerificationTarget = "F:\\C#\\BioSkyNetSuccess\\BioSky.Net\\BioSky.Net\\BioUITest\\123.fir";
 
-      await _bioFaceServiceManager.FaceClient.VerifyImages(vd);
+      await _BioServiceManager.FaceClient.VerifyImages(vd);
       */
-      //await _bioFaceServiceManager.FaceClient.EnrollFace(imageList);
+      //await _BioServiceManager.FaceClient.EnrollFace(imageList);
 
       /*
       Google.Protobuf.ByteString bs = Google.Protobuf.ByteString.CopyFrom(bytes);
@@ -526,14 +526,14 @@ namespace BioUITest.ViewModels
       */
       //try
       //{
-      //await _bioFaceServiceManager.FaceClient.DetectFace(bytes);
+      //await _BioServiceManager.FaceClient.DetectFace(bytes);
       /*
       int i = 0;
       System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
       watch.Start();
       while (watch.ElapsedMilliseconds < 1000)
       {
-        await _bioFaceServiceManager.FaceClient.(bytes);
+        await _BioServiceManager.FaceClient.(bytes);
 
 
          i++;

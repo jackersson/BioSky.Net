@@ -1,57 +1,97 @@
 ﻿using BioContracts;
 using BioContracts.Services;
-using BioFaceService;
+using BioService;
 using Grpc.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioGRPC
 {
+  public class ServiceConfiguration : IServiceConfiguration
+  {
+    public ServiceConfiguration(string database_service, string facial_service )
+    {
+
+    }
+    public ServiceConfiguration()
+    {
+
+    }
+
+    private string _facialService;
+    public string FacialService
+    {
+      get { return _facialService; }
+      set
+      {
+        if (_facialService != value)
+          _facialService = value;
+
+      }
+    }
+
+    private string _databaseService;
+    public string DatabaseService
+    {
+      get { return _databaseService; }
+      set
+      {
+        if ( _databaseService != value)        
+          _databaseService = value;
+        
+      }
+    }
+
+    //string database = "169.254.14.74:50051"
+
+  }
+  
+
   public class BioServiceManager : IServiceManager
   {
     public BioServiceManager( IProcessorLocator locator )
     {
-      _locator = locator;
-     // Start();
+      _locator = locator;    
     }
 
-    public void Start(string server_address = "169.254.14.74:50051")
-    {
-      
+    public void Start(IServiceConfiguration configuration)
+    {      
       IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
-      
-      _clientChannel = new Channel(server_address, Grpc.Core.ChannelCredentials.Insecure);
 
-      BioFaceDetector.BioFaceDetectorClient client = BioFaceDetector.NewClient(_clientChannel);
+      _databaseClientChannel = new Channel(configuration.DatabaseService, ChannelCredentials.Insecure);
 
-      _bioFaceService     = new BioFaceService    (_locator, client);
-      _bioDatabaseService = new BioDatabaseService(_locator, client);
+      _facialClientChannel   = new Channel(configuration.FacialService  , ChannelCredentials.Insecure);
+       
+      BioService.BiometricFacialSevice.IBiometricFacialSeviceClient   facialClient   = BiometricFacialSevice.NewClient(_facialClientChannel);
+      BioService.BiometricDatabaseSevice.IBiometricDatabaseSeviceClient databaseClient = BiometricDatabaseSevice.NewClient(_databaseClientChannel);
+
+      _faceService     = new BioFacialService  (_locator, facialClient  );
+      _databaseService = new BioDatabaseService(_locator, databaseClient);
 
      
     }
     public void Stop()
     {
-      if (_clientChannel != null)
-        _clientChannel.ShutdownAsync().Wait();
+      if (_databaseClientChannel != null)
+        _databaseClientChannel.ShutdownAsync().Wait();
+
+      if (_facialClientChannel != null)
+        _facialClientChannel.ShutdownAsync().Wait();
     }
 
 
-    private IFaceService _bioFaceService;
+    private IFaceService _faceService;
     public IFaceService FaceService
     {
-      get { return _bioFaceService; }
+      get { return _faceService; }
     }
 
-    private IDatabaseService _bioDatabaseService;
+    private IDatabaseService _databaseService;
     public IDatabaseService DatabaseService
     {
-      get { return _bioDatabaseService; }
+      get { return _databaseService; }
     }  
 
-    private Channel       _clientChannel;
+    private Channel _databaseClientChannel;
+    private Channel _facialClientChannel  ;
 
     private readonly IProcessorLocator _locator;
 

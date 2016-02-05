@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 using BioModule.DragDrop;
 using BioContracts;
-using BioFaceService;
+using BioService;
 using BioModule.Utils;
 
 namespace BioModule.ViewModels
@@ -97,6 +97,10 @@ namespace BioModule.ViewModels
     }
 
     public void Apply()
+    {
+
+    }
+    public void Remove(bool all)
     {
 
     }

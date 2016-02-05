@@ -149,11 +149,12 @@
     <Compile Include="ITrackLocatioEngine.cs" />
     <Compile Include="Common\ProcessorLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Protobufs\BiofaceService.cs" />
-    <Compile Include="Protobufs\BiofaceServiceGrpc.cs" />
     <Compile Include="Common\TrackLocation.cs" />
+    <Compile Include="Protobufs\BioService.cs" />
+    <Compile Include="Protobufs\BioServiceGrpc.cs" />
     <Compile Include="Services\IDatabaseService.cs" />
     <Compile Include="Services\IFaceService.cs" />
+    <Compile Include="Services\IServiceConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

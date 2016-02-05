@@ -18,7 +18,7 @@ using System.Windows.Media;
 
 using BioModule.Utils;
 using BioContracts;
-using BioFaceService;
+using BioService;
 using Google.Protobuf.Collections;
 using System.Collections;
 

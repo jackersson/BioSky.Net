@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
-//using static BioFaceService.Person.Types;
+//using static BioService.Person.Types;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows;
 using BioContracts;
-using BioFaceService;
+using BioService;
 
 namespace BioModule.Utils
 {
@@ -74,20 +74,40 @@ namespace BioModule.Utils
         }
       }
     }
+
+    private static ConvertFileLocationToImage _fileLocationToImageConverter;
+    public static ConvertFileLocationToImage FileLocationToImageConverter
+    {
+      get { return _fileLocationToImageConverter; }
+      set
+      {
+        if (_fileLocationToImageConverter != value)
+        {
+          _fileLocationToImageConverter = value;
+        }
+      }
+    }
     public ConverterInitializer( IBioSkyNetRepository database )
     {
       PhotoIDConverter                  = new ConvertPhotoIdToImage          (database );
+      FileLocationToImageConverter      = new ConvertFileLocationToImage     (database);
       PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database.PersonHolder);
       PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database.PersonHolder);
       LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database.LocationHolder);
     }
   }
+
+
+  #region ConvertLongToDateTime
   public class ConvertLongToDateTime : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       if (value != null)
       {
+        long newvalue = (long)value;
+        if (newvalue < 1000)
+          return DateTime.Now.Ticks.ToString("hh:mm:ss dd.MM.yy");
         return new DateTime((long)value).ToString("hh:mm:ss dd.MM.yy");
       }
       return null;
@@ -102,6 +122,10 @@ namespace BioModule.Utils
       return null;
     }
   }
+
+  #endregion
+
+  #region ConvertPhotoIdToImage
   public class ConvertPhotoIdToImage : IValueConverter
   {
     public ConvertPhotoIdToImage(IBioSkyNetRepository database)
@@ -144,7 +168,39 @@ namespace BioModule.Utils
     private readonly IHolder<Photo, long>  _photoHolder ;
     private readonly IHolder<Person, long> _personHolder;
   }
+  #endregion
 
+  #region ConvertFileLocationToImage
+  public class ConvertFileLocationToImage : IValueConverter
+  {
+    public ConvertFileLocationToImage(IBioSkyNetRepository database)
+    {
+      _database = database;
+    }
+
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        string fullFilePathway = _database.LocalStorage.LocalStoragePath + "\\" + value;
+
+        if (File.Exists(fullFilePathway))
+        {
+          BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));
+          return img;
+        }
+      }
+      return ResourceLoader.UserDefaultImageIconSource;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+    private readonly IBioSkyNetRepository _database;
+  }
+  #endregion
+
+  #region ConvertLocationIdToLocationname
   public class ConvertLocationIdToLocationname : IValueConverter
   {
     public ConvertLocationIdToLocationname(IHolder<Location, long> locationHolder)
@@ -170,6 +226,9 @@ namespace BioModule.Utils
     private readonly IHolder<Location, long> _locationHolder;
   }
 
+  #endregion
+
+  #region ConvertPersonIdToFirstname
   public class ConvertPersonIdToFirstname : IValueConverter
   {
     public ConvertPersonIdToFirstname(IHolder<Person, long> personHolder)
@@ -195,7 +254,9 @@ namespace BioModule.Utils
 
     private readonly IHolder<Person, long> _personHolder;
   }
+  #endregion
 
+  #region ConvertPersonIdToLastname
   public class ConvertPersonIdToLastname : IValueConverter
   {
     public ConvertPersonIdToLastname(IHolder<Person, long> personHolder)
@@ -221,7 +282,9 @@ namespace BioModule.Utils
 
     private readonly IHolder<Person, long> _personHolder;
   }
+  #endregion
 
+  #region ConvertPhotoPathToImage
   public class ConvertPhotoPathToImage : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -244,10 +307,14 @@ namespace BioModule.Utils
     }
   }
 
-  public class StringToGenderConverter : StringToEnumConverter<BioFaceService.Person.Types.Gender>
+  #endregion
+
+  #region StringToEnumConverter
+
+  public class StringToGenderConverter : StringToEnumConverter<BioService.Person.Types.Gender>
   { }
 
-  public class StringToRightsConverter : StringToEnumConverter<BioFaceService.Person.Types.Rights>
+  public class StringToRightsConverter : StringToEnumConverter<BioService.Person.Types.Rights>
   { }
 
   public class StringToEnumConverter<TEnum> : IValueConverter
@@ -269,7 +336,9 @@ namespace BioModule.Utils
     
   }
 
+  #endregion
 
+  #region ConvertStatusToImage
   public class ConvertStatusToImage : IValueConverter
   {
     private BioStatusResource _resource = new BioStatusResource();
@@ -287,6 +356,9 @@ namespace BioModule.Utils
     }
   }
 
+  #endregion
+
+  #region ActivatedDevicesConverter
   public class ActivatedDevicesConverter : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -301,7 +373,9 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
   }
+  #endregion
 
+  #region ConvertToFormatedNumber
   public class ConvertToFormatedNumber : IValueConverter
   {
     public object Convert(object values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -325,6 +399,10 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
   }
+
+  #endregion
+
+  #region NullImageConverter
   public class NullImageConverter : IValueConverter
   {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -339,4 +417,5 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
   }
+  #endregion
 }

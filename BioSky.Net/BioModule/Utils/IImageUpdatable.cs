@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BioService;
 
 namespace BioModule.Utils
 {
@@ -15,7 +16,7 @@ namespace BioModule.Utils
 
     void UpdateImage(ref Bitmap img);
 
-    void UpdateImage(Uri uriSource);
+    void UpdateImage(Photo photo, string path);
 
     void Clear();
   }

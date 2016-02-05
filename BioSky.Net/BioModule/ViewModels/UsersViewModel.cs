@@ -23,7 +23,7 @@ using System.Windows.Input;
 using System.Windows.Data;
 
 using BioModule.Utils;
-using BioFaceService;
+using BioService;
 using BioContracts;
 using Google.Protobuf.Collections;
 
@@ -176,66 +176,16 @@ namespace BioModule.ViewModels
         IsDeleteButtonEnabled = false;            
     }
 
-    public async void OnDeleteUsers()
+    public void OnDeleteUsers()
     {
-      await UserUpdatePerformer(DbState.Remove);      
+      //await UserUpdatePerformer(DbState.Remove);      
     }
 
-    public async Task UserUpdatePerformer(DbState state)
-    {
-      /*
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
-      if (result == true)
-      {
-        if (SelectedItemIds == null)
-          return;
-
-        PersonList personList = new PersonList();
-
-        foreach (long personId in SelectedItemIds)
-        {
-          Person person = _database.GetPersonByID(personId);
-          person.Dbstate = state;
-          personList.Persons.Add(person);
-        }
-
-        _bioService.DatabaseService.PersonUpdated += DatabaseService_PersonsUpdated;
-
-        await _bioService.DatabaseService.PersonUpdateRequest(personList);
-      }
-      */
-    }
-
-    private void PersonUpdateResultProcessing(PersonList list, Result result)
-    {
-      /*
-      _bioService.DatabaseService.PersonUpdated -= DatabaseService_PersonsUpdated;
-
-      string message = "";
-
-      foreach (ResultPair rp in result.Status)
-      {
-        Person person = null;
-        if (rp.Status == ResultStatus.Success)
-        {
-          person = list.Persons.Where(x => x.Id == rp.Id).FirstOrDefault();  
-
-          _database.UpdatePerson(person, rp.State);
-        }
-
-        if (person != null)
-          message += rp.Status.ToString() + " " + rp.State.ToString() + " " + person.Firstname + " " + person.Lastname + "\n";
-
-        
-      }
-
-      MessageBox.Show(message);  
-      */   
-    }
+   
 
     private void DatabaseService_PersonsUpdated(PersonList list, Result result)
     {
-      PersonUpdateResultProcessing(list, result);
+      //PersonUpdateResultProcessing(list, result);
     }
    
 

@@ -15,13 +15,29 @@ namespace BioData
 
     public BioLocalStorage()
     {
-      string mediaParametr = "MEDIA_PATHWAY:";
-      string mediaPath = GetConfigFile(mediaParametr);
+      string mediaParametr           = "MEDIA_PATHWAY:"   ;
+      string faceServiceParametr     = "FACE_SERVICE:"    ;
+      string databaseServiceParametr = "DATABASE_SERVICE:";
+
+      string[] allParametrs = { mediaParametr, faceServiceParametr, databaseServiceParametr };
+
+      GetConfigFile(allParametrs);
+      string mediaPath           = GetParametr(mediaParametr)          ;
+      string faceServicePath     = GetParametr(faceServiceParametr)    ;
+      string databaseServicePath = GetParametr(databaseServiceParametr);
 
       if (mediaPath == null)      
         LocalStoragePath = "F:\\GRPCs\\ClientFolder";
 
-      LocalStoragePath = mediaPath;
+      if (mediaPath == null)
+        LocalStoragePath = "";
+
+      if (mediaPath == null)
+        LocalStoragePath = "";
+
+      LocalStoragePath           = mediaPath          ;
+      FaceServiceStoragePath     = faceServicePath    ;
+      DatabaseServiceStoragePath = databaseServicePath;
     }
 
     private string _localStoragePath;
@@ -37,18 +53,41 @@ namespace BioData
         }
       }
     }
-  
-    //TODO to Utils not Repository
-    private string GetConfigFile(string parametr)
+
+    private string _faceServiceStoragePath;
+    public string FaceServiceStoragePath
+    {
+      get { return _faceServiceStoragePath; }
+      set
+      {
+        if (_faceServiceStoragePath != value)
+        {
+          _faceServiceStoragePath = value;
+          NotifyOfPropertyChange(() => FaceServiceStoragePath);
+        }
+      }
+    }
+
+    private string _databaseServiceStoragePath;
+    public string DatabaseServiceStoragePath
+    {
+      get { return _databaseServiceStoragePath; }
+      set
+      {
+        if (_databaseServiceStoragePath != value)
+        {
+          _databaseServiceStoragePath = value;
+          NotifyOfPropertyChange(() => DatabaseServiceStoragePath);
+        }
+      }
+    }
+
+    //TODO Make in Utils
+
+    private string GetParametr(string parametr)
     {
       string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
       FileInfo configFile = new FileInfo(path);
-
-      if (!configFile.Exists)
-      {   
-        using (StreamWriter streamWriter = configFile.CreateText())        
-          streamWriter.WriteLine(parametr);       
-      }
 
       using (StreamReader sr = new StreamReader(path))
       {
@@ -77,5 +116,27 @@ namespace BioData
       }
       return null;
     }
+
+
+    
+    private void GetConfigFile(string[] allParametrs)
+    {
+      string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
+      FileInfo configFile = new FileInfo(path);
+
+      if (!configFile.Exists)
+      {
+        foreach (string parametr in allParametrs)
+        {
+          using (FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write))
+          using (StreamWriter sw = new StreamWriter(fs))
+          {
+            sw.WriteLine(parametr);
+          }
+        }
+      }     
+    }
+
+    
   }
 }

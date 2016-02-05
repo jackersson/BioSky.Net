@@ -1,4 +1,5 @@
 ﻿using BioContracts;
+using BioGRPC;
 using System;
 
 namespace BioEngine
@@ -11,11 +12,17 @@ namespace BioEngine
       _serviceManager = locator.GetProcessor<IServiceManager>();
     }
 
-    public void Run()
-    {     
-      _serviceManager.Start("192.168.1.178:50051");
+    public async void Run()
+    {
+      ServiceConfiguration configuration = new ServiceConfiguration();
+      configuration.FacialService   = "192.168.1.127:50051";
+      configuration.DatabaseService = "192.168.1.178:50051";
+
+      _serviceManager.Start(configuration);
       
-      RequestData();    
+      RequestData();
+
+      await _serviceManager.FaceService.Configurate(configuration);
     }
 
     public void Stop()
@@ -24,30 +31,31 @@ namespace BioEngine
       _bioEngine.Stop();
     }
 
+ 
+
     public async void RequestData()
     {
       try
       {
-        
-        BioFaceService.CommandPerson commandPerson = new BioFaceService.CommandPerson();
+        BioService.CommandPerson commandPerson = new BioService.CommandPerson();
         await _serviceManager.DatabaseService.PersonRequest(commandPerson);
 
-        BioFaceService.CommandVisitor commandVisitor = new BioFaceService.CommandVisitor();
+        BioService.CommandVisitor commandVisitor = new BioService.CommandVisitor();
         await _serviceManager.DatabaseService.VisitorRequest(commandVisitor);
 
-        BioFaceService.CommandAccessDevice commandAccessDevice = new BioFaceService.CommandAccessDevice();
+        BioService.CommandAccessDevice commandAccessDevice = new BioService.CommandAccessDevice();
         await _serviceManager.DatabaseService.AccessDeviceRequest(commandAccessDevice);
 
-        BioFaceService.CommandCaptureDevice commandCaptureDevice = new BioFaceService.CommandCaptureDevice();
+        BioService.CommandCaptureDevice commandCaptureDevice = new BioService.CommandCaptureDevice();
         await _serviceManager.DatabaseService.CaptureDeviceRequest(commandCaptureDevice);
 
-        BioFaceService.CommandCard commandCard = new BioFaceService.CommandCard();
+        BioService.CommandCard commandCard = new BioService.CommandCard();
         await _serviceManager.DatabaseService.CardRequest(commandCard);
 
-        BioFaceService.CommandLocation commandLocation = new BioFaceService.CommandLocation();
+        BioService.CommandLocation commandLocation = new BioService.CommandLocation();
         await _serviceManager.DatabaseService.LocationRequest(commandLocation);
-        
-        BioFaceService.CommandPhoto commandPhoto = new BioFaceService.CommandPhoto();
+
+        BioService.CommandPhoto commandPhoto = new BioService.CommandPhoto();
         await _serviceManager.DatabaseService.PhotoRequest(commandPhoto);
         
       }

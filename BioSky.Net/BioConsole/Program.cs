@@ -1,7 +1,7 @@
 
 using System;
 using Grpc.Core;
-using BioFaceService;
+using BioService;
 using System.Threading.Tasks;
 using System.Text;
 using System.Drawing;

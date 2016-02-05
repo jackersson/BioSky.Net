@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using BioContracts;
 
-using BioFaceService;
+using BioService;
 using Caliburn.Micro;
 
 using System.Collections.ObjectModel;

@@ -27,7 +27,8 @@ namespace BioModule.ViewModels
     }
 
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
-    {     
+    {
+      _locator = locator;
       _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       
@@ -196,6 +197,8 @@ namespace BioModule.ViewModels
 
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IAccessDeviceEngine  _accessDeviceEngine ;
+    private readonly IProcessorLocator    _locator            ;
+
 
     //**************************************************** UI **********************************************
     public BitmapSource OkIconSource

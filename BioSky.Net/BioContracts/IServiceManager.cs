@@ -9,7 +9,7 @@ namespace BioContracts
 {
   public interface IServiceManager
   {
-    void Start(string server_address);
+    void Start(IServiceConfiguration configuration);
     void Stop();
 
     IFaceService FaceService

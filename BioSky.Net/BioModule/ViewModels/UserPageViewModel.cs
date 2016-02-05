@@ -15,7 +15,7 @@ using BioData;
 using System.Reflection;
 using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
-using BioFaceService;
+using BioService;
 using System.IO;
 
 namespace BioModule.ViewModels
@@ -34,14 +34,14 @@ namespace BioModule.ViewModels
 
       IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
       _bioService          = _locator.GetProcessor<IServiceManager>();
-      _database            = _locator.GetProcessor<IBioSkyNetRepository>();     
+      _database            = _locator.GetProcessor<IBioSkyNetRepository>();
 
       CurrentImageView = new ImageViewModel();
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
       Items.Add(new UserInformationViewModel    ());
       Items.Add(new UserContactlessCardViewModel(bioEngine, _locator));
-      Items.Add(new UserPhotoViewModel          (bioEngine, CurrentImageView, _locator));
+      Items.Add(new UserPhotoViewModel          (bioEngine, CurrentImageView, _locator, _windowManager));
      
       ActiveItem = Items[0];
       OpenTab();
@@ -59,20 +59,12 @@ namespace BioModule.ViewModels
       {
         _user = user.Clone();
         _userPageMode = UserPageMode.ExistingUser;
-        
+
+       
         Photo photo = null;
         bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnail, out photo);
-
         if (photoExists)
-        {
-          string photoLocation = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
-
-          if (File.Exists(photoLocation))
-          {
-            Uri uri = new Uri(photoLocation);
-            CurrentImageView.UpdateImage(uri);
-          }
-        }
+          CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
 
         DisplayName = (_user.Firstname + " " + _user.Lastname);
       }
@@ -80,17 +72,12 @@ namespace BioModule.ViewModels
       {
         _user = new Person()
         {
-          Firstname = ""
-          ,
-          Lastname = ""
-          ,
-          Thumbnail = 0
-          ,
-          Gender = Person.Types.Gender.Male
-          ,
-          Rights = Person.Types.Rights.Operator
-          ,
-          Dbstate = DbState.Insert
+            Firstname = ""
+          , Lastname = ""
+          , Thumbnail = 0
+          , Gender = Person.Types.Gender.Male
+          , Rights = Person.Types.Rights.Operator
+          , Dbstate = DbState.Insert
         };
 
         _userPageMode = UserPageMode.NewUser;
@@ -126,114 +113,162 @@ namespace BioModule.ViewModels
 
       await _bioService.DatabaseService.PersonUpdateRequest(personList);
     }
-
-    //TODO show that person updated
+    
     private void PersonHolder_DataUpdated(IList<Person> list, Result result)
     {
       _database.PersonHolder.DataUpdated -= PersonHolder_DataUpdated;
 
-      foreach (Person person in list)
+      Person person = null;      
+      foreach (ResultPair currentResult in result.Status)
       {
-        MessageBox.Show("User " + person.Firstname + " " + person.Lastname + "\n" + result + " Updated");
+        if (currentResult.Status == ResultStatus.Success)
+        {
+          if (currentResult.State == DbState.Insert)
+            person = currentResult.Person;
+          else if (currentResult.State == DbState.Update)          
+            person = _user;    
+          else if (currentResult.State == DbState.Remove)
+          {
+            Update(null);
+            foreach (Person personDeleted in list)
+            {
+              MessageBox.Show("User " + personDeleted.Firstname + " " + personDeleted.Lastname + "\n" + "Successfully Removed");
+            }
+            return;
+          }
+        }        
       }
+
+      Update(person);
+      ResolveConnections();
     }
 
-    public async Task GetCurrentImage()
+    public async void ResolveConnections()
     {
-      if (CurrentImageView.CurrentImageUri != null)
+      if (_user.Id <= 0)
+        return;
+
+      if (CurrentImageView.CurrentImagePhoto == null)
+        return;
+
+      if (CurrentImageView.CurrentImagePhoto.Id <= 0)
+        return;
+
+      if ( _user.Thumbnail != CurrentImageView.CurrentImagePhoto.Id )
       {
-        IList<Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
+        _user.Thumbnail = CurrentImageView.CurrentImagePhoto.Id;
+        _user.Dbstate = DbState.Update;
 
-        string personFolder = _database.LocalStorage.LocalStoragePath;
-        string currentImagePath = CurrentImageView.CurrentImageUri.OriginalString;
-
-        foreach (Photo personPhoto in list)
-        {
-          if (personFolder + " " + personPhoto.FileLocation == currentImagePath)
-          {
-            _user.Thumbnail = personPhoto.Id;
-          }
-        }
+        await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);       
       }
-      else
+      else  if ( CurrentImageView.CurrentImagePhoto.Personid != _user.Id )
       {
-        if (CurrentImageView.CurrentImageBitmap != null)
-        {
-          PhotoList photoList = new PhotoList();
-          Google.Protobuf.ByteString description = _bioUtils.ImageToByteString(CurrentImageView.CurrentImageBitmap);
+        CurrentImageView.CurrentImagePhoto.Personid = _user.Id;
+        CurrentImageView.CurrentImagePhoto.Dbstate = DbState.Update;
 
-          Photo photo = new Photo()
-          {
-            Dbstate = DbState.Insert
-          ,
-            Description = description
-          ,
-            FileLocation = ""
-          ,
-            FirLocation = ""
-          ,
-            Personid = _user.Id
-          ,
-            Type = Photo.Types.PhotoSizeType.Full
-          };
-
-          photoList.Photos.Add(photo);
-
-          _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
-
-          await _bioService.DatabaseService.PhotoUpdateRequest(photoList);
-        }
+        await PhotoUpdatePerformer();
       }
+
+      if(_user.Thumbnail == CurrentImageView.CurrentImagePhoto.Id && CurrentImageView.CurrentImagePhoto.Personid == _user.Id)
+        MessageBox.Show("User " + _user.Firstname + " " + _user.Lastname + "\n" + "Successfully Updated");     
+    }
+
+    public async Task PhotoUpdatePerformer()
+    {
+      Photo photo = CurrentImageView.CurrentImagePhoto;
+
+      photo.Origin = PhotoOriginType.Loaded;
+
+      PhotoList photoList = new PhotoList();
+      photoList.Photos.Add(photo);
+
+      _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;     
+
+      await _bioService.DatabaseService.PhotoUpdateRequest(photoList);
     }
 
     private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
     {
-      _database.PersonHolder.DataUpdated -= PersonHolder_DataUpdated;
+      _database.PhotoHolder.DataUpdated -= PhotoHolder_DataUpdated;
+
       foreach (ResultPair currentResult in result.Status)
       {
         Photo photo = null;
         if (currentResult.Status == ResultStatus.Success)
         {
+          photo = currentResult.Photo;
           if (currentResult.State == DbState.Insert)
-            photo = currentResult.Photo;
-          if (photo != null)
           {
-            string savePath = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
-            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-
-            byte[] data = photo.Description.ToByteArray();
-            var fs = new BinaryWriter(new FileStream(savePath, FileMode.CreateNew, FileAccess.Write));
-            fs.Write(data);
-            fs.Close();
-
-            _user.Thumbnail = photo.Id;
+            if (photo != null)
+            {
+              string path = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
+              CurrentImageView.SavePhoto(path);
+              CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+            }  
           }
+          else if(currentResult.State == DbState.Update)
+          {
+            string foledrPath = _database.LocalStorage.LocalStoragePath + "\\";
+            foreach(Photo photoUpdated in list)
+            {
+              if (photo.Id == photoUpdated.Id)
+                if (photoUpdated.FileLocation != photo.FileLocation)
+                {
+                  try
+                  {
+                    if (File.Exists(foledrPath + photo.FileLocation))
+                      File.Delete(foledrPath + photo.FileLocation);
+
+                    CurrentImageView.UpdateImage(null, null);                    
+                    CurrentImageView.MovePhoto(foledrPath + photoUpdated.FileLocation, foledrPath + photo.FileLocation);
+                    CurrentImageView.UpdateImage(photo, foledrPath + photo.FileLocation);
+                  }
+                  catch (System.IO.IOException e)
+                  {
+                    Console.WriteLine(e.Message);
+                    return;
+                  }
+
+                }
+            }
+          }                
         }
       }
-    }
+
+      
+
+      ResolveConnections();
+    }   
     #endregion
 
     #region Interface
 
     public async void Apply()
     {
-      foreach (IUpdatable updatableScreen in Items)
-        updatableScreen.Apply();
-
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
 
       if (result == true)     
       {
+        foreach (IUpdatable updatableScreen in Items)
+          updatableScreen.Apply();
+
         await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);
-        await GetCurrentImage();
-        await UserUpdatePerformer(DbState.Update);
+        await PhotoUpdatePerformer();
       }
     }
 
 
     public async void Remove()
     {
-      await UserUpdatePerformer(DbState.Remove);
+      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+
+      if (result == true)
+      {
+        foreach (IUpdatable updatableScreen in Items)
+          updatableScreen.Remove(true);
+
+        await UserUpdatePerformer(DbState.Remove);
+      }
     }
 
     #endregion

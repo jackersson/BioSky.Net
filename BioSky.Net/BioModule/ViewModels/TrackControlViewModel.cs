@@ -18,7 +18,7 @@ using BioModule.Utils;
 using System.Windows.Controls;
 using Google.Protobuf.Collections;
 using System.Reflection;
-using BioFaceService;
+using BioService;
 
 namespace BioModule.ViewModels
 {
