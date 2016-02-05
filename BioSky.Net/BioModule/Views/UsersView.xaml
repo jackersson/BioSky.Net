@@ -73,7 +73,7 @@
                               />
                             </ContextMenu>
                         </StackPanel.ContextMenu>
-                        <Image Source="{Binding Thumbnail, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                        <Image Source="{Binding Id, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
                                        Stretch="Fill" Width="128" Height="128"/>
                         <StackPanel Width="128" Orientation="Horizontal">
                             <TextBlock Text="{Binding Firstname}"

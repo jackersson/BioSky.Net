@@ -8,6 +8,10 @@ namespace BioContracts
 {
   public interface ILocalStorage
   {   
-    string LocalStoragePath { get; }    
+    string LocalStoragePath { get; }
+
+    string FaceServiceStoragePath { get; }
+
+    string DatabaseServiceStoragePath { get; }
   }
 }

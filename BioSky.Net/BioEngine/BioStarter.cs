@@ -16,7 +16,7 @@ namespace BioEngine
     public async void Run()
     {
       ServiceConfiguration configuration = new ServiceConfiguration();
-      configuration.FacialService   = "127.0.0.1:50051";
+      configuration.FacialService   = "192.168.1.127:50051";
       configuration.DatabaseService = "192.168.1.178:50051";
 
       _serviceManager.Start(configuration);

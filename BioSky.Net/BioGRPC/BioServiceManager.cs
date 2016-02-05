@@ -3,9 +3,6 @@ using BioContracts.Services;
 using BioService;
 using Grpc.Core;
 
-using static BioService.BiometricFacialSevice;
-using static BioService.BiometricDatabaseSevice;
-
 namespace BioGRPC
 {
   public class ServiceConfiguration : IServiceConfiguration
@@ -63,8 +60,8 @@ namespace BioGRPC
 
       _facialClientChannel   = new Channel(configuration.FacialService  , ChannelCredentials.Insecure);
        
-      IBiometricFacialSeviceClient   facialClient   = BiometricFacialSevice.NewClient(_facialClientChannel);
-      IBiometricDatabaseSeviceClient databaseClient = BiometricDatabaseSevice.NewClient(_databaseClientChannel);
+      BioService.BiometricFacialSevice.IBiometricFacialSeviceClient   facialClient   = BiometricFacialSevice.NewClient(_facialClientChannel);
+      BioService.BiometricDatabaseSevice.IBiometricDatabaseSeviceClient databaseClient = BiometricDatabaseSevice.NewClient(_databaseClientChannel);
 
       _faceService     = new BioFacialService  (_locator, facialClient  );
       _databaseService = new BioDatabaseService(_locator, databaseClient);

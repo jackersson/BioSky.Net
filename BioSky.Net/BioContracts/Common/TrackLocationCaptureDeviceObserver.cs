@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace BioContracts.Common
 {
   public class BiometricPerformerBase<T>
@@ -207,16 +208,40 @@ namespace BioContracts.Common
       {
         img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
         stream.Close();
+       
 
         byteArray = stream.ToArray();
       }
       return byteArray;
     }
 
+    public Byte[] ImageToByte(Stream stream)
+    {
+     
+      Byte[] buffer = null;
+      if (stream != null && stream.Length > 0)
+      {
+        using (BinaryReader br = new BinaryReader(stream))
+        {
+          buffer = br.ReadBytes((Int32)stream.Length);
+        }
+      }
+
+      return buffer;
+    }  
+
     public Google.Protobuf.ByteString ImageToByteString(Image img)
     {
       byte[] bytes = ImageToByte(img);      
       return Google.Protobuf.ByteString.CopyFrom(bytes);
     }
+
+    public Google.Protobuf.ByteString ImageToByteString(Stream img)
+    {
+      byte[] bytes = ImageToByte(img);
+      return Google.Protobuf.ByteString.CopyFrom(bytes);
+    }
+
+   
   }
 }

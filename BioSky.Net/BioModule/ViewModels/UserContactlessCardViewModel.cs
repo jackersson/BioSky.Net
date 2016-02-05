@@ -38,171 +38,23 @@ namespace BioModule.ViewModels
 
       _userCards = new ObservableCollection<Card>();
 
-      IsEnabled = false;
-
-      //UserCards = _bioEngine.Database().Cards;
-
-     
+      IsEnabled = false;    
     }
 
-    private bool _isEnabled;
-    public bool IsEnabled
-    {
-      get { return _isEnabled; }
-      set
-      {
-        if (_isEnabled != value)
-        {
-          _isEnabled = value;
-          NotifyOfPropertyChange(() => IsEnabled);
-        }
-      }
-    }
-
-
-/*
-    private void OnCardsChanged(CardList cards)
-    {
-      UserCards.Clear();
-
-      if (_user == null)
-        return;
-
-      foreach (Card item in cards.Cards)
-      {
-        if (item.Personid != _user.Id)
-          continue;
-
-        if (UserCards.Contains(item))
-          continue;
-
-        UserCards.Add(item);
-      }
-    }*/
-
-    private string _cardNumber;
-    public string CardNumber
-    {
-      get { return _cardNumber; }
-      set
-      {
-        if (_cardNumber != value)
-        {
-          _cardNumber = value;
-          NotifyOfPropertyChange(() => CardNumber);
-        }
-      }
-    }
-
-   // private bool _dataChanged;
-    
-    private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-      NotifyOfPropertyChange(() => AvaliableDevicesCount);
-    }
-
-    private AsyncObservableCollection<string> _accessDevicesNames;
-    public AsyncObservableCollection<string> AccessDevicesNames
-    {
-      get { return _accessDevicesNames; }
-      set
-      {
-        if (_accessDevicesNames != value)
-        {
-          _accessDevicesNames = value;          
-
-          NotifyOfPropertyChange(() => AccessDevicesNames);         
-        }
-      }
-    }
-    
-    public string AvaliableDevicesCount
-    {
-      get { return String.Format( "Available Devices ({0})", _accessDevicesNames.Count); }      
-    }
-
-    private string _selectedAccessDevice;
-    public string SelectedAccessDevice
-    {
-      get { return _selectedAccessDevice; }
-      set
-      {
-        if (_selectedAccessDevice != value)
-        {
-          _selectedAccessDevice = value;
-          NotifyOfPropertyChange(() => SelectedAccessDevice);
-
-          Subscribe();
-        }
-      }
-    }
-
-    private string _cardState;
-    public string CardState
-    {
-      get { return _cardState; }
-      set
-      {
-        if ( _cardState != value)
-        {
-          _cardState = value;
-          NotifyOfPropertyChange(() => CardState);
-        }
-      }
-    }
-
-    public void Subscribe()
-    {
-      if (_selectedAccessDevice == null)
-      {
-        AccessDeviceConnected = false;
-        return;
-      }
-
-      IAccessDeviceEngine accessDeviceEngine = _bioEngine.AccessDeviceEngine();
-
-      accessDeviceEngine.Add(_selectedAccessDevice);
-
-      if (!accessDeviceEngine.HasObserver(this, _selectedAccessDevice))
-        accessDeviceEngine.Subscribe(this, _selectedAccessDevice);
-
-      AccessDeviceConnected = accessDeviceEngine.AccessDeviceActive(_selectedAccessDevice);
-    }
-
-
-    private bool _accessDeviceConnected;
-    private bool AccessDeviceConnected
-    {
-      get {  return _accessDeviceConnected;  }
-      set
-      {
-        if ( _accessDeviceConnected != value)
-        {
-          _accessDeviceConnected = value;
-          NotifyOfPropertyChange(() => AccessDeviceConnectedIcon);
-        }
-      }
-    }
-
-    public BitmapSource AccessDeviceConnectedIcon
-    {
-      get  { return AccessDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
-    }
+    #region Update
 
 
     public void Update(Person user)
     {
       if (user == null)
-        return;    
+        return;
 
       if (user.Dbstate == DbState.Insert)
         return;
 
       IsEnabled = true;
 
-      _user = user;
-
-      //_dataChanged = false;
+      _user = user;    
 
       _userCards.Clear();
 
@@ -213,9 +65,8 @@ namespace BioModule.ViewModels
       {
         if (card.Personid == _user.Id)
           _userCards.Add(card);
-      }     
+      }
     }
-
     public void AddNewCard()
     {
       if (!CanAddNewCard)
@@ -227,111 +78,126 @@ namespace BioModule.ViewModels
       UserCards.Add(newCard);
 
       //_dataChanged = true;
-     
+
       NotifyOfPropertyChange(() => UserCards);
 
       CanAddNewCard = false;
-
     }
+    #endregion
 
-    public bool AnyCardDetected
-    {
-      get { return _detectedCard != null;  }
-    }
+    #region Database
 
-    private ObservableCollection<Card> _userCards;
-    public ObservableCollection<Card> UserCards
+    public void AddNewCard(string cardNumber)
     {
-      get
-      {             
-        return _userCards;      
-      }
-      set
+      Card card;
+      bool cardFound = _bioEngine.Database().CardHolder.DataSet.TryGetValue(cardNumber, out card);
+      if (cardFound)
       {
-        if ( _userCards != value )
+        Person person;
+        bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(card.Personid, out person);
+        if (personFound)
+          CardState = "Card is avaliable to use";
+        else
         {
-          _userCards = value;
-          NotifyOfPropertyChange(() => UserCards);
+          CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
+          CanAddNewCard = false;
         }
       }
-    }
 
-    private Card _detectedCard;
-    public Card DetectedCard
-    {
-      get { return _detectedCard; }
-      set
-      {
-        if ( _detectedCard == value )
-        {
-          _detectedCard = value;
-          NotifyOfPropertyChange(() => DetectedCard);
-          NotifyOfPropertyChange(() => AnyCardDetected);          
-        }
-      }
-    }
+      DetectedCard = _detectedCard;
 
-    public async Task CardUpdatePerformer()
+      if (UserCards.Contains(DetectedCard))
+        CanAddNewCard = false;
+    }
+    #endregion
+
+    #region BioService
+    public async Task CardUpdatePerformer(DbState dbState)
     {
       CardList cardList = new CardList();
-      foreach (Card card in UserCards)
+      if (dbState == DbState.None)
       {
-        if (card.Dbstate != DbState.None)
-          cardList.Cards.Add(card);
+        foreach (Card card in UserCards)
+        {
+          if (card.Dbstate != DbState.None)
+            cardList.Cards.Add(card);
+        }
+      }
+      else if (dbState == DbState.Remove)
+      {
+        selectedCard.Dbstate = DbState.Remove;
+        cardList.Cards.Add(selectedCard);       
       }
 
-      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; ;
+      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; 
 
       await _bioService.DatabaseService.CardUpdateRequest(cardList);
     }
-    
     private void CardHolder_DataUpdated(System.Collections.Generic.IList<Card> list, Result result)
-    {
-      Console.WriteLine("Data Updated");
+    {      
+      _bioEngine.Database().CardHolder.DataUpdated -= CardHolder_DataUpdated; 
+
+      Card card = null;
+      foreach (ResultPair currentResult in result.Status)
+      {
+        if (currentResult.Status == ResultStatus.Success)
+        {
+          if (currentResult.State == DbState.Remove)
+          {
+            card = currentResult.Card;
+            Console.WriteLine("Card successfully Removed");
+          }
+          else
+            Console.WriteLine("Data Updated");
+        }
+      }
     }
 
+    #endregion
+
+    #region Interface
     public async void Apply()
     {
-      await CardUpdatePerformer();
-
+      await CardUpdatePerformer(DbState.None);
     }
 
-    public async void Remove()
+    public async void Remove(bool all)
     {
-      await CardUpdatePerformer();
-    }
-
-    public void OnNext(AccessDeviceActivity value)
-    {
-      AccessDeviceConnected = true;
-     
-      if (value.Data != null)
+      if(!all)
       {
-        _detectedCard.UniqueNumber = "";
-        for ( int i = 0; i < value.Data.Length; ++i )        
-          _detectedCard.UniqueNumber += value.Data[i];
-
-        CanAddNewCard = true;
-
-        Card card;
-        bool cardFound = _bioEngine.Database().CardHolder.DataSet.TryGetValue(_detectedCard.UniqueNumber, out card);       
-        if (cardFound)
+        if (selectedCard != null)
+          await CardUpdatePerformer(DbState.Remove);
+      }
+      else if(all)
+      {
+        CardList cardList = new CardList();
+        foreach(Card card in UserCards)
         {
-          Person person;
-          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(card.Personid, out person);
-          if (personFound)          
-            CardState = "Card is avaliable to use";
-          else
-          {
-            CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
-            CanAddNewCard = false;
-          }
+          card.Dbstate = DbState.Remove;
+          cardList.Cards.Add(card);
         }
 
-        DetectedCard = _detectedCard;
+        _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated;
 
-        if (UserCards.Contains(DetectedCard))
-          CanAddNewCard = false;
+        await _bioService.DatabaseService.CardUpdateRequest(cardList);
+      }
+    }
+
+    #endregion
+
+    #region UI
+
+    private Card selectedCard;
+    public Card SelectedCard
+    {
+      get { return selectedCard; }
+      set
+      {
+        if (selectedCard != value)
+        {
+          selectedCard = value;
+          NotifyOfPropertyChange(() => SelectedCard);
+        }
       }
     }
 
@@ -349,6 +215,128 @@ namespace BioModule.ViewModels
       }
     }
 
+    private ObservableCollection<Card> _userCards;
+    public ObservableCollection<Card> UserCards
+    {
+      get
+      {
+        return _userCards;
+      }
+      set
+      {
+        if (_userCards != value)
+        {
+          _userCards = value;
+          NotifyOfPropertyChange(() => UserCards);
+        }
+      }
+    }
+
+    private Card _detectedCard;
+    public Card DetectedCard
+    {
+      get { return _detectedCard; }
+      set
+      {
+        if (_detectedCard == value)
+        {
+          _detectedCard = value;
+          NotifyOfPropertyChange(() => DetectedCard);
+          NotifyOfPropertyChange(() => AnyCardDetected);
+        }
+      }
+    }
+
+    private string _cardNumber;
+    public string CardNumber
+    {
+      get { return _cardNumber; }
+      set
+      {
+        if (_cardNumber != value)
+        {
+          _cardNumber = value;
+          NotifyOfPropertyChange(() => CardNumber);
+        }
+      }
+    }
+
+    private bool _isEnabled;
+    public bool IsEnabled
+    {
+      get { return _isEnabled; }
+      set
+      {
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
+      }
+    }
+
+    private string _cardState;
+    public string CardState
+    {
+      get { return _cardState; }
+      set
+      {
+        if (_cardState != value)
+        {
+          _cardState = value;
+          NotifyOfPropertyChange(() => CardState);
+        }
+      }
+    }
+    #endregion
+
+    #region Global Variables
+
+    private Person _user;
+    private readonly IBioEngine _bioEngine;
+    private readonly IProcessorLocator _locator;
+    private readonly ViewModelSelector _selector;
+    private readonly IServiceManager _bioService;
+
+    #endregion
+
+    #region AccessDevices
+    private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      NotifyOfPropertyChange(() => AvaliableDevicesCount);
+    }
+    public void Subscribe()
+    {
+      if (_selectedAccessDevice == null)
+      {
+        AccessDeviceConnected = false;
+        return;
+      }
+
+      IAccessDeviceEngine accessDeviceEngine = _bioEngine.AccessDeviceEngine();
+
+      accessDeviceEngine.Add(_selectedAccessDevice);
+
+      if (!accessDeviceEngine.HasObserver(this, _selectedAccessDevice))
+        accessDeviceEngine.Subscribe(this, _selectedAccessDevice);
+
+      AccessDeviceConnected = accessDeviceEngine.AccessDeviceActive(_selectedAccessDevice);
+    }
+    public void OnNext(AccessDeviceActivity value)
+    {
+      AccessDeviceConnected = true;
+
+      if (value.Data != null)
+      {
+        _detectedCard.UniqueNumber = "";
+        for (int i = 0; i < value.Data.Length; ++i)
+          _detectedCard.UniqueNumber += value.Data[i];
+
+        CanAddNewCard = true;
+
+        AddNewCard(_detectedCard.UniqueNumber);
+      }
+    }
     public void OnError(Exception error)
     {
       AccessDeviceConnected = false;
@@ -358,13 +346,68 @@ namespace BioModule.ViewModels
     {
       throw new NotImplementedException();
     }
+    public string AvaliableDevicesCount
+    {
+      get { return String.Format("Available Devices ({0})", _accessDevicesNames.Count); }
+    }
 
-    private Person                     _user      ;
-    private readonly IBioEngine        _bioEngine ;
-    private readonly IProcessorLocator _locator   ;
-    private readonly ViewModelSelector _selector  ;
-    private readonly IServiceManager   _bioService;
-  }
+    private string _selectedAccessDevice;
+    public string SelectedAccessDevice
+    {
+      get { return _selectedAccessDevice; }
+      set
+      {
+        if (_selectedAccessDevice != value)
+        {
+          _selectedAccessDevice = value;
+          NotifyOfPropertyChange(() => SelectedAccessDevice);
 
- 
+          Subscribe();
+        }
+      }
+    }
+    public BitmapSource AccessDeviceConnectedIcon
+    {
+      get { return AccessDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
+    }
+
+    private AsyncObservableCollection<string> _accessDevicesNames;
+    public AsyncObservableCollection<string> AccessDevicesNames
+    {
+      get { return _accessDevicesNames; }
+      set
+      {
+        if (_accessDevicesNames != value)
+        {
+          _accessDevicesNames = value;
+
+          NotifyOfPropertyChange(() => AccessDevicesNames);
+        }
+      }
+    }
+
+    public bool AnyCardDetected
+    {
+      get { return _detectedCard != null; }
+    }
+
+    private bool _accessDeviceConnected;
+    private bool AccessDeviceConnected
+    {
+      get { return _accessDeviceConnected; }
+      set
+      {
+        if (_accessDeviceConnected != value)
+        {
+          _accessDeviceConnected = value;
+          NotifyOfPropertyChange(() => AccessDeviceConnectedIcon);
+        }
+      }
+    }
+
+    #endregion
+
+
+    // private bool _dataChanged;
+  } 
 }

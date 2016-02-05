@@ -216,6 +216,7 @@
     <Compile Include="Resources\langs\lang.en.Designer.cs" />
     <Compile Include="Resources\langs\lang.ru-RU.Designer.cs" />
     <Compile Include="Utils\BioConverters.cs" />
+    <Compile Include="Utils\BioFileUtils.cs" />
     <Compile Include="Utils\BioStatusResource.cs" />
     <Compile Include="Utils\ComboBoxItemTemplateSelector.cs" />
     <Compile Include="Utils\FastMethodInvoker.cs" />

@@ -19,16 +19,17 @@ namespace BioData.Holders
        
 
     protected override void AddToDataSet(Photo obj, long key)
-    {           
-      if (_photos.ContainsKey(key))
+    {
+      long person_idkey = obj.Personid;
+      if (_photos.ContainsKey(person_idkey))
       {
         //TODO check photo type
-        _photos[key].Add(obj);
+        _photos[person_idkey].Add(obj);
       }
-      else      
-        _photos.Add(key, new List<Photo>());
-      
-      base.AddToDataSet(obj, key);
+      else
+        _photos.Add(person_idkey, new List<Photo>());
+
+      base.AddToDataSet(obj, obj.Id);
     }
 
     protected override void Update(Photo obj, long key)
@@ -44,17 +45,18 @@ namespace BioData.Holders
             photos[i] = obj;
         }
       }
-      base.Update(obj, key);
+      base.Update(obj, obj.Id);
     }
 
     protected override void Remove(Photo obj, long key)
     {
-      if (_photos.ContainsKey(key))
+      long person_idkey = obj.Personid;
+      if (_photos.ContainsKey(person_idkey))
       {
-        IList<Photo> photos = _photos[key];
+        IList<Photo> photos = _photos[person_idkey];
         photos.Remove(obj);      
       }
-      base.Remove(obj, key);
+      base.Remove(obj, obj.Id);
     }
 
     protected override void UpdateDataSet(IList<Photo> list)

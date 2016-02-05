@@ -18,6 +18,7 @@ using BioData;
 using BioService;
 using System.Windows.Threading;
 using BioModule.Utils;
+using BioContracts;
 
 namespace BioModule.ViewModels
 {
@@ -25,95 +26,170 @@ namespace BioModule.ViewModels
   {
     public ImageViewModel()
     {
+      _bioUtils = new BioContracts.Common.BioImageUtils();
+
       ZoomToFitState = true;
-      CurrentImageUri = null;   
-    }  
- 
+      CurrentImagePhoto = null;   
+    }
+    #region Update
     public void UploadClick(double viewWidth, double viewHeight)
-    {          
+    {
 
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = false;
-      openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-      openFileDialog.InitialDirectory = Environment.CurrentDirectory;      
-      
-      if (openFileDialog.ShowDialog() == true)
-      {        
-        Zoom(viewWidth, viewHeight);
-        SetImageFromFile(openFileDialog.FileName);
-      }      
-    }
+      openFileDialog.Filter = "All files (*.*)|*.*";
+      openFileDialog.InitialDirectory = Environment.CurrentDirectory;
 
-    private void SetImageFromFile(string fileName)
-    {
-      if (File.Exists(fileName))
+      if (openFileDialog.ShowDialog() == true)
       {
-        Bitmap bmp = (Bitmap)Image.FromFile(fileName);
-        CurrentImageSource = BitmapConversion.BitmapToBitmapSource(bmp);
-        //TODO User photo
-        //User. = fileName;
-        Zoom(_imageViewWidth, _imageViewHeight);
+        Zoom(viewWidth, viewHeight);
+        UpdateImage(null, openFileDialog.FileName);        
       }
     }
 
-
-    public void Update(Person user )
+    public void UpdateImage(ref Bitmap img)
     {
-      User = user;
-      
-      //TODO User photo
-      //SetImageFromFile(User.Photo);
+      if (img == null)
+        return;
+
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
+      newFrame.Freeze();
+      CurrentImageSource = newFrame;
     }
 
-    public void UpdateImage(Uri uriSource)
+    public void SavePhoto(string path)
     {
-      SetImageFromFile(uriSource.OriginalString);
-      CurrentImageUri = uriSource; 
+      Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+      if (CurrentImagePhoto.Description == null)
+        return;
+
+      byte[] data = CurrentImagePhoto.Description.ToByteArray();
+      var fs = new BinaryWriter(new FileStream(path, FileMode.CreateNew, FileAccess.Write));
+      fs.Write(data);
+      fs.Close();
+    }
+    public void MovePhoto(string pathFrom, string pathTo)
+    {
+      Directory.CreateDirectory(Path.GetDirectoryName(pathTo));
+
+      try
+      {
+        File.Move(pathFrom, pathTo); // Try to move
+        Console.WriteLine("Moved"); // Success
+      }
+      catch (IOException ex)
+      {
+        Console.WriteLine(ex); // Write error
+      }
+      
+    }
+    public BitmapImage SetImageFromFile(string fileName)
+    {
+      if (File.Exists(fileName))
+      {
+        //Bitmap bmp = (Bitmap)Image.FromFile(fileName);
+        BitmapImage bmp = GetImageSource(fileName);
+        CurrentImageSource = bmp;//BitmapConversion.BitmapToBitmapSource(bmp);
+
+        Zoom(_imageViewWidth, _imageViewHeight);
+        return bmp;
+      }
+
+      return null;
+    }
+
+    public BitmapImage GetImageSource(string fileName)
+    {
+      BitmapImage image = new BitmapImage();
+            
+      image.BeginInit();
+      image.UriSource = new Uri(fileName);
+      image.CacheOption = BitmapCacheOption.OnLoad;
+      image.EndInit();
+           
+
+      return image;
+    }
+
+    public void Update(Person user)
+    {
+      User = user;
+    }
+
+    public void UpdateImage(Photo photo, string path)
+    {
+      if (photo != null)
+      {
+        string photoLocation = path + "\\" + photo.FileLocation;
+
+        SetImageFromFile(photoLocation);        
+
+        CurrentImagePhoto = photo;        
+      }
+      else if(photo == null && path != null)
+      {
+        BitmapImage bmp = SetImageFromFile(path);
+        
+        Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(path ));
+        Photo newphoto = new Photo()
+        {
+          Dbstate = DbState.Insert
+          , Description = description
+          , FileLocation = ""
+          , FirLocation = ""
+          , Type = PhotoSizeType.Full
+          , Origin = PhotoOriginType.Loaded
+        };
+        CurrentImagePhoto = newphoto;
+      }
+      else if (photo == null && path == null)
+      {
+        CurrentImagePhoto = null;
+        CurrentImageSource = null;
+      }
+    }
+    #endregion
+
+    #region Interface
+    public void Clear()
+    {
+      CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
     }
 
     public void CancelClick(double viewWidth, double viewHeight)
     {
       CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
       Zoom(viewWidth, viewHeight);
-      CurrentImageUri = null;
+      CurrentImagePhoto = null;
     }
 
-    private Uri _currentImageUri;
-    public Uri CurrentImageUri
-    {
-      get { return _currentImageUri; }
-      set
-      {
-        if (_currentImageUri != value)
-        {
-          _currentImageUri = value;
-          NotifyOfPropertyChange(() => CurrentImageUri);
-        }
-      }
-    }
+
     public void Zoom(double viewWidth, double viewHeight)
     {
-      _imageViewWidth  = viewWidth;
+      _imageViewWidth = viewWidth;
       _imageViewHeight = viewHeight;
 
       double zoomRateToFitInView = ZoomRate / ZOOM_RATIO;
-            
-      double imageWidth  = CurrentImageSource.Width;
-      double imageHeight = CurrentImageSource.Height;
-      
-      double minImageSide = Math.Min(imageWidth, imageHeight);
-      double maxImageSide = (minImageSide == imageWidth) ? imageHeight : imageWidth;      
-      
-      double proportionRate = minImageSide / maxImageSide;
-      
-      double calculatedZoomFactor = zoomRateToFitInView * proportionRate;
-      
-      CalculatedImageWidth  = calculatedZoomFactor * viewWidth ;
-      CalculatedImageHeight = calculatedZoomFactor * viewHeight;
-      
-      CalculatedImageScale = CalculatedImageWidth / imageWidth;      
-    }
 
+      double imageWidth = CurrentImageSource.Width;
+      double imageHeight = CurrentImageSource.Height;
+
+      double minImageSide = Math.Min(imageWidth, imageHeight);
+      double maxImageSide = (minImageSide == imageWidth) ? imageHeight : imageWidth;
+
+      double proportionRate = minImageSide / maxImageSide;
+
+      double calculatedZoomFactor = zoomRateToFitInView * proportionRate;
+
+      CalculatedImageWidth = calculatedZoomFactor * viewWidth;
+      CalculatedImageHeight = calculatedZoomFactor * viewHeight;
+
+      CalculatedImageScale = CalculatedImageWidth / imageWidth;
+    }
+    #endregion
+
+    #region UI
     double _calculatedImageScale;
     public double CalculatedImageScale
     {
@@ -186,54 +262,16 @@ namespace BioModule.ViewModels
         }
       }
     }
-    
-    private double _imageViewWidth = 0;
-    private double _imageViewHeight = 0;
-
-    private const double ZOOM_TO_FIT_RATE = 90  ;
-    private const double ZOOM_RATIO       = 100D;
-
-
-    private Person _user;
-    public Person User
-    {
-      get { return _user; }
-      set
-      {
-        if (_user != value)
-        {
-          _user = value;
-          NotifyOfPropertyChange(() => User);
-        }
-      }
-    }
-
-    
-
-    public void UpdateImage(ref Bitmap img)
-    {
-      if (img == null)
-        return;
-            
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
-      newFrame.Freeze();
-      CurrentImageSource = newFrame;        
-    }
-
-    public void Clear()
-    {
-      CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
-    }
-
 
     private BitmapSource _currentImageSource;
     public BitmapSource CurrentImageSource
     {
-      get {
+      get
+      {
         if (_currentImageSource == null)
           _currentImageSource = ResourceLoader.UserDefaultImageIconSource;
-        return _currentImageSource; 
-      
+        return _currentImageSource;
+
       }
       private set
       {
@@ -252,11 +290,52 @@ namespace BioModule.ViewModels
       }
     }
 
+    private Bitmap _currentImageBitmap;
+    public Bitmap CurrentImageBitmap
+    {
+      get { return _currentImageBitmap; }
+      set
+      {
+        if (_currentImageBitmap != value)
+        {
+          _currentImageBitmap = value;
+          NotifyOfPropertyChange(() => CurrentImageBitmap);
+        }
+      }
+    }
 
-    //*********************************************ProgressRing**************************************************************
+    private Photo _currentImagePhoto;
+    public Photo CurrentImagePhoto
+    {
+      get { return _currentImagePhoto; }
+      set
+      {
+        if (_currentImagePhoto != value)
+        {
+          _currentImagePhoto = value;
+          NotifyOfPropertyChange(() => CurrentImagePhoto);
+        }
+      }
+    }
 
+    private Person _user;
+    public Person User
+    {
+      get { return _user; }
+      set
+      {
+        if (_user != value)
+        {
+          _user = value;
+          NotifyOfPropertyChange(() => User);
+        }
+      }
+    }
+    #endregion
 
-      //TODO refactor as soon as possible (To difficult to understand)
+    #region ProgressRing
+
+    //TODO refactor as soon as possible (To difficult to understand)
     public async void ShowProgress(int progress, bool status)
     {
       ProgressRingVisibility         = true ;
@@ -391,5 +470,18 @@ namespace BioModule.ViewModels
         }
       }
     }
+    #endregion
+
+    #region Global Variables
+
+    private double _imageViewWidth = 0;
+    private double _imageViewHeight = 0;
+
+    private const double ZOOM_TO_FIT_RATE = 90;
+    private const double ZOOM_RATIO = 100D;
+
+    private BioContracts.Common.BioImageUtils _bioUtils;
+
+    #endregion
   }
 }

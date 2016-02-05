@@ -48,14 +48,20 @@
                    Height="32" Width="32" />
         </Button>
 
-        <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}">
+        <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                cal:Message.Attach="[Event Click]=[Action Remove('false')]"
+                >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" />
         </Button>
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
                  Grid.Row="5" Margin="0, 5, 0, 0"
-                 ItemsSource="{Binding UserCards}">
+                 ItemsSource="{Binding UserCards}"
+                 SelectedItem="{Binding SelectedCard}"                 
+                 >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <ContentControl Margin="2,2,2,2" Content="{Binding UniqueNumber, Converter={StaticResource ConvertToFormatedNumber}}"></ContentControl>

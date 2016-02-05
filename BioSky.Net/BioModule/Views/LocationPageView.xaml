@@ -46,7 +46,7 @@
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
                  Controls:TextBoxHelper.Watermark="Description"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                 Text="{Binding CurrentLocation.Desctiption}"
+                 Text="{Binding CurrentLocation.Description}"
                  >
         </TextBox>
 
@@ -84,18 +84,23 @@
 
         <Button Grid.Row="4" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" 
-                Style="{DynamicResource MetroCircleButtonStyle}" >
+                VerticalAlignment="Stretch" ToolTip="Apply"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                cal:Message.Attach="[Event Click]=[Action Apply]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
         </Button>
 
         <Button  Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" 
-                 VerticalAlignment="Stretch" 
-                 Style="{DynamicResource MetroCircleButtonStyle}">
+                 VerticalAlignment="Stretch" ToolTip="Revert changes"
+                 Style="{DynamicResource MetroCircleButtonStyle}"
+                 cal:Message.Attach="[Event Click]=[Action Revert]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Width="32" Height="32"  />
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" ToolTip="Delete"
+                Style="{DynamicResource MetroCircleButtonStyle}" 
+                cal:Message.Attach="[Event Click]=[Action Delete]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" Width="32" Height="32"  />
         </Button>
     </Grid>

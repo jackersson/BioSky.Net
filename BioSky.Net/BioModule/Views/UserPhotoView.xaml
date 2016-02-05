@@ -14,8 +14,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
-        <utils:NullImageConverter x:Key="NullImageConverter"/>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>        
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
@@ -71,9 +70,9 @@
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="4" CornerRadius="5" Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
-                        <Image Source="{Binding Mode=OneWay, Converter={StaticResource NullImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
-                    </Border>
+                    <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
+                        <Image Source="{Binding FileLocation, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemsPanel>

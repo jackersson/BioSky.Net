@@ -11,7 +11,7 @@ namespace BioContracts
   {
     void Init();
 
-    ObservableCollection<TrackLocation> TrackLocations
+    AsyncObservableCollection<TrackLocation> TrackLocations
     { get; }
   }
 }
