@@ -124,6 +124,8 @@ namespace BioModule.ViewModels
         return bmp;
       }
 
+      CurrentImageSource = null;
+
       return null;
     }
 
@@ -135,7 +137,6 @@ namespace BioModule.ViewModels
       image.UriSource = new Uri(fileName);
       image.CacheOption = BitmapCacheOption.OnLoad;
       image.EndInit();
-           
 
       return image;
     }
@@ -151,18 +152,22 @@ namespace BioModule.ViewModels
       {
         string photoLocation = path + "\\" + photo.FileLocation;
 
-        SetImageFromFile(photoLocation);        
-
-        CurrentImagePhoto = photo;        
+        var result = SetImageFromFile(photoLocation);        
+        if(result != null)
+          CurrentImagePhoto = photo;
       }
       else if(photo == null && path != null)
       {
         BitmapImage bmp = SetImageFromFile(path);
+        if (bmp == null)
+        {
+          CurrentImageSource = null;
+        }
         
         Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(path ));
         Photo newphoto = new Photo()
         {
-          EntityState = EntityState.Added
+            EntityState = EntityState.Added
           , Description = description
           , FileLocation = ""
           , FirLocation = ""

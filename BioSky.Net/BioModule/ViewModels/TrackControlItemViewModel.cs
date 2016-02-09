@@ -70,10 +70,17 @@ namespace BioModule.ViewModels
 
       CurrentLocation = trackLocation;
 
-      CurrentLocation.PropertyChanged += CurrentLocation_PropertyChanged; ;
+      CurrentLocation.PropertyChanged += CurrentLocation_PropertyChanged;
+      trackLocation.EnrollFeedbackChanged += TrackLocation_EnrollFeedbackChanged;
 
       _captureDeviceEngine.Subscribe(OnNewFrame, trackLocation.CaptureDeviceName) ;
       _visitorsView.Update();
+    }
+
+    private void TrackLocation_EnrollFeedbackChanged(object sender, BioService.EnrollmentFeedback feedback)
+    {
+      if (ImageView != null && feedback != null)
+        ImageView.ShowProgress(feedback.Progress, feedback.Success);
     }
 
     private void CurrentLocation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -10,12 +10,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BioContracts
-{
-  
+{  
 
 
   public class TrackLocation : PropertyChangedBase
-  {    
+  {
+    public event EnrollFeedbackEventHandler EnrollFeedbackChanged;
     public TrackLocation(IProcessorLocator locator, Location location)
     {
       _locator = locator;
@@ -74,12 +74,16 @@ namespace BioContracts
       AccessDevicesStatus = status;      
     }
 
-    private async void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
+    private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
     {
+      CardNumber = "";
+      CardNumber = cardNumber;
+      observer = null;
+      observer = sender;
       Card card;
       bool cardFound = _database.CardHolder.DataSet.TryGetValue(cardNumber, out card);
 
-      
+      /*
       VisitorList list = new VisitorList();
       Visitor visitor = new Visitor() { Locationid  = _location.Id
                                       , EntityState = EntityState.Added
@@ -89,9 +93,9 @@ namespace BioContracts
                                       , Photoid     = 0
                                       , CardNumber = cardNumber };
 
+      */
 
-  
-
+      sender.Reset();
       Person person = null;
       if (cardFound)
       {        
@@ -100,10 +104,22 @@ namespace BioContracts
         {
          //_bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
              
-          sender.Success();       
+          //sender.Success();       
 
-          visitor.Personid = person.Id;
-          visitor.Status   = ResultStatus.Success;
+          //visitor.Personid = person.Id;
+          //visitor.Status   = ResultStatus.Success;
+
+          try
+          {
+            VerificationData verificationData = new VerificationData();
+            verificationData.Personid = person.Id;
+            _veryfier.Start(CaptureDeviceName, verificationData);
+            _bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
+          }
+          catch ( Exception e)
+          {
+            Console.WriteLine(e.Message);
+          }
         }
        
       }
@@ -114,6 +130,7 @@ namespace BioContracts
 
       //_veryfier.Start(CaptureDeviceName, data);
 
+      /*
       sender.Failed();
       list.Visitors.Add(visitor);
 
@@ -125,12 +142,16 @@ namespace BioContracts
       {
         Console.WriteLine(ex.Message);
       }
+      */
 
     }
 
-    private void FaceService_VerifyFeedbackChanged(object sender, VerificationFeedback feedback)
-    {
-      /*
+    string CardNumber = "";
+    TrackLocationAccessDeviceObserver observer = null;
+
+
+    private async void FaceService_VerifyFeedbackChanged(object sender, VerificationFeedback feedback)
+    {      
       EnrollmentFeedback enrollFeedback = feedback.EnrollmentFeedback;
       if (enrollFeedback == null)
         return;
@@ -145,6 +166,14 @@ namespace BioContracts
         personid = data.Personid;
         success  = enrollFeedback.Success ? ResultStatus.Success : ResultStatus.Failed;
 
+        if (observer != null)
+        {
+          if (success == ResultStatus.Success)
+            observer.Success();
+          else
+            observer.Failed();
+        }
+       ;
 
         Photo image         = _veryfier.GetImage();
         Photo feedbackPhoto = enrollFeedback.Photo;
@@ -156,64 +185,43 @@ namespace BioContracts
           image.Fir = feedbackPhoto.Fir;
 
 
-        image.Dbstate  = DbState.Insert;     
-        image.Type     = PhotoSizeType.Full;
-        image.Origin   = PhotoOriginType.Detected;
-        image.Personid = personid;
-        
+        image.EntityState  = EntityState.Added;     
+        image.SizeType     = PhotoSizeType.Full;
+        image.OriginType   = PhotoOriginType.Detected;
+        image.Personid     = personid;
 
-        Visitor visitor  = new Visitor() { Locationid = _location.Id
-                                           , Dbstate    = DbState.Insert
-                                           , Time       = DateTime.Now.Ticks
-                                           , Status     = success
-                                           , Personid   = personid };
+        VisitorList list = new VisitorList();
+        Visitor visitor  = new Visitor() { Locationid    = _location.Id
+                                          , EntityState  = EntityState.Added
+                                          , Time         = DateTime.Now.Ticks
+                                          , Status       = success
+                                          , CardNumber   = CardNumber
+                                          , Personid     = personid };
 
-        _requestUpdator.BeginRequest(image, visitor);
-      }
+        visitor.Photo = image;
 
+        list.Visitors.Add(visitor);
 
-      
-      if (enrollFeedback.Progress == 100)
-      {
-        _bioService.FaceService.VerifyFeedbackChanged -= FaceService_VerifyFeedbackChanged;
-        Photo image = _veryfier.GetImage();
-        Photo feedbackPhoto = enrollFeedback.Photo;
-        VerificationData data = _veryfier.GetData();
-      
-        if ( image != null && feedbackPhoto != null )
+        try
         {
-          PhotoList photoList = new PhotoList();          
-          Photo photo = new Photo() { Dbstate      = DbState.Insert
-                                    , Description  = image.Description
-                                    , FileLocation = feedbackPhoto.FileLocation
-                                    , FirLocation  = feedbackPhoto.FirLocation
-                                    , Personid     = data.Personid
-                                    , Type         = PhotoSizeType.Full
-                                    , Origin       = PhotoOriginType.Detected
-                                    };
-      
-          photoList.Photos.Add(photo);
-
-          VisitorList list = new VisitorList();
-          Visitor visitor  = new Visitor() { Locationid = _location.Id
-                                           , Dbstate    = DbState.Insert
-                                           , Time       = DateTime.Now.Ticks
-                                           , Status     = ResultStatus.Success
-                                           , Personid   = data.Personid };
-
-          list.Visitors.Add(visitor);
-          _requestUpdator.BeginRequest(photo, visitor);
-
-
-          //await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
-        }        
-       
+          await _bioService.DatabaseService.VisitorUpdate(list);
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine(ex.Message);
+        }
+        observer.Failed();
       }
-      if (_imageViewer != null)
-         _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
-       
-      
-       Console.WriteLine(feedback);*/
+
+
+      OnEnrollFeedbackChanged(enrollFeedback);
+      Console.WriteLine(enrollFeedback.Progress);
+    }
+
+    private void OnEnrollFeedbackChanged(EnrollmentFeedback feedback)
+    {
+      if (EnrollFeedbackChanged != null)
+        EnrollFeedbackChanged(null, feedback);
     }
 
     private string _captureDeviceName;

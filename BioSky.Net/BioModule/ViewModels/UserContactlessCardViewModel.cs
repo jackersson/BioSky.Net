@@ -38,7 +38,7 @@ namespace BioModule.ViewModels
 
       CardState = "Card number";
 
-      _userCards = new ObservableCollection<Card>();
+      _userCards = new AsyncObservableCollection<Card>();
 
       _bioEngine.Database().Persons.DataChanged += RefreshData;
 
@@ -209,8 +209,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<Card> _userCards;
-    public ObservableCollection<Card> UserCards
+    private AsyncObservableCollection<Card> _userCards;
+    public AsyncObservableCollection<Card> UserCards
     {
       get
       {

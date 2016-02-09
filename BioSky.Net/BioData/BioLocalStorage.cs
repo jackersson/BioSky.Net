@@ -34,7 +34,7 @@ namespace BioData
       Language = language;
 
       if (mediaPath == null)      
-        LocalStoragePath = "F:\\GRPCs\\ClientFolder";
+        LocalStoragePath = "F:\\GRPCs\\ClientFolder\\";
 
       if (faceServicePath == null)
         FaceServiceStoragePath = "192.168.1.127:50051";

@@ -62,7 +62,7 @@ namespace BioData.Holders
         _noDescriptionPhotos.Photos.Add(obj);
         _checkedPhotos.Add(obj.Id);
       }
-      //OnFullPhotoRequested(_noDescriptionPhotos);
+      
       return false;
     }
 

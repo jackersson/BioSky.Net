@@ -35,6 +35,11 @@ namespace BioContracts.Common
       _accessDeviceEngine.Execute(AccessDeviceCommands.CommandAccess, _accessDevice.Portname);
     }
 
+    public void Reset()
+    {
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReset, _accessDevice.Portname);
+    }
+
     public void Failed()
     {
       _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);

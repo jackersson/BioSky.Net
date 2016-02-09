@@ -18,9 +18,7 @@ namespace BioEngine.CaptureDevices
     private IVideoSource _videoSource;
     private readonly ICaptureDeviceConnectivity _capDevConnectivity;
     private readonly string _cameraName;
-
-    //public delegate void FrameEventHandler(object sender, Bitmap bitmap );
-    
+  
 
     private event EventHandler      CanConnect;
     public  event FrameEventHandler NewFrame;
@@ -39,13 +37,22 @@ namespace BioEngine.CaptureDevices
     {
       FilterInfo fi = (FilterInfo)sender;
 
-      if (fi == null)
+      if (fi == null)      
         return;
-
+        
       _videoSource = new VideoCaptureDevice(fi.MonikerString);
+     
+      _videoSource.PlayingFinished += _videoSource_PlayingFinished;
       _videoSource.NewFrame += _videoSource_NewFrame;
       _videoSource.Start();
+  
     }
+
+    private void _videoSource_PlayingFinished(object sender, ReasonToFinishPlaying reason)
+    {
+      this.Start();
+    }
+    
 
     private void OnNewFrame( Bitmap bmp )
     {
@@ -71,13 +78,13 @@ namespace BioEngine.CaptureDevices
       ReleaseVideoDevice();
 
       while (Active)
-      {
-        FilterInfo fi =  _capDevConnectivity.CaptureDeviceConnected(_cameraName);
-        if ( fi != null )
+      {       
+        FilterInfo fi = _capDevConnectivity.CaptureDeviceConnected(_cameraName);
+        if (fi != null)
         {
-          Active = false;
-          OnCanConnect(fi);         
-        }        
+          Active = false;         
+          OnCanConnect(fi);
+        }                    
         Thread.Sleep(2000);
       }
       
@@ -102,6 +109,7 @@ namespace BioEngine.CaptureDevices
         return false;
       return _videoSource.IsRunning;
     }
+    
 
     public void Kill()
     {

@@ -198,61 +198,8 @@ namespace BioModule.ViewModels
         _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
 
       
-      //Console.WriteLine(feedback.Progress);
     }
-    /*
-    private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
-    {
-      _database.PhotoHolder.DataUpdated -= PhotoHolder_DataUpdated;
 
-      Photo photo = null;      
-      foreach (ResultPair currentResult in result.Status)
-      {
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          if (currentResult.State == DbState.Insert)
-          {
-            photo = currentResult.Photo;
-
-            if (photo != null)
-            {
-              string savePath = _bioEngine.Database().LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
-              Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-              
-              byte[] data = NewPhoto.Description.ToByteArray();
-              File.WriteAllBytes(savePath, data);
-              
-            }               
-          }
-          else if (currentResult.State == DbState.Remove)
-          {
-            string folderPath = _bioEngine.Database().LocalStorage.LocalStoragePath + "\\";
-
-            _imageViewer.UpdateImage(null, null);
-
-            foreach(Photo deletedPhoto in list)
-            {
-              UserImages.Remove(deletedPhoto);
-              
-              File.Delete(folderPath + deletedPhoto.FileLocation);
-              try
-              {
-                System.IO.File.Delete(folderPath + deletedPhoto.FileLocation);
-              }
-              catch (System.IO.IOException e)
-              {
-                Console.WriteLine(e.Message);
-                return;
-              }
-            }
-            
-            MessageBox.Show("Photo successfully Removed");
-          }
-          RefreshData();  
-        }
-      }
-    }
-    */
     
 
 
@@ -275,6 +222,7 @@ namespace BioModule.ViewModels
 
     public void UploadClick()
     {
+      Photo photo = _imageViewer.UploadPhoto();
       /*
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = false;
@@ -309,7 +257,7 @@ namespace BioModule.ViewModels
       */
     }   
    
-    public async void DeletePhoto()
+    public void DeletePhoto()
     {
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
 
@@ -329,7 +277,7 @@ namespace BioModule.ViewModels
       } 
     } 
 
-    public async void Remove(bool all)
+    public void Remove(bool all)
     {
       if(all)
       {

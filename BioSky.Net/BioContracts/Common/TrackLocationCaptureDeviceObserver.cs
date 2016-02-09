@@ -146,7 +146,14 @@ namespace BioContracts.Common
 
     protected async override void PerformRequest()
     {
-      await _bioService.FaceService.Verify(_data);
+      try
+      {
+        await _bioService.FaceService.Verify(_data);
+      }     
+      catch (Exception e)
+      {
+        Console.Write(e.Message);
+      }
       base.PerformRequest();
     }
 
