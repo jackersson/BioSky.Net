@@ -9,6 +9,10 @@
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d"                  
              d:DesignHeight="600" d:DesignWidth="360" 
              d:DataContext="{d:DesignInstance vm:LocationPageViewModel, IsDesignTimeCreatable=False}"
@@ -35,7 +39,7 @@
 
         <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="0"
-                 Controls:TextBoxHelper.Watermark="Location Name*"
+                 Controls:TextBoxHelper.Watermark="{lex:Loc LocationName}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                  Controls:TextBoxHelper.ClearTextButton="True"
                  Text="{Binding CurrentLocation.LocationName}"
@@ -44,7 +48,7 @@
 
         <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
-                 Controls:TextBoxHelper.Watermark="Description"
+                 Controls:TextBoxHelper.Watermark="{lex:Loc Description}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                  Text="{Binding CurrentLocation.Description}"
                  >
@@ -70,8 +74,10 @@
             </TabControl.Resources>
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock
-        				Text="{Binding DisplayName}" FontSize="14" />
+                    <Grid Background="Transparent">
+                        <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False" />
+                        <TextBlock Text="{Binding Result, ElementName=Proxy}" FontSize="14" />
+                    </Grid>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
@@ -84,21 +90,21 @@
 
         <Button Grid.Row="4" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" ToolTip="Apply"
+                VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 cal:Message.Attach="[Event Click]=[Action Apply]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
         </Button>
 
         <Button  Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" 
-                 VerticalAlignment="Stretch" ToolTip="Revert changes"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc RevertChanges}"
                  Style="{DynamicResource MetroCircleButtonStyle}"
                  cal:Message.Attach="[Event Click]=[Action Revert]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Width="32" Height="32"  />
         </Button>
 
         <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" ToolTip="Delete"
+                VerticalAlignment="Stretch" ToolTip="{lex:Loc Delete}"
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click]=[Action Delete]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" Width="32" Height="32"  />

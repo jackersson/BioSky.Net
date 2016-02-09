@@ -6,7 +6,10 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"      
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"   
-             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"             
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader" 
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="100"
              d:DataContext="{d:DesignInstance vm:ToolBarViewModel, IsDesignTimeCreatable=False}">
@@ -19,26 +22,26 @@
         <ToolBarTray Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left"  VerticalAlignment="Top">
             <ToolBar>
                 <Separator></Separator>
-                <Button ToolTip="AddPerson" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
+                <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
-                <Button ToolTip="Add new Location" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]">
+                <Button ToolTip="{lex:Loc AddNewLocation}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}" Width="32" Height="32"  />
                 </Button>                
                 <Separator></Separator>
-                <Button ToolTip="Visitors" cal:Message.Attach="[Event Click]=[Action OpenTabVisitors]">
+                <Button ToolTip="{lex:Loc Visitors}" cal:Message.Attach="[Event Click]=[Action OpenTabVisitors]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=JournalListIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
-                <Button ToolTip="Users" cal:Message.Attach="[Event Click]=[Action OpenTabUsers]">
+                <Button ToolTip="{lex:Loc Users}" cal:Message.Attach="[Event Click]=[Action OpenTabUsers]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UsersListIconSource}" Width="32" Height="32"  />
                 </Button>
                 <Separator></Separator>
 
-                <Button ToolTip="Tracking" cal:Message.Attach="[Event Click]=[Action OpenTabTrack]">
+                <Button ToolTip="{lex:Loc Tracking}" cal:Message.Attach="[Event Click]=[Action OpenTabTrack]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=TrackingIconSource}" Width="32" Height="32"  />
                 </Button>
             </ToolBar>

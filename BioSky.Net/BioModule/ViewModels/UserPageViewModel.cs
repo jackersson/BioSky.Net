@@ -48,7 +48,7 @@ namespace BioModule.ViewModels
       
       _methodInvoker = new FastMethodInvoker();     
 
-      DisplayName = "Add New User";
+      DisplayName = "AddNewUser_";
     }
 
     #region Update
@@ -81,7 +81,7 @@ namespace BioModule.ViewModels
         };
 
         _userPageMode = UserPageMode.NewUser;
-        DisplayName = "Add New User";
+        DisplayName = "AddNewUser";
       }
 
       CurrentImageView.Update(_user);

@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using MahApps.Metro;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for UsersView.xaml
+  /// Interaction logic for SettingsPageView.xaml
   /// </summary>
-  public partial class UsersView : UserControl
+  public partial class GeneralSettingsPageView : UserControl
   {
-    public UsersView()
+    public GeneralSettingsPageView()
     {
       InitializeComponent();
-    }    
+    }
   }
 }

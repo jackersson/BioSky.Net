@@ -9,16 +9,10 @@ namespace BioModule.Utils
 {
   public class BioFileUtils
   {
-    private string GetConfigFile(string parametr)
+    private string GetParametr(string parametr)
     {
       string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
       FileInfo configFile = new FileInfo(path);
-
-      if (!configFile.Exists)
-      {
-        using (StreamWriter streamWriter = configFile.CreateText())
-          streamWriter.WriteLine(parametr);
-      }
 
       using (StreamReader sr = new StreamReader(path))
       {
@@ -46,6 +40,24 @@ namespace BioModule.Utils
         }
       }
       return null;
+    }
+
+    private void GetConfigFile(string[] allParametrs)
+    {
+      string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
+      FileInfo configFile = new FileInfo(path);
+
+      if (!configFile.Exists)
+      {
+        foreach (string parametr in allParametrs)
+        {
+          using (FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write))
+          using (StreamWriter sw = new StreamWriter(fs))
+          {
+            sw.WriteLine(parametr);
+          }
+        }
+      }
     }
 
 

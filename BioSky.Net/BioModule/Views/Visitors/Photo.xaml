@@ -11,7 +11,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"             
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"  
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"            
              d:DesignHeight="400" d:DesignWidth="400"
@@ -62,11 +66,11 @@
                     <StackPanel Margin="-20,0,0,0" Tag="{Binding DataContext, ElementName=GridLayout}">
                         <StackPanel.ContextMenu>
                             <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                <MenuItem Header="Open in New Tab"  
+                                <MenuItem Header="{lex:Loc OpenInNewTab}"  
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
                               />
-                                <MenuItem Header="Remove" 
+                                <MenuItem Header="{lex:Loc Remove}" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
                               />
@@ -112,11 +116,11 @@
 
             <ListBox.ContextMenu >
                 <ContextMenu x:Name="VisitorContextMenu" IsEnabled="True" >
-                    <MenuItem Header="Open in New Tab"  
+                    <MenuItem Header="{lex:Loc OpenInNewTab}"  
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
                               />
-                    <MenuItem Header="Remove" 
+                    <MenuItem Header="{lex:Loc Remove}" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
                               />

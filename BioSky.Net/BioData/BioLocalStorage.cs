@@ -12,34 +12,49 @@ namespace BioData
 {
   public class BioLocalStorage : PropertyChangedBase, ILocalStorage
   {
+    private static readonly string mediaParametr           = "MEDIA_PATHWAY:"   ;
+    private static readonly string faceServiceParametr     = "FACE_SERVICE:"    ;
+    private static readonly string databaseServiceParametr = "DATABASE_SERVICE:";
+    private static readonly string languageParametr        = "LANGUAGE:"        ;
+    private string[] allParametrs = { mediaParametr, faceServiceParametr, databaseServiceParametr, languageParametr };
+
 
     public BioLocalStorage()
     {
-      string mediaParametr           = "MEDIA_PATHWAY:"   ;
-      string faceServiceParametr     = "FACE_SERVICE:"    ;
-      string databaseServiceParametr = "DATABASE_SERVICE:";
-
-      string[] allParametrs = { mediaParametr, faceServiceParametr, databaseServiceParametr };
-
       GetConfigFile(allParametrs);
+
       string mediaPath           = GetParametr(mediaParametr)          ;
       string faceServicePath     = GetParametr(faceServiceParametr)    ;
       string databaseServicePath = GetParametr(databaseServiceParametr);
+      string language            = GetParametr(languageParametr);
+
+      LocalStoragePath = mediaPath;
+      FaceServiceStoragePath = faceServicePath;
+      DatabaseServiceStoragePath = databaseServicePath;
+      Language = language;
 
       if (mediaPath == null)      
         LocalStoragePath = "F:\\GRPCs\\ClientFolder";
 
-      if (mediaPath == null)
-        LocalStoragePath = "";
+      if (faceServicePath == null)
+        FaceServiceStoragePath = "";
 
-      if (mediaPath == null)
-        LocalStoragePath = "";
-
-      LocalStoragePath           = mediaPath          ;
-      FaceServiceStoragePath     = faceServicePath    ;
-      DatabaseServiceStoragePath = databaseServicePath;
+      if (databaseServicePath == null)
+        DatabaseServiceStoragePath = "";
     }
 
+    public void SaveGeneralSettings(string local, string face, string service, string language)
+    {
+      LocalStoragePath           = local   ;
+      FaceServiceStoragePath     = face    ;
+      DatabaseServiceStoragePath = service ;
+      Language                   = language;
+
+      string[] newData = { local, face, service, language };
+      
+      SetParametr(newData, allParametrs);
+
+    }
     private string _localStoragePath;
     public string LocalStoragePath
     {
@@ -82,6 +97,20 @@ namespace BioData
       }
     }
 
+    private string _language;
+    public string Language
+    {
+      get { return _language; }
+      set
+      {
+        if (_language != value)
+        {
+          _language = value;
+          NotifyOfPropertyChange(() => Language);
+        }
+      }
+    }
+
     //TODO Make in Utils
 
     private string GetParametr(string parametr)
@@ -117,8 +146,23 @@ namespace BioData
       return null;
     }
 
+    private void SetParametr(string[] data, string[] allParametrs)
+    {
+      string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
+      FileInfo configFile = new FileInfo(path);
 
-    
+      if (configFile.Exists)
+      {
+        using (FileStream fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+        {
+          using (StreamWriter sw = new StreamWriter(fs))
+          {
+            for (int i = 0; i != 4; ++i)            
+              sw.WriteLine(allParametrs[i] + data[i]);          
+          }
+        }
+      }
+    }    
     private void GetConfigFile(string[] allParametrs)
     {
       string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";

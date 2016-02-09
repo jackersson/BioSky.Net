@@ -6,15 +6,15 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"    
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:langs="clr-namespace:BioModule.Resources.langs"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"             
-   
+             xmlns:lex="http://wpflocalizeextension.codeplex.com" 
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"  
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="250"
              d:DataContext="{d:DesignInstance vm:MainMenuViewModel, IsDesignTimeCreatable=False}">
 
-    <!--      lex:LocalizeDictionary.DesignCulture="ru-RU"
-             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
-             lex:ResxLocalizationProvider.DefaultDictionary="lang" -->
+
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -23,37 +23,41 @@
                   Margin="5,5,0,5"
                   VerticalAlignment="Stretch"            
                   HorizontalAlignment="Left">
-            <MenuItem Header="File">
-                <MenuItem Header="Add">
-                    <MenuItem Header="User" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"/>
-                    <MenuItem Header="Location" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"/>
+            <MenuItem Header="{lex:Loc File}">
+                <MenuItem Header="{lex:Loc Add}">
+                    <MenuItem Header="{lex:Loc User}" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"/>
+                    <MenuItem Header="{lex:Loc Location}" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"/>
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Log In"
+                <MenuItem Header="{lex:Loc LogIn}"
                           cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">
                 </MenuItem>
-                <MenuItem Header="Log Out"
+                <MenuItem Header="{lex:Loc LogOut}"
                           cal:Message.Attach="[Event Click] = [Action OnLogOut]"
                           >
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="{lex:Loc Exit}"/>
             </MenuItem>
-            <MenuItem Header="Edit"/>
-            <MenuItem Header="View" 
+            <MenuItem Header="{lex:Loc Edit}"/>
+            <MenuItem Header="{lex:Loc View}" 
                           >
-                <MenuItem Header="Settings" 
+                <MenuItem Header="{lex:Loc Settings}" 
                           cal:Message.Attach="[Event Click] = [Action OpenFlayoutSettings]" />
-                <MenuItem Header="Tracking" 
+                <MenuItem Header="{lex:Loc Tracking}" 
                           cal:Message.Attach="[Event Click] = [Action OpenTabTrack]"/>
-                <MenuItem Header="Users"
+                <MenuItem Header="{lex:Loc Users}"
                           cal:Message.Attach="[Event Click] = [Action OpenTabUsers]"/>
-                <MenuItem Header="Visitors" 
+                <MenuItem Header="{lex:Loc Visitors}" 
                           cal:Message.Attach="[Event Click] = [Action OpenTabVisitors]"/>
             </MenuItem>
-            <MenuItem Header="Help">
-                <MenuItem Header="About"
+            <MenuItem Header="{lex:Loc Help}">
+                <MenuItem Header="{lex:Loc About}"
                           cal:Message.Attach="[Event Click] = [Action ShowAboutDialog]"/>
+            </MenuItem>
+            <MenuItem Header="{lex:Loc Tools}">
+                <MenuItem Header="{lex:Loc Settings}"
+                          cal:Message.Attach="[Event Click] = [Action ShowSettingsFlayout]"/>
             </MenuItem>
         </Menu>
 

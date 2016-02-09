@@ -12,6 +12,10 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"  
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              Name="Test"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -50,7 +54,9 @@
         </Grid.ColumnDefinitions>
 
 
-        <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48">
+        <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" 
+                 Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                 Width="48" Height="48">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
@@ -110,13 +116,13 @@
                   IsChecked="{Binding IsAllChecked}"
                   Margin="10,0,0,0"/>
 
-        <TextBlock Text="All" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Column="1" Grid.Row="0"
+        <TextBlock Text="{lex:Loc All}" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Column="1" Grid.Row="0"
                    Margin="0,0,10,0"
                    >            
         </TextBlock>
         
         <TextBlock Grid.Column="2"  Grid.Row="1" 
-                   Grid.ColumnSpan="2" Text="Locations"
+                   Grid.ColumnSpan="2" Text="{lex:Loc Locations}"
                    VerticalAlignment="Bottom"></TextBlock>
 
         <WrapPanel Grid.ColumnSpan="2"  >
@@ -156,7 +162,7 @@
             
             <DataGrid.ContextMenu >
                 <ContextMenu IsEnabled="True" >
-                    <MenuItem Header="Open Settings"  
+                    <MenuItem Header="{lex:Loc OpenSettings}"  
                               IsEnabled="{Binding CanOpenSettings, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowLocationFlayout()]"
                               />

@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using BioModule.Utils;
 
-using WPFLocalizeExtension.Engine;
-using BioModule.Resources.langs;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
@@ -23,9 +21,6 @@ namespace BioModule.ViewModels
     {   
       _viewModelSelector = locator.GetProcessor<ViewModelSelector>();
       _windowManager     = locator.GetProcessor<IWindowManager>();
-      //_languages = new ObservableCollection<string>();
-      //_languages.Add("en");
-      //_languages.Add("ru-RU");
     }
 
     public void OpenTabAddNewPerson()
@@ -42,44 +37,10 @@ namespace BioModule.ViewModels
     {
       _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.VisitorsPage);
     }
+
+
        
 
-    //****************************************************Language****************************************************
-    private ObservableCollection<string> _languages;
-    public ObservableCollection<string> Languages
-    {
-      get { return _languages; }
-      set
-      {
-        if (_languages != value)
-        {
-          _languages = value;
-          NotifyOfPropertyChange(() => Languages);
-        }
-      }
-    }
-
-    private string _selectedLanguage;
-    public string SelectedLanguage
-    {
-      get { return _selectedLanguage; }
-      set
-      {
-        if (_selectedLanguage != value)
-        {
-          _selectedLanguage = value;
-          NotifyOfPropertyChange(() => SelectedLanguage);
-        }
-      }
-    }
-
-    public void LanguageChanged()
-    {
-      LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
-      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);
-    }
-
-    //***************************************************************************************************************
     public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
     {
       Console.WriteLine(register + " " + name + " " + password);
@@ -94,12 +55,13 @@ namespace BioModule.ViewModels
       var result = _windowManager.ShowDialog(new LoginDialogViewModel(this));      
     }
 
-    public void OnLogOut()
+    public void ShowSettingsFlayout()
     {
-      string path = "D://";
-      string path2 = path + "media//test1//test2";
-      System.IO.Directory.CreateDirectory(path2);
-    }
+      _viewModelSelector.ShowContent(ShowableContentControl.FlyoutControlContent
+                           , ViewModelsID.GeneralSettings
+                           , new object[] {  });    }
+
+
 
     private ViewModelSelector          _viewModelSelector;
     private readonly IWindowManager    _windowManager;

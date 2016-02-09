@@ -19,6 +19,7 @@ namespace BioModule.ViewModels
       _locator = locator;
 
       Items.Add(_locator.GetProcessor<LocationPageViewModel>());
+      Items.Add(_locator.GetProcessor<GeneralSettingsPageViewModel>());
 
       _methodInvoker = new FastMethodInvoker();
 

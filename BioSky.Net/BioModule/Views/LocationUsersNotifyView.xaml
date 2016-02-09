@@ -6,6 +6,10 @@
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:dd="clr-namespace:BioModule.DragDrop" 
              xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
@@ -47,11 +51,11 @@
                          dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}"
                          dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">              
                 </local:DragablListBoxView>
-                
-                <Label  Content="Users to Notify" Grid.Column="0" Grid.Row="0"
+
+                <Label  Content="{lex:Loc UsersToNotify}" Grid.Column="0" Grid.Row="0"
                         HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
-                <Label  Content="Registered Users" Grid.Column="2" Grid.Row="0"
+                <Label  Content="{lex:Loc RegisteredUsers}" Grid.Column="2" Grid.Row="0"
                         HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
             </Grid>
         </ScrollViewer>

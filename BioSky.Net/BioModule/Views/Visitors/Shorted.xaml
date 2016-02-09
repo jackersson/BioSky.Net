@@ -11,7 +11,11 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"             
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"  
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"              
@@ -68,11 +72,11 @@
                     <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
                         <StackPanel.ContextMenu>
                             <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                <MenuItem Header="Open in New Tab"  
+                                <MenuItem Header="{lex:Loc OpenInNewTab}"  
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
                               />
-                                <MenuItem Header="Remove" 
+                                <MenuItem Header="{lex:Loc Remove}" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
                               />
@@ -124,14 +128,14 @@
         </ListBox>
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
-                ToolTip="Delete"
+                ToolTip="{lex:Loc Delete}"
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>
 
         <TextBox  Margin="0, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   
                   Grid.ColumnSpan="2"
-                         Controls:TextBoxHelper.Watermark="Search..."
+                         Controls:TextBoxHelper.Watermark="{lex:Loc Search}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
                          Controls:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCmd, Mode=OneWay}">

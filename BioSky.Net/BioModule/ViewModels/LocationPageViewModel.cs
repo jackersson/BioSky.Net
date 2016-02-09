@@ -39,7 +39,7 @@ namespace BioModule.ViewModels
       OpenTab();
 
 
-      DisplayName = "Location Settings";
+      DisplayName = "LocationSettings";
     }
 
     public void Update(Location location)
@@ -47,6 +47,7 @@ namespace BioModule.ViewModels
       if (location != null)
       {
         CurrentLocation = location.Clone();
+        CurrentLocation.Dbstate = DbState.Update;
       }      
       else
         CurrentLocation = new Location() { LocationName = "", Description = "", Dbstate = DbState.Insert };
@@ -55,10 +56,8 @@ namespace BioModule.ViewModels
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });    
 
     }
-    public async Task LocationUpdatePerformer(DbState state)
-    {
-      CurrentLocation.Dbstate = state;
-
+    public async Task LocationUpdatePerformer()
+    {   
       LocationList locationList = new LocationList();
       locationList.Locations.Add(CurrentLocation);
 
@@ -74,6 +73,9 @@ namespace BioModule.ViewModels
         Location location = null;
         if (currentResult.Status == ResultStatus.Success)
         {
+          if (currentResult.State != DbState.Insert)
+            location = currentResult.Location;
+
           if (currentResult.State != DbState.Remove)
             location = currentResult.Location;
           if (location != null)
@@ -94,7 +96,7 @@ namespace BioModule.ViewModels
 
       if (result == true)
       {
-        await LocationUpdatePerformer(DbState.Insert);
+        await LocationUpdatePerformer();
         /*await GetCurrentImage();
         await UserUpdatePerformer(DbState.Update);*/
       }

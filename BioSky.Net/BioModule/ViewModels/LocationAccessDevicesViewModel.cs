@@ -26,7 +26,7 @@ namespace BioModule.ViewModels
   {
     public LocationAccessDevicesViewModel(IProcessorLocator locator)
     {
-      DisplayName = "Access Devices";
+      DisplayName = "AccessDevices";
 
       _locator    = locator ;
       _bioService = _locator.GetProcessor<IServiceManager>();
@@ -68,26 +68,35 @@ namespace BioModule.ViewModels
       {
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
 
-        if (_location == null)
-          continue;
-        
-        if(item.Locationid == _location.Id)
+        if (_location.Id == null)
         {
-          switch (item.Type)
-          {
-            case AccessDevice.Types.AccessDeviceType.DeviceIn:
-              DevicesInList.Add(dragableItem);
-              AddToGeneralDeviceList(dragableItem, false);
-              break;
-            case AccessDevice.Types.AccessDeviceType.DeviceOut:
-              DevicesOutList.Add(dragableItem);
-              AddToGeneralDeviceList(dragableItem, false);
-              break;
-            case AccessDevice.Types.AccessDeviceType.DeviceNone:
-              AddToGeneralDeviceList(dragableItem, true);
-              break;
-          }
+          if (item.Type == AccessDevice.Types.AccessDeviceType.DeviceNone)
+            AddToGeneralDeviceList(dragableItem, true);
+          else
+            AddToGeneralDeviceList(dragableItem, false);
+
+          continue;
         }
+        else
+        {
+          if (item.Locationid == _location.Id)
+          {
+            switch (item.Type)
+            {
+              case AccessDevice.Types.AccessDeviceType.DeviceIn:
+                DevicesInList.Add(dragableItem);
+                AddToGeneralDeviceList(dragableItem, false);
+                break;
+              case AccessDevice.Types.AccessDeviceType.DeviceOut:
+                DevicesOutList.Add(dragableItem);
+                AddToGeneralDeviceList(dragableItem, false);
+                break;
+              case AccessDevice.Types.AccessDeviceType.DeviceNone:
+                AddToGeneralDeviceList(dragableItem, true);
+                break;
+            }
+          }
+        }     
       }
     } 
    

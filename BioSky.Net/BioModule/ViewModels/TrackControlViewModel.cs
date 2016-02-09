@@ -38,7 +38,7 @@ namespace BioModule.ViewModels
       _visitorsView = new VisitorsViewModel(locator);
 
 
-      DisplayName = "Tracking";
+      DisplayName = "Tracking_";
 
       _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
     }

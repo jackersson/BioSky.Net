@@ -118,22 +118,22 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EnrollFromImageFile" xml:space="preserve">
-    <value>Зарегестрировать из файла изображения</value>
+    <value>Зареєструвати з файлу зображення</value>
   </data>
   <data name="EnrollFromCamera" xml:space="preserve">
-    <value>Зарегестрировать с камеры</value>
+    <value>Зареєструвати з камери</value>
   </data>
   <data name="AddNewUser_" xml:space="preserve">
-    <value>  Добавить нового пользователя</value>
+    <value>  Додати нового користувача</value>
   </data>
   <data name="Tracking_" xml:space="preserve">
-    <value>  Наблюдение</value>
+    <value>  Спостереження</value>
   </data>
   <data name="Users_" xml:space="preserve">
-    <value>  Пользователи</value>
+    <value>  Користувачі</value>
   </data>
   <data name="Visitors_" xml:space="preserve">
-    <value>  Посетители</value>
+    <value>  Відвідувачі</value>
   </data>
   <data name="DatabaseService" xml:space="preserve">
     <value>Database Service</value>
@@ -148,201 +148,201 @@
     <value>Веб-Сайт</value>
   </data>
   <data name="Version" xml:space="preserve">
-    <value>Версия:</value>
+    <value>Версія:</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>Вид</value>
+    <value>Вигляд</value>
   </data>
   <data name="Out" xml:space="preserve">
-    <value>Внешние</value>
+    <value>Зовнішні</value>
   </data>
   <data name="In" xml:space="preserve">
-    <value>Внутренние</value>
+    <value>Внутрішні</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Все</value>
+    <value>Всі</value>
   </data>
   <data name="SignIn" xml:space="preserve">
-    <value>Вход</value>
+    <value>Вхід</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
-    <value>Вы уверены?</value>
+    <value>Ви впевнені?</value>
   </data>
   <data name="Exit" xml:space="preserve">
-    <value>Выход</value>
+    <value>Вихід</value>
   </data>
   <data name="GeneralSettings" xml:space="preserve">
-    <value>Главные Настройки</value>
+    <value>Загальні параметри</value>
   </data>
   <data name="City" xml:space="preserve">
-    <value>Город</value>
+    <value>Місто</value>
   </data>
   <data name="DateOfBirth" xml:space="preserve">
-    <value>Дата Рождения</value>
+    <value>Дата Народження</value>
   </data>
   <data name="Add" xml:space="preserve">
-    <value>Добавить</value>
+    <value>Додати</value>
   </data>
   <data name="AddCard" xml:space="preserve">
-    <value>Добавить Карточку</value>
+    <value>Додати картку</value>
   </data>
   <data name="AddNewLocation" xml:space="preserve">
-    <value>Добавить новое Местоположение</value>
+    <value>Додати нове Розтагування</value>
   </data>
   <data name="AddPerson" xml:space="preserve">
-    <value>Добавить пользователя</value>
+    <value>Додати користувача</value>
   </data>
   <data name="AccessDevices" xml:space="preserve">
-    <value>Доступніе приборы</value>
+    <value>Доступні пристрої</value>
   </data>
   <data name="UploadPhoto" xml:space="preserve">
-    <value>Загрузить фото</value>
+    <value>Завантажити фото</value>
   </data>
   <data name="RegisteredUsers" xml:space="preserve">
-    <value>Зарегестрированные Пользователи</value>
+    <value>Зареєстровані Користувачі</value>
   </data>
   <data name="Register" xml:space="preserve">
-    <value>Зарегестрироваться</value>
+    <value>Зареєструватися</value>
   </data>
   <data name="FirstName" xml:space="preserve">
-    <value>Имя</value>
+    <value>Ім'я</value>
   </data>
   <data name="UserName" xml:space="preserve">
-    <value>Имя Пользователя</value>
+    <value>Ім'я користувача</value>
   </data>
   <data name="Tools" xml:space="preserve">
-    <value>Инструменты</value>
+    <value>Інструменти</value>
   </data>
   <data name="Information" xml:space="preserve">
-    <value>Информация</value>
+    <value>Інформація</value>
   </data>
   <data name="Cards" xml:space="preserve">
-    <value>Карточки</value>
+    <value>Картки</value>
   </data>
   <data name="Comments" xml:space="preserve">
-    <value>Комментарии</value>
+    <value>Коментарі</value>
   </data>
   <data name="Company" xml:space="preserve">
-    <value>Компания</value>
+    <value>Компанія</value>
   </data>
   <data name="LogIn" xml:space="preserve">
-    <value>Логин</value>
+    <value>Логін</value>
   </data>
   <data name="Locations" xml:space="preserve">
-    <value>Места</value>
+    <value>Розташування</value>
   </data>
   <data name="Location" xml:space="preserve">
-    <value>Местоположение</value>
+    <value>Розташування</value>
   </data>
   <data name="LocationName" xml:space="preserve">
-    <value>Название местоположения</value>
+    <value>Назва розташування</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Настройки</value>
+    <value>Параметры</value>
   </data>
   <data name="LocationSettings" xml:space="preserve">
-    <value>Настройки местоположения</value>
+    <value>Параметри Розташування</value>
   </data>
   <data name="About" xml:space="preserve">
-    <value>О программе</value>
+    <value>Про програму</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Описание</value>
+    <value>Опис</value>
   </data>
   <data name="UsersNotification" xml:space="preserve">
-    <value>Оповещение пользователей</value>
+    <value>Попередження користувачів</value>
   </data>
   <data name="OpenInNewTab" xml:space="preserve">
-    <value>Открыть в Новой вкладке</value>
+    <value>Відкрити у новій вкладці</value>
   </data>
   <data name="OpenSettings" xml:space="preserve">
-    <value>Открыть Настройки</value>
+    <value>Відкрити Параметри</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Отменить</value>
+    <value>Скасувати</value>
   </data>
   <data name="RevertChanges" xml:space="preserve">
-    <value>Отменить изменения</value>
+    <value>Повернути зміни</value>
   </data>
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>
   </data>
   <data name="Search" xml:space="preserve">
-    <value>Поиск...</value>
+    <value>Пошук...</value>
   </data>
   <data name="Gender" xml:space="preserve">
-    <value>Пол</value>
+    <value>Стать</value>
   </data>
   <data name="UsersToNotify" xml:space="preserve">
-    <value>Пользователи для опопвещения</value>
+    <value>Користувачі для попередження</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>Пользователь</value>
+    <value>Користувач</value>
   </data>
   <data name="Help" xml:space="preserve">
-    <value>Помощь</value>
+    <value>Допомога</value>
   </data>
   <data name="Rights" xml:space="preserve">
     <value>Права</value>
   </data>
   <data name="CaptureDevices" xml:space="preserve">
-    <value>Приборы захвата</value>
+    <value>Пристрої захоплення</value>
   </data>
   <data name="Apply" xml:space="preserve">
-    <value>Применить</value>
+    <value>Застосувати</value>
   </data>
   <data name="LocalStoragePath" xml:space="preserve">
-    <value>Путь к локальному хранилищу</value>
+    <value>Шлях до локального репозиторія</value>
   </data>
   <data name="Developers" xml:space="preserve">
-    <value>Разработчики:</value>
+    <value>Розробники:</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Редактирование</value>
+    <value>Редактування</value>
   </data>
   <data name="Save" xml:space="preserve">
-    <value>Сохранить</value>
+    <value>Зберегти</value>
   </data>
   <data name="Country" xml:space="preserve">
-    <value>Страна</value>
+    <value>Країна</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Удалить</value>
+    <value>Видалити</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>Удалить</value>
+    <value>Видалити</value>
   </data>
   <data name="DeleteUser" xml:space="preserve">
-    <value>Удалить Пользователя</value>
+    <value>Видалити Користувача</value>
   </data>
   <data name="File" xml:space="preserve">
     <value>Файл</value>
   </data>
   <data name="LastName" xml:space="preserve">
-    <value>Фамилия</value>
+    <value>Прізвище</value>
   </data>
   <data name="Photo" xml:space="preserve">
     <value>Фото</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Язык</value>
+    <value>Мова</value>
   </data>
   <data name="AddNewUser" xml:space="preserve">
-    <value>Добавить нового пользователя</value>
+    <value>Додати нового користувача</value>
   </data>
   <data name="Tracking" xml:space="preserve">
-    <value>Наблюдение</value>
+    <value>Спостереження</value>
   </data>
   <data name="Users" xml:space="preserve">
-    <value>Пользователи</value>
+    <value>Користувачі</value>
   </data>
   <data name="Visitors" xml:space="preserve">
-    <value>Посетители</value>
+    <value>Відвідувачі</value>
   </data>
   <data name="Port" xml:space="preserve">
     <value>Порт</value>
   </data>
   <data name="IpAdress" xml:space="preserve">
-    <value>IP-адрес</value>
+    <value>IP-адреса</value>
   </data>
 </root>

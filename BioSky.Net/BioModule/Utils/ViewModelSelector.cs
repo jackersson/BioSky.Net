@@ -17,6 +17,7 @@ namespace BioModule.Utils
     , VisitorsPage
     , UsersPage
     , TrackPage
+    , GeneralSettings
   }
 
   public enum ShowableContentControl
@@ -37,6 +38,8 @@ namespace BioModule.Utils
       _viewModels.Add(ViewModelsID.VisitorsPage     , Type.GetType("BioModule.ViewModels.VisitorsViewModel"));
       _viewModels.Add(ViewModelsID.UsersPage        , Type.GetType("BioModule.ViewModels.UsersViewModel"   ));
       _viewModels.Add(ViewModelsID.TrackPage        , Type.GetType("BioModule.ViewModels.TrackControlViewModel"));
+      _viewModels.Add(ViewModelsID.GeneralSettings  , Type.GetType("BioModule.ViewModels.GeneralSettingsPageViewModel"));
+
 
 
       _showableControls = new Dictionary<ShowableContentControl, IShowableContent>();

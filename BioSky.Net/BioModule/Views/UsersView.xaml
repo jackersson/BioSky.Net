@@ -10,7 +10,13 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:cal="http://www.caliburnproject.org"    
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"             
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:catel="http://catel.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             xmlns:scm="clr-namespace:System;assembly=mscorlib"             
              mc:Ignorable="d" 
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
@@ -28,7 +34,6 @@
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
-            
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -50,7 +55,7 @@
         <ListBox BorderThickness="1" Grid.ColumnSpan="5"
                  Grid.Column="0" HorizontalAlignment="Stretch" 
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
-                 ItemsSource="{Binding Users}"                   
+                 ItemsSource="{Binding UsersCollectionView}"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
                  SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
@@ -64,11 +69,11 @@
                     <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
                         <StackPanel.ContextMenu>
                             <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                <MenuItem Header="Open in New Tab"  
+                                <MenuItem Header="{lex:Loc OpenInNewTab}"  
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage('true')]"
                                           />
-                                <MenuItem Header="Add New User" 
+                                <MenuItem Header="{lex:Loc AddNewUser}" 
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]"
                               />
                             </ContextMenu>
@@ -94,95 +99,27 @@
             </ListBox.ItemsPanel>
         </ListBox>
 
-
-
-
-
-
-        <!-- <DataGrid 
-            BorderThickness="1" 
-                  Grid.Column="0" HorizontalAlignment="Stretch" 
-            Grid.ColumnSpan="5"
-                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
-                  ItemsSource="{Binding Users}"                
-                  GridLinesVisibility="All"            
-                  AutoGenerateColumns="False"
-                  CanUserSortColumns="True" CanUserAddRows="False"
-                  materialDesign:DataGridAssist.CellPadding="13 8 8 8"
-                  materialDesign:DataGridAssist.ColumnHeaderPadding="8"           
-            cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
-                                [Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"            
-                              
-                  ColumnHeaderStyle="{StaticResource MaterialDesignDataGridColumnHeader}"
-            
-            >
-
-            <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=TwoWay}"                                        
-                                        RenderOptions.ClearTypeHint="Enabled"
-                                        TextOptions.TextFormattingMode="Display">
-                    <DataGridCheckBoxColumn.Header>
-                        
-                        <Border Background="Transparent" Padding="6 0 6 0" HorizontalAlignment="Center">
-                            <CheckBox HorizontalAlignment="Center"                                               
-                                              DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext}"
-                                              IsChecked="{Binding IsAllItemsSelected}" />
-                        </Border>
-                    </DataGridCheckBoxColumn.Header>
-                </DataGridCheckBoxColumn>
-
-                <DataGridTemplateColumn Header="Photo" IsReadOnly="True" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Width="32" Height="32" Source="{Binding Thumbnail, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}">
-                           
-                            </Image>
-
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTextColumn Header="First name" IsReadOnly="True" Binding="{Binding Firstname}"/>
-                <DataGridTextColumn Header="Last  name" IsReadOnly="True" Binding="{Binding Lastname}"/>
-                <DataGridTextColumn Header="Gender"     IsReadOnly="True" Binding="{Binding Gender}"/>
-                <DataGridTextColumn Header="Rights"     IsReadOnly="True" Binding="{Binding Rights}"/>               
-            </DataGrid.Columns>
-
-            <DataGrid.ContextMenu >
-                <ContextMenu IsEnabled="True" >
-                    <MenuItem Header="Open in New Tab"  
-                              IsEnabled="{Binding CanOpenInNewTab, Mode=TwoWay}"
-                              cal:Message.Attach="[Event Click] = [Action ShowUserPage('true')]"
-                              />
-                    <MenuItem Header="Add New User" 
-                              cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]"
-                              />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-        </DataGrid>
-
         <Button  Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="3" 
                  Grid.Row="0" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" 
-                 ToolTip="Add User"
+                 ToolTip="{lex:Loc AddNewUser}"
                  cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
         </Button>
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
                 IsEnabled="{Binding IsDeleteButtonEnabled}"
-                ToolTip="Delete"
+                ToolTip="{lex:Loc Delete}"
                 cal:Message.Attach="[Event Click] = [Action OnDeleteUsers()]"
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
-        </Button>-->
+        </Button>       
 
         <TextBox x:Name="SearchBox" Margin="0, 5, 0, 5"  Grid.Column="0"  Grid.Row="0"   
-                         Controls:TextBoxHelper.Watermark="Search..."
+                         Controls:TextBoxHelper.Watermark="{lex:Loc Search}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"             
+                         Controls:TextBoxHelper.ClearTextButton="True" 
+                 
                     cal:Message.Attach="[Event TextChanged] = [Action OnSearchTextChanged(SearchBox.Text)]"         
                   >
           

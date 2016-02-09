@@ -245,7 +245,7 @@ namespace BioModule.Utils
         if (personFound)
           return person.Firstname;
       }
-      return null;
+      return "Undefined";
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
@@ -273,7 +273,7 @@ namespace BioModule.Utils
         if (personFound)
           return person.Lastname;
       }
-      return null;
+      return "Undefined";
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {

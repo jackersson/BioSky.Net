@@ -9,6 +9,10 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:UserPhotoViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
@@ -34,7 +38,7 @@
         <Button Width="48" Height="48" Grid.Column="2" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Row="0"               
-                ToolTip="Enroll from Camera"
+                ToolTip="{lex:Loc EnrollFromCamera}"
                 cal:Message.Attach="[Event Click]=[Action EnrollFromCamera]"               
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}" 
@@ -44,14 +48,14 @@
         <Button Width="48" Height="48" Grid.Column="3" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Row="0"               
-                ToolTip="Enroll from image file"
+                ToolTip="{lex:Loc EnrollFromImageFile}"
                 cal:Message.Attach="[Event Click]=[Action EnrollFromPhoto]"               
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}"
                    Height="24" Width="24" />
         </Button>
 
-        <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
+        <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 cal:Message.Attach="[Event Click]=[Action DeletePhoto]"

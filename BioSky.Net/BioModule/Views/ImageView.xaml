@@ -8,6 +8,10 @@
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              x:Name="ImageViewModel"             
              d:DesignHeight="300" d:DesignWidth="300">
@@ -99,20 +103,20 @@
         <Controls:ToggleSwitch x:Name="Switch" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                    cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"                               
                                    IsChecked="{Binding ZoomToFitState, Mode=TwoWay}"                                
-                                   OnLabel="Fit On"
-                                   OffLabel="Fit Off" Margin="0,6"  >
+                                   OnLabel="{lex:Loc FitOn}"
+                                   OffLabel="{lex:Loc FitOff}" Margin="0,6"  >
 
 
         </Controls:ToggleSwitch>
 
         <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="Cancel"
+                ToolTip="{lex:Loc Cancel}"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
         <Button cal:Message.Attach="[Event Click] = [Action UploadClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="Upload photo"
+                ToolTip="{lex:Loc UploadPhoto}"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}" />
         </Button>

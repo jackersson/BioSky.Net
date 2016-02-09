@@ -9,6 +9,10 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              
@@ -41,14 +45,14 @@
                 Grid.Row="1" Grid.RowSpan="3"
                 Visibility="{Binding CanAddNewCard, Converter={StaticResource BooleanToVisibilityConverter}}"
                 
-                ToolTip="Add Card"
+                ToolTip="{lex:Loc AddCard}"
                 cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}"
                    Height="32" Width="32" />
         </Button>
 
-        <Button ToolTip="Delete" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" 
+        <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 cal:Message.Attach="[Event Click]=[Action Remove('false')]"

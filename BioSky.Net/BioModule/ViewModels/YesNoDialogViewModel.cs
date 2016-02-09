@@ -12,12 +12,12 @@ namespace BioModule.ViewModels
 {
   public class YesNoDialogViewModel : Screen
   {
-    public YesNoDialogViewModel( string title = "Custom Dialog", string dialogMessage = "Are you sure?" )
+    public YesNoDialogViewModel(string title = "Custom Dialog", string dialogMessage = "AreYouSure")
     {
       Update(title, dialogMessage);      
     }
 
-    public void Update(string title = "Custom Dialog", string dialogMessage = "Are you sure?")
+    public void Update(string title = "Custom Dialog", string dialogMessage = "AreYouSure")
     {
       DisplayName = title;
       DialogMessage = dialogMessage;

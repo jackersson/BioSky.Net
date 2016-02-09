@@ -7,6 +7,10 @@
                    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                    xmlns:cal="http://www.caliburnproject.org" 
                    xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+                   xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+                   lex:LocalizeDictionary.DesignCulture="uk-UA"
+                   lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+                   lex:ResxLocalizationProvider.DefaultDictionary="lang"
                    mc:Ignorable="d" 
                    WindowStartupLocation="CenterOwner"
                    ShowMaxRestoreButton="False" 
@@ -35,6 +39,7 @@
         <Button 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
+                 ToolTip="{lex:Loc Apply}"
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="1" Grid.Row="1" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
@@ -42,14 +47,19 @@
 
         <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
-                Grid.Column="2" Grid.Row="1" 
+                Grid.Column="2" Grid.Row="1" ToolTip="{lex:Loc Cancel}"
                 cal:Message.Attach="[Event Click]=[Action Cancel]">
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
-
-        <Label  Content="{Binding DialogMessage}" HorizontalAlignment="Left" 
+        
+        <Grid>
+            <lex:LocProxy Source="{Binding DialogMessage}" x:Name="Proxy" PrependType="False" />
+            <Label  Content="{Binding Result, ElementName=Proxy}" HorizontalAlignment="Left" 
                 VerticalAlignment="Top" FontSize="20"
                 Width="150" Grid.ColumnSpan="2" Height="74"/>
+        </Grid>
+
+
 
     </Grid>
 </metro:MetroWindow>

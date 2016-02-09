@@ -27,13 +27,14 @@ using BioService;
 using BioContracts;
 using Google.Protobuf.Collections;
 
+
 namespace BioModule.ViewModels
 {
   public class UsersViewModel : Screen
   {
     public UsersViewModel(IProcessorLocator locator, IWindowManager windowManager)
     {
-      DisplayName = "Users";
+      DisplayName = "Users_";
 
       _locator       = locator;
       _windowManager = windowManager;
@@ -48,115 +49,65 @@ namespace BioModule.ViewModels
       _database.PhotoHolder.DataChanged  += RefreshData;
 
       IsDeleteButtonEnabled = false;
-    }
 
+      Users = new AsyncObservableCollection<Person>();
+      Person per1 = new Person(){ Firstname = "Sasha", Lastname = "Iskra",  Rights = Person.Types.Rights.Manager};
+      Person per2 = new Person() { Firstname = "Taras", Lastname = "Lishenko", Rights = Person.Types.Rights.Manager };
+      Person per3 = new Person() { Firstname = "Viktor", Lastname = "Karnaushenkov", Rights = Person.Types.Rights.Manager };
+      Person per4 = new Person() { Firstname = "Alexey", Lastname = "Iskra", Rights = Person.Types.Rights.Manager };
+      Person per5 = new Person() { Firstname = "Elena", Lastname = "Dolgova", Rights = Person.Types.Rights.Supervisor };
+      Person per6 = new Person() { Firstname = "Yaroslav", Lastname = "Shubert", Rights = Person.Types.Rights.Manager };
+      Person per7 = new Person() { Firstname = "Макс", Lastname = "Репинетский", Rights = Person.Types.Rights.Manager };
+      Person per8 = new Person() { Firstname = "Natasha", Lastname = "Goroh", Rights = Person.Types.Rights.Manager };
+      Person per9 = new Person() { Firstname = "Tanya", Lastname = "Goroh", Rights = Person.Types.Rights.Operator };      
+
+      Users.Add(per1);
+      Users.Add(per3);
+      Users.Add(per2);
+      Users.Add(per4);
+      Users.Add(per5);
+      Users.Add(per6);
+      Users.Add(per7);
+      Users.Add(per8);
+      Users.Add(per9);
+
+      UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
+      
+    }
+    #region Database
     private void RefreshData()
     {
-      if (!IsActive)
-        return;
+      /*
+            if (!IsActive)
+              return;
 
-      Users = null;
-      Users = _database.PersonHolder.Data;
-    }   
+            Users = null;
+            Users = _database.PersonHolder.Data;*/
+      UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
+    }  
 
-    
-    protected override void OnActivate()
-    {          
-      base.OnActivate();
-      RefreshData();
-    }
-  
-    private AsyncObservableCollection<Person> _users;
-    public AsyncObservableCollection<Person> Users
+    #endregion
+
+    #region BioService
+    private void DatabaseService_PersonsUpdated(PersonList list, Result result)
     {
-      get { return _users; }
-      set
-      {
-        if (_users != value)
-        {
-          _users = value;
-          NotifyOfPropertyChange(() => Users);
-        }
-      }
+      //PersonUpdateResultProcessing(list, result);
+
     }
 
-    /*
-    private ObservableCollection<User> _filteredUsers;
-    public ObservableCollection<User> FilteredUsers
+    #endregion
+
+    #region Interface
+    public void OnDeleteUsers()
     {
-      get { return _filteredUsers; }
-      set
-      {
-        if (_filteredUsers != value)
-        {
-          _filteredUsers = value;
-          NotifyOfPropertyChange(() => FilteredUsers);
-        }
-      }
-    }
-    */
-    private bool _isSelected;
-    public bool IsSelected
-    {
-      get { return _isSelected; }
-      set
-      {
-        if (_isSelected != value)
-        {
-          _isSelected = value;
-          NotifyOfPropertyChange(() => IsSelected);
-        }
-      }
-    }
-
-    private bool _isDeleteButtonEnabled;
-    public bool IsDeleteButtonEnabled
-    {
-      get { return _isDeleteButtonEnabled; }
-      set
-      {
-        if (_isDeleteButtonEnabled != value)
-        {
-          _isDeleteButtonEnabled = value;
-          NotifyOfPropertyChange(() => IsDeleteButtonEnabled);
-        }
-      }
-    }
-
-    private bool? _isAllItemsSelected;
-    public bool? IsAllItemsSelected
-    {
-      get { return _isAllItemsSelected; }
-      set
-      {
-        if (_isAllItemsSelected == value) return;
-
-        _isAllItemsSelected = value;
-
-        if (_isAllItemsSelected.HasValue)
-          //SelectAll(_isAllItemsSelected.Value, FilteredVisitors);
-
-          NotifyOfPropertyChange(() => IsAllItemsSelected);
-      }
-    }
-
-    private ObservableCollection<long> _selectedItemIds;
-    public ObservableCollection<long> SelectedItemIds
-    {
-      get { return _selectedItemIds; }
-      set
-      {
-        if (_selectedItemIds != value)
-        {
-          _selectedItemIds = value;
-          NotifyOfPropertyChange(() => SelectedItemIds);
-        }
-      }
+      //await UserUpdatePerformer(DbState.Remove);   
+      Person p = new Person() { Firstname = "Test", Lastname = "Test" };
+      Users.Add(p);
     }
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)
     {
-      
+
       IList selectedRecords = e.AddedItems as IList;
       IList unselectedRecords = e.RemovedItems as IList;
 
@@ -170,26 +121,103 @@ namespace BioModule.ViewModels
         SelectedItemIds.Remove(currentUser.Id);
       }
 
-      if (SelectedItemIds.Count >= 1)      
-        IsDeleteButtonEnabled = true;      
-      else      
-        IsDeleteButtonEnabled = false;            
+      if (SelectedItemIds.Count >= 1)
+        IsDeleteButtonEnabled = true;
+      else
+        IsDeleteButtonEnabled = false;
     }
-
-    public void OnDeleteUsers()
+    protected override void OnActivate()
     {
-      //await UserUpdatePerformer(DbState.Remove);      
+      base.OnActivate();
+      RefreshData();
     }
-
-   
-
-    private void DatabaseService_PersonsUpdated(PersonList list, Result result)
+    public void ShowUserPage(bool isExistingUser)
     {
-      //PersonUpdateResultProcessing(list, result);
-    }
-   
+      //TODO refactor
+      if (!isExistingUser)
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { null });
+      else
+      {
+        foreach (long id in SelectedItemIds)
+        {
+          Person person = null;
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(id, out person);
 
-    //*************************************************************Context Menu******************************************\
+          if (personFound)
+          {
+            _selector.ShowContent(ShowableContentControl.TabControlContent
+                                 , ViewModelsID.UserPage
+                                 , new object[] { person });
+          }
+        }
+      }
+    }
+    public void OnSearchTextChanged(string s)
+    {
+      SearchText = s;
+
+      UsersCollectionView.Filter = item =>
+      {
+        Person vitem = item as Person;
+        if (vitem == null) return false;
+
+        if (String.IsNullOrEmpty(SearchText))
+          return true;
+
+        if ((item as Person).Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
+            (item as Person).Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+          return true;
+        }
+        return false;
+      };
+    }
+    public void OnMouseRightButtonDown(Person user)
+    {
+      CanOpenInNewTab = (user != null);
+      SelectedItem = user;
+    }
+
+    public void OnMouseDoubleClick(Person user)
+    {
+      if (user != null)
+      {
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
+                             , new object[] { user });
+      }
+    }
+    #endregion
+
+    #region UI
+    private string _searchText;
+    public string SearchText
+    {
+      get { return _searchText; }
+      set
+      {
+        if (_searchText != value)
+        {
+          _searchText = value;
+
+          NotifyOfPropertyChange(() => SearchText);
+        }
+      }
+    }
+
+    private ICollectionView _usersCollectionView;
+    public ICollectionView UsersCollectionView
+    {
+      get { return _usersCollectionView; }
+      set
+      {
+        if (_usersCollectionView != value)
+        {
+          _usersCollectionView = value;
+
+          NotifyOfPropertyChange(() => UsersCollectionView);
+        }
+      }
+    }
 
     private Person _selectedItem;
     public Person SelectedItem
@@ -219,71 +247,72 @@ namespace BioModule.ViewModels
       }
     }
 
-    public void OnMouseRightButtonDown(Person user)
+    private AsyncObservableCollection<Person> _users;
+    public AsyncObservableCollection<Person> Users
     {
-      CanOpenInNewTab = (user != null);
-      SelectedItem = user;
-    }
-
-    public void OnMouseDoubleClick(Person user)
-    {
-      if(user != null)
+      get { return _users; }
+      set
       {
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
-                             , new object[] { user });
-      }
-    }
-
-
-    public void ShowUserPage(bool isExistingUser)
-    {
-      //TODO refactor
-      if (!isExistingUser)
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { null });
-      else
-      {
-        foreach (long id in SelectedItemIds)
+        if (_users != value)
         {
-          Person person = null;
-          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(id, out person);
-
-          if (personFound)
-          {
-            _selector.ShowContent( ShowableContentControl.TabControlContent
-                                 , ViewModelsID.UserPage
-                                 , new object[] { person });
-          }
+          _users = value;
+          NotifyOfPropertyChange(() => Users);
         }
       }
-
     }
 
-    //************************************************************SearchBox***************************************************
-
-    public void OnSearchTextChanged(string s)
+    private bool _isSelected;
+    public bool IsSelected
     {
-      /*
-      FilteredUsers.Clear();
-      if (s == "")
+      get { return _isSelected; }
+      set
       {
-        foreach (User user in _users)
-          FilteredUsers.Add(user);
+        if (_isSelected != value)
+        {
+          _isSelected = value;
+          NotifyOfPropertyChange(() => IsSelected);
+        }
       }
-      else
-      {
-
-        IEnumerable<User> filter = Users.Where(x => (x.First_Name_.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0));
-        foreach (User user in filter)
-          FilteredUsers.Add(user);
-      }
-      NotifyOfPropertyChange(() => FilteredUsers);
-      */
     }
+
+    private bool _isDeleteButtonEnabled;
+    public bool IsDeleteButtonEnabled
+    {
+      get { return _isDeleteButtonEnabled; }
+      set
+      {
+        if (_isDeleteButtonEnabled != value)
+        {
+          _isDeleteButtonEnabled = value;
+          NotifyOfPropertyChange(() => IsDeleteButtonEnabled);
+        }
+      }
+    }
+
+    private ObservableCollection<long> _selectedItemIds;
+    public ObservableCollection<long> SelectedItemIds
+    {
+      get { return _selectedItemIds; }
+      set
+      {
+        if (_selectedItemIds != value)
+        {
+          _selectedItemIds = value;
+          NotifyOfPropertyChange(() => SelectedItemIds);
+        }
+      }
+    }
+
+
+    #endregion
+
+    #region Global Variables
     private readonly IWindowManager       _windowManager;
     private readonly IProcessorLocator    _locator      ;
     private readonly ViewModelSelector    _selector     ;
     private readonly IBioEngine           _bioEngine    ;    
     private readonly IServiceManager      _bioService   ;
-    private readonly IBioSkyNetRepository _database     ;
-  }
+    private readonly IBioSkyNetRepository _database;
+    #endregion
+  } 
 }
