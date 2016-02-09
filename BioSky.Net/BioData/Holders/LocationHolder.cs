@@ -14,10 +14,11 @@ namespace BioData.Holders
 
     protected override void UpdateDataSet(IList<Location> list)
     {
-      foreach (Location location in list)             
-        AddToDataSet(location, location.Id);      
+      foreach (Location location in list)
+        Update(location, location.Id);      
     }
 
+    /*
     public override void Update(IList<Location> list, Result result)
     {
       foreach (ResultPair currentResult in result.Status)
@@ -39,6 +40,6 @@ namespace BioData.Holders
       }
       base.Update(list, result);
     }
-
+    */
   }
 }

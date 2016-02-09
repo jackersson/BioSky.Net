@@ -16,111 +16,27 @@ namespace BioGRPC
       _locator   = locator;
 
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
+
+      _database.PhotoHolderByPerson.FullPhotoRequested += PhotoHolderByPerson_FullPhotoRequested;
     }
-    
-   
-    public async Task CaptureDeviceRequest(CommandCaptureDevice command)
+
+    private async void PhotoHolderByPerson_FullPhotoRequested(PhotoList list)
     {
-      try
-      {
-        CaptureDeviceList call = await _client.CaptureDeviceSelectAsync(command);
-        _database.CaptureDeviceHolder.Update(call.CaptureDevices);
+      CommandPhoto cmd = new CommandPhoto();
+      cmd.Description = true;
 
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-    
-    public async Task AccessDeviceRequest(CommandAccessDevice command)
-    {
-      try
-      {
-        AccessDeviceList call = await _client.AccessDeviceSelectAsync(command);
-        _database.AccessDeviceHolder.Update(call.AccessDevices);
+      foreach (Photo ph in list.Photos)      
+        cmd.TargetPhoto.Add(new Photo() { Id = ph.Id });
 
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
+      await PhotosSelect(cmd);
     }
 
-    public async Task LocationRequest(CommandLocation command)
-    {
-      try
-      {
-        LocationList call = await _client.LocationSelectAsync(command);
-        _database.LocationHolder.Update(call.Locations);
-
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task PhotoRequest(CommandPhoto command)
-    {
-      try
-      {
-        PhotoList call = await _client.PhotoSelectAsync(command);
-        _database.PhotoHolder.Update(call.Photos);
-
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task CardRequest(CommandCard command)
-    {
-      try
-      {
-        CardList call = await _client.CardSelectAsync(command);
-        _database.CardHolder.Update(call.Cards);
-
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task VisitorRequest(CommandVisitor command)
-    {
-      try
-      {
-        VisitorList call = await _client.VisitorSelectAsync(command);
-        _database.VisitorHolder.Update(call.Visitors);
-
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task PersonRequest(CommandPerson command)
+    public async Task PersonsSelect(CommandPersons command)
     {
       try
       {
         PersonList call = await _client.PersonSelectAsync(command);
-        _database.PersonHolder.Update(call.Persons);
+        _database.Persons.Init(call);
 
         Console.WriteLine(call.ToString());
       }
@@ -131,23 +47,113 @@ namespace BioGRPC
       }
     }
 
-    public async Task PersonUpdateRequest(Person person)
-    {
-      if (person == null)
-        return;
-
-      PersonList personList = new PersonList();
-      personList.Persons.Add(person);
-
-      await PersonUpdateRequest(personList);
-    }
-
-    public async Task PersonUpdateRequest(PersonList list)
+    public async Task VisitorsSelect(CommandVisitors command)
     {
       try
       {
-        Result call = await _client.PersonUpdateAsync(list);
-        _database.PersonHolder.Update(list.Persons, call);      
+        VisitorList call = await _client.VisitorSelectAsync(command);
+        _database.Visitors.Init(call);
+
+        Console.WriteLine(call.ToString());
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task LocationsSelect(CommandLocations command)
+    {
+      try
+      {
+        LocationList call = await _client.LocationSelectAsync(command);
+        _database.Locations.Init(call);
+
+        Console.WriteLine(call.ToString());
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task PhotosSelect(CommandPhoto command)
+    {
+      try
+      {
+        PhotoList call = await _client.PhotoSelectAsync(command);
+
+        _database.PhotoHolder.Update(call.Photos);
+        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
+
+       // Console.WriteLine(call.ToString());
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task PersonUpdate(PersonList persons)
+    {
+      try
+      {
+        PersonList call = await _client.PersonUpdateAsync(persons);
+        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
+
+        Console.WriteLine(call.ToString());
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task VisitorUpdate(VisitorList visitors)
+    {
+      try
+      {
+        VisitorList call = await _client.VisitorUpdateAsync(visitors);
+        _database.Visitors.Update(visitors, call);
+        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
+
+        Console.WriteLine(call.ToString());
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task LocationUpdate(LocationList locations)
+    {
+      try
+      {
+        LocationList call = await _client.LocationUpdateAsync(locations);
+        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
+
+        Console.WriteLine(call.ToString());
+      }
+      catch (RpcException e)
+      {
+        Log("RPC failed " + e);
+        throw;
+      }
+    }
+
+    public async Task AddSocket(SocketConfiguration config)
+    {
+      try
+      {
+        Response call = await _client.AddSocketAsync(config);
+        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
+
+        Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
       {
@@ -157,155 +163,7 @@ namespace BioGRPC
     }
 
 
-    public async Task CardUpdateRequest(Card card)
-    {
-      if (card == null)
-        return;
 
-      CardList cardList = new CardList();
-      cardList.Cards.Add(card);
-
-      await CardUpdateRequest(cardList);
-    }
-
-    public async Task CardUpdateRequest(CardList list)
-    {
-      try
-      {
-        Result call = await _client.CardUpdateAsync(list);
-        _database.CardHolder.Update(list.Cards, call);        
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-    public async Task VisitorUpdateRequest(Visitor visitor)
-    {
-      if (visitor == null)
-        return;
-
-      VisitorList visitorList = new VisitorList();
-      visitorList.Visitors.Add(visitor);
-
-      await VisitorUpdateRequest(visitorList);
-    }
-
-    public async Task VisitorUpdateRequest(VisitorList list)
-    {
-      try
-      {
-        Result call = await _client.VisitorUpdateAsync(list);
-        _database.VisitorHolder.Update(list.Visitors, call);        
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-
-    public async Task LocationUpdateRequest(Location location)
-    {
-      if (location == null)
-        return;
-
-      LocationList locationList = new LocationList();
-      locationList.Locations.Add(location);
-
-      await LocationUpdateRequest(locationList);
-    }
-
-    public async Task LocationUpdateRequest(LocationList list)
-    {
-      try
-      {
-        Result call = await _client.LocationUpdateAsync(list);
-        _database.LocationHolder.Update(list.Locations, call);
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task AccessDeviceUpdateRequest(AccessDevice accessDevice)
-    {
-      if (accessDevice == null)
-        return;
-
-      AccessDeviceList accessDeviceList = new AccessDeviceList();
-      accessDeviceList.AccessDevices.Add(accessDevice);
-
-      await AccessDeviceUpdateRequest(accessDeviceList);
-    }
-
-    public async Task AccessDeviceUpdateRequest(AccessDeviceList list)
-    {
-      try
-      {
-        Result call = await _client.AccessDeviceUpdateAsync(list);
-        _database.AccessDeviceHolder.Update(list.AccessDevices, call);
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task CaptureDeviceUpdateRequest(CaptureDevice captureDevice)
-    {
-      if (captureDevice == null)
-        return;
-
-      CaptureDeviceList captureDeviceList = new CaptureDeviceList();
-      captureDeviceList.CaptureDevices.Add(captureDevice);
-
-      await CaptureDeviceUpdateRequest(captureDeviceList);
-    }
-
-    public async Task CaptureDeviceUpdateRequest(CaptureDeviceList list)
-    {
-      try
-      {
-        Result call = await _client.CaptureDeviceUpdateAsync(list);
-        _database.CaptureDeviceHolder.Update(list.CaptureDevices, call);
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task PhotoUpdateRequest(Photo photo)
-    {
-      if (photo == null)
-        return;
-
-      PhotoList photoList = new PhotoList();
-      photoList.Photos.Add(photo);
-
-      await PhotoUpdateRequest(photoList);
-    }
-
-    public async Task PhotoUpdateRequest(PhotoList list)
-    {
-      try
-      {
-        Result call = await _client.PhotoUpdateAsync(list);
-        _database.PhotoHolder.Update(list.Photos, call);
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
 
     private void Log(string s, params object[] args)
     {

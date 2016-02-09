@@ -15,9 +15,11 @@ namespace BioData.Holders
     protected override void UpdateDataSet(IList<Person> list)
     {
       foreach (Person person in list)
-        AddToDataSet(person, person.Id);
+        Update(person, person.Id);
     }
+        
 
+    /*
     public override void Update(IList<Person> list, Result result)
     {     
       foreach (ResultPair currentResult in result.Status)
@@ -41,7 +43,7 @@ namespace BioData.Holders
       base.Update(list, result);
     }
 
-    
+    */
 
   }
 }

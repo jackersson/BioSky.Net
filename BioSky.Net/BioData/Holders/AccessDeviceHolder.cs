@@ -15,9 +15,10 @@ namespace BioData.Holders
     protected override void UpdateDataSet(IList<AccessDevice> list)
     {
       foreach (AccessDevice accessDevice in list)
-        AddToDataSet(accessDevice, accessDevice.Id);
+        Update(accessDevice, accessDevice.Id);
     }
 
+    /*
     public override void Update(IList<AccessDevice> list, Result result)
     {
       foreach (ResultPair currentResult in result.Status)
@@ -39,6 +40,7 @@ namespace BioData.Holders
       }
       base.Update(list, result);
     }
+    */
 
   }
 }

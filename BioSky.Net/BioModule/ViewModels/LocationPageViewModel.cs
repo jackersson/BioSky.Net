@@ -49,26 +49,30 @@ namespace BioModule.ViewModels
         CurrentLocation = location.Clone();
       }      
       else
-        CurrentLocation = new Location() { LocationName = "", Description = "", Dbstate = DbState.Insert };
+        CurrentLocation = new Location() { LocationName = "", Description = "", EntityState = EntityState.Added };
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });    
 
     }
-    public async Task LocationUpdatePerformer(DbState state)
+
+    /*
+    public async Task LocationUpdatePerformer(EntityState state)
     {
-      CurrentLocation.Dbstate = state;
+      CurrentLocation.EntityState = state;
 
       LocationList locationList = new LocationList();
       locationList.Locations.Add(CurrentLocation);
 
-      _database.LocationHolder.DataUpdated += LocationHolder_DataUpdated;
+      //_database.LocationHolder.DataUpdated += LocationHolder_DataUpdated;
 
-      await _bioService.DatabaseService.LocationUpdateRequest(locationList);
+      //await _bioService.DatabaseService.LocationUpdateRequest(locationList);
     }
+    */
+    /*
     private void LocationHolder_DataUpdated(IList<Location> list, Result result)
     {
-      _database.LocationHolder.DataUpdated -= LocationHolder_DataUpdated;
+     // _database.LocationHolder.DataUpdated -= LocationHolder_DataUpdated;
       foreach (ResultPair currentResult in result.Status)
       {
         Location location = null;
@@ -85,6 +89,7 @@ namespace BioModule.ViewModels
         MessageBox.Show("Location: " + location.LocationName + " " + currentResult.Status.ToString());
       }
     }
+    */
     public async void Apply()
     {
       foreach (IUpdatable updatableScreen in Items)
@@ -94,7 +99,7 @@ namespace BioModule.ViewModels
 
       if (result == true)
       {
-        await LocationUpdatePerformer(DbState.Insert);
+       // await LocationUpdatePerformer(EntityState.Insert);
         /*await GetCurrentImage();
         await UserUpdatePerformer(DbState.Update);*/
       }

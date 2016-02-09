@@ -49,7 +49,7 @@ namespace BioModule.ViewModels
       if (user == null)
         return;
 
-      if (user.Dbstate == DbState.Insert)
+      if (user.EntityState == EntityState.Added)
         return;
 
       IsEnabled = true;
@@ -72,7 +72,7 @@ namespace BioModule.ViewModels
       if (!CanAddNewCard)
         return;
 
-      DetectedCard.Dbstate = DbState.Insert;
+      DetectedCard.EntityState = EntityState.Added;
 
       Card newCard = new Card(DetectedCard);
       UserCards.Add(newCard);
@@ -112,30 +112,32 @@ namespace BioModule.ViewModels
     #endregion
 
     #region BioService
-    public async Task CardUpdatePerformer(DbState dbState)
+    public async Task CardUpdatePerformer(EntityState dbState)
     {
-      CardList cardList = new CardList();
-      if (dbState == DbState.None)
+      PersonList personChangedList = new PersonList();
+
+      if (dbState == EntityState.Unchanged)
       {
         foreach (Card card in UserCards)
         {
-          if (card.Dbstate != DbState.None)
-            cardList.Cards.Add(card);
+          if (card.EntityState != EntityState.Unchanged)
+            _user.Cards.Add(card);
         }
       }
-      else if (dbState == DbState.Remove)
+      else if (dbState == EntityState.Deleted)
       {
-        selectedCard.Dbstate = DbState.Remove;
-        cardList.Cards.Add(selectedCard);       
+        ///selectedCard.EntityState = EntityState.Deleted;
+        //cardList.Cards.Add(selectedCard);       
       }
 
-      _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated; 
+     // _bioEngine.Database().Persons.DataChanged += CardHolder_DataUpdated; 
 
-      await _bioService.DatabaseService.CardUpdateRequest(cardList);
+     // await _bioService.DatabaseService.CardUpdateRequest(cardList);
     }
+    /*
     private void CardHolder_DataUpdated(System.Collections.Generic.IList<Card> list, Result result)
     {      
-      _bioEngine.Database().CardHolder.DataUpdated -= CardHolder_DataUpdated; 
+      //_bioEngine.Database().CardHolder.DataUpdated -= CardHolder_DataUpdated; 
 
       Card card = null;
       foreach (ResultPair currentResult in result.Status)
@@ -152,13 +154,14 @@ namespace BioModule.ViewModels
         }
       }
     }
+    */
 
     #endregion
 
     #region Interface
     public async void Apply()
     {
-      await CardUpdatePerformer(DbState.None);
+      await CardUpdatePerformer(EntityState.Unchanged);
     }
 
     public async void Remove(bool all)
@@ -166,10 +169,11 @@ namespace BioModule.ViewModels
       if(!all)
       {
         if (selectedCard != null)
-          await CardUpdatePerformer(DbState.Remove);
+          await CardUpdatePerformer(EntityState.Deleted);
       }
       else if(all)
       {
+        /*
         CardList cardList = new CardList();
         foreach(Card card in UserCards)
         {
@@ -180,6 +184,7 @@ namespace BioModule.ViewModels
         _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated;
 
         await _bioService.DatabaseService.CardUpdateRequest(cardList);
+        */
       }
     }
 

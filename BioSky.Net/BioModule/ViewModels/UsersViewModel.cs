@@ -43,9 +43,9 @@ namespace BioModule.ViewModels
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
 
       _selectedItemIds = new ObservableCollection<long>();
-
-      _database.PersonHolder.DataChanged += RefreshData;      
-      _database.PhotoHolder.DataChanged  += RefreshData;
+      
+      _database.Persons.DataChanged     += RefreshData;
+      _database.PhotoHolder.DataChanged += RefreshData;
 
       IsDeleteButtonEnabled = false;
     }
@@ -80,21 +80,6 @@ namespace BioModule.ViewModels
       }
     }
 
-    /*
-    private ObservableCollection<User> _filteredUsers;
-    public ObservableCollection<User> FilteredUsers
-    {
-      get { return _filteredUsers; }
-      set
-      {
-        if (_filteredUsers != value)
-        {
-          _filteredUsers = value;
-          NotifyOfPropertyChange(() => FilteredUsers);
-        }
-      }
-    }
-    */
     private bool _isSelected;
     public bool IsSelected
     {
@@ -181,14 +166,14 @@ namespace BioModule.ViewModels
       //await UserUpdatePerformer(DbState.Remove);      
     }
 
-   
+   /*
 
     private void DatabaseService_PersonsUpdated(PersonList list, Result result)
     {
       //PersonUpdateResultProcessing(list, result);
     }
    
-
+    */
     //*************************************************************Context Menu******************************************\
 
     private Person _selectedItem;

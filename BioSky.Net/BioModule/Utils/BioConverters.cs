@@ -145,11 +145,11 @@ namespace BioModule.Utils
         if(person != null)
         {
           Photo photo = null;
-          bool photoFound = _photoHolder.DataSet.TryGetValue(person.Thumbnail, out photo);
+          bool photoFound = _photoHolder.DataSet.TryGetValue(person.Thumbnailid, out photo);
 
           if (photoFound)
           {
-            string fullFilePathway = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
+            string fullFilePathway = _database.LocalStorage.LocalStoragePath + photo.FileLocation;
             if (File.Exists(fullFilePathway))
             {
               BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));

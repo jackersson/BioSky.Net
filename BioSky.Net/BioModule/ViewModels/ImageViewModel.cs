@@ -134,12 +134,12 @@ namespace BioModule.ViewModels
         Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(path ));
         Photo newphoto = new Photo()
         {
-          Dbstate = DbState.Insert
+          EntityState = EntityState.Added
           , Description = description
           , FileLocation = ""
           , FirLocation = ""
-          , Type = PhotoSizeType.Full
-          , Origin = PhotoOriginType.Loaded
+          , SizeType = PhotoSizeType.Full
+          , OriginType = PhotoOriginType.Loaded
         };
         CurrentImagePhoto = newphoto;
       }

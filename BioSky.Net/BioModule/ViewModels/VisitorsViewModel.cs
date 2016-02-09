@@ -40,8 +40,8 @@ namespace BioModule.ViewModels
 
       LocationId = -1;
 
-      _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.VisitorHolder.DataChanged += RefreshData;   
+      _database.Visitors.DataChanged    += RefreshData;
+      _database.PhotoHolder.DataChanged += RefreshData;
     } 
 
     public void OnDataContextChanged()
@@ -56,6 +56,9 @@ namespace BioModule.ViewModels
     
     private void RefreshData()
     {
+      if (!IsActive)
+        return;
+
       Visitors = null;
       Visitors = _database.VisitorHolder.Data;    
       GetLastVisitor();
@@ -207,7 +210,7 @@ namespace BioModule.ViewModels
           if ( personExists )
           {
             Photo photo = null;
-            bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(person.Thumbnail, out photo);
+            bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(person.Thumbnailid, out photo);
             if ( photoExists )
             {
               /*

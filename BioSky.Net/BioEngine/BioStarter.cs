@@ -46,28 +46,18 @@ namespace BioEngine
     {
       try
       {
-        
-        BioService.CommandPerson commandPerson = new BioService.CommandPerson();
-        await _serviceManager.DatabaseService.PersonRequest(commandPerson);
+        BioService.CommandPersons commandPerson = new BioService.CommandPersons();
+        await _serviceManager.DatabaseService.PersonsSelect(commandPerson);
 
-        BioService.CommandVisitor commandVisitor = new BioService.CommandVisitor();
-        await _serviceManager.DatabaseService.VisitorRequest(commandVisitor);
+        BioService.CommandVisitors commandVisitor = new BioService.CommandVisitors();
+        await _serviceManager.DatabaseService.VisitorsSelect(commandVisitor);
 
-        BioService.CommandAccessDevice commandAccessDevice = new BioService.CommandAccessDevice();
-        await _serviceManager.DatabaseService.AccessDeviceRequest(commandAccessDevice);
+        BioService.CommandLocations commandLocation = new BioService.CommandLocations();
+        await _serviceManager.DatabaseService.LocationsSelect(commandLocation);
 
-        BioService.CommandCaptureDevice commandCaptureDevice = new BioService.CommandCaptureDevice();
-        await _serviceManager.DatabaseService.CaptureDeviceRequest(commandCaptureDevice);
-
-        BioService.CommandCard commandCard = new BioService.CommandCard();
-        await _serviceManager.DatabaseService.CardRequest(commandCard);
-
-        BioService.CommandLocation commandLocation = new BioService.CommandLocation();
-        await _serviceManager.DatabaseService.LocationRequest(commandLocation);
-        
         BioService.CommandPhoto commandPhoto = new BioService.CommandPhoto();
-        await _serviceManager.DatabaseService.PhotoRequest(commandPhoto);
-        
+        await _serviceManager.DatabaseService.PhotosSelect(commandPhoto);
+
       }
       catch (Exception ex)
       {

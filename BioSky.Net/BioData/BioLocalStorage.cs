@@ -15,29 +15,30 @@ namespace BioData
 
     public BioLocalStorage()
     {
-      string mediaParametr           = "MEDIA_PATHWAY:"   ;
-      string faceServiceParametr     = "FACE_SERVICE:"    ;
-      string databaseServiceParametr = "DATABASE_SERVICE:";
+      //string mediaParametr           = "MEDIA_PATHWAY:"   ;
+     /// string faceServiceParametr     = "FACE_SERVICE:"    ;
+      //string databaseServiceParametr = "DATABASE_SERVICE:";
 
+      /*
       string[] allParametrs = { mediaParametr, faceServiceParametr, databaseServiceParametr };
 
       GetConfigFile(allParametrs);
       string mediaPath           = GetParametr(mediaParametr)          ;
       string faceServicePath     = GetParametr(faceServiceParametr)    ;
       string databaseServicePath = GetParametr(databaseServiceParametr);
+      */
+      //if (mediaPath == null)      
+        LocalStoragePath = "F:\\GRPCs\\ClientFolder\\";
 
-      if (mediaPath == null)      
-        LocalStoragePath = "F:\\GRPCs\\ClientFolder";
+     // if (mediaPath == null)
+      //  LocalStoragePath = "";
 
-      if (mediaPath == null)
-        LocalStoragePath = "";
+     // if (mediaPath == null)
+       // LocalStoragePath = "";
 
-      if (mediaPath == null)
-        LocalStoragePath = "";
-
-      LocalStoragePath           = mediaPath          ;
-      FaceServiceStoragePath     = faceServicePath    ;
-      DatabaseServiceStoragePath = databaseServicePath;
+      //LocalStoragePath           = mediaPath          ;
+      //FaceServiceStoragePath     = faceServicePath    ;
+      //DatabaseServiceStoragePath = databaseServicePath;
     }
 
     private string _localStoragePath;

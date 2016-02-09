@@ -19,16 +19,10 @@ namespace BioEngine
       _locator = locator;
       _trackLocations = new AsyncObservableCollection<TrackLocation>();
            
-      _locator.GetProcessor<IBioSkyNetRepository>().LocationHolder.DataChanged += LocationViewModel_DataChanged;
-        
+      _locator.GetProcessor<IBioSkyNetRepository>().Locations.DataChanged += RefreshData;        
     }
 
-    public void LocationViewModel_DataChanged()
-    {
-      Init();
-    }
-
-    public void Init()
+    public void RefreshData()
     {
       IBioSkyNetRepository database           = _locator.GetProcessor<IBioSkyNetRepository>();     
       

@@ -36,19 +36,20 @@ namespace BioModule.ViewModels
       _windowManager       = windowManager;
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
+
       DisplayName = "Photo";
 
       _serviceManager = locator.GetProcessor<IServiceManager>();
 
       UserImages = new AsyncObservableCollection<Photo>();
 
-      _bioUtils = new BioContracts.Common.BioImageUtils();
+      _bioUtils = new BioImageUtils();
       
       _enroller = new Enroller(_captureDeviceEngine, _serviceManager);
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
 
-      _database.PhotoHolder.DataChanged += RefreshData;      
+     // _database.PhotoHolder.DataChanged += RefreshData;      
     }  
 
     #region Update
@@ -57,7 +58,7 @@ namespace BioModule.ViewModels
       if (user == null)
         return;
 
-      if (user.Dbstate == DbState.Insert)
+      if (user.EntityState == EntityState.Added)
         return;
 
       IsEnabled = true;
@@ -71,12 +72,12 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
-      IList<Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
+      //IList<Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
 
-      if (list == null)
-        return;
+     // if (list == null)
+       // return;
 
-      UserImages.Clear();
+      //UserImages.Clear();
 
       /*
       foreach (Photo personPhoto in list)
@@ -85,7 +86,7 @@ namespace BioModule.ViewModels
       }
        */
     }
-
+    /*
     private void RefreshData(IList<Photo> list, Result result)
     {
       if (list == null)
@@ -96,8 +97,8 @@ namespace BioModule.ViewModels
       {
         UserImages.Add(personPhoto);
       }      
-       * */
-    }
+       * 
+    }*/
     #endregion
 
     #region BioService
@@ -125,7 +126,7 @@ namespace BioModule.ViewModels
         _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);
 
       SelectedCaptureDevice = null;
-      _imageViewer.Clear();
+      //_imageViewer.Clear();
 
       CaptureDevicesNames.CollectionChanged -= CaptureDevicesNames_CollectionChanged;
 
@@ -169,6 +170,7 @@ namespace BioModule.ViewModels
 
     private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
     {
+      
       if (feedback.Progress == 100)
       {
         _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
@@ -180,27 +182,30 @@ namespace BioModule.ViewModels
 
         if (NewPhoto != null && feedbackPhoto != null)
         {
-          PhotoList photoList = new PhotoList();
-          feedbackPhoto.Dbstate = DbState.Insert;
-          feedbackPhoto.Description = NewPhoto.Description;
-          feedbackPhoto.Personid = _user.Id;
-          feedbackPhoto.Type = PhotoSizeType.Full;
+          PersonList personList = new PersonList();
+          feedbackPhoto.EntityState = EntityState.Added   ;
+          feedbackPhoto.Description = NewPhoto.Description;         
+          feedbackPhoto.Personid    = _user.Id            ;
+          feedbackPhoto.SizeType    = PhotoSizeType.Full  ;
 
+          Person personWithPhoto = new Person() { Id = _user.Id };
+          personWithPhoto.Photos.Add(feedbackPhoto);
 
-          photoList.Photos.Add(feedbackPhoto);
+          personList.Persons.Add(personWithPhoto);
 
-          _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
+          //_database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
 
-          await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+          await _serviceManager.DatabaseService.PersonUpdate(personList);
         }
 
       }
       if (_imageViewer != null)
         _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
 
-
-      Console.WriteLine(feedback);
+      
+      Console.WriteLine(feedback.Progress);
     }
+    /*
     private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
     {
       _database.PhotoHolder.DataUpdated -= PhotoHolder_DataUpdated;
@@ -218,11 +223,10 @@ namespace BioModule.ViewModels
             {
               string savePath = _bioEngine.Database().LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
               Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-
+              
               byte[] data = NewPhoto.Description.ToByteArray();
-              var fs = new BinaryWriter(new FileStream(savePath, FileMode.CreateNew, FileAccess.Write));
-              fs.Write(data);
-              fs.Close(); 
+              File.WriteAllBytes(savePath, data);
+              
             }               
           }
           else if (currentResult.State == DbState.Remove)
@@ -253,7 +257,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
+    */
     
 
 
@@ -266,7 +270,7 @@ namespace BioModule.ViewModels
     }
     public void EnrollFromPhoto()
     {
-      UploadClick();
+      //UploadClick();
     }
     public void OnSelectionChange()
     {
@@ -276,6 +280,7 @@ namespace BioModule.ViewModels
 
     public void UploadClick()
     {
+      /*
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = false;
       openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -292,12 +297,12 @@ namespace BioModule.ViewModels
 
           NewPhoto = new Photo()
           {
-            Dbstate = DbState.Insert
+            EntityState = EntityState.Added
             , Description = description
             , FileLocation = ""
             , FirLocation = ""
             , Personid = _user.Id
-            , Type = PhotoSizeType.Full
+            , SizeType = PhotoSizeType.Full
           };
 
           _imageViewer.UpdateImage(NewPhoto, filename);
@@ -306,6 +311,7 @@ namespace BioModule.ViewModels
           photoList.Photos.Add(NewPhoto);          
         }
       }
+      */
     }   
    
     public async void DeletePhoto()
@@ -317,14 +323,14 @@ namespace BioModule.ViewModels
         if (SelectedItem == null)
           return;
 
-        SelectedItem.Dbstate = DbState.Remove;
+        SelectedItem.EntityState = EntityState.Deleted;
 
         PhotoList photoList = new PhotoList();
         photoList.Photos.Add(SelectedItem);
 
-        _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
+       // _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
 
-        await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+        //await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
       } 
     } 
 
@@ -336,13 +342,13 @@ namespace BioModule.ViewModels
 
         foreach(Photo photo in UserImages)
         {
-          photo.Dbstate = DbState.Remove;
+          photo.EntityState = EntityState.Deleted;
           photoList.Photos.Add(photo);
         }
 
-        _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
+      //  _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
 
-        await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+        //await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
       }
 
     }

@@ -27,17 +27,20 @@ namespace BioContracts
       _accessDevices  = new Dictionary<string, TrackLocationAccessDeviceObserver>();
       _captureDevices = new Dictionary<string, TrackLocationCaptureDeviceObserver>();
 
-      _database.AccessDeviceHolder.DataChanged  += AccessDevicesRepository_DataChanged;
-      _database.CaptureDeviceHolder.DataChanged += CaptureDeviceHolder_DataChanged;
+      _database.Locations.DataChanged += RefreshData;     
 
-
-      _veryfier = new Verifyer(_captureDeviceEngine, _bioService);
-      _requestUpdator = new UpdateRequestByForeignKey(_bioService.DatabaseService, _database);
+      _veryfier = new Verifyer(_captureDeviceEngine, _bioService);     
 
       Update(location);
     }
 
-    private void CaptureDeviceHolder_DataChanged()
+    private void RefreshData()
+    {
+      RefreshCaptureDevices();
+      RefreshAccessDevices ();
+    }
+
+    private void RefreshCaptureDevices()
     {
       List<CaptureDevice> capture_devices = _database.CaptureDeviceHolder.Data
                                             .Where(cap => cap.Locationid == _location.Id)
@@ -51,7 +54,7 @@ namespace BioContracts
       }
     }
 
-    private void AccessDevicesRepository_DataChanged()
+    private void RefreshAccessDevices()
     {
       List<AccessDevice> access_devices = _database.AccessDeviceHolder.Data
                                           .Where(ad => ad.Locationid == _location.Id)
@@ -71,54 +74,63 @@ namespace BioContracts
       AccessDevicesStatus = status;      
     }
 
-    private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
+    private async void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
     {
       Card card;
       bool cardFound = _database.CardHolder.DataSet.TryGetValue(cardNumber, out card);
 
-      /*
+      
       VisitorList list = new VisitorList();
-      Visitor visitor = new Visitor() { Locationid = _location.Id
-                                      , Dbstate    = DbState.Insert
-                                      , Time       = DateTime.Now.Ticks
-                                      , Status     = ResultStatus.Failed
-                                      , Personid   = 0
-                                      , Photoid    = 0 };
+      Visitor visitor = new Visitor() { Locationid  = _location.Id
+                                      , EntityState = EntityState.Added
+                                      , Time        = DateTime.Now.Ticks
+                                      , Status      = ResultStatus.Failed
+                                      , Personid    = 0
+                                      , Photoid     = 0
+                                      , CardNumber = cardNumber };
 
 
-  */
+  
 
       Person person = null;
       if (cardFound)
       {        
         bool personFound = _database.PersonHolder.DataSet.TryGetValue(card.Personid, out person);
-        //if (personFound)
-        //{
-         // _bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
+        if (personFound)
+        {
+         //_bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
              
+          sender.Success();       
 
-          //sender.Success();       
-
-          //visitor.Personid = person.Id;
-          // visitor.Status   = ResultStatus.Success;
-       // }
+          visitor.Personid = person.Id;
+          visitor.Status   = ResultStatus.Success;
+        }
        
       }
 
-      _bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
-      VerificationData data = new VerificationData();
-      data.Personid = ( person == null ) ? person.Id : 0;
+      //_bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
+      //VerificationData data = new VerificationData();
+      //data.Personid = ( person == null ) ? person.Id : 0;
 
-      _veryfier.Start(CaptureDeviceName, data);
+      //_veryfier.Start(CaptureDeviceName, data);
 
-      //sender.Failed();
-      //list.Visitors.Add(visitor);
-      //await _bioService.DatabaseService.VisitorUpdateRequest(list);
+      sender.Failed();
+      list.Visitors.Add(visitor);
+
+      try
+      {
+        await _bioService.DatabaseService.VisitorUpdate(list);
+      }
+      catch (Exception ex )
+      {
+        Console.WriteLine(ex.Message);
+      }
 
     }
 
     private void FaceService_VerifyFeedbackChanged(object sender, VerificationFeedback feedback)
     {
+      /*
       EnrollmentFeedback enrollFeedback = feedback.EnrollmentFeedback;
       if (enrollFeedback == null)
         return;
@@ -201,7 +213,7 @@ namespace BioContracts
          _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
        
       
-       Console.WriteLine(feedback);
+       Console.WriteLine(feedback);*/
     }
 
     private string _captureDeviceName;
@@ -236,6 +248,7 @@ namespace BioContracts
     public void Update(Location location)
     {
       _location = location;
+      RefreshData();
     }
 
     public long LocationID
@@ -246,7 +259,8 @@ namespace BioContracts
 
     //TODO make it once in Engine - not HERE
     public async void Start()
-    {         
+    {    
+      /*     
       if (_database.AccessDeviceHolder.Data.Count <= 0)
         await _bioService.DatabaseService.AccessDeviceRequest(new CommandAccessDevice());
       else
@@ -255,7 +269,8 @@ namespace BioContracts
       if (_database.CaptureDeviceHolder.Data.Count <= 0)
         await _bioService.DatabaseService.CaptureDeviceRequest(new CommandCaptureDevice());
       else
-        CaptureDeviceHolder_DataChanged();  
+        CaptureDeviceHolder_DataChanged(); 
+        */ 
     }
    
     public void Stop()
@@ -277,7 +292,6 @@ namespace BioContracts
     private Dictionary<string, TrackLocationAccessDeviceObserver>  _accessDevices ;
     private Dictionary<string, TrackLocationCaptureDeviceObserver> _captureDevices;
 
-    private UpdateRequestByForeignKey _requestUpdator;
     private Verifyer _veryfier;
     private Location _location;
     private readonly IAccessDeviceEngine  _accessDeviceEngine ;

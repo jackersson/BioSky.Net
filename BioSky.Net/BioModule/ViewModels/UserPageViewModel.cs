@@ -62,7 +62,7 @@ namespace BioModule.ViewModels
 
        
         Photo photo = null;
-        bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnail, out photo);
+        bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out photo);
         if (photoExists)
           CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
 
@@ -74,10 +74,10 @@ namespace BioModule.ViewModels
         {
             Firstname = ""
           , Lastname = ""
-          , Thumbnail = 0
+          , Thumbnailid = 0
           , Gender = Person.Types.Gender.Male
           , Rights = Person.Types.Rights.Operator
-          , Dbstate = DbState.Insert
+          , EntityState = EntityState.Added
         };
 
         _userPageMode = UserPageMode.NewUser;
@@ -102,20 +102,22 @@ namespace BioModule.ViewModels
 
     #region BioService
 
-    public async Task UserUpdatePerformer(DbState state)
+    public async Task UserUpdatePerformer(EntityState state)
     {
-      _user.Dbstate = state;
+      _user.EntityState = state;
 
       PersonList personList = new PersonList();
       personList.Persons.Add(_user);
 
-      _database.PersonHolder.DataUpdated += PersonHolder_DataUpdated;
+      //_database.PersonHolder.DataUpdated += PersonHolder_DataUpdated;
 
-      await _bioService.DatabaseService.PersonUpdateRequest(personList);
+     // await _bioService.DatabaseService.PersonUpdateRequest(personList);
     }
     
+    /*
     private void PersonHolder_DataUpdated(IList<Person> list, Result result)
     {
+      /*
       _database.PersonHolder.DataUpdated -= PersonHolder_DataUpdated;
 
       Person person = null;      
@@ -142,51 +144,24 @@ namespace BioModule.ViewModels
       Update(person);
       ResolveConnections();
     }
-
-    public async void ResolveConnections()
-    {
-      if (_user.Id <= 0)
-        return;
-
-      if (CurrentImageView.CurrentImagePhoto == null)
-        return;
-
-      if (CurrentImageView.CurrentImagePhoto.Id <= 0)
-        return;
-
-      if ( _user.Thumbnail != CurrentImageView.CurrentImagePhoto.Id )
-      {
-        _user.Thumbnail = CurrentImageView.CurrentImagePhoto.Id;
-        _user.Dbstate = DbState.Update;
-
-        await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);       
-      }
-      else  if ( CurrentImageView.CurrentImagePhoto.Personid != _user.Id )
-      {
-        CurrentImageView.CurrentImagePhoto.Personid = _user.Id;
-        CurrentImageView.CurrentImagePhoto.Dbstate = DbState.Update;
-
-        await PhotoUpdatePerformer();
-      }
-
-      if(_user.Thumbnail == CurrentImageView.CurrentImagePhoto.Id && CurrentImageView.CurrentImagePhoto.Personid == _user.Id)
-        MessageBox.Show("User " + _user.Firstname + " " + _user.Lastname + "\n" + "Successfully Updated");     
-    }
+  */
+    
 
     public async Task PhotoUpdatePerformer()
     {
       Photo photo = CurrentImageView.CurrentImagePhoto;
 
-      photo.Origin = PhotoOriginType.Loaded;
+      photo.OriginType = PhotoOriginType.Loaded;
 
       PhotoList photoList = new PhotoList();
       photoList.Photos.Add(photo);
 
-      _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;     
+      //_database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;     
 
-      await _bioService.DatabaseService.PhotoUpdateRequest(photoList);
+     // await _bioService.DatabaseService.PhotoUpdateRequest(photoList);
     }
 
+    /*
     private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
     {
       _database.PhotoHolder.DataUpdated -= PhotoHolder_DataUpdated;
@@ -239,6 +214,7 @@ namespace BioModule.ViewModels
 
       ResolveConnections();
     }   
+    */
     #endregion
 
     #region Interface
@@ -252,7 +228,7 @@ namespace BioModule.ViewModels
         foreach (IUpdatable updatableScreen in Items)
           updatableScreen.Apply();
 
-        await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? DbState.Insert : DbState.Update);
+        await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? EntityState.Added : EntityState.Modified);
         await PhotoUpdatePerformer();
       }
     }
@@ -267,7 +243,7 @@ namespace BioModule.ViewModels
         foreach (IUpdatable updatableScreen in Items)
           updatableScreen.Remove(true);
 
-        await UserUpdatePerformer(DbState.Remove);
+        await UserUpdatePerformer(EntityState.Deleted);
       }
     }
 

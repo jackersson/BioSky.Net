@@ -24,10 +24,10 @@ namespace BioGRPC
     {
       try
       {
-        ServerConfiguration config = new ServerConfiguration();
+        SocketConfiguration config = new SocketConfiguration();
         config.Address             = configuration.DatabaseService;
 
-        Response call = await _client.ConfigurateAsync(config);
+        Response call = await _client.AddSocketAsync(config);
         Console.WriteLine(call.ToString());
       }
       catch (RpcException e)

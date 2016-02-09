@@ -141,6 +141,7 @@
     <Compile Include="IBioStarter.cs" />
     <Compile Include="ICaptureDeviceEngine.cs" />
     <Compile Include="IEntityFrameworkConnectionBuilder.cs" />
+    <Compile Include="IFullHolder.cs" />
     <Compile Include="IHolder.cs" />
     <Compile Include="ILocalStorage.cs" />
     <Compile Include="IProcessorLocator.cs" />

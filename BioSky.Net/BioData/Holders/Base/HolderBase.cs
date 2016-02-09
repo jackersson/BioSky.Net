@@ -46,37 +46,30 @@ namespace BioData.Holders.Base
     }
 
 
-    public virtual void Update(IList<TValue> list, Result result)
-    {
-      Console.WriteLine("On update");  
-      OnDataChanged();
-      OnDataUpdated(list, result);
-    }
-
     public void Update(IList<TValue> list)
     {
       Data = new AsyncObservableCollection<TValue>(list);
       UpdateDataSet(list);
-      OnDataChanged();
+      //OnDataChanged();
 
       Console.WriteLine(Data.Count + " " + DataSet.Count);
     }
 
     protected virtual void UpdateDataSet(IList<TValue> list) {  }
 
-    protected void UpdateItem(TValue obj, TKey key, DbState state)
+    public void UpdateItem(TValue obj, TKey key, EntityState state)
     {      
       switch (state)
       {
-        case DbState.Insert:
+        case EntityState.Added:
           Add(obj, key);
           break;
 
-        case DbState.Update:
+        case EntityState.Modified:
           Update(obj, key);
           break;
 
-        case DbState.Remove:
+        case EntityState.Deleted:
           Remove(obj, key);
           break;
       }
@@ -84,43 +77,51 @@ namespace BioData.Holders.Base
       NotifyOfPropertyChange(() => Data);
     }
 
-    protected virtual void Add(TValue obj, TKey key)
+    public virtual void Add(TValue obj, TKey key)
     {     
       Data.Add(obj);
-      AddToDataSet(obj, key);   
+      Update(obj, key);
+     // AddToDataSet(obj, key);   
     }
 
+    /*
     protected virtual void AddToDataSet(TValue obj, TKey key)
     {
       if (!_dataSet.ContainsKey(key))
         _dataSet.Add(key, obj);
+      else
+        Update(obj, key);
     }
-
-    protected virtual void Update(TValue obj, TKey key)
+    */
+    public virtual void Update(TValue obj, TKey key)
     {      
       if (_dataSet.ContainsKey(key))
         _dataSet[key] = obj;
+      else
+        _dataSet.Add(key, obj);
     }
 
-    protected virtual void Remove(TValue obj, TKey key)
+    public virtual void Remove(TValue obj, TKey key)
     {
       _dataSet.Remove(key);
       Data.Remove(obj);
     }
 
-    private void OnDataChanged()
+    protected void OnDataChanged()
     {
       if (DataChanged != null)
         DataChanged();
     }
 
+    /*
     protected void OnDataUpdated(IList<TValue> list, Result result)
     {
       if (DataUpdated != null)
         DataUpdated(list, result);
     }
+    */
 
     public event DataChangedHandler         DataChanged;
-    public event DataUpdatedHandler<TValue> DataUpdated;
+   // public event DataUpdatedHandler<TValue> DataUpdated;
   }
 }

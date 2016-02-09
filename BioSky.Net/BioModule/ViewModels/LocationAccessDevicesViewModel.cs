@@ -43,7 +43,7 @@ namespace BioModule.ViewModels
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
-      _bioEngine.Database().PersonHolder.DataChanged += RefreshData;
+     // _bioEngine.Database().PersonHolder.DataChanged += RefreshData;
 
       RefreshData();
     }    

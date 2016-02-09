@@ -13,6 +13,9 @@ namespace BioGRPC.ForeignUpdators
 
   public class UpdatePairRequestWithDependency<ProtoTypeFirst, ProtoTypeSecond>
   {
+    public delegate void UpdateRequestByForeignKeyHandler(ProtoTypeFirst photo, ProtoTypeSecond visitor);
+    public event UpdateRequestByForeignKeyHandler DataRequestSolved;
+
     public UpdatePairRequestWithDependency( IDatabaseService dataService
                                           , IBioSkyNetRepository database)
     {
@@ -24,6 +27,17 @@ namespace BioGRPC.ForeignUpdators
     {
       _protoTypeFirst  = valueFirst;
       _protoTypeSecond = valueSecond;
+    }
+
+    protected virtual void ResolveDependency()
+    {
+
+    }
+
+    protected void OnDataRequestSolved()
+    {
+      if (DataRequestSolved != null)
+        DataRequestSolved(_protoTypeFirst, _protoTypeSecond);
     }
    
 
@@ -54,22 +68,38 @@ namespace BioGRPC.ForeignUpdators
 
         base.BeginRequest(photo, visitor);     
 
-        _database.VisitorHolder.DataUpdated += VisitorHolder_DataUpdated;
-        _database.PhotoHolder.DataUpdated   += PhotoHolder_DataUpdated;
+       // _database.VisitorHolder.DataUpdated += VisitorHolder_DataUpdated;
+       // _database.PhotoHolder.DataUpdated   += PhotoHolder_DataUpdated;
 
-        await _dataService.PhotoUpdateRequest  (photo  );
-        await _dataService.VisitorUpdateRequest(visitor);
+        //await _dataService.PhotoUpdateRequest  (photo  );
+        //await _dataService.VisitorUpdateRequest(visitor);
       }
 
+      /*
       private void VisitorHolder_DataUpdated(IList<Visitor> list, Result result)
       {
         _database.VisitorHolder.DataUpdated -= VisitorHolder_DataUpdated;
-      }
 
+        foreach (ResultPair currentResult in result.Status)
+        {
+          if (currentResult.Status == ResultStatus.Success)
+          {
+            if (currentResult.State == DbState.Insert)
+            {
+
+            }
+          }
+        }
+      }
+      
       private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
       {
         _database.PhotoHolder.DataUpdated -= PhotoHolder_DataUpdated;
+
+
       }
+       */
+
            
     }
   }
