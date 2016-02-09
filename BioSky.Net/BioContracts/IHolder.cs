@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public delegate void DataUpdatedHandler<T>( IList<T> list);
+  public delegate void DataUpdatedHandler<T>( T list);
   public delegate void DataChangedHandler();
   public interface IHolder<TValue, TKey>
   {

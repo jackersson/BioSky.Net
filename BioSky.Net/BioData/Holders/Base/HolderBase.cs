@@ -46,18 +46,20 @@ namespace BioData.Holders.Base
     }
 
 
+    
     public void Update(IList<TValue> list)
     {
-      Data = new AsyncObservableCollection<TValue>(list);
+      //Data = new AsyncObservableCollection<TValue>(list);
       UpdateDataSet(list);
       //OnDataChanged();
 
-      Console.WriteLine(Data.Count + " " + DataSet.Count);
+     // Console.WriteLine(Data.Count + " " + DataSet.Count);
     }
+    
 
     protected virtual void UpdateDataSet(IList<TValue> list) {  }
 
-    public void UpdateItem(TValue obj, TKey key, EntityState state)
+    public virtual void UpdateItem(TValue obj, TKey key, EntityState state)
     {      
       switch (state)
       {
@@ -79,7 +81,7 @@ namespace BioData.Holders.Base
 
     public virtual void Add(TValue obj, TKey key)
     {     
-      Data.Add(obj);
+      //Data.Add(obj);
       Update(obj, key);
      // AddToDataSet(obj, key);   
     }
@@ -94,11 +96,14 @@ namespace BioData.Holders.Base
     }
     */
     public virtual void Update(TValue obj, TKey key)
-    {      
+    {
       if (_dataSet.ContainsKey(key))
         _dataSet[key] = obj;
       else
+      {
+        Data.Add(obj);
         _dataSet.Add(key, obj);
+      }
     }
 
     public virtual void Remove(TValue obj, TKey key)

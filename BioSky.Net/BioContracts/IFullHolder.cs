@@ -14,6 +14,7 @@ namespace BioContracts
 
 
     event DataChangedHandler         DataChanged;
+    event DataUpdatedHandler<TList>  DataUpdated;
  
   }
 }

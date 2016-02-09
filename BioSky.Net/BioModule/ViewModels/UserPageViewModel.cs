@@ -17,6 +17,7 @@ using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using BioService;
 using System.IO;
+using Grpc.Core;
 
 namespace BioModule.ViewModels
 {
@@ -106,14 +107,36 @@ namespace BioModule.ViewModels
     {
       _user.EntityState = state;
 
+      Photo photo = CurrentImageView.CurrentImagePhoto;
+      photo.OriginType = PhotoOriginType.Loaded;
+
       PersonList personList = new PersonList();
-      personList.Persons.Add(_user);
+      _user.Thumbnail = photo;
+      personList.Persons.Add(_user);   
 
-      //_database.PersonHolder.DataUpdated += PersonHolder_DataUpdated;
+      try
+      {
+        //_database.Persons.DataChanged += UpdateData;
 
-     // await _bioService.DatabaseService.PersonUpdateRequest(personList);
+
+        await _bioService.DatabaseService.PersonUpdate(personList);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine(e.Message);
+      }      
     }
     
+    private void UpdateData(PersonList list)
+    {
+      if (list != null)
+      {
+        Person person = list.Persons.FirstOrDefault();
+       // if (person != null)
+
+      }
+    }
+
     /*
     private void PersonHolder_DataUpdated(IList<Person> list, Result result)
     {
@@ -225,11 +248,10 @@ namespace BioModule.ViewModels
 
       if (result == true)     
       {
-        foreach (IUpdatable updatableScreen in Items)
-          updatableScreen.Apply();
+        //foreach (IUpdatable updatableScreen in Items)
+         // updatableScreen.Apply();
 
-        await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? EntityState.Added : EntityState.Modified);
-        await PhotoUpdatePerformer();
+        await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? EntityState.Added : EntityState.Modified);    
       }
     }
 

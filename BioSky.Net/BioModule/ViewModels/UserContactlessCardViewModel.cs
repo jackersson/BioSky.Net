@@ -11,6 +11,8 @@ using BioModule.Utils;
 using System.Windows;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
+using Grpc.Core;
 
 namespace BioModule.ViewModels
 {
@@ -38,10 +40,29 @@ namespace BioModule.ViewModels
 
       _userCards = new ObservableCollection<Card>();
 
-      IsEnabled = false;    
+      _bioEngine.Database().Persons.DataChanged += RefreshData;
+
+      IsEnabled = false;
     }
 
     #region Update
+
+    public void RefreshData()
+    {
+      if (_user == null)
+        return;
+
+      IEnumerable<Card> cards = _bioEngine.Database().CardHolder.Data.Where(x => x.Personid == _user.Id);
+
+      if (cards == null)
+        return;
+
+      _userCards.Clear();
+
+      foreach (Card card in cards)      
+        _userCards.Add(card);      
+
+    }
 
 
     public void Update(Person user)
@@ -54,32 +75,39 @@ namespace BioModule.ViewModels
 
       IsEnabled = true;
 
-      _user = user;    
-
-      _userCards.Clear();
-
-      _detectedCard.Personid = _user.Id;
+      _user = user;
 
 
-      foreach (Card card in _bioEngine.Database().CardHolder.Data)
-      {
-        if (card.Personid == _user.Id)
-          _userCards.Add(card);
-      }
+      RefreshData();
+
     }
-    public void AddNewCard()
+    public async void AddNewCard()
     {
       if (!CanAddNewCard)
         return;
 
       DetectedCard.EntityState = EntityState.Added;
+      DetectedCard.Personid = _user.Id;
 
-      Card newCard = new Card(DetectedCard);
-      UserCards.Add(newCard);
+      PersonList personList = new PersonList();
+     
+      Person personWithPhoto = new Person() { Id = _user.Id };
+      personWithPhoto.Cards.Add(DetectedCard);
 
-      //_dataChanged = true;
+      personList.Persons.Add(personWithPhoto);
 
-      NotifyOfPropertyChange(() => UserCards);
+      CanAddNewCard = false;
+
+      try
+      {
+        await _bioService.DatabaseService.PersonUpdate(personList);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine(e.Message);
+      }
+
+    
 
       CanAddNewCard = false;
     }
@@ -87,8 +115,10 @@ namespace BioModule.ViewModels
 
     #region Database
 
-    public void AddNewCard(string cardNumber)
+    public void TryToAddNewCard(string cardNumber)
     {
+      CanAddNewCard = false;
+
       Card card;
       bool cardFound = _bioEngine.Database().CardHolder.DataSet.TryGetValue(cardNumber, out card);
       if (cardFound)
@@ -96,76 +126,35 @@ namespace BioModule.ViewModels
         Person person;
         bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(card.Personid, out person);
         if (personFound)
-          CardState = "Card is avaliable to use";
-        else
         {
           CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
-          CanAddNewCard = false;
         }
+        else
+        {
+          CardState = "Card is avaliable to use";
+          CanAddNewCard = true;
+        }
+      }
+      else
+      {
+        CardState = "Card is avaliable to use";
+        CanAddNewCard = true;
       }
 
       DetectedCard = _detectedCard;
-
-      if (UserCards.Contains(DetectedCard))
-        CanAddNewCard = false;
+      
     }
-    #endregion
-
-    #region BioService
-    public async Task CardUpdatePerformer(EntityState dbState)
-    {
-      PersonList personChangedList = new PersonList();
-
-      if (dbState == EntityState.Unchanged)
-      {
-        foreach (Card card in UserCards)
-        {
-          if (card.EntityState != EntityState.Unchanged)
-            _user.Cards.Add(card);
-        }
-      }
-      else if (dbState == EntityState.Deleted)
-      {
-        ///selectedCard.EntityState = EntityState.Deleted;
-        //cardList.Cards.Add(selectedCard);       
-      }
-
-     // _bioEngine.Database().Persons.DataChanged += CardHolder_DataUpdated; 
-
-     // await _bioService.DatabaseService.CardUpdateRequest(cardList);
-    }
-    /*
-    private void CardHolder_DataUpdated(System.Collections.Generic.IList<Card> list, Result result)
-    {      
-      //_bioEngine.Database().CardHolder.DataUpdated -= CardHolder_DataUpdated; 
-
-      Card card = null;
-      foreach (ResultPair currentResult in result.Status)
-      {
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          if (currentResult.State == DbState.Remove)
-          {
-            card = currentResult.Card;
-            Console.WriteLine("Card successfully Removed");
-          }
-          else
-            Console.WriteLine("Data Updated");
-        }
-      }
-    }
-    */
-
     #endregion
 
     #region Interface
-    public async void Apply()
+    public void Apply()
     {
-      await CardUpdatePerformer(EntityState.Unchanged);
+      //await CardUpdatePerformer(EntityState.Unchanged);
     }
 
-    public async void Remove(bool all)
+    public void Remove(bool all)
     {
+      /*
       if(!all)
       {
         if (selectedCard != null)
@@ -185,7 +174,7 @@ namespace BioModule.ViewModels
 
         await _bioService.DatabaseService.CardUpdateRequest(cardList);
         */
-      }
+      //  }
     }
 
     #endregion
@@ -339,7 +328,7 @@ namespace BioModule.ViewModels
 
         CanAddNewCard = true;
 
-        AddNewCard(_detectedCard.UniqueNumber);
+        TryToAddNewCard(_detectedCard.UniqueNumber);
       }
     }
     public void OnError(Exception error)
@@ -414,5 +403,5 @@ namespace BioModule.ViewModels
 
 
     // private bool _dataChanged;
-  } 
+  }
 }

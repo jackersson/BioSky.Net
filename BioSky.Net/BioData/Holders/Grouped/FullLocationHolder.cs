@@ -52,9 +52,7 @@ namespace BioData.Holders.Grouped
 
 
     public event DataChangedHandler DataChanged;
-
-
-
+    public event DataUpdatedHandler<LocationList> DataUpdated;
 
     private readonly LocationHolder      _locations     ;
     private readonly AccessDeviceHolder  _accessDevices ;

@@ -27,10 +27,11 @@ namespace BioData.Holders.Grouped
       {
         foreach ( Card card in person.Cards )        
           _cards.Add(card, card.UniqueNumber);
-        /*
-        foreach (Photo photo in person.Photos)
-          _photos.Add(photo, photo.Id);
+        
+        //foreach (Photo photo in person.Photos)
+         // _photos.Add(photo, photo.Id);
 
+        /*
         Photo thumbnail = person.Thumbnail;
         if (thumbnail != null)
           _photos.Add(thumbnail, thumbnail.Id); */
@@ -48,16 +49,26 @@ namespace BioData.Holders.Grouped
     {
       Google.Protobuf.Collections.RepeatedField<Person> data = results.Persons;
 
+      bool success = false;
       foreach (Person person in data)
       {
         foreach (Card card in person.Cards)        
           _cards.UpdateItem(card, card.UniqueNumber, card.EntityState);
 
         foreach (Photo photo in person.Photos)
-          _photos.UpdateItem(photo, photo.Id, photo.EntityState);        
+          _photos.UpdateItem(photo, photo.Id, photo.EntityState);
 
-        _persons.UpdateItem(person, person.Id, person.EntityState);
+        success = person.Dbresult == ResultStatus.Success;
+
+        _persons.UpdateItem(person, person.Id, person.EntityState);        
       }
+
+      if (success)
+        OnDataUpdated(results);
+
+      OnDataChanged();
+      _photos.CheckPhotos();
+    
     }
 
     private void OnDataChanged()
@@ -66,8 +77,15 @@ namespace BioData.Holders.Grouped
         DataChanged();
     }
 
+    private void OnDataUpdated(PersonList list)
+    {
+      if (DataUpdated != null)
+        DataUpdated(list);
+    }
 
-    public event DataChangedHandler DataChanged;
+
+    public event DataChangedHandler             DataChanged;
+    public event DataUpdatedHandler<PersonList> DataUpdated;
 
     private readonly PersonHolder _persons;
     private readonly PhotoHolder  _photos ;

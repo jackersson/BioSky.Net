@@ -68,6 +68,7 @@ namespace BioData.Holders.Grouped
 
 
     public event DataChangedHandler DataChanged;
+    public event DataUpdatedHandler<VisitorList> DataUpdated;
 
     private readonly VisitorHolder _visitors;
     private readonly PhotoHolder   _photos  ;

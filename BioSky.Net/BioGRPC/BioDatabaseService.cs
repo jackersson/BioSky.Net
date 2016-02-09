@@ -86,9 +86,11 @@ namespace BioGRPC
         PhotoList call = await _client.PhotoSelectAsync(command);
 
         _database.PhotoHolder.Update(call.Photos);
+
+        Console.WriteLine("Photos count = " + call.Photos.Count);
         //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
 
-       // Console.WriteLine(call.ToString());
+        // Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
       {
@@ -102,9 +104,9 @@ namespace BioGRPC
       try
       {
         PersonList call = await _client.PersonUpdateAsync(persons);
-        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
+        _database.Persons.Update(persons, call);
 
-        Console.WriteLine(call.ToString());
+      //  Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
       {
@@ -121,7 +123,7 @@ namespace BioGRPC
         _database.Visitors.Update(visitors, call);
         //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
 
-        Console.WriteLine(call.ToString());
+      //  Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
       {
@@ -137,7 +139,7 @@ namespace BioGRPC
         LocationList call = await _client.LocationUpdateAsync(locations);
         //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
 
-        Console.WriteLine(call.ToString());
+      //  Console.WriteLine(call.ToString());
       }
       catch (RpcException e)
       {

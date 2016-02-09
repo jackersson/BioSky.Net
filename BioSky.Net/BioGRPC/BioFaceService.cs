@@ -74,8 +74,8 @@ namespace BioGRPC
           while (await responseStream.MoveNext())
           {
             VerificationFeedback feature = responseStream.Current;          
-            Console.WriteLine("");           
-            Console.WriteLine(feature.ToString());
+           // Console.WriteLine("");           
+           // Console.WriteLine(feature.ToString());
             OnVerifyFeedback(feature);
           }          
         }
@@ -100,8 +100,8 @@ namespace BioGRPC
           while (await responseStream.MoveNext())
           {
             EnrollmentFeedback feature = responseStream.Current;            
-            Console.WriteLine("");
-            Console.WriteLine(feature.ToString());
+           // Console.WriteLine("");
+           // Console.WriteLine(feature.ToString());
             OnEnrollFeedback(feature);
           }      
         }

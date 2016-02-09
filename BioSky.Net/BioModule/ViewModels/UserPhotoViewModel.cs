@@ -22,6 +22,7 @@ using BioContracts.Services;
 using Microsoft.Win32;
 using BioContracts.Common;
 using System.Windows;
+using Grpc.Core;
 
 namespace BioModule.ViewModels
 {
@@ -49,7 +50,9 @@ namespace BioModule.ViewModels
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
 
-     // _database.PhotoHolder.DataChanged += RefreshData;      
+
+      _database.Persons.DataChanged += RefreshData;
+      _database.PhotoHolder.DataChanged += RefreshData;      
     }  
 
     #region Update
@@ -72,33 +75,17 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
-      //IList<Photo> list = _database.PhotoHolderByPerson.GetPersonPhoto(_user.Id);
+      IList<Photo> list = _database.PhotoHolder.Data.Where(x=>x.Personid == _user.Id).ToList();
 
-     // if (list == null)
-       // return;
-
-      //UserImages.Clear();
-
-      /*
-      foreach (Photo personPhoto in list)
-      {
-        UserImages.Add(personPhoto);
-      }
-       */
-    }
-    /*
-    private void RefreshData(IList<Photo> list, Result result)
-    {
       if (list == null)
-        return;     
+        return;
 
-      /*
-      foreach (Photo personPhoto in list)
-      {
-        UserImages.Add(personPhoto);
-      }      
-       * 
-    }*/
+      UserImages.Clear();
+     
+      foreach (Photo personPhoto in list)      
+        UserImages.Add(personPhoto);             
+    }
+
     #endregion
 
     #region BioService
@@ -183,10 +170,11 @@ namespace BioModule.ViewModels
         if (NewPhoto != null && feedbackPhoto != null)
         {
           PersonList personList = new PersonList();
-          feedbackPhoto.EntityState = EntityState.Added   ;
-          feedbackPhoto.Description = NewPhoto.Description;         
-          feedbackPhoto.Personid    = _user.Id            ;
-          feedbackPhoto.SizeType    = PhotoSizeType.Full  ;
+          feedbackPhoto.EntityState = EntityState.Added    ;
+          feedbackPhoto.Description = NewPhoto.Description ;         
+          feedbackPhoto.Personid    = _user.Id             ;
+          feedbackPhoto.SizeType    = PhotoSizeType.Full   ;
+          feedbackPhoto.OriginType  = PhotoOriginType.Loaded;
 
           Person personWithPhoto = new Person() { Id = _user.Id };
           personWithPhoto.Photos.Add(feedbackPhoto);
@@ -195,7 +183,14 @@ namespace BioModule.ViewModels
 
           //_database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
 
-          await _serviceManager.DatabaseService.PersonUpdate(personList);
+          try
+          {
+            await _serviceManager.DatabaseService.PersonUpdate(personList);
+          }          
+          catch (RpcException e)
+          {
+            Console.WriteLine(e.Message);            
+          }
         }
 
       }
@@ -203,7 +198,7 @@ namespace BioModule.ViewModels
         _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
 
       
-      Console.WriteLine(feedback.Progress);
+      //Console.WriteLine(feedback.Progress);
     }
     /*
     private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
