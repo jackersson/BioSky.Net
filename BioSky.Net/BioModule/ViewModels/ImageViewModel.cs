@@ -68,20 +68,21 @@ namespace BioModule.ViewModels
     }
 
     public void UpdateImage(ref Bitmap img)
-    {
-      if(_width != _imageViewWidth || _height != _imageViewHeight)
-      {
-        _width = _imageViewWidth;
-        _height = _imageViewHeight;
-        Zoom(_imageViewWidth, _imageViewHeight);
-      }
-
+    {     
       if (img == null)
         return;
 
       BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
       newFrame.Freeze();
+      
       CurrentImageSource = newFrame;
+
+      if (_width != _imageViewWidth || _height != _imageViewHeight)
+      {
+        _width = _imageViewWidth;
+        _height = _imageViewHeight;
+        Zoom(_imageViewWidth, _imageViewHeight);
+      }
     }
 
     public void SavePhoto(string path)

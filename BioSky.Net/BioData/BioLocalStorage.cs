@@ -42,6 +42,10 @@ namespace BioData
       if (databaseServicePath == null)
         DatabaseServiceStoragePath = "192.168.1.178:50051";
 
+      if (Language == null)
+        Language = "en";
+
+
     }
     public void SaveGeneralSettings(string local, string face, string service, string language)
     {

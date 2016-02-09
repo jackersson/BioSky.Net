@@ -43,7 +43,7 @@ namespace BioEngine
     public void Setlanguage()
     {
       LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
-      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(_bioEngine.Database().LocalStorage.Language);
+      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(_localStorage.Language);
     }
 
     public void Stop()
