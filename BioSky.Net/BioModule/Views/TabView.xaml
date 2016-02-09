@@ -9,6 +9,10 @@
              xmlns:contracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com" 
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang" 
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:TabViewModel, IsDesignTimeCreatable=False}">
@@ -98,7 +102,8 @@
             <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
-                        <TextBlock Text="{Binding DisplayName}" />
+                        <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False" />
+                        <TextBlock Text="{Binding Result, ElementName=Proxy}" TextAlignment="Center" TextTrimming="WordEllipsis" />
                     </Grid>
                 </DataTemplate>
             </dragablz:TabablzControl.CustomHeaderItemTemplate>

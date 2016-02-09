@@ -6,21 +6,33 @@
                          xmlns:vm="clr-namespace:BioModule.ViewModels"
                          xmlns:local="clr-namespace:BioModule.Views"
                          xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                         xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+                         lex:LocalizeDictionary.DesignCulture="uk-UA"
+                         lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+                         lex:ResxLocalizationProvider.DefaultDictionary="lang"
                          mc:Ignorable="d"                          
                          d:DesignHeight="300" d:DesignWidth="300"
                          d:DataContext="{d:DesignInstance vm:FlyoutControlViewModel, IsDesignTimeCreatable=False}">
-   
-      <Controls:FlyoutsControl.Resources>          
+
+    <Controls:FlyoutsControl.Resources>          
         <DataTemplate DataType="{x:Type vm:LocationPageViewModel}">            
             <local:LocationPageView x:Name="CurrentFlyoutPage"></local:LocationPageView>
          </DataTemplate>
-      
+        <DataTemplate DataType="{x:Type vm:GeneralSettingsPageViewModel}">
+            <local:GeneralSettingsPageView x:Name="CurrentFlyoutPage"></local:GeneralSettingsPageView>
+        </DataTemplate>
+
     </Controls:FlyoutsControl.Resources>
+
     
-      <Controls:Flyout HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                       Header="{Binding ActiveItem.DisplayName}" Theme="Dark" Position="Right"
-                       IsOpen="{Binding FlyoutOpenState}">       
-          <Grid>
+    
+    <Controls:Flyout HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        Theme="Dark" Position="Right"
+                        Header="{Binding Result, ElementName=Proxy}"
+                        IsOpen="{Binding FlyoutOpenState}">
+        <Grid>
+            <lex:LocProxy Source="{Binding ActiveItem.DisplayName}" x:Name="Proxy" PrependType="False" />
+
             <ContentControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             Content="{Binding ActiveItem}"></ContentControl>
           </Grid>

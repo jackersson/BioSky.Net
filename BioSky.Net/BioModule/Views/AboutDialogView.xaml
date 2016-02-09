@@ -7,17 +7,21 @@
                    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                    xmlns:cal="http://www.caliburnproject.org" 
                    xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+                   xmlns:lex="http://wpflocalizeextension.codeplex.com" 
+                   lex:LocalizeDictionary.DesignCulture="uk-UA"
+                   lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+                   lex:ResxLocalizationProvider.DefaultDictionary="lang"
                    mc:Ignorable="d" 
                    WindowStartupLocation="CenterOwner"
                    ShowMaxRestoreButton="False" 
                    ResizeMode="NoResize"
                    Width="300"
                    Height="300"                   
-                   Title="{Binding DisplayName}"
+                   Title="{lex:Loc About}"
                    d:DesignHeight="300" d:DesignWidth="300">
 
     <metro:MetroWindow.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>        
     </metro:MetroWindow.Resources>
 
     <Grid>
@@ -35,22 +39,25 @@
             <RowDefinition Height="31"/>
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
+
+        
+
         <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
                Source="{Binding Source={StaticResource ResourceLoader}, Path=LoaderIconSource}" Grid.ColumnSpan="3" Grid.RowSpan="6" Margin="0,0,-20,0" 
                />
-        <TextBlock Text="WebSite:" Grid.Row="1" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
+        <TextBlock Text="{lex:Loc WebSite}" Grid.Row="1" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
         <TextBlock Text="http://bioskynet.com" Grid.Row="1" Foreground="LightSkyBlue"  Grid.Column="1" ></TextBlock>
-        <TextBlock Text="Company:" Grid.Row="2" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
+        <TextBlock Text="{lex:Loc Company}" Grid.Row="2" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
         <TextBlock Text="JAM" Grid.Row="2" Foreground="LightSkyBlue"  Grid.Column="1" ></TextBlock>
-        <TextBlock Text="Developers:" Grid.Row="3" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
+        <TextBlock Text="{lex:Loc Developers}" Grid.Row="3" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
         <TextBlock Text="Lishenko Taras" Grid.Row="3" Foreground="LightSkyBlue"  Grid.Column="1" ></TextBlock>
         <TextBlock Text="Iskra Alexandr" Grid.Row="4" Foreground="LightSkyBlue"  Grid.Column="1" ></TextBlock>
-        <TextBlock Text="Version" Grid.Row="5" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
+        <TextBlock Text="{lex:Loc Version}" Grid.Row="5" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
         <TextBlock Text="0.9.8.1.1" Grid.Row="5" Foreground="LightSkyBlue"  Grid.Column="1" ></TextBlock>
 
         <Button 
                  HorizontalAlignment="Stretch"
-                 VerticalAlignment="Stretch"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="6" Grid.Column="2" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />

@@ -3,6 +3,8 @@ using BioGRPC;
 using Grpc.Core;
 using System;
 
+using WPFLocalizeExtension.Engine;
+using System.Globalization;
 
 
 namespace BioEngine
@@ -13,18 +15,20 @@ namespace BioEngine
     {
       _bioEngine      = locator.GetProcessor<IBioEngine>();
       _serviceManager = locator.GetProcessor<IServiceManager>();
+      _localStorage   = _bioEngine.Database().LocalStorage;
     }
 
     public async void Run()
     {
       ServiceConfiguration configuration = new ServiceConfiguration();
-      configuration.FacialService   = "192.168.1.127:50051";
-      configuration.DatabaseService = "192.168.1.178:50051";
 
+      configuration.FacialService   = _localStorage.FaceServiceStoragePath;
+      configuration.DatabaseService = _localStorage.DatabaseServiceStoragePath;
+      
       _serviceManager.Start(configuration);
       
       RequestData();
-
+      Setlanguage();
       try
       {
         await _serviceManager.FaceService.Configurate(configuration);
@@ -36,13 +40,17 @@ namespace BioEngine
       }
     }
 
+    public void Setlanguage()
+    {
+      LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
+      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(_bioEngine.Database().LocalStorage.Language);
+    }
+
     public void Stop()
     {
       _serviceManager.Stop();
       _bioEngine.Stop();
-    }
-
- 
+    } 
 
     public async void RequestData()
     {
@@ -69,5 +77,6 @@ namespace BioEngine
 
     private IServiceManager _serviceManager;
     private IBioEngine      _bioEngine     ;
+    private ILocalStorage   _localStorage  ;
   }
 }

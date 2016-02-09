@@ -34,21 +34,48 @@ namespace BioModule.ViewModels
     #region Update
     public void UploadClick(double viewWidth, double viewHeight)
     {
+      var dialog = OpenFileDialog();
+      if (dialog.ShowDialog() == true)
+      {
+        Zoom(viewWidth, viewHeight);
+        UpdateImage(null, dialog.FileName);        
+      }
+    }
+    public Photo UploadPhoto()
+    {
+      var dialog = OpenFileDialog();
+      if (dialog.ShowDialog() == true)
+      {
+        string filename = dialog.FileName;
+        if (File.Exists(filename))
+        {
+          Zoom(_imageViewWidth, _imageViewHeight);
+          UpdateImage(null, filename);
+          return CurrentImagePhoto;
+        }
+      }
+      return null;
+    }
 
+    public OpenFileDialog OpenFileDialog()
+    {
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = false;
       openFileDialog.Filter = "All files (*.*)|*.*";
       openFileDialog.InitialDirectory = Environment.CurrentDirectory;
 
-      if (openFileDialog.ShowDialog() == true)
-      {
-        Zoom(viewWidth, viewHeight);
-        UpdateImage(null, openFileDialog.FileName);        
-      }
+      return openFileDialog;
     }
 
     public void UpdateImage(ref Bitmap img)
     {
+      if(_width != _imageViewWidth || _height != _imageViewHeight)
+      {
+        _width = _imageViewWidth;
+        _height = _imageViewHeight;
+        Zoom(_imageViewWidth, _imageViewHeight);
+      }
+
       if (img == null)
         return;
 
@@ -186,6 +213,10 @@ namespace BioModule.ViewModels
       CalculatedImageHeight = calculatedZoomFactor * viewHeight;
 
       CalculatedImageScale = CalculatedImageWidth / imageWidth;
+      CalculatedImageScaleY = CalculatedImageHeight / imageHeight;
+
+      if (CalculatedImageScale > CalculatedImageScaleY)
+        CalculatedImageScale = CalculatedImageScaleY;
     }
     #endregion
 
@@ -200,6 +231,20 @@ namespace BioModule.ViewModels
         {
           _calculatedImageScale = value;
           NotifyOfPropertyChange(() => CalculatedImageScale);
+        }
+      }
+    }
+
+    double _calculatedImageScaleY;
+    public double CalculatedImageScaleY
+    {
+      get { return _calculatedImageScaleY; }
+      set
+      {
+        if (_calculatedImageScaleY != value)
+        {
+          _calculatedImageScaleY = value;
+          NotifyOfPropertyChange(() => CalculatedImageScaleY);
         }
       }
     }
@@ -474,8 +519,10 @@ namespace BioModule.ViewModels
 
     #region Global Variables
 
-    private double _imageViewWidth = 0;
+    private double _imageViewWidth  = 0;
     private double _imageViewHeight = 0;
+    private double _width           = 0;
+    private double _height          = 0;
 
     private const double ZOOM_TO_FIT_RATE = 90;
     private const double ZOOM_RATIO = 100D;

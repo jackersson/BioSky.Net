@@ -21,6 +21,9 @@ using BioContracts;
 using BioService;
 using Google.Protobuf.Collections;
 using System.Collections;
+using System.ComponentModel;
+using System.Windows.Data;
+
 
 namespace BioModule.ViewModels
 {
@@ -28,7 +31,7 @@ namespace BioModule.ViewModels
   {      
     public VisitorsViewModel(IProcessorLocator locator )
     {
-      DisplayName = "Visitors";
+      DisplayName = "Visitors_";
 
       _locator    = locator;
       _bioEngine  = _locator.GetProcessor<IBioEngine>();
@@ -38,36 +41,155 @@ namespace BioModule.ViewModels
 
       _selectedItemIds = new ObservableCollection<long>();
 
+      _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
+
       LocationId = -1;
 
-      _database.Visitors.DataChanged    += RefreshData;
-      _database.PhotoHolder.DataChanged += RefreshData;
+      _database.PhotoHolder.DataChanged   += RefreshData;
+      _database.VisitorHolder.DataChanged += RefreshData;
+
+      VisitorsCollectionView = CollectionViewSource.GetDefaultView(Visitors);
     } 
+
+
+
+    #region Database
+
+    private void RefreshData()
+    {
+      Visitors = null;
+      Visitors = _database.VisitorHolder.Data;
+      GetLastVisitor();
+      VisitorsCollectionView = CollectionViewSource.GetDefaultView(Visitors);
+      VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
+    }
+    private void GetLastVisitor()
+    {
+      LastVisitor = null;
+      if (Visitors.Count != 0)
+        LastVisitor = Visitors[Visitors.Count - 1];
+    }
+
+    #endregion
+
+    #region Interface
 
     public void OnDataContextChanged()
     {
       ImageView = new ImageViewModel();
     }
+
     protected override void OnActivate()
-    {      
+    {
       base.OnActivate();
       RefreshData();
     }
-    
-    private void RefreshData()
+    public void Update()
     {
-      if (!IsActive)
-        return;
+      NotifyOfPropertyChange(() => Visitors);
+    }
+    public void OnSelectionChanged(SelectionChangedEventArgs e)
+    {
 
-      Visitors = null;
-      Visitors = _database.VisitorHolder.Data;    
-      GetLastVisitor();
+      IList selectedRecords = e.AddedItems as IList;
+      IList unselectedRecords = e.RemovedItems as IList;
+
+      foreach (Visitor currentUser in selectedRecords)
+      {
+        SelectedItemIds.Add(currentUser.Id);
+      }
+
+      foreach (Visitor currentUser in unselectedRecords)
+      {
+        SelectedItemIds.Remove(currentUser.Id);
+      }
+
+      foreach (long item in SelectedItemIds)
+      {
+        Console.WriteLine(item);
+      }
+
+      if (SelectedItemIds.Count == 1)
+      {
+        Visitor visitor = null;
+        bool visitorExists = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(SelectedItemIds[0], out visitor);
+        if (visitorExists)
+        {
+          Person person = null;
+          bool personExists = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
+          if (personExists)
+          {
+/*
+            Photo photo = null;
+            bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(person.Thumbnail, out photo);
+            if (photoExists)
+            {
+              / *
+              string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + person.Id;
+
+              Uri uri = new Uri(personFolder + "\\" + photo.FileLocation);
+              if (uri == null)
+                return;
+              ImageView.UpdateImage(uri);
+              * /
+            }*/
+          }
+        }
+      }
     }
-    private void GetLastVisitor()
+
+    public void OnSearchTextChanged(string s)
     {
-      if (Visitors.Count != 0)
-        LastVisitor = Visitors[Visitors.Count - 1];
+      SearchText = s;
+
+      VisitorsCollectionView.Filter = item =>
+      {
+        if (String.IsNullOrEmpty(SearchText))
+          return true;
+
+        Visitor vitem = item as Visitor;       
+
+        Person person = null;
+        bool personFound = _database.PersonHolder.DataSet.TryGetValue((long)vitem.Personid, out person);
+
+        if (person == null)
+          return false;
+
+        if (person.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
+            person.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
+        {
+          return true;
+        }
+        return false;
+      };     
     }
+    public void OnMouseRightButtonDown(Visitor visitor)
+    {
+      MenuOpenStatus = (visitor != null);
+      SelectedItem = visitor;
+    }
+
+    public void ShowUserPage()
+    {
+      foreach (long id in SelectedItemIds)
+      {
+
+        Visitor visitor = null;
+        bool visitorFound = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(id, out visitor);
+
+        if (visitorFound)
+        {
+          Person person = null;
+          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
+          _selector.ShowContent(ShowableContentControl.TabControlContent
+                               , ViewModelsID.UserPage
+                               , new object[] { person });
+        }
+      }
+    }
+    #endregion
+
+    #region UI
 
     private ImageViewModel _imageView;
     public ImageViewModel ImageView
@@ -83,10 +205,18 @@ namespace BioModule.ViewModels
       }
     }
 
-
-    public void Update()
+    private SortDescription _sortDescriptionByTime;
+    public SortDescription SortDescriptionByTime
     {
-      NotifyOfPropertyChange(() => Visitors);
+      get { return _sortDescriptionByTime; }
+      set
+      {
+        if (_sortDescriptionByTime != value)
+        {
+          _sortDescriptionByTime = value;
+          NotifyOfPropertyChange(() => SortDescriptionByTime);
+        }
+      }
     }
 
     private AsyncObservableCollection<Visitor> _visitors;
@@ -130,8 +260,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    //**********************************************************Context Menu*****************************************************
 
     private Visitor _selectedItem;
     public Visitor SelectedItem
@@ -178,82 +306,46 @@ namespace BioModule.ViewModels
         }
       }
     }
-    public void OnSelectionChanged(SelectionChangedEventArgs e)
+
+    private ICollectionView _visitorsCollectionView;
+    public ICollectionView VisitorsCollectionView
     {
-
-      IList selectedRecords = e.AddedItems as IList;
-      IList unselectedRecords = e.RemovedItems as IList;
-
-      foreach (Visitor currentUser in selectedRecords)
+      get { return _visitorsCollectionView; }
+      set
       {
-        SelectedItemIds.Add(currentUser.Id);
-      }
-
-      foreach (Visitor currentUser in unselectedRecords)
-      {
-        SelectedItemIds.Remove(currentUser.Id);
-      }
-
-      foreach (long item in SelectedItemIds)
-      {
-        Console.WriteLine(item);
-      }
-
-      if(SelectedItemIds.Count == 1)
-      {
-        Visitor visitor = null;
-        bool visitorExists = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(SelectedItemIds[0], out visitor);
-        if (visitorExists)
+        if (_visitorsCollectionView != value)
         {
-          Person person = null;
-          bool personExists = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
-          if ( personExists )
-          {
-            Photo photo = null;
-            bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(person.Thumbnailid, out photo);
-            if ( photoExists )
-            {
-              /*
-              string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + person.Id;
+          _visitorsCollectionView = value;
 
-              Uri uri = new Uri(personFolder + "\\" + photo.FileLocation);
-              if (uri == null)
-                return;
-              ImageView.UpdateImage(uri);
-              */
-            }
-          }
-        }   
-      }
-    }
-    public void OnMouseRightButtonDown(Visitor visitor)
-    {
-      MenuOpenStatus = (visitor != null);
-      SelectedItem = visitor;
-    }
-    public void ShowUserPage()
-    {
-      foreach (long id in SelectedItemIds)
-      {
-
-        Visitor visitor = null;
-        bool visitorFound = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(id, out visitor);
-
-        if (visitorFound)
-        {
-          Person person = null;
-          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
-          _selector.ShowContent(ShowableContentControl.TabControlContent
-                               , ViewModelsID.UserPage
-                               , new object[] { person });
+          NotifyOfPropertyChange(() => VisitorsCollectionView);
         }
       }
     }
 
+    private string _searchText;
+    public string SearchText
+    {
+      get { return _searchText; }
+      set
+      {
+        if (_searchText != value)
+        {
+          _searchText = value;
+
+          NotifyOfPropertyChange(() => SearchText);
+        }
+      }
+    }
+
+
+    #endregion
+
+    #region Global Variables
     private readonly IProcessorLocator    _locator   ;
     private readonly ViewModelSelector    _selector  ;
     private readonly IBioEngine           _bioEngine ;
     private readonly IServiceManager      _bioService;
-    private readonly IBioSkyNetRepository _database  ;
+    private readonly IBioSkyNetRepository _database;
+    #endregion
   }
 }

@@ -17,7 +17,7 @@ namespace BioModule.ViewModels
   {
     public LocationCaptureDevicesViewModel(IProcessorLocator locator)
     {
-      DisplayName = "Capture Devices";
+      DisplayName = "CaptureDevices";
 
       _locator    = locator;
       _bioService = _locator.GetProcessor<IServiceManager>();

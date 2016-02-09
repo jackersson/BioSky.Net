@@ -13,5 +13,9 @@ namespace BioContracts
     string FaceServiceStoragePath { get; }
 
     string DatabaseServiceStoragePath { get; }
+
+    string Language { get; }
+
+    void SaveGeneralSettings(string local, string face, string service, string language);
   }
 }

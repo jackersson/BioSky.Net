@@ -7,6 +7,10 @@
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:vm="clr-namespace:BioModule.ViewModels"    
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="200"
              >
@@ -23,7 +27,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="100"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Height="48" Text="Sign In" TextDecorations="Underline" TextAlignment="Center">            
+        <TextBlock Grid.Column="0" Height="48" Text="{lex:Loc SignIn}" TextDecorations="Underline" TextAlignment="Center">            
         </TextBlock>
         <Image Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="48" Height="48" Source="{Binding Source={StaticResource ResourceLoader}, Path=UserDefaultImageIconSource}"></Image>
     </Grid>

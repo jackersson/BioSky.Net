@@ -6,7 +6,11 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             xmlns:cal="http://www.caliburnproject.org"   
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture=""
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:UserPageViewModel, IsDesignTimeCreatable=False}"
@@ -49,7 +53,7 @@
         <TabControl Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
                     VerticalAlignment="Stretch" 
                     ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="4"                
-                    SelectedItem="{Binding ActiveItem, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding ActiveItem}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"
                     Style="{StaticResource MetroTabControl}"
                     >
@@ -66,8 +70,10 @@
             </TabControl.Resources> 
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock
-        				Text="{Binding DisplayName}" />
+                    <Grid Background="Transparent">
+                        <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False" />
+                        <TextBlock Text="{Binding Result, ElementName=Proxy}" />
+                    </Grid>
                 </DataTemplate>
             </TabControl.ItemTemplate> 
             <TabControl.ContentTemplate>
@@ -82,17 +88,17 @@
         <Button  Grid.Row="5" Grid.Column="2" 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 ToolTip="Save"
+                 ToolTip="{lex:Loc Save}"
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
         </Button>
 
-        <Button ToolTip="Cancel" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button ToolTip="{lex:Loc RevertChanges}" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
-        <Button ToolTip="Delete User" Grid.Row="5" Grid.Column="4" 
+        <Button ToolTip="{lex:Loc DeleteUser}" Grid.Row="5" Grid.Column="4" 
                 cal:Message.Attach="[Event Click]=[Action Remove]"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" />

@@ -17,7 +17,7 @@ namespace BioModule.ViewModels
   {
     public LocationUsersNotifyViewModel(IProcessorLocator locator)
     {
-      DisplayName = "Users Notification";
+      DisplayName = "UsersNotification";
 
       _locator = locator;
       _bioService = _locator.GetProcessor<IServiceManager>();

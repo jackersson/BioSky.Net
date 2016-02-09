@@ -33,7 +33,7 @@ namespace BioModule.ViewModels
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       
       Initialize(locator);
-
+      
       if ( location != null )
        Update(location);
     }

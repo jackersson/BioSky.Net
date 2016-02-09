@@ -7,6 +7,10 @@
                    xmlns:cal="http://www.caliburnproject.org" 
                    xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                   xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+                   lex:LocalizeDictionary.DesignCulture="uk-UA"
+                   lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+                   lex:ResxLocalizationProvider.DefaultDictionary="lang"
                    mc:Ignorable="d"
                    WindowStartupLocation="CenterOwner"
                    SizeToContent="WidthAndHeight"
@@ -35,19 +39,20 @@
             <ColumnDefinition Width="64"/>
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Text="User Name" Grid.Column="0"  Grid.Row="1" Margin="5,0,0,0"></TextBlock>
-        <TextBlock Text="Password" Grid.Column="0"  Grid.Row="3" Margin="5,0,0,0" ></TextBlock>
+        <TextBlock Text="{lex:Loc UserName}" Grid.Column="0"  Grid.Row="1" Margin="5,0,0,0"></TextBlock>
+        <TextBlock Text="{lex:Loc Password}" Grid.Column="0"  Grid.Row="3" Margin="5,0,0,0" ></TextBlock>
+
         <TextBox Text="{Binding UserName}" Grid.Column="1"  Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,5,0"></TextBox>
         <PasswordBox Name="PasswordBox2" Grid.Column="1"  Grid.Row="3" Grid.ColumnSpan="3" Margin="0,0,5,0" />
 
-        <Button Content="Register" Margin="0,0,5,0"
+        <Button Content="{lex:Loc Register}" Margin="0,0,5,0"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  cal:Message.Attach="[Event Click]=[Action Register(PasswordBox2.SecurePassword)]"
                   Grid.Row="5" Grid.Column="1">
         </Button>
 
-        <Button Content="Login"
+        <Button Content="{lex:Loc Login}"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  cal:Message.Attach="[Event Click]=[Action Login(PasswordBox2.SecurePassword)]"
@@ -56,7 +61,7 @@
 
         <Button 
                  HorizontalAlignment="Stretch"
-                 VerticalAlignment="Stretch"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Cancel}"
                  cal:Message.Attach="[Event Click]=[Action Cancel]"
                  Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="5" Grid.Column="3" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />

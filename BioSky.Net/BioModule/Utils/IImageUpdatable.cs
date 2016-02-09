@@ -18,6 +18,8 @@ namespace BioModule.Utils
 
     void UpdateImage(Photo photo, string path);
 
+    Photo UploadPhoto();
+
     void Clear();
   }
 }
