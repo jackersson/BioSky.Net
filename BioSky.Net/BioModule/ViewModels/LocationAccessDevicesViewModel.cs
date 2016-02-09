@@ -43,7 +43,7 @@ namespace BioModule.ViewModels
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
-      _bioEngine.Database().PersonHolder.DataChanged += RefreshData;
+     // _bioEngine.Database().PersonHolder.DataChanged += RefreshData;
 
       RefreshData();
     }    
@@ -68,7 +68,7 @@ namespace BioModule.ViewModels
       {
         DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
 
-        if (_location.Id == null)
+        if (_location.Id <= 0)
         {
           if (item.Type == AccessDevice.Types.AccessDeviceType.DeviceNone)
             AddToGeneralDeviceList(dragableItem, true);

@@ -53,7 +53,7 @@
         <TabControl Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
                     VerticalAlignment="Stretch" 
                     ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="4"                
-                    SelectedItem="{Binding ActiveItem, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding ActiveItem}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"
                     Style="{StaticResource MetroTabControl}"
                     >

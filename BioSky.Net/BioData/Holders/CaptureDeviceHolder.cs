@@ -15,10 +15,11 @@ namespace BioData.Holders
     protected override void UpdateDataSet(IList<CaptureDevice> list)
     {
       foreach (CaptureDevice captureDevice in list)
-        AddToDataSet(captureDevice, captureDevice.Id);
+        Update(captureDevice, captureDevice.Id);
     }
 
-    public override void Update(IList<CaptureDevice> list, Result result)
+    /*
+    public override void Update(IList<CaptureDevice> list,  result)
     {
       foreach (ResultPair currentResult in result.Status)
       {
@@ -39,6 +40,6 @@ namespace BioData.Holders
       }
       base.Update(list, result);
     }
-
+    */
   }
 }

@@ -70,7 +70,7 @@
                  SelectedItem="{Binding SelectedItem}"
                  ItemsSource="{Binding UserImages}"  
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
-                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChange]"
+                 
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>

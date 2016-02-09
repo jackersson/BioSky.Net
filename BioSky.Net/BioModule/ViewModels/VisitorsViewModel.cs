@@ -46,7 +46,9 @@ namespace BioModule.ViewModels
       LocationId = -1;
 
       _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.VisitorHolder.DataChanged += RefreshData;   
+      _database.VisitorHolder.DataChanged += RefreshData;
+
+      VisitorsCollectionView = CollectionViewSource.GetDefaultView(Visitors);
     } 
 
 
@@ -63,6 +65,7 @@ namespace BioModule.ViewModels
     }
     private void GetLastVisitor()
     {
+      LastVisitor = null;
       if (Visitors.Count != 0)
         LastVisitor = Visitors[Visitors.Count - 1];
     }
@@ -116,19 +119,20 @@ namespace BioModule.ViewModels
           bool personExists = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
           if (personExists)
           {
+/*
             Photo photo = null;
             bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(person.Thumbnail, out photo);
             if (photoExists)
             {
-              /*
+              / *
               string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + person.Id;
 
               Uri uri = new Uri(personFolder + "\\" + photo.FileLocation);
               if (uri == null)
                 return;
               ImageView.UpdateImage(uri);
-              */
-            }
+              * /
+            }*/
           }
         }
       }
@@ -140,7 +144,10 @@ namespace BioModule.ViewModels
 
       VisitorsCollectionView.Filter = item =>
       {
-        Visitor vitem = item as Visitor;
+        if (String.IsNullOrEmpty(SearchText))
+          return true;
+
+        Visitor vitem = item as Visitor;       
 
         Person person = null;
         bool personFound = _database.PersonHolder.DataSet.TryGetValue((long)vitem.Personid, out person);
@@ -148,16 +155,13 @@ namespace BioModule.ViewModels
         if (person == null)
           return false;
 
-        if (String.IsNullOrEmpty(SearchText))
-          return true;
-
         if (person.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
             person.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
         {
           return true;
         }
         return false;
-      };
+      };     
     }
     public void OnMouseRightButtonDown(Visitor visitor)
     {

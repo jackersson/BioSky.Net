@@ -14,10 +14,11 @@ namespace BioData.Holders
 
     protected override void UpdateDataSet(IList<Card> list)
     {
-      foreach (Card card in list)        
-        AddToDataSet(card, card.UniqueNumber);        
+      foreach (Card card in list)
+        Update(card, card.UniqueNumber);        
     }
 
+    /*
     public override void Update(IList<Card> list, Result result)
     {
       foreach (ResultPair currentResult in result.Status)
@@ -39,7 +40,7 @@ namespace BioData.Holders
       }
       base.Update(list, result);
     }
-
+    */
 
   }
 }

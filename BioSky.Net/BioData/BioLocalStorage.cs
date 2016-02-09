@@ -37,12 +37,12 @@ namespace BioData
         LocalStoragePath = "F:\\GRPCs\\ClientFolder";
 
       if (faceServicePath == null)
-        FaceServiceStoragePath = "";
+        FaceServiceStoragePath = "192.168.1.127:50051";
 
       if (databaseServicePath == null)
-        DatabaseServiceStoragePath = "";
-    }
+        DatabaseServiceStoragePath = "192.168.1.178:50051";
 
+    }
     public void SaveGeneralSettings(string local, string face, string service, string language)
     {
       LocalStoragePath           = local   ;

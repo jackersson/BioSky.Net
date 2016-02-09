@@ -117,23 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EnrollFromImageFile" xml:space="preserve">
-    <value>Зарегестрировать из файла изображения</value>
-  </data>
-  <data name="EnrollFromCamera" xml:space="preserve">
-    <value>Зарегестрировать с камеры</value>
+  <data name="Visitors_" xml:space="preserve">
+    <value>  Посетители</value>
   </data>
   <data name="AddNewUser_" xml:space="preserve">
     <value>  Добавить нового пользователя</value>
   </data>
-  <data name="Tracking_" xml:space="preserve">
-    <value>  Наблюдение</value>
-  </data>
   <data name="Users_" xml:space="preserve">
     <value>  Пользователи</value>
   </data>
-  <data name="Visitors_" xml:space="preserve">
-    <value>  Посетители</value>
+  <data name="Tracking_" xml:space="preserve">
+    <value>  Наблюдение</value>
   </data>
   <data name="DatabaseService" xml:space="preserve">
     <value>Database Service</value>
@@ -144,17 +138,41 @@
   <data name="FaceService" xml:space="preserve">
     <value>Face Service</value>
   </data>
+  <data name="IpAdress" xml:space="preserve">
+    <value>IP-адрес</value>
+  </data>
   <data name="WebSite" xml:space="preserve">
     <value>Веб-Сайт</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Версия:</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Вы уверены?</value>
+  </data>
   <data name="View" xml:space="preserve">
     <value>Вид</value>
   </data>
-  <data name="Out" xml:space="preserve">
-    <value>Внешние</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="DeleteUser" xml:space="preserve">
+    <value>Удалить Пользователя</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="Visitors" xml:space="preserve">
+    <value>Посетители</value>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Открыть Настройки</value>
+  </data>
+  <data name="OpenInNewTab" xml:space="preserve">
+    <value>Открыть в Новой вкладке</value>
   </data>
   <data name="In" xml:space="preserve">
     <value>Внутренние</value>
@@ -165,18 +183,6 @@
   <data name="SignIn" xml:space="preserve">
     <value>Вход</value>
   </data>
-  <data name="AreYouSure" xml:space="preserve">
-    <value>Вы уверены?</value>
-  </data>
-  <data name="Exit" xml:space="preserve">
-    <value>Выход</value>
-  </data>
-  <data name="GeneralSettings" xml:space="preserve">
-    <value>Главные Настройки</value>
-  </data>
-  <data name="City" xml:space="preserve">
-    <value>Город</value>
-  </data>
   <data name="DateOfBirth" xml:space="preserve">
     <value>Дата Рождения</value>
   </data>
@@ -186,11 +192,17 @@
   <data name="AddCard" xml:space="preserve">
     <value>Добавить Карточку</value>
   </data>
+  <data name="AddPerson" xml:space="preserve">
+    <value>Добавить пользователя</value>
+  </data>
   <data name="AddNewLocation" xml:space="preserve">
     <value>Добавить новое Местоположение</value>
   </data>
-  <data name="AddPerson" xml:space="preserve">
-    <value>Добавить пользователя</value>
+  <data name="AddNewUser" xml:space="preserve">
+    <value>Добавить нового пользователя</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Помощь</value>
   </data>
   <data name="AccessDevices" xml:space="preserve">
     <value>Доступніе приборы</value>
@@ -198,11 +210,29 @@
   <data name="UploadPhoto" xml:space="preserve">
     <value>Загрузить фото</value>
   </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>Главные Настройки</value>
+  </data>
   <data name="RegisteredUsers" xml:space="preserve">
     <value>Зарегестрированные Пользователи</value>
   </data>
+  <data name="EnrollFromCamera" xml:space="preserve">
+    <value>Зарегестрировать с камеры</value>
+  </data>
+  <data name="EnrollFromImageFile" xml:space="preserve">
+    <value>Зарегестрировать из файла изображения</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>Зарегестрироваться</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Out" xml:space="preserve">
+    <value>Внешние</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>Имя</value>
@@ -225,62 +255,53 @@
   <data name="Company" xml:space="preserve">
     <value>Компания</value>
   </data>
-  <data name="LogIn" xml:space="preserve">
-    <value>Логин</value>
+  <data name="User" xml:space="preserve">
+    <value>Пользователь</value>
   </data>
-  <data name="Locations" xml:space="preserve">
-    <value>Места</value>
-  </data>
-  <data name="Location" xml:space="preserve">
-    <value>Местоположение</value>
-  </data>
-  <data name="LocationName" xml:space="preserve">
-    <value>Название местоположения</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Настройки</value>
-  </data>
-  <data name="LocationSettings" xml:space="preserve">
-    <value>Настройки местоположения</value>
-  </data>
-  <data name="About" xml:space="preserve">
-    <value>О программе</value>
-  </data>
-  <data name="Description" xml:space="preserve">
-    <value>Описание</value>
-  </data>
-  <data name="UsersNotification" xml:space="preserve">
-    <value>Оповещение пользователей</value>
-  </data>
-  <data name="OpenInNewTab" xml:space="preserve">
-    <value>Открыть в Новой вкладке</value>
-  </data>
-  <data name="OpenSettings" xml:space="preserve">
-    <value>Открыть Настройки</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Отменить</value>
-  </data>
-  <data name="RevertChanges" xml:space="preserve">
-    <value>Отменить изменения</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>Пароль</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Поиск...</value>
-  </data>
-  <data name="Gender" xml:space="preserve">
-    <value>Пол</value>
+  <data name="Users" xml:space="preserve">
+    <value>Пользователи</value>
   </data>
   <data name="UsersToNotify" xml:space="preserve">
     <value>Пользователи для опопвещения</value>
   </data>
-  <data name="User" xml:space="preserve">
-    <value>Пользователь</value>
+  <data name="Country" xml:space="preserve">
+    <value>Страна</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Помощь</value>
+  <data name="LogIn" xml:space="preserve">
+    <value>Логин</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Город</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="LocationName" xml:space="preserve">
+    <value>Название местоположения</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="LocationSettings" xml:space="preserve">
+    <value>Настройки местоположения</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="RevertChanges" xml:space="preserve">
+    <value>Отменить изменения</value>
+  </data>
+  <data name="UsersNotification" xml:space="preserve">
+    <value>Оповещение пользователей</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Порт</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Поиск...</value>
   </data>
   <data name="Rights" xml:space="preserve">
     <value>Права</value>
@@ -288,61 +309,40 @@
   <data name="CaptureDevices" xml:space="preserve">
     <value>Приборы захвата</value>
   </data>
-  <data name="Apply" xml:space="preserve">
-    <value>Применить</value>
+  <data name="LastName" xml:space="preserve">
+    <value>Фамилия</value>
   </data>
-  <data name="LocalStoragePath" xml:space="preserve">
-    <value>Путь к локальному хранилищу</value>
-  </data>
-  <data name="Developers" xml:space="preserve">
-    <value>Разработчики:</value>
+  <data name="About" xml:space="preserve">
+    <value>О программе</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Редактирование</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Сохранить</value>
+  <data name="Developers" xml:space="preserve">
+    <value>Разработчики:</value>
   </data>
-  <data name="Country" xml:space="preserve">
-    <value>Страна</value>
+  <data name="Location" xml:space="preserve">
+    <value>Местоположение</value>
   </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Удалить</value>
+  <data name="Locations" xml:space="preserve">
+    <value>Места</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
-  <data name="DeleteUser" xml:space="preserve">
-    <value>Удалить Пользователя</value>
-  </data>
-  <data name="File" xml:space="preserve">
-    <value>Файл</value>
-  </data>
-  <data name="LastName" xml:space="preserve">
-    <value>Фамилия</value>
-  </data>
-  <data name="Photo" xml:space="preserve">
-    <value>Фото</value>
-  </data>
-  <data name="Language" xml:space="preserve">
-    <value>Язык</value>
-  </data>
-  <data name="AddNewUser" xml:space="preserve">
-    <value>Добавить нового пользователя</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отменить</value>
   </data>
   <data name="Tracking" xml:space="preserve">
     <value>Наблюдение</value>
   </data>
-  <data name="Users" xml:space="preserve">
-    <value>Пользователи</value>
+  <data name="Gender" xml:space="preserve">
+    <value>Пол</value>
   </data>
-  <data name="Visitors" xml:space="preserve">
-    <value>Посетители</value>
+  <data name="File" xml:space="preserve">
+    <value>Файл</value>
   </data>
-  <data name="Port" xml:space="preserve">
-    <value>Порт</value>
+  <data name="Photo" xml:space="preserve">
+    <value>Фото</value>
   </data>
-  <data name="IpAdress" xml:space="preserve">
-    <value>IP-адрес</value>
+  <data name="LocalStoragePath" xml:space="preserve">
+    <value>Путь к локальному хранилищу</value>
   </data>
 </root>

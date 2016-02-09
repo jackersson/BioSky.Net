@@ -12,6 +12,8 @@ using System.IO;
 using BioData.Holders;
 
 using BioContracts.Holders;
+using BioData.Holders.Grouped;
+using BioData.Holders.Utils;
 
 namespace BioData
 {
@@ -25,20 +27,47 @@ namespace BioData
     AccessDeviceHolder  _accessDeviceHolder ;
     PhotoHolder         _photoHolder        ;
 
+    FullLocationHolder _fullLocations;
+    FullPersonHolder   _fullPersons  ;
+    FullVisitorHolder  _fullVisitors ;
+
     ILocalStorage       _localStorage       ;
+
+    IOUtils _ioUtils;
 
     public BioSkyNetRepository()
     {
+      _localStorage = new BioLocalStorage();
+      _ioUtils = new IOUtils(_localStorage);
+
       _visitorHolder       = new VisitorHolder      ();
       _personHolder        = new PersonHolder       ();     
       _locationHolder      = new LocationHolder     ();
       _cardHolder          = new CardHolder         ();
       _captureDeviceHolder = new CaptureDeviceHolder();
       _accessDeviceHolder  = new AccessDeviceHolder ();
-      _photoHolder         = new PhotoHolder        ();
+      _photoHolder         = new PhotoHolder        (_ioUtils);
       _localStorage        = new BioLocalStorage    ();
 
-    
+
+      _fullLocations = new FullLocationHolder(_locationHolder, _accessDeviceHolder, _captureDeviceHolder);
+      _fullPersons   = new FullPersonHolder(_personHolder, _photoHolder, _cardHolder);
+      _fullVisitors  = new FullVisitorHolder(_visitorHolder, _photoHolder);
+    }
+
+    public IFullHolder<LocationList> Locations
+    {
+      get { return _fullLocations; }
+    }
+
+    public IFullHolder<PersonList> Persons
+    {
+      get { return _fullPersons; }
+    }
+
+    public IFullHolder<VisitorList> Visitors
+    {
+      get { return _fullVisitors; }
     }
 
     public IHolder<Visitor, long> VisitorHolder

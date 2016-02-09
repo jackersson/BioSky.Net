@@ -1,6 +1,11 @@
 ﻿using BioContracts;
 using BioGRPC;
+using Grpc.Core;
 using System;
+
+using WPFLocalizeExtension.Engine;
+using System.Globalization;
+
 
 namespace BioEngine
 {
@@ -10,54 +15,59 @@ namespace BioEngine
     {
       _bioEngine      = locator.GetProcessor<IBioEngine>();
       _serviceManager = locator.GetProcessor<IServiceManager>();
+      _localStorage   = _bioEngine.Database().LocalStorage;
     }
 
     public async void Run()
     {
       ServiceConfiguration configuration = new ServiceConfiguration();
-      configuration.FacialService   = "192.168.1.127:50051";
-      configuration.DatabaseService = "192.168.1.178:50051";
 
+      configuration.FacialService   = _localStorage.FaceServiceStoragePath;
+      configuration.DatabaseService = _localStorage.DatabaseServiceStoragePath;
+      
       _serviceManager.Start(configuration);
       
       RequestData();
+      Setlanguage();
+      try
+      {
+        await _serviceManager.FaceService.Configurate(configuration);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine("RPC failed " + e);
+        throw;
+      }
+    }
 
-      await _serviceManager.FaceService.Configurate(configuration);
+    public void Setlanguage()
+    {
+      LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
+      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(_bioEngine.Database().LocalStorage.Language);
     }
 
     public void Stop()
     {
       _serviceManager.Stop();
       _bioEngine.Stop();
-    }
-
- 
+    } 
 
     public async void RequestData()
     {
       try
       {
-        BioService.CommandPerson commandPerson = new BioService.CommandPerson();
-        await _serviceManager.DatabaseService.PersonRequest(commandPerson);
+        BioService.CommandPersons commandPerson = new BioService.CommandPersons();
+        await _serviceManager.DatabaseService.PersonsSelect(commandPerson);
 
-        BioService.CommandVisitor commandVisitor = new BioService.CommandVisitor();
-        await _serviceManager.DatabaseService.VisitorRequest(commandVisitor);
+        BioService.CommandVisitors commandVisitor = new BioService.CommandVisitors();
+        await _serviceManager.DatabaseService.VisitorsSelect(commandVisitor);
 
-        BioService.CommandAccessDevice commandAccessDevice = new BioService.CommandAccessDevice();
-        await _serviceManager.DatabaseService.AccessDeviceRequest(commandAccessDevice);
-
-        BioService.CommandCaptureDevice commandCaptureDevice = new BioService.CommandCaptureDevice();
-        await _serviceManager.DatabaseService.CaptureDeviceRequest(commandCaptureDevice);
-
-        BioService.CommandCard commandCard = new BioService.CommandCard();
-        await _serviceManager.DatabaseService.CardRequest(commandCard);
-
-        BioService.CommandLocation commandLocation = new BioService.CommandLocation();
-        await _serviceManager.DatabaseService.LocationRequest(commandLocation);
+        BioService.CommandLocations commandLocation = new BioService.CommandLocations();
+        await _serviceManager.DatabaseService.LocationsSelect(commandLocation);
 
         BioService.CommandPhoto commandPhoto = new BioService.CommandPhoto();
-        await _serviceManager.DatabaseService.PhotoRequest(commandPhoto);
-        
+        await _serviceManager.DatabaseService.PhotosSelect(commandPhoto);
+
       }
       catch (Exception ex)
       {
@@ -67,5 +77,6 @@ namespace BioEngine
 
     private IServiceManager _serviceManager;
     private IBioEngine      _bioEngine     ;
+    private ILocalStorage   _localStorage  ;
   }
 }

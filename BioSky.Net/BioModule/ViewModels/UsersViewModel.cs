@@ -48,48 +48,26 @@ namespace BioModule.ViewModels
       _database.PersonHolder.DataChanged += RefreshData;      
       _database.PhotoHolder.DataChanged  += RefreshData;
 
-      IsDeleteButtonEnabled = false;
-
-      Users = new AsyncObservableCollection<Person>();
-      Person per1 = new Person(){ Firstname = "Sasha", Lastname = "Iskra",  Rights = Person.Types.Rights.Manager};
-      Person per2 = new Person() { Firstname = "Taras", Lastname = "Lishenko", Rights = Person.Types.Rights.Manager };
-      Person per3 = new Person() { Firstname = "Viktor", Lastname = "Karnaushenkov", Rights = Person.Types.Rights.Manager };
-      Person per4 = new Person() { Firstname = "Alexey", Lastname = "Iskra", Rights = Person.Types.Rights.Manager };
-      Person per5 = new Person() { Firstname = "Elena", Lastname = "Dolgova", Rights = Person.Types.Rights.Supervisor };
-      Person per6 = new Person() { Firstname = "Yaroslav", Lastname = "Shubert", Rights = Person.Types.Rights.Manager };
-      Person per7 = new Person() { Firstname = "Макс", Lastname = "Репинетский", Rights = Person.Types.Rights.Manager };
-      Person per8 = new Person() { Firstname = "Natasha", Lastname = "Goroh", Rights = Person.Types.Rights.Manager };
-      Person per9 = new Person() { Firstname = "Tanya", Lastname = "Goroh", Rights = Person.Types.Rights.Operator };      
-
-      Users.Add(per1);
-      Users.Add(per3);
-      Users.Add(per2);
-      Users.Add(per4);
-      Users.Add(per5);
-      Users.Add(per6);
-      Users.Add(per7);
-      Users.Add(per8);
-      Users.Add(per9);
+      IsDeleteButtonEnabled = false;     
 
       UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
       
     }
     #region Database
     private void RefreshData()
-    {
-      /*
-            if (!IsActive)
-              return;
+    {      
+      if (!IsActive)
+        return;
 
-            Users = null;
-            Users = _database.PersonHolder.Data;*/
+      Users = null;
+      Users = _database.PersonHolder.Data; 
       UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
     }  
 
     #endregion
 
     #region BioService
-    private void DatabaseService_PersonsUpdated(PersonList list, Result result)
+    private void DatabaseService_PersonsUpdated(/*PersonList list, Result result*/)
     {
       //PersonUpdateResultProcessing(list, result);
 

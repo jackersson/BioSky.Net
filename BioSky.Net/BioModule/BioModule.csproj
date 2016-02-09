@@ -564,9 +564,6 @@
     <None Include="Resources\iris_scan.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\user_image.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\card_in_use.png" />
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +580,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\loader.PNG" />
+    <None Include="Resources\user_image.png" />
     <None Include="Resources\loadphotos.png" />
     <None Include="Resources\screenshot.png" />
     <Content Include="Resources\tracking.png" />

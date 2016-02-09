@@ -117,8 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EnrollFromImageFile" xml:space="preserve">
-    <value>Enroll from image file</value>
+  <data name="LogOut" xml:space="preserve">
+    <value>Log Out</value>
   </data>
   <data name="FitOff" xml:space="preserve">
     <value>Fit Off</value>
@@ -126,23 +126,17 @@
   <data name="FitOn" xml:space="preserve">
     <value>Fit On</value>
   </data>
-  <data name="LogOut" xml:space="preserve">
-    <value>Log Out</value>
-  </data>
-  <data name="EnrollFromCamera" xml:space="preserve">
-    <value>Enroll from famera</value>
+  <data name="Visitors_" xml:space="preserve">
+    <value>  Visitors</value>
   </data>
   <data name="AddNewUser_" xml:space="preserve">
     <value>  Add New User</value>
   </data>
-  <data name="Tracking_" xml:space="preserve">
-    <value>  Tracking</value>
-  </data>
   <data name="Users_" xml:space="preserve">
     <value>  Users</value>
   </data>
-  <data name="Visitors_" xml:space="preserve">
-    <value>  Visitors</value>
+  <data name="Tracking_" xml:space="preserve">
+    <value>  Tracking</value>
   </data>
   <data name="DatabaseService" xml:space="preserve">
     <value>Database Service</value>
@@ -153,17 +147,41 @@
   <data name="FaceService" xml:space="preserve">
     <value>Face Service</value>
   </data>
+  <data name="IpAdress" xml:space="preserve">
+    <value>IP-adress</value>
+  </data>
   <data name="WebSite" xml:space="preserve">
     <value>WebSite:</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>Version:</value>
   </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
   <data name="View" xml:space="preserve">
     <value>View</value>
   </data>
-  <data name="Out" xml:space="preserve">
-    <value>Out</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="DeleteUser" xml:space="preserve">
+    <value>Delete User</value>
+  </data>
+  <data name="Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Visitors" xml:space="preserve">
+    <value>Visitors</value>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Open Settings</value>
+  </data>
+  <data name="OpenInNewTab" xml:space="preserve">
+    <value>Open in New Tab</value>
   </data>
   <data name="In" xml:space="preserve">
     <value>In</value>
@@ -174,18 +192,6 @@
   <data name="SignIn" xml:space="preserve">
     <value>SignIn</value>
   </data>
-  <data name="AreYouSure" xml:space="preserve">
-    <value>Are you sure?</value>
-  </data>
-  <data name="Exit" xml:space="preserve">
-    <value>Exit</value>
-  </data>
-  <data name="GeneralSettings" xml:space="preserve">
-    <value>General Settings</value>
-  </data>
-  <data name="City" xml:space="preserve">
-    <value>City</value>
-  </data>
   <data name="DateOfBirth" xml:space="preserve">
     <value>Date Of Birth</value>
   </data>
@@ -195,11 +201,17 @@
   <data name="AddCard" xml:space="preserve">
     <value>Add Card</value>
   </data>
+  <data name="AddPerson" xml:space="preserve">
+    <value>Add Person</value>
+  </data>
   <data name="AddNewLocation" xml:space="preserve">
     <value>Add New Location</value>
   </data>
-  <data name="AddPerson" xml:space="preserve">
-    <value>Add Person</value>
+  <data name="AddNewUser" xml:space="preserve">
+    <value>Add New User</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
   </data>
   <data name="AccessDevices" xml:space="preserve">
     <value>Access Devices</value>
@@ -207,11 +219,29 @@
   <data name="UploadPhoto" xml:space="preserve">
     <value>Upload Photo</value>
   </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>General Settings</value>
+  </data>
   <data name="RegisteredUsers" xml:space="preserve">
     <value>Registered Users</value>
   </data>
+  <data name="EnrollFromCamera" xml:space="preserve">
+    <value>Enroll from famera</value>
+  </data>
+  <data name="EnrollFromImageFile" xml:space="preserve">
+    <value>Enroll from image file</value>
+  </data>
   <data name="Register" xml:space="preserve">
     <value>Register</value>
+  </data>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Out" xml:space="preserve">
+    <value>Out</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name*</value>
@@ -234,62 +264,53 @@
   <data name="Company" xml:space="preserve">
     <value>Company:</value>
   </data>
-  <data name="LogIn" xml:space="preserve">
-    <value>LogIn</value>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
   </data>
-  <data name="Locations" xml:space="preserve">
-    <value>Locations</value>
-  </data>
-  <data name="Location" xml:space="preserve">
-    <value>Location</value>
-  </data>
-  <data name="LocationName" xml:space="preserve">
-    <value>LocationName*</value>
-  </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="LocationSettings" xml:space="preserve">
-    <value>Location Settings</value>
-  </data>
-  <data name="About" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="Description" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="UsersNotification" xml:space="preserve">
-    <value>Users Notification</value>
-  </data>
-  <data name="OpenInNewTab" xml:space="preserve">
-    <value>Open in New Tab</value>
-  </data>
-  <data name="OpenSettings" xml:space="preserve">
-    <value>Open Settings</value>
-  </data>
-  <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="RevertChanges" xml:space="preserve">
-    <value>Revert Changes</value>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>Password</value>
-  </data>
-  <data name="Search" xml:space="preserve">
-    <value>Search...</value>
-  </data>
-  <data name="Gender" xml:space="preserve">
-    <value>Gender*</value>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
   </data>
   <data name="UsersToNotify" xml:space="preserve">
     <value>Users To Notify</value>
   </data>
-  <data name="User" xml:space="preserve">
-    <value>User</value>
+  <data name="Country" xml:space="preserve">
+    <value>Country</value>
   </data>
-  <data name="Help" xml:space="preserve">
-    <value>Help</value>
+  <data name="LogIn" xml:space="preserve">
+    <value>LogIn</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LocationName" xml:space="preserve">
+    <value>LocationName*</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="LocationSettings" xml:space="preserve">
+    <value>Location Settings</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="RevertChanges" xml:space="preserve">
+    <value>Revert Changes</value>
+  </data>
+  <data name="UsersNotification" xml:space="preserve">
+    <value>Users Notification</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search...</value>
   </data>
   <data name="Rights" xml:space="preserve">
     <value>Rights*</value>
@@ -297,61 +318,40 @@
   <data name="CaptureDevices" xml:space="preserve">
     <value>Capture Devices</value>
   </data>
-  <data name="Apply" xml:space="preserve">
-    <value>Apply</value>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name*</value>
   </data>
-  <data name="LocalStoragePath" xml:space="preserve">
-    <value>Loca lStorage Path</value>
-  </data>
-  <data name="Developers" xml:space="preserve">
-    <value>Developers:</value>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="Save" xml:space="preserve">
-    <value>Save</value>
+  <data name="Developers" xml:space="preserve">
+    <value>Developers:</value>
   </data>
-  <data name="Country" xml:space="preserve">
-    <value>Country</value>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
   </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+  <data name="Locations" xml:space="preserve">
+    <value>Locations</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="DeleteUser" xml:space="preserve">
-    <value>Delete User</value>
-  </data>
-  <data name="File" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="LastName" xml:space="preserve">
-    <value>Last Name*</value>
-  </data>
-  <data name="Photo" xml:space="preserve">
-    <value>Photo</value>
-  </data>
-  <data name="Language" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="AddNewUser" xml:space="preserve">
-    <value>Add New User</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
   <data name="Tracking" xml:space="preserve">
     <value>Tracking</value>
   </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
+  <data name="Gender" xml:space="preserve">
+    <value>Gender*</value>
   </data>
-  <data name="Visitors" xml:space="preserve">
-    <value>Visitors</value>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
   </data>
-  <data name="Port" xml:space="preserve">
-    <value>Port</value>
+  <data name="Photo" xml:space="preserve">
+    <value>Photo</value>
   </data>
-  <data name="IpAdress" xml:space="preserve">
-    <value>IP-adress</value>
+  <data name="LocalStoragePath" xml:space="preserve">
+    <value>Loca lStorage Path</value>
   </data>
 </root>

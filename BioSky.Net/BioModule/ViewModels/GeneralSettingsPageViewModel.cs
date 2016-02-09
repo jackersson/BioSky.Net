@@ -13,6 +13,7 @@ using BioContracts;
 using Microsoft.Win32;
 using System.IO;
 using System.Windows.Forms;
+using BioModule.ViewModels;
 
 namespace BioModule.ViewModels
 {
@@ -35,8 +36,7 @@ namespace BioModule.ViewModels
      public void LanguageChanged()
      {
        LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
-       LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);
-       
+       LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);       
      }
 
      protected override void OnActivate()

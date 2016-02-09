@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public delegate void DataUpdatedHandler<T>( IList<T> list, Result result);
+  public delegate void DataUpdatedHandler<T>( IList<T> list);
   public delegate void DataChangedHandler();
   public interface IHolder<TValue, TKey>
   {
-    event DataUpdatedHandler<TValue> DataUpdated;
+    //event DataUpdatedHandler<TValue> DataUpdated;
     event DataChangedHandler         DataChanged;
 
     AsyncObservableCollection<TValue> Data
@@ -25,7 +25,7 @@ namespace BioContracts
 
     void Update(IList<TValue> objects);
 
-    void Update(IList<TValue> objects, Result result);
+   // void Update(IList<TValue> objects);
   }
 
 }

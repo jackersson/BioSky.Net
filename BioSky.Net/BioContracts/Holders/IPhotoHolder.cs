@@ -8,8 +8,13 @@ using BioService;
 
 namespace BioContracts.Holders
 {
+  public delegate void FullPhotoRequest(PhotoList list);
   public interface IPhotoHolder 
   {
-    IList<Photo> GetPersonPhoto(long id);
+    event FullPhotoRequest FullPhotoRequested;
+
+    //IList<Photo> GetPersonPhoto(long id);
+
+    
   }
 }

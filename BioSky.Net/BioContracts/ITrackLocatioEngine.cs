@@ -9,8 +9,7 @@ namespace BioContracts
 {
   public interface ITrackLocationEngine
   {
-    void Init();
-
+ 
     AsyncObservableCollection<TrackLocation> TrackLocations
     { get; }
   }

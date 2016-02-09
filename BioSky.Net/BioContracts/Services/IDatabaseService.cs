@@ -9,27 +9,29 @@ namespace BioContracts.Services
 {
 
   public interface IDatabaseService
-  {   
-    Task CaptureDeviceRequest(CommandCaptureDevice command);
-    Task CaptureDeviceUpdateRequest(CaptureDeviceList list);
+  {
+    Task PersonsSelect(CommandPersons command);
 
-    Task AccessDeviceRequest(CommandAccessDevice command);
-    Task AccessDeviceUpdateRequest(AccessDeviceList list);
 
-    Task PhotoRequest       (CommandPhoto command);
-    Task PhotoUpdateRequest(PhotoList list);
+    Task VisitorsSelect(CommandVisitors command);
 
-    Task CardRequest        (CommandCard command);
-    Task CardUpdateRequest  (CardList list);
 
-    Task VisitorRequest     (CommandVisitor command);
-    Task VisitorUpdateRequest(VisitorList list);
+    Task LocationsSelect(CommandLocations command);
 
-    Task PersonRequest      (CommandPerson command);
-    Task PersonUpdateRequest(PersonList command);
 
-    Task LocationRequest(CommandLocation command);
+    Task PhotosSelect(CommandPhoto command);
 
-    Task LocationUpdateRequest(LocationList list);
+
+    Task PersonUpdate(PersonList persons);
+
+
+    Task VisitorUpdate(VisitorList visitors);
+
+    Task LocationUpdate(LocationList locations);
+
+
+    Task AddSocket(SocketConfiguration config);
+   
+
   }
 }

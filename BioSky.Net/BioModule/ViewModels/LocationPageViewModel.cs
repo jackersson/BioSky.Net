@@ -44,6 +44,7 @@ namespace BioModule.ViewModels
 
     public void Update(Location location)
     {
+/*
       if (location != null)
       {
         CurrentLocation = location.Clone();
@@ -53,20 +54,22 @@ namespace BioModule.ViewModels
         CurrentLocation = new Location() { LocationName = "", Description = "", Dbstate = DbState.Insert };
 
       foreach (IScreen scrn in Items)
-        _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });    
+        _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });*/    
 
     }
     public async Task LocationUpdatePerformer()
     {   
+/*
       LocationList locationList = new LocationList();
       locationList.Locations.Add(CurrentLocation);
 
       _database.LocationHolder.DataUpdated += LocationHolder_DataUpdated;
 
-      await _bioService.DatabaseService.LocationUpdateRequest(locationList);
+      await _bioService.DatabaseService.LocationUpdateRequest(locationList);*/
     }
-    private void LocationHolder_DataUpdated(IList<Location> list, Result result)
+    private void LocationHolder_DataUpdated(/*IList<Location> list, Result result*/)
     {
+/*
       _database.LocationHolder.DataUpdated -= LocationHolder_DataUpdated;
       foreach (ResultPair currentResult in result.Status)
       {
@@ -85,7 +88,7 @@ namespace BioModule.ViewModels
         }
 
         MessageBox.Show("Location: " + location.LocationName + " " + currentResult.Status.ToString());
-      }
+      }*/
     }
     public async void Apply()
     {

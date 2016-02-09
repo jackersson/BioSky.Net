@@ -34,7 +34,7 @@
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
         <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
-            <Grid >
+            <Grid>
                 <ScrollViewer x:Name="CurrentImageScrollViewer" 
                               cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
                                                   [Event SizeChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"           
