@@ -51,13 +51,13 @@ namespace BioData.Holders.Grouped
           updatedPhoto.FileLocation = resultedPhoto.FileLocation;
           updatedPhoto.FirLocation  = resultedPhoto.FirLocation ;
 
-          _photos.UpdateItem(updatedPhoto, updatedPhoto.Id, updatedPhoto.EntityState);
+          _photos.UpdateItem(updatedPhoto, updatedPhoto.Id, updatedPhoto.EntityState, updatedVisitor.Dbresult);
 
           updatedPhoto.EntityState = EntityState.Unchanged;
           updatedPhoto.Dbresult    = ResultStatus.Success;
         }
         
-        _visitors.UpdateItem(updatedVisitor, updatedVisitor.Id, updatedVisitor.EntityState);
+        _visitors.UpdateItem(updatedVisitor, updatedVisitor.Id, updatedVisitor.EntityState, updatedVisitor.Dbresult);
         visitor.EntityState = EntityState.Unchanged;
         visitor.Dbresult    = ResultStatus.Success;
       }

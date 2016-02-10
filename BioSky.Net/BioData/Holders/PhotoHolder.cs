@@ -34,9 +34,11 @@ namespace BioData.Holders
       CheckPhotos();
     }
 
-    public override void UpdateItem(Photo obj, long key, EntityState state)
+    public override void UpdateItem(Photo obj, long key, EntityState state, ResultStatus result)
     {
-      base.UpdateItem(obj, key, state);
+      if (result != ResultStatus.Success)
+        return;
+      base.UpdateItem(obj, key, state, result);
       SavePhoto  (obj);
       PhotoExists(obj);
       

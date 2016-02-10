@@ -41,7 +41,26 @@ namespace BioData.Holders.Grouped
 
     public void Update(LocationList updated, LocationList results)
     {
+      Google.Protobuf.Collections.RepeatedField<Location> data = results.Locations;
 
+      bool success = false;
+      foreach (Location location in data)
+      {
+        foreach (AccessDevice accessDevice in location.AccessDevices)
+          _accessDevices.UpdateItem(accessDevice, accessDevice.Id, accessDevice.EntityState, accessDevice.Dbresult);
+
+        foreach (CaptureDevice captureDevice in location.CaptureDevices)
+          _captureDevices.UpdateItem(captureDevice, captureDevice.Id, captureDevice.EntityState, captureDevice.Dbresult);
+
+        success = location.Dbresult == ResultStatus.Success;
+
+        _locations.UpdateItem(location, location.Id, location.EntityState, location.Dbresult);
+      }
+
+      if (success)
+        OnDataUpdated(results);
+
+      OnDataChanged();    
     }
 
     private void OnDataChanged()
@@ -50,6 +69,11 @@ namespace BioData.Holders.Grouped
         DataChanged();
     }
 
+    private void OnDataUpdated(LocationList list)
+    {
+      if (DataUpdated != null)
+        DataUpdated(list);
+    }
 
     public event DataChangedHandler DataChanged;
     public event DataUpdatedHandler<LocationList> DataUpdated;

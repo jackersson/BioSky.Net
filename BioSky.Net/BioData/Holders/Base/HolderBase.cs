@@ -59,8 +59,11 @@ namespace BioData.Holders.Base
 
     protected virtual void UpdateDataSet(IList<TValue> list) {  }
 
-    public virtual void UpdateItem(TValue obj, TKey key, EntityState state)
-    {      
+    public virtual void UpdateItem(TValue obj, TKey key, EntityState state, ResultStatus result)
+    {
+      if (result != ResultStatus.Success)
+        return;
+
       switch (state)
       {
         case EntityState.Added:
@@ -99,13 +102,19 @@ namespace BioData.Holders.Base
     {
       if (_dataSet.ContainsKey(key))
       {
-        _dataSet[key] = obj;           
+        //_dataSet[key] = obj;      
+        CopyFrom(obj, _dataSet[key]);   
       }
       else
       {
         Data.Add(obj);
         _dataSet.Add(key, obj);
       }
+    }
+
+    protected virtual void CopyFrom(TValue from, TValue to)
+    {
+      to = from;
     }
 
     public virtual void Remove(TValue obj, TKey key)

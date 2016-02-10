@@ -17,33 +17,12 @@ namespace BioData.Holders
       foreach (Person person in list)
         Update(person, person.Id);
     }
-        
 
-    /*
-    public override void Update(IList<Person> list, Result result)
-    {     
-      foreach (ResultPair currentResult in result.Status)
-      {
-        Person person = null;
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          if (currentResult.State == DbState.Insert)          
-            person = currentResult.Person;          
-          else
-            person = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
-
-          if (person != null)
-          {
-            person.Dbstate = DbState.None;
-            UpdateItem(person, person.Id, currentResult.State);
-          }
-        }            
-      }
-    
-      base.Update(list, result);
+    protected override void CopyFrom(Person from, Person to)
+    {
+      to.MergeFrom(from);
     }
-
-    */
+  
 
   }
 }

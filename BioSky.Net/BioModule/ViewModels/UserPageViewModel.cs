@@ -108,10 +108,20 @@ namespace BioModule.ViewModels
       _user.EntityState = state;     
 
       Photo photo = CurrentImageView.CurrentImagePhoto;
-      if(photo != null)
+      if (photo != null)
       {
         photo.OriginType = PhotoOriginType.Loaded;
-        _user.Thumbnail = photo;
+
+        Photo thumbnail = null;
+        bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out thumbnail);
+        if (photoExists)
+        {
+          if (thumbnail.GetHashCode() != photo.GetHashCode())
+            _user.Thumbnail = photo;
+        }           
+        else        
+          _user.Thumbnail = photo;
+        
       }
 
       PersonList personList = new PersonList();
@@ -120,6 +130,7 @@ namespace BioModule.ViewModels
       try
       {
         _database.Persons.DataUpdated += UpdateData;
+        _database.PhotoHolder.DataChanged += UpdatePhoto;
 
         await _bioService.DatabaseService.PersonUpdate(personList);
       }
@@ -127,6 +138,16 @@ namespace BioModule.ViewModels
       {
         Console.WriteLine(e.Message);
       }      
+    }
+
+    public void UpdatePhoto()
+    {
+      _database.PhotoHolder.DataChanged -= UpdatePhoto;
+
+      Photo photo = null;
+      bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out photo);
+      if (photoExists)
+        CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
     }
     
     private void UpdateData(PersonList list)
@@ -162,7 +183,8 @@ namespace BioModule.ViewModels
     #region Interface
 
     public async void Apply()
-    {
+    {   
+
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
 
       if (result == true)     

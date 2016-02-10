@@ -51,22 +51,34 @@ namespace BioData.Holders.Grouped
 
       bool success = false;
       foreach (Person person in data)
-      {
+      {       
         foreach (Card card in person.Cards)        
-          _cards.UpdateItem(card, card.UniqueNumber, card.EntityState);
+          _cards.UpdateItem(card, card.UniqueNumber, card.EntityState, card.Dbresult);
+
+        Photo thumbnail = person.Thumbnail;
+        if (thumbnail != null)
+          _photos.UpdateItem(thumbnail, thumbnail.Id, thumbnail.EntityState, thumbnail.Dbresult);
 
         foreach (Photo photo in person.Photos)
-          _photos.UpdateItem(photo, photo.Id, photo.EntityState);
+          _photos.UpdateItem(photo, photo.Id, photo.EntityState, photo.Dbresult);
 
         success = person.Dbresult == ResultStatus.Success;
 
-        _persons.UpdateItem(person, person.Id, person.EntityState);        
+        _persons.UpdateItem(person, person.Id, person.EntityState, person.Dbresult);        
       }
 
       if (success)
         OnDataUpdated(results);
 
-      OnDataChanged();
+      try
+      {
+        OnDataChanged();
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
+
       _photos.CheckPhotos();
     
     }

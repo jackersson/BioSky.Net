@@ -77,6 +77,9 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
+      if (_user == null)
+        return;
+
       IList<Photo> list = _database.PhotoHolder.Data.Where(  x=>x.Personid == _user.Id 
                                                           && x.OriginType == PhotoOriginType.Loaded).ToList();
 
