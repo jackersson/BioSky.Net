@@ -45,6 +45,10 @@ namespace BioModule.ViewModels
       DevicesOutList = new DragablListBoxViewModel(removeDragable);
       DevicesOutList.ItemRemoved += DevicesList.ItemDropped;
 
+      AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
+      AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
+
+
      // _bioEngine.Database().PersonHolder.DataChanged += RefreshData;
 
       RefreshData();
@@ -100,6 +104,13 @@ namespace BioModule.ViewModels
           }
         }     
       }
+
+      foreach(string deviceName in AccessDevicesNames)
+      {
+        AccessDevice device = new AccessDevice() { Portname = "deviceName",  };
+        DragableItem dragableItem = new DragableItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Portname };
+        AddToGeneralDeviceList(dragableItem, true);
+      }
     }
 
     public RepeatedField<AccessDevice> GetAccessDevices()
@@ -122,8 +133,11 @@ namespace BioModule.ViewModels
 
       return accessDevices;
     }
-   
 
+    private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      RefreshData();
+    }
 
     public void Update(Location location)
     {
@@ -141,6 +155,20 @@ namespace BioModule.ViewModels
     }
 
     #region UI
+    private AsyncObservableCollection<string> _accessDevicesNames;
+    public AsyncObservableCollection<string> AccessDevicesNames
+    {
+      get { return _accessDevicesNames; }
+      set
+      {
+        if (_accessDevicesNames != value)
+        {
+          _accessDevicesNames = value;
+
+          NotifyOfPropertyChange(() => AccessDevicesNames);
+        }
+      }
+    }
 
     private DragablListBoxViewModel _devicesList;
     public DragablListBoxViewModel DevicesList
