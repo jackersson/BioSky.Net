@@ -46,7 +46,7 @@ namespace BioModule.ViewModels
       LocationId = -1;
 
       _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.VisitorHolder.DataChanged += RefreshData;
+      _database.Visitors.DataChanged += RefreshData;
 
       VisitorsCollectionView = CollectionViewSource.GetDefaultView(Visitors);
     } 
@@ -65,9 +65,8 @@ namespace BioModule.ViewModels
     }
     private void GetLastVisitor()
     {
-      LastVisitor = null;
-      if (Visitors.Count != 0)
-        LastVisitor = Visitors[Visitors.Count - 1];
+      LastVisitor = null;     
+      LastVisitor = Visitors.LastOrDefault();
     }
 
     #endregion

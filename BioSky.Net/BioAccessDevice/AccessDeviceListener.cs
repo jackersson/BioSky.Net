@@ -74,8 +74,8 @@ namespace BioAccessDevice
       {
         _serialPort.Open();
 
-        Enqueque(AccessDeviceCommands.CommandReset);
-        Enqueque(AccessDeviceCommands.CommandReady);
+        Enqueque(AccessDeviceCommands.CommandReset    );
+        Enqueque(AccessDeviceCommands.CommandReady    );
 
         AccessDeviceActivity notification = new AccessDeviceActivity();
         Notify(new AccessDeviceActivity() { CommandID = AccessDeviceCommands.CommandReady });

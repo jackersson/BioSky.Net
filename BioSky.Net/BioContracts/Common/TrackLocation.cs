@@ -76,6 +76,11 @@ namespace BioContracts
 
     private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
     {
+
+      Console.WriteLine("Verifier busy = " + _veryfier.Busy);
+      if (_veryfier.Busy)
+        return;
+
       CardNumber = "";
       CardNumber = cardNumber;
       observer = null;
@@ -83,32 +88,14 @@ namespace BioContracts
       Card card;
       bool cardFound = _database.CardHolder.DataSet.TryGetValue(cardNumber, out card);
 
-      /*
-      VisitorList list = new VisitorList();
-      Visitor visitor = new Visitor() { Locationid  = _location.Id
-                                      , EntityState = EntityState.Added
-                                      , Time        = DateTime.Now.Ticks
-                                      , Status      = ResultStatus.Failed
-                                      , Personid    = 0
-                                      , Photoid     = 0
-                                      , CardNumber = cardNumber };
-
-      */
-
+      
       sender.Reset();
       Person person = null;
       if (cardFound)
       {        
         bool personFound = _database.PersonHolder.DataSet.TryGetValue(card.Personid, out person);
         if (personFound)
-        {
-         //_bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
-             
-          //sender.Success();       
-
-          //visitor.Personid = person.Id;
-          //visitor.Status   = ResultStatus.Success;
-
+        {         
           try
           {
             VerificationData verificationData = new VerificationData();
@@ -123,27 +110,6 @@ namespace BioContracts
         }
        
       }
-
-      //_bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
-      //VerificationData data = new VerificationData();
-      //data.Personid = ( person == null ) ? person.Id : 0;
-
-      //_veryfier.Start(CaptureDeviceName, data);
-
-      /*
-      sender.Failed();
-      list.Visitors.Add(visitor);
-
-      try
-      {
-        await _bioService.DatabaseService.VisitorUpdate(list);
-      }
-      catch (Exception ex )
-      {
-        Console.WriteLine(ex.Message);
-      }
-      */
-
     }
 
     string CardNumber = "";
@@ -173,7 +139,7 @@ namespace BioContracts
           else
             observer.Failed();
         }
-       ;
+       
 
         Photo image         = _veryfier.GetImage();
         Photo feedbackPhoto = enrollFeedback.Photo;

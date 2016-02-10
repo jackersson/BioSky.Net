@@ -50,6 +50,8 @@ namespace BioModule.ViewModels
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
 
+      CaptureDeviceConnected = false;
+
 
       _database.Persons.DataChanged += RefreshData;
       _database.PhotoHolder.DataChanged += RefreshData;      
@@ -75,7 +77,8 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
-      IList<Photo> list = _database.PhotoHolder.Data.Where(x=>x.Personid == _user.Id).ToList();
+      IList<Photo> list = _database.PhotoHolder.Data.Where(  x=>x.Personid == _user.Id 
+                                                          && x.OriginType == PhotoOriginType.Loaded).ToList();
 
       if (list == null)
         return;
@@ -121,12 +124,19 @@ namespace BioModule.ViewModels
     }
     public void EnrollFromCamera()
     {
-      if (CaptureDeviceConnected)
+      if (CaptureDeviceConnected && !_enroller.Busy)
       {
         _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
         EnrollmentData data = new EnrollmentData();
         _enroller.Start(ActiveCaptureDevice, data);
       }
+
+      if (!CaptureDeviceConnected)      
+        MessageBox.Show("Choose CaptureDevice first ! ");      
+
+      if (_enroller.Busy)      
+        MessageBox.Show("Wait for finnishing previous operation");
+      
     }
     public void Subscribe()
     {
@@ -212,7 +222,22 @@ namespace BioModule.ViewModels
     }
     public void EnrollFromPhoto()
     {
-      //UploadClick();
+      if (!_enroller.Busy)
+      {
+        Photo photo = _imageViewer.UploadPhoto();
+
+        if (photo == null || photo.Description.Length <= 0)
+        {
+          MessageBox.Show("Upload New photo");
+          return;
+        }
+
+        _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
+        EnrollmentData data = new EnrollmentData();
+        _enroller.Start(photo, data);       
+      }
+      else     
+        MessageBox.Show("Wait for finnishing previous operation");
     }
     public void OnSelectionChange()
     {
@@ -223,38 +248,7 @@ namespace BioModule.ViewModels
     public void UploadClick()
     {
       Photo photo = _imageViewer.UploadPhoto();
-      /*
-      OpenFileDialog openFileDialog = new OpenFileDialog();
-      openFileDialog.Multiselect = false;
-      openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-      openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-
-      if (openFileDialog.ShowDialog() == true)
-      {
-        string filename = openFileDialog.FileName;
-        if (File.Exists(filename))
-        {
-          Bitmap bmp = (Bitmap)Image.FromFile(filename);
-
-          Google.Protobuf.ByteString description = _bioUtils.ImageToByteString(bmp);
-
-          NewPhoto = new Photo()
-          {
-            EntityState = EntityState.Added
-            , Description = description
-            , FileLocation = ""
-            , FirLocation = ""
-            , Personid = _user.Id
-            , SizeType = PhotoSizeType.Full
-          };
-
-          _imageViewer.UpdateImage(NewPhoto, filename);
-
-          PhotoList photoList = new PhotoList();
-          photoList.Photos.Add(NewPhoto);          
-        }
-      }
-      */
+      
     }   
    
     public void DeletePhoto()
@@ -352,23 +346,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-/*
-    private AsyncObservableCollection<Uri> _userImages;
-    public AsyncObservableCollection<Uri> UserImages
-    {
-      get { return _userImages; }
-      set
-      {
-        if (_userImages != value)
-        {
-          _userImages = value;
-
-          NotifyOfPropertyChange(() => UserImages);
-        }
-      }
-    }*/
-
+    
     private AsyncObservableCollection<string> _captureDevicesNames;
     public AsyncObservableCollection<string> CaptureDevicesNames
     {
@@ -410,8 +388,16 @@ namespace BioModule.ViewModels
           _selectedItem = value;
 
           NotifyOfPropertyChange(() => SelectedItem);
+          NotifyOfPropertyChange(() => CanDeleteItem);
         }
       }
+    }
+
+    private bool _canDeleteItem;
+    public bool CanDeleteItem
+    {
+      get { return SelectedItem != null; }
+      
     }
 
     private Person _user;
@@ -429,7 +415,7 @@ namespace BioModule.ViewModels
     }
 
     private bool _captureDeviceConnected;
-    private bool CaptureDeviceConnected
+    public bool CaptureDeviceConnected
     {
       get { return _captureDeviceConnected; }
       set
@@ -437,6 +423,7 @@ namespace BioModule.ViewModels
         if (_captureDeviceConnected != value)
         {
           _captureDeviceConnected = value;
+          NotifyOfPropertyChange(() => CaptureDeviceConnected);
           NotifyOfPropertyChange(() => CaptureDeviceConnectedIcon);
         }
       }

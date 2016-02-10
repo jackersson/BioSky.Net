@@ -65,7 +65,7 @@
                     <local:UserContactlessCardView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserContactlessCardView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPhotoViewModel}">
-                    <local:UserPhotoView x:Name="ActiveItem"></local:UserPhotoView>
+                    <local:UserPhotoView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserPhotoView>
                 </DataTemplate>
             </TabControl.Resources> 
             <TabControl.ItemTemplate>

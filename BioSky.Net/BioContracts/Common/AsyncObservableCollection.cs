@@ -40,7 +40,15 @@ namespace BioContracts
     private void RaiseCollectionChanged(object param)
     {
       // We are in the creator thread, call the base implementation directly
-      base.OnCollectionChanged((NotifyCollectionChangedEventArgs)param);
+      try
+      {
+        base.OnCollectionChanged((NotifyCollectionChangedEventArgs)param);
+
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)

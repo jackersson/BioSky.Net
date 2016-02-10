@@ -6,18 +6,30 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace BioContracts.Common
 {
   public class BiometricPerformerBase<T>
   {
+    private readonly Timer resetTimer; 
     public BiometricPerformerBase(ICaptureDeviceEngine captureDeviceEngine)
     {
       _utils               = new BioImageUtils();  
 
       _captureDeviceEngine = captureDeviceEngine;
+
+      resetTimer = new Timer(10000);
+      resetTimer.Elapsed += ResetTimer_Elapsed;
+      resetTimer.Stop();
+    }
+
+    private void ResetTimer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+      resetTimer.Stop();
+      Reset();
     }
 
     public void Start(string deviceName, T data)
@@ -30,15 +42,20 @@ namespace BioContracts.Common
       _captureDeviceEngine.Subscribe(OnImage, deviceName);
     }
 
-    public void Start(string deviceName, Bitmap image, T data)
+    public void Start(Photo image, T data)
     {
       if (_busy)
         return;
 
-      Init(deviceName, data);
+      Init(null, data);
 
-      OnImage(null, ref image);
+      UpdateData(image);       
     }   
+
+    public bool Busy
+    {
+       get { return _busy; }
+    }
 
     private void OnImage(object sender, ref Bitmap bitmap)
     {
@@ -68,23 +85,25 @@ namespace BioContracts.Common
     protected virtual void PerformRequest()
     {
       Console.WriteLine("Request performed");
-
       Reset();
     }
 
     private void Reset()
     {
+    
       _busy = false;     
       _captureDeviceEngine.Unsubscribe(OnImage, _deviceName);      
     }
 
     private void Init(string deviceName, T data)
     {
+      resetTimer.Start();
       Reset();
-
+      _busy = true;
       _data       = data;
       _deviceName = deviceName;
-      _captureDeviceEngine.Add(deviceName);
+      if (deviceName != null)
+        _captureDeviceEngine.Add(deviceName);
     }
 
     protected T _data;

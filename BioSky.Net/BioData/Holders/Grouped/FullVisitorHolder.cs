@@ -24,20 +24,10 @@ namespace BioData.Holders.Grouped
     {
       Google.Protobuf.Collections.RepeatedField<Visitor> data = list.Visitors;
 
-      foreach (Visitor visitor in data)
-      {
-        /*
-        Photo visitorPhoto = visitor.Photo;
-        if (visitorPhoto != null)
-          _photos.Add(visitorPhoto, visitorPhoto.Id);
-          */
-        //TODO clear visitor list
-
-        _visitors.Add(visitor, visitor.Id);
-      }
+      foreach (Visitor visitor in data)      
+        _visitors.Add(visitor, visitor.Id);      
 
       OnDataChanged();
-      //_photos.CheckPhotos();
     }
 
     public void Update(VisitorList updated, VisitorList results)
@@ -52,9 +42,24 @@ namespace BioData.Holders.Grouped
         if (resultedVisitor != null)
           updatedVisitor.Id = resultedVisitor.Id;
 
+        Photo resultedPhoto = resultedVisitor.Photo;
+        Photo updatedPhoto = new Photo(updatedVisitor.Photo);
+        if (resultedPhoto != null && updatedPhoto != null)
+        {
+          updatedPhoto.Id = resultedPhoto.Id;
+
+          updatedPhoto.FileLocation = resultedPhoto.FileLocation;
+          updatedPhoto.FirLocation  = resultedPhoto.FirLocation ;
+
+          _photos.UpdateItem(updatedPhoto, updatedPhoto.Id, updatedPhoto.EntityState);
+
+          updatedPhoto.EntityState = EntityState.Unchanged;
+          updatedPhoto.Dbresult    = ResultStatus.Success;
+        }
+        
         _visitors.UpdateItem(updatedVisitor, updatedVisitor.Id, updatedVisitor.EntityState);
         visitor.EntityState = EntityState.Unchanged;
-        visitor.Dbresult = ResultStatus.Success;
+        visitor.Dbresult    = ResultStatus.Success;
       }
 
       OnDataChanged();

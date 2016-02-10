@@ -21,6 +21,9 @@ namespace BioEngine.CaptureDevices
 
     public void Add(string cameraName)
     {
+      if (cameraName == null)
+        return;
+
       СaptureDeviceListener listener;
       if (!_captureDevices.TryGetValue(cameraName, out listener))
       {      

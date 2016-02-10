@@ -28,7 +28,7 @@ namespace BioAccessDevice.Commands
 
 
       bool flag = commandEquality && checkResponseSumValid;
-     
+    
       if (flag && (( timer.ElapsedMilliseconds > DALLASKEY_COMMAND_DELAY && timer.IsRunning) || !timer.IsRunning) )
       {
         byte[] dallasKey = GetDallayKey();
@@ -64,7 +64,7 @@ namespace BioAccessDevice.Commands
 
     private const short DALLASKEY_COMMAND_RESPONSE_BYTES_COUNT = 17;
 
-    private const int DALLASKEY_COMMAND_DELAY = 2000;
+    private const int DALLASKEY_COMMAND_DELAY = 3000;
 
     private Stopwatch timer = new Stopwatch();
   }

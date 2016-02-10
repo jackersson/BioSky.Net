@@ -90,7 +90,7 @@ namespace BioModule.ViewModels
     
     private void OnNewFrame(object sender, ref Bitmap bitmap)
     {
-      if (bitmap == null)
+      if (bitmap == null || ImageView == null)
         return;
       
       ImageView.UpdateImage(ref bitmap);

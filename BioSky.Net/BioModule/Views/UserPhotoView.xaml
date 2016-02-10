@@ -18,7 +18,8 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>        
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
@@ -37,10 +38,9 @@
         
         <Button Width="48" Height="48" Grid.Column="2" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
-                Grid.Row="0"               
+                Grid.Row="0"                 
                 ToolTip="{lex:Loc EnrollFromCamera}"
-                cal:Message.Attach="[Event Click]=[Action EnrollFromCamera]"               
-                >
+                cal:Message.Attach="[Event Click]=[Action EnrollFromCamera]"  >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}" 
                    Height="24" Width="24" />
         </Button>
@@ -58,6 +58,7 @@
         <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
+                Visibility="{Binding CanDeleteItem, Converter={StaticResource BooleanToVisibilityConverter}}"
                 cal:Message.Attach="[Event Click]=[Action DeletePhoto]"
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}"
