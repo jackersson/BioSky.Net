@@ -18,6 +18,21 @@ namespace BioData.Holders
         Update(card, card.UniqueNumber);        
     }
 
+    public override void Remove(Card obj, string key)
+    {
+      base.Remove(obj, key);
+      var item = Data.Where(x => x.Id == obj.Id).FirstOrDefault();
+      if (item != null)
+      {
+        Data.Remove(item);
+      }
+    }
+
+    protected override void CopyFrom(Card from, Card to)
+    {
+      to.MergeFrom(from);
+    }
+
     /*
     public override void Update(IList<Card> list, Result result)
     {

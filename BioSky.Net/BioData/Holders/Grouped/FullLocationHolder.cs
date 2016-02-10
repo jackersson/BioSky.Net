@@ -42,10 +42,12 @@ namespace BioData.Holders.Grouped
     public void Update(LocationList updated, LocationList results)
     {
       Google.Protobuf.Collections.RepeatedField<Location> data = results.Locations;
-
+      Console.WriteLine(_accessDevices.Data);
       bool success = false;
+      
       foreach (Location location in data)
       {
+        Clear(location.Id);
         foreach (AccessDevice accessDevice in location.AccessDevices)
           _accessDevices.UpdateItem(accessDevice, accessDevice.Id, accessDevice.EntityState, accessDevice.Dbresult);
 
@@ -57,10 +59,41 @@ namespace BioData.Holders.Grouped
         _locations.UpdateItem(location, location.Id, location.EntityState, location.Dbresult);
       }
 
+      Console.WriteLine(_accessDevices.Data);
+
       if (success)
         OnDataUpdated(results);
 
       OnDataChanged();    
+    }
+
+    private void Clear(long locationid )
+    {
+
+
+      try
+      {
+        IEnumerable<AccessDevice> tempAccessDevices = _accessDevices.Data.Where(x => x.Locationid == locationid);
+        if (tempAccessDevices != null)
+        {
+          foreach (AccessDevice accessDevice in tempAccessDevices.ToList())
+            _accessDevices.UpdateItem(accessDevice, accessDevice.Id, EntityState.Deleted, accessDevice.Dbresult);
+        }
+
+        IEnumerable<CaptureDevice> tempCaptureDevices = _captureDevices.Data.Where(x => x.Locationid == locationid);
+        if (tempCaptureDevices != null)
+        {
+          foreach (CaptureDevice captureDevice in tempCaptureDevices.ToList())
+            _captureDevices.UpdateItem(captureDevice, captureDevice.Id, EntityState.Deleted, captureDevice.Dbresult);
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
+   
+
+      Console.WriteLine(_locations.DataSet);
     }
 
     private void OnDataChanged()

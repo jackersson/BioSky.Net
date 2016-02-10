@@ -18,6 +18,21 @@ namespace BioData.Holders
         Update(location, location.Id);      
     }
 
+    public override void Remove(Location obj, long key)
+    {
+      base.Remove(obj, key);
+      var item = Data.Where(x=>x.Id == obj.Id).FirstOrDefault();
+      if ( item != null)
+      {
+        Data.Remove(item);
+      }
+    }
+
+    protected override void CopyFrom(Location from, Location to)
+    {
+      to.MergeFrom(from);
+    }
+
     /*
     public override void Update(IList<Location> list, Result result)
     {

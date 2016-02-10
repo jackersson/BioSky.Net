@@ -14,6 +14,8 @@ namespace BioEngine
   public class TrackLocationEngine : ITrackLocationEngine
   {
 
+    
+
     public TrackLocationEngine(  IProcessorLocator locator )      
     {     
       _locator = locator;
@@ -21,6 +23,8 @@ namespace BioEngine
            
       _locator.GetProcessor<IBioSkyNetRepository>().Locations.DataChanged += RefreshData;        
     }
+
+  
 
     public void RefreshData()
     {

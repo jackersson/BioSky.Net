@@ -25,6 +25,20 @@ namespace BioData.Holders
         Update(visitor, visitor.Id);
     }
 
+    protected override void CopyFrom(Visitor from, Visitor to)
+    {
+      to.MergeFrom(from);
+    }
+
+    public override void Remove(Visitor obj, long key)
+    {
+      base.Remove(obj, key);
+      var item = Data.Where(x => x.Id == obj.Id).FirstOrDefault();
+      if (item != null)
+      {
+        Data.Remove(item);
+      }
+    }
     /*
 
     public override void Update(IList<Visitor> list, Result result)

@@ -18,6 +18,21 @@ namespace BioData.Holders
         Update(accessDevice, accessDevice.Id);
     }
 
+    public override void Remove(AccessDevice obj, long key)
+    {
+      base.Remove(obj, key);
+      var item = Data.Where(x => x.Id == obj.Id).FirstOrDefault();
+      if (item != null)
+      {
+        Data.Remove(item);
+      }
+    }
+
+    protected override void CopyFrom(AccessDevice from, AccessDevice to)
+    {
+      to.MergeFrom(from);
+    }
+
     /*
     public override void Update(IList<AccessDevice> list, Result result)
     {

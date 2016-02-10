@@ -5,6 +5,7 @@ using Caliburn.Micro;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,8 @@ namespace BioContracts
 
   public class TrackLocation : PropertyChangedBase
   {
+    public event FrameEventHandler FrameChanged;
+
     public event EnrollFeedbackEventHandler EnrollFeedbackChanged;
     public TrackLocation(IProcessorLocator locator, Location location)
     {
@@ -51,8 +54,17 @@ namespace BioContracts
       foreach (CaptureDevice cd in capture_devices)
       {       
         TrackLocationCaptureDeviceObserver observer = new TrackLocationCaptureDeviceObserver(_locator, cd);
+        observer.Subscribe(OnFrameChanged);
         _captureDevices.Add(cd.Devicename, observer);
         CaptureDeviceName = cd.Devicename;
+      }
+    }
+
+    private void OnFrameChanged(object sender, ref Bitmap bitmap)
+    {
+      if (FrameChanged != null)
+      {
+        FrameChanged(sender,ref  bitmap);
       }
     }
 
@@ -69,6 +81,7 @@ namespace BioContracts
     {
       foreach (KeyValuePair<string, TrackLocationCaptureDeviceObserver> ac in _captureDevices)
       {
+        ac.Value.Unsubscribe(OnFrameChanged);
         ac.Value.Stop();
         _accessDevices.Remove(ac.Key);
       }

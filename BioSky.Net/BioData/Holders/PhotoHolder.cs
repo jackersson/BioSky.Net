@@ -68,6 +68,21 @@ namespace BioData.Holders
       return false;
     }
 
+    protected override void CopyFrom(Photo from, Photo to)
+    {
+      to.MergeFrom(from);
+    }
+
+    public override void Remove(Photo obj, long key)
+    {
+      base.Remove(obj, key);
+      var item = Data.Where(x => x.Id == obj.Id).FirstOrDefault();
+      if (item != null)
+      {
+        Data.Remove(item);
+      }
+    }
+
     public void CheckPhotos()
     {
       if (_noDescriptionPhotos.Photos.Count > 0)
@@ -82,8 +97,8 @@ namespace BioData.Holders
       if ( FullPhotoRequested != null )
         FullPhotoRequested(list);
     }
-        
 
+   
     PhotoList _noDescriptionPhotos;
 
     HashSet<long> _checkedPhotos;

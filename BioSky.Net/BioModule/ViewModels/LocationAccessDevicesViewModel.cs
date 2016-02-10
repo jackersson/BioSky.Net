@@ -72,7 +72,7 @@ namespace BioModule.ViewModels
 
       foreach (AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
       {
-        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Portname };
+        DragableItem dragableItem = new DragableItem() { ItemContext = item.Clone(), ItemEnabled = true, DisplayName = item.Portname };
 
         if (_location.Id <= 0)
         {
@@ -107,7 +107,7 @@ namespace BioModule.ViewModels
 
       foreach(string deviceName in AccessDevicesNames)
       {
-        AccessDevice device = new AccessDevice() { Portname = "deviceName",  };
+        AccessDevice device = new AccessDevice() { Portname = deviceName };
         DragableItem dragableItem = new DragableItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Portname };
         AddToGeneralDeviceList(dragableItem, true);
       }
@@ -141,7 +141,7 @@ namespace BioModule.ViewModels
 
     public void Update(Location location)
     {
-      _location = location;
+      _location = location.Clone();
       RefreshData();
     }
     public void Apply()

@@ -95,12 +95,19 @@ namespace BioEngine.CaptureDevices
       if (null == _videoSource)
         return;
 
-      _videoSource.SignalToStop();
+      try
+      {
+        _videoSource.SignalToStop();
 
-      for (int i = 0; (i < 50) && (_videoSource.IsRunning); i++)      
-        Thread.Sleep(100);       
-      
-      _videoSource = null;
+        for (int i = 0; (i < 50) && (_videoSource.IsRunning); i++)
+          Thread.Sleep(100);
+
+        _videoSource = null;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
 
     public bool IsActive()

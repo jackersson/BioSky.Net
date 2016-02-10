@@ -137,7 +137,7 @@ namespace BioGRPC
       try
       {
         LocationList call = await _client.LocationUpdateAsync(locations);
-        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
+        _database.Locations.Update(locations, call);
 
       //  Console.WriteLine(call.ToString());
       }

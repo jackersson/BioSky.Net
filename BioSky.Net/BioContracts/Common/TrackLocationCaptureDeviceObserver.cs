@@ -213,6 +213,16 @@ namespace BioContracts.Common
       _captureDeviceEngine.Add(_captureDevice.Devicename);     
     }   
 
+    public void Subscribe(FrameEventHandler handler)
+    {
+      _captureDeviceEngine.Subscribe(handler, _captureDevice.Devicename);
+    }
+
+    public void Unsubscribe(FrameEventHandler handler)
+    {
+      _captureDeviceEngine.Unsubscribe(handler, _captureDevice.Devicename);
+    }
+
     public void Stop()
     {        
       _captureDeviceEngine.Remove(_captureDevice.Devicename);

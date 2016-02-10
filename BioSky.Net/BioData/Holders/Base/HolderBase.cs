@@ -120,7 +120,6 @@ namespace BioData.Holders.Base
     public virtual void Remove(TValue obj, TKey key)
     {
       _dataSet.Remove(key);
-      Data.Remove(obj);
     }
 
     protected void OnDataChanged()

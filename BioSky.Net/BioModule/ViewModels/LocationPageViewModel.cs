@@ -97,7 +97,7 @@ namespace BioModule.ViewModels
         AccessDevice accessDevice = null;
         bool accessDeviceExist = _database.AccessDeviceHolder.DataSet.TryGetValue(item.Id, out accessDevice);
         if (accessDeviceExist)
-          item.EntityState = EntityState.Modified;
+          item.EntityState = EntityState.Added;
         else
           item.EntityState = EntityState.Added;
 
@@ -109,7 +109,7 @@ namespace BioModule.ViewModels
         CaptureDevice captureDevice = null;
         bool captureDeviceExist = _database.CaptureDeviceHolder.DataSet.TryGetValue(item.Id, out captureDevice);
         if (captureDeviceExist)
-          item.EntityState = EntityState.Modified;
+          item.EntityState = EntityState.Added;
         else
           item.EntityState = EntityState.Added;
 

@@ -65,6 +65,10 @@ namespace BioModule.ViewModels
 
     public void Update(TrackLocation trackLocation)
     {
+
+      if (CurrentLocation != null)      
+        CurrentLocation.FrameChanged -= OnNewFrame;      
+
       if (trackLocation == null)
         return;
 
@@ -73,7 +77,7 @@ namespace BioModule.ViewModels
       CurrentLocation.PropertyChanged += CurrentLocation_PropertyChanged;
       trackLocation.EnrollFeedbackChanged += TrackLocation_EnrollFeedbackChanged;
 
-      _captureDeviceEngine.Subscribe(OnNewFrame, trackLocation.CaptureDeviceName) ;
+      trackLocation.FrameChanged += OnNewFrame;
       _visitorsView.Update();
     }
 

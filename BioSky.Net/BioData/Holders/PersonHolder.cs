@@ -22,7 +22,18 @@ namespace BioData.Holders
     {
       to.MergeFrom(from);
     }
-  
+
+    public override void Remove(Person obj, long key)
+    {
+      base.Remove(obj, key);
+      var item = Data.Where(x => x.Id == obj.Id).FirstOrDefault();
+      if (item != null)
+      {
+        Data.Remove(item);
+      }
+    }
+
+   
 
   }
 }
