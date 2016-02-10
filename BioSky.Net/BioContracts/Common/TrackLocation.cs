@@ -42,20 +42,42 @@ namespace BioContracts
 
     private void RefreshCaptureDevices()
     {
+      StopCaptureDevices();
+
       List<CaptureDevice> capture_devices = _database.CaptureDeviceHolder.Data
                                             .Where(cap => cap.Locationid == _location.Id)
                                             .ToList();
 
       foreach (CaptureDevice cd in capture_devices)
-      {
+      {       
         TrackLocationCaptureDeviceObserver observer = new TrackLocationCaptureDeviceObserver(_locator, cd);
         _captureDevices.Add(cd.Devicename, observer);
         CaptureDeviceName = cd.Devicename;
       }
     }
 
+    private void StopAccessDevices()
+    {
+      foreach (KeyValuePair<string, TrackLocationAccessDeviceObserver> ac in _accessDevices)
+      {
+        ac.Value.AccessDeviceState -= OnAccessDeviceStateChanged;
+        _accessDevices.Remove(ac.Key);
+      }
+    }
+
+    private void StopCaptureDevices( )
+    {
+      foreach (KeyValuePair<string, TrackLocationCaptureDeviceObserver> ac in _captureDevices)
+      {
+        ac.Value.Stop();
+        _accessDevices.Remove(ac.Key);
+      }
+    }
+
     private void RefreshAccessDevices()
     {
+      StopAccessDevices();
+
       List<AccessDevice> access_devices = _database.AccessDeviceHolder.Data
                                           .Where(ad => ad.Locationid == _location.Id)
                                           .ToList();
@@ -230,30 +252,11 @@ namespace BioContracts
       get { return _location.Id; }
     }
 
-
-    //TODO make it once in Engine - not HERE
-    public async void Start()
-    {    
-      /*     
-      if (_database.AccessDeviceHolder.Data.Count <= 0)
-        await _bioService.DatabaseService.AccessDeviceRequest(new CommandAccessDevice());
-      else
-        AccessDevicesRepository_DataChanged();
-
-      if (_database.CaptureDeviceHolder.Data.Count <= 0)
-        await _bioService.DatabaseService.CaptureDeviceRequest(new CommandCaptureDevice());
-      else
-        CaptureDeviceHolder_DataChanged(); 
-        */ 
-    }
-   
+       
     public void Stop()
     {
-      foreach (KeyValuePair<string, TrackLocationAccessDeviceObserver> ac in _accessDevices)
-      {       
-        ac.Value.AccessDeviceState -= OnAccessDeviceStateChanged;
-        _accessDevices.Remove(ac.Key);
-      }
+      StopAccessDevices();
+      StopCaptureDevices();
     }
     
     public object ScreenViewModel { get; set; }

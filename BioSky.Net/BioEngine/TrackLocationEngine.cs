@@ -31,10 +31,20 @@ namespace BioEngine
         if (_trackLocations.Where(x => x.LocationID == location.Id ).FirstOrDefault() != null)        
           continue;        
           
-         TrackLocation trackLocation = new TrackLocation(_locator, location);
-         trackLocation.Start();
+         TrackLocation trackLocation = new TrackLocation(_locator, location);      
         _trackLocations.Add(trackLocation);
-      }     
+      }
+
+
+      Dictionary<long, Location> dict = database.LocationHolder.DataSet;
+      foreach ( TrackLocation location in _trackLocations)
+      {
+        if (!dict.ContainsKey(location.LocationID))
+        {
+          location.Stop();
+          _trackLocations.Remove(location);
+        }
+      }
     }
 
     private AsyncObservableCollection<TrackLocation> _trackLocations;

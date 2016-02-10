@@ -211,13 +211,13 @@ namespace BioContracts.Common
       _captureDeviceEngine = _locator.GetProcessor<ICaptureDeviceEngine>();        
 
       _captureDeviceEngine.Add(_captureDevice.Devicename);     
+    }   
+
+    public void Stop()
+    {        
+      _captureDeviceEngine.Remove(_captureDevice.Devicename);
     }
 
-    private Enroller _enrollPerformer;
-    public Enroller EnrollPerformer
-    {
-      get { return _enrollPerformer; }
-    } 
 
     private readonly CaptureDevice     _captureDevice; 
     private readonly IProcessorLocator _locator      ;
