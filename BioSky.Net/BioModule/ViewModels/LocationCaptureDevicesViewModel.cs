@@ -31,13 +31,8 @@ namespace BioModule.ViewModels
       DevicesInList = new DragablListBoxViewModel(removeDragable);
       DevicesInList.ItemRemoved += DevicesList.ItemDropped;
 
-      /*
-      foreach (CaptureDevice item in _bioEngine.Database().CaptureDeviceHolder.Data)
-      {
-        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
-        AddToGeneralDeviceList(dragableItem);
-      }
-      */
+      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
+      CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
   
     }
 
@@ -50,20 +45,6 @@ namespace BioModule.ViewModels
       newItem.ItemEnabled = isEnabled;
       DevicesList.Add(newItem);
     }
-    /*private void OnCaptureDevicesChanged(CaptureDeviceList captureDevices)
-    {
-      foreach (CaptureDevice item in captureDevices.CaptureDevices)
-      {
-        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
-
-        if (DevicesList.ContainsItem(dragableItem))
-        {
-          return;
-        }
-
-        AddToGeneralDeviceList(dragableItem);
-      }
-    }*/
 
     public void RefreshData()
     {
@@ -94,6 +75,33 @@ namespace BioModule.ViewModels
             AddToGeneralDeviceList(dragableItem, true);          
           else
             AddToGeneralDeviceList(dragableItem, false);          
+        }
+      }
+
+      foreach (string deviceName in CaptureDevicesNames)
+      {
+        CaptureDevice device = new CaptureDevice() { Devicename = deviceName, };
+        DragableItem dragableItem = new DragableItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename };
+        AddToGeneralDeviceList(dragableItem, true);
+      }
+    }
+
+    private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      RefreshData();
+    }
+
+    private AsyncObservableCollection<string> _captureDevicesNames;
+    public AsyncObservableCollection<string> CaptureDevicesNames
+    {
+      get { return _captureDevicesNames; }
+      set
+      {
+        if (_captureDevicesNames != value)
+        {
+          _captureDevicesNames = value;
+
+          NotifyOfPropertyChange(() => CaptureDevicesNames);
         }
       }
     }

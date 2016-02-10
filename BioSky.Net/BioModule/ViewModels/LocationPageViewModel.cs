@@ -68,18 +68,55 @@ namespace BioModule.ViewModels
     {
       CurrentLocation.EntityState = state;
 
+      Location location = null;
+
+      if (state == EntityState.Modified)
+      {
+        if (RevertLocation.Description != CurrentLocation.Description || RevertLocation.LocationName != CurrentLocation.LocationName)
+        {
+          location = CurrentLocation;
+          location.EntityState = EntityState.Modified;
+        }
+        else
+        {
+          location = new Location() { Id = CurrentLocation.Id };
+          location.EntityState = EntityState.Unchanged;
+        }
+      }
+      else
+        location = CurrentLocation;   
+       
+
       LocationList locationList = new LocationList();
 
       RepeatedField<AccessDevice> accessDevices   = LocationAccessDevicesView.GetAccessDevices()  ;
       RepeatedField<CaptureDevice> captureDevices = LocationCaptureDevicesView.GetCaptureDevices();
       
-      foreach (AccessDevice item in accessDevices)      
-        CurrentLocation.AccessDevices.Add(item);
+      foreach (AccessDevice item in accessDevices)
+      {
+        AccessDevice accessDevice = null;
+        bool accessDeviceExist = _database.AccessDeviceHolder.DataSet.TryGetValue(item.Id, out accessDevice);
+        if (accessDeviceExist)
+          item.EntityState = EntityState.Modified;
+        else
+          item.EntityState = EntityState.Added;
+
+        location.AccessDevices.Add(item);
+      }
 
       foreach (CaptureDevice item in captureDevices)
-        CurrentLocation.CaptureDevices.Add(item);
+      {
+        CaptureDevice captureDevice = null;
+        bool captureDeviceExist = _database.CaptureDeviceHolder.DataSet.TryGetValue(item.Id, out captureDevice);
+        if (captureDeviceExist)
+          item.EntityState = EntityState.Modified;
+        else
+          item.EntityState = EntityState.Added;
 
-      locationList.Locations.Add(CurrentLocation);
+        location.CaptureDevices.Add(item);
+      }
+
+      locationList.Locations.Add(location);
 
       try
       {
@@ -107,14 +144,10 @@ namespace BioModule.ViewModels
             location = null;
             MessageBox.Show("Location successfully Deleted");
           }
-          else if (location.EntityState == EntityState.Added)
-          {
-            MessageBox.Show("Location successfully Added");
-          }
-          else
-          {
-            MessageBox.Show("Location successfully Updated");
-          }
+          else if (location.EntityState == EntityState.Added)          
+            MessageBox.Show("Location successfully Added");          
+          else          
+            MessageBox.Show("Location successfully Updated");         
 
           Update(location);
         }
