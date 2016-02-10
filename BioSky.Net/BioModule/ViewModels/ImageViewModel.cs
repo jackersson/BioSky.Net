@@ -125,7 +125,7 @@ namespace BioModule.ViewModels
         return bmp;
       }
 
-      CurrentImageSource = null;
+      //CurrentImageSource = null;
 
       return null;
     }
