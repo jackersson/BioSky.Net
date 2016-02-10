@@ -15,7 +15,7 @@ namespace BioModule.ViewModels
 {
   public class LocationUsersNotifyViewModel : Screen, IUpdatable
   {
-    public LocationUsersNotifyViewModel(IProcessorLocator locator)
+    public LocationUsersNotifyViewModel(IProcessorLocator locator, IWindowManager windowManager)
     {
       DisplayName = "UsersNotification";
 

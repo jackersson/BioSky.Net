@@ -49,7 +49,7 @@ namespace BioModule.ViewModels
       
       _methodInvoker = new FastMethodInvoker();     
 
-      DisplayName = "Add New User";
+      DisplayName = "AddNewUser";
     }
 
     #region Update
@@ -82,7 +82,7 @@ namespace BioModule.ViewModels
         };
 
         _userPageMode = UserPageMode.NewUser;
-        DisplayName = "Add New User";
+        DisplayName = "AddNewUser";
       }
 
       CurrentImageView.Update(_user);
@@ -105,19 +105,21 @@ namespace BioModule.ViewModels
 
     public async Task UserUpdatePerformer(EntityState state)
     {
-      _user.EntityState = state;
+      _user.EntityState = state;     
 
       Photo photo = CurrentImageView.CurrentImagePhoto;
-      photo.OriginType = PhotoOriginType.Loaded;
+      if(photo != null)
+      {
+        photo.OriginType = PhotoOriginType.Loaded;
+        _user.Thumbnail = photo;
+      }
 
       PersonList personList = new PersonList();
-      _user.Thumbnail = photo;
       personList.Persons.Add(_user);   
 
       try
       {
-        //_database.Persons.DataChanged += UpdateData;
-
+        _database.Persons.DataUpdated += UpdateData;
 
         await _bioService.DatabaseService.PersonUpdate(personList);
       }
@@ -129,115 +131,32 @@ namespace BioModule.ViewModels
     
     private void UpdateData(PersonList list)
     {
+      _database.Persons.DataUpdated -= UpdateData;
+
       if (list != null)
       {
         Person person = list.Persons.FirstOrDefault();
-       // if (person != null)
-
-      }
-    }
-
-    /*
-    private void PersonHolder_DataUpdated(IList<Person> list, Result result)
-    {
-      /*
-      _database.PersonHolder.DataUpdated -= PersonHolder_DataUpdated;
-
-      Person person = null;      
-      foreach (ResultPair currentResult in result.Status)
-      {
-        if (currentResult.Status == ResultStatus.Success)
+        if (person != null)
         {
-          if (currentResult.State == DbState.Insert)
-            person = currentResult.Person;
-          else if (currentResult.State == DbState.Update)          
-            person = _user;    
-          else if (currentResult.State == DbState.Remove)
+          if (person.EntityState == EntityState.Deleted)
           {
-            Update(null);
-            foreach (Person personDeleted in list)
-            {
-              MessageBox.Show("User " + personDeleted.Firstname + " " + personDeleted.Lastname + "\n" + "Successfully Removed");
-            }
-            return;
+            person = null;
+            MessageBox.Show("User successfully Deleted");
           }
-        }        
-      }
-
-      Update(person);
-      ResolveConnections();
-    }
-  */
-    
-
-    public async Task PhotoUpdatePerformer()
-    {
-      Photo photo = CurrentImageView.CurrentImagePhoto;
-
-      photo.OriginType = PhotoOriginType.Loaded;
-
-      PhotoList photoList = new PhotoList();
-      photoList.Photos.Add(photo);
-
-      //_database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;     
-
-     // await _bioService.DatabaseService.PhotoUpdateRequest(photoList);
-    }
-
-    /*
-    private void PhotoHolder_DataUpdated(IList<Photo> list, Result result)
-    {
-      _database.PhotoHolder.DataUpdated -= PhotoHolder_DataUpdated;
-
-      foreach (ResultPair currentResult in result.Status)
-      {
-        Photo photo = null;
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          photo = currentResult.Photo;
-          if (currentResult.State == DbState.Insert)
+          else if (person.EntityState == EntityState.Added)
           {
-            if (photo != null)
-            {
-              string path = _database.LocalStorage.LocalStoragePath + "\\" + photo.FileLocation;
-              CurrentImageView.SavePhoto(path);
-              CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
-            }  
+            MessageBox.Show("User successfully Added");
           }
-          else if(currentResult.State == DbState.Update)
+          else
           {
-            string foledrPath = _database.LocalStorage.LocalStoragePath + "\\";
-            foreach(Photo photoUpdated in list)
-            {
-              if (photo.Id == photoUpdated.Id)
-                if (photoUpdated.FileLocation != photo.FileLocation)
-                {
-                  try
-                  {
-                    if (File.Exists(foledrPath + photo.FileLocation))
-                      File.Delete(foledrPath + photo.FileLocation);
+            MessageBox.Show("User successfully Updated");
+          }
 
-                    CurrentImageView.UpdateImage(null, null);                    
-                    CurrentImageView.MovePhoto(foledrPath + photoUpdated.FileLocation, foledrPath + photo.FileLocation);
-                    CurrentImageView.UpdateImage(photo, foledrPath + photo.FileLocation);
-                  }
-                  catch (System.IO.IOException e)
-                  {
-                    Console.WriteLine(e.Message);
-                    return;
-                  }
-
-                }
-            }
-          }                
+          Update(person);
         }
       }
-
-      
-
-      ResolveConnections();
     }   
-    */
+
     #endregion
 
     #region Interface
@@ -248,10 +167,14 @@ namespace BioModule.ViewModels
 
       if (result == true)     
       {
-        //foreach (IUpdatable updatableScreen in Items)
-         // updatableScreen.Apply();
-
-        await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? EntityState.Added : EntityState.Modified);    
+        try
+        {
+          await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? EntityState.Added : EntityState.Modified); 
+        }
+        catch (Exception e)
+        {
+          Console.WriteLine(e.Message);
+        } 
       }
     }
 
@@ -262,11 +185,15 @@ namespace BioModule.ViewModels
 
       if (result == true)
       {
-        foreach (IUpdatable updatableScreen in Items)
-          updatableScreen.Remove(true);
-
-        await UserUpdatePerformer(EntityState.Deleted);
-      }
+        try
+        {
+          await UserUpdatePerformer(EntityState.Deleted);
+        }
+        catch (Exception e)
+        {
+          Console.WriteLine(e.Message);
+        } 
+      }   
     }
 
     #endregion

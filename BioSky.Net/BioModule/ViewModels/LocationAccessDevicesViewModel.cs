@@ -24,13 +24,15 @@ namespace BioModule.ViewModels
 {
   public class LocationAccessDevicesViewModel : Screen, IUpdatable
   {
-    public LocationAccessDevicesViewModel(IProcessorLocator locator)
+    public LocationAccessDevicesViewModel(IProcessorLocator locator, IWindowManager windowManager)
     {
       DisplayName = "AccessDevices";
 
-      _locator    = locator ;
-      _bioService = _locator.GetProcessor<IServiceManager>();
-      _bioEngine  = _locator.GetProcessor<IBioEngine>();
+      _locator       = locator ;
+      _windowManager = windowManager;
+
+      _bioService    = _locator.GetProcessor<IServiceManager>();
+      _bioEngine     = _locator.GetProcessor<IBioEngine>();
 
       DragableWithDisabledItem disabledDragable = new DragableWithDisabledItem();
       DragableWithRemoveItem   removeDragable   = new DragableWithRemoveItem();
@@ -98,8 +100,48 @@ namespace BioModule.ViewModels
           }
         }     
       }
-    } 
+    }
+
+    public RepeatedField<AccessDevice> GetAccessDevices()
+    {
+      RepeatedField<AccessDevice> accessDevices = new RepeatedField<AccessDevice>();
+
+      foreach (DragableItem item in DevicesInList.DragableItems)
+      {
+        AccessDevice accessDevice = (AccessDevice)item.ItemContext;
+        accessDevice.Type = AccessDevice.Types.AccessDeviceType.DeviceIn;
+        accessDevices.Add(accessDevice);
+      }
+
+      foreach (DragableItem item in DevicesOutList.DragableItems)
+      {
+        AccessDevice accessDevice = (AccessDevice)item.ItemContext;
+        accessDevice.Type = AccessDevice.Types.AccessDeviceType.DeviceOut;
+        accessDevices.Add(accessDevice);
+      }
+
+      return accessDevices;
+    }
    
+
+
+    public void Update(Location location)
+    {
+      _location = location;
+      RefreshData();
+    }
+    public void Apply()
+    {
+
+      
+    }
+    public void Remove(bool all)
+    {
+
+    }
+
+    #region UI
+
     private DragablListBoxViewModel _devicesList;
     public DragablListBoxViewModel DevicesList
     {
@@ -142,24 +184,16 @@ namespace BioModule.ViewModels
       }
     }
 
-    public void Update(Location location)
-    {
-      _location = location;
-      RefreshData();
-    }
-    public void Apply()
-    {
 
-    }
-    public void Remove(bool all)
-    {
+    #endregion
 
-    }
+    #region Global Variables
+    private          Location          _location     ;
+    private readonly IProcessorLocator _locator      ;
+    private readonly IBioEngine        _bioEngine    ;
+    private readonly IServiceManager   _bioService   ;
+    private          IWindowManager    _windowManager;
 
-    private          Location          _location  ;
-    private readonly IProcessorLocator _locator   ;
-    private readonly IBioEngine        _bioEngine ;
-    private readonly IServiceManager   _bioService;
-
+    #endregion
   }   
 }

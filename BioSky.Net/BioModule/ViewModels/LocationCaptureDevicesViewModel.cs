@@ -10,12 +10,13 @@ using BioModule.DragDrop;
 using BioContracts;
 using BioService;
 using BioModule.Utils;
+using Google.Protobuf.Collections;
 
 namespace BioModule.ViewModels
 {
   public class LocationCaptureDevicesViewModel : Screen, IUpdatable
   {
-    public LocationCaptureDevicesViewModel(IProcessorLocator locator)
+    public LocationCaptureDevicesViewModel(IProcessorLocator locator, IWindowManager windowManager)
     {
       DisplayName = "CaptureDevices";
 
@@ -64,6 +65,55 @@ namespace BioModule.ViewModels
       }
     }*/
 
+    public void RefreshData()
+    {
+      DevicesInList.Clear();
+      DevicesList.Clear();
+
+      foreach (CaptureDevice item in _bioEngine.Database().CaptureDeviceHolder.Data)
+      {
+        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
+
+        if (_location.Id <= 0)
+        {
+          if (item.Locationid <= 0)
+            AddToGeneralDeviceList(dragableItem, true);
+          else
+            AddToGeneralDeviceList(dragableItem, false);
+
+          continue;
+        }
+        else
+        {
+          if (item.Locationid == _location.Id)
+          {
+            DevicesInList.Add(dragableItem);
+            AddToGeneralDeviceList(dragableItem, false);
+          }
+          else if (item.Locationid <= 0)          
+            AddToGeneralDeviceList(dragableItem, true);          
+          else
+            AddToGeneralDeviceList(dragableItem, false);          
+        }
+      }
+    }
+
+    public RepeatedField<CaptureDevice> GetCaptureDevices()
+    {
+      RepeatedField<CaptureDevice> captureDevices = new RepeatedField<CaptureDevice>();
+
+      foreach (DragableItem item in DevicesInList.DragableItems)
+      {
+        CaptureDevice captureDevice = (CaptureDevice)item.ItemContext;
+        captureDevices.Add(captureDevice);
+      }
+
+      return captureDevices;
+    }
+
+
+
+
     private DragablListBoxViewModel _devicesList;
     public DragablListBoxViewModel DevicesList
     {
@@ -95,6 +145,7 @@ namespace BioModule.ViewModels
     public void Update(Location location)
     {
       _location = location;
+      RefreshData();
     }
     public void Apply()
     {

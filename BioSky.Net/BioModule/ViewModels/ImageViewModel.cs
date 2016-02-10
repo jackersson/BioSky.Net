@@ -82,7 +82,7 @@ namespace BioModule.ViewModels
       {
         _width = _imageViewWidth;
         _height = _imageViewHeight;
-        Zoom(_imageViewWidth, _imageViewHeight);
+        Zoom(_imageViewWidth, _imageViewHeight); 
       }
     }
 
@@ -223,7 +223,7 @@ namespace BioModule.ViewModels
       CalculatedImageScaleY = CalculatedImageHeight / imageHeight;
 
       if (CalculatedImageScale > CalculatedImageScaleY)
-        CalculatedImageScale = CalculatedImageScaleY;
+        CalculatedImageScale = CalculatedImageScaleY;     
     }
     #endregion
 
