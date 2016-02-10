@@ -98,7 +98,9 @@ namespace BioData.Holders.Base
     public virtual void Update(TValue obj, TKey key)
     {
       if (_dataSet.ContainsKey(key))
-        _dataSet[key] = obj;
+      {
+        _dataSet[key] = obj;           
+      }
       else
       {
         Data.Add(obj);

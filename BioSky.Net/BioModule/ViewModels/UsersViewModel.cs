@@ -45,7 +45,7 @@ namespace BioModule.ViewModels
 
       _selectedItemIds = new ObservableCollection<long>();
 
-      _database.PersonHolder.DataChanged += RefreshData;      
+      _database.Persons.DataChanged += RefreshData;      
       _database.PhotoHolder.DataChanged  += RefreshData;
 
       IsDeleteButtonEnabled = false;     
@@ -55,12 +55,10 @@ namespace BioModule.ViewModels
     }
     #region Database
     private void RefreshData()
-    {      
-      if (!IsActive)
-        return;
-
+    {
       Users = null;
-      Users = _database.PersonHolder.Data; 
+      Users = _database.PersonHolder.Data;
+      UsersCollectionView = null;
       UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
     }  
 
@@ -79,8 +77,9 @@ namespace BioModule.ViewModels
     public void OnDeleteUsers()
     {
       //await UserUpdatePerformer(DbState.Remove);   
+/*
       Person p = new Person() { Firstname = "Test", Lastname = "Test" };
-      Users.Add(p);
+      Users.Add(p);*/
     }
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)

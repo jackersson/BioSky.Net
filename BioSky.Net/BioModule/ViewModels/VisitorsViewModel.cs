@@ -111,32 +111,19 @@ namespace BioModule.ViewModels
 
       if (SelectedItemIds.Count == 1)
       {
+        if (ImageView == null)
+          return;
+
         Visitor visitor = null;
         bool visitorExists = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(SelectedItemIds[0], out visitor);
         if (visitorExists)
         {
           Photo photo = null;
           bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(visitor.Photoid, out photo);
-          if (photoExists)          
+          if (photoExists)            
             ImageView.UpdateImage(photo, _bioEngine.Database().LocalStorage.LocalStoragePath);
           else
             ImageView.UpdateImage(null, null);
-
-          /*
-           Photo photo = null;
-          bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(person.Thumbnail, out photo);
-          if (photoExists)
-          {
-            / *
-            string personFolder = _bioEngine.Database().PersonsFolderAddress + "\\" + person.Id;
-
-            Uri uri = new Uri(personFolder + "\\" + photo.FileLocation);
-            if (uri == null)
-              return;
-            ImageView.UpdateImage(uri);
-            */
-          //}
-
         }
       }
     }

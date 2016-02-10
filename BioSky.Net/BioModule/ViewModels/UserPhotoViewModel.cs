@@ -181,8 +181,6 @@ namespace BioModule.ViewModels
 
           personList.Persons.Add(personWithPhoto);
 
-          //_database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
-
           try
           {
             await _serviceManager.DatabaseService.PersonUpdate(personList);
@@ -192,15 +190,10 @@ namespace BioModule.ViewModels
             Console.WriteLine(e.Message);            
           }
         }
-
       }
       if (_imageViewer != null)
-        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
-
-      
-    }
-
-    
+        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);      
+    }  
 
 
     #endregion
@@ -212,7 +205,7 @@ namespace BioModule.ViewModels
     }
     public void EnrollFromPhoto()
     {
-      //UploadClick();
+      UploadClick();
     }
     public void OnSelectionChange()
     {
@@ -222,39 +215,7 @@ namespace BioModule.ViewModels
 
     public void UploadClick()
     {
-      Photo photo = _imageViewer.UploadPhoto();
-      /*
-      OpenFileDialog openFileDialog = new OpenFileDialog();
-      openFileDialog.Multiselect = false;
-      openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-      openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-
-      if (openFileDialog.ShowDialog() == true)
-      {
-        string filename = openFileDialog.FileName;
-        if (File.Exists(filename))
-        {
-          Bitmap bmp = (Bitmap)Image.FromFile(filename);
-
-          Google.Protobuf.ByteString description = _bioUtils.ImageToByteString(bmp);
-
-          NewPhoto = new Photo()
-          {
-            EntityState = EntityState.Added
-            , Description = description
-            , FileLocation = ""
-            , FirLocation = ""
-            , Personid = _user.Id
-            , SizeType = PhotoSizeType.Full
-          };
-
-          _imageViewer.UpdateImage(NewPhoto, filename);
-
-          PhotoList photoList = new PhotoList();
-          photoList.Photos.Add(NewPhoto);          
-        }
-      }
-      */
+      Photo photo = _imageViewer.UploadPhoto();      
     }   
    
     public void DeletePhoto()
@@ -352,22 +313,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-/*
-    private AsyncObservableCollection<Uri> _userImages;
-    public AsyncObservableCollection<Uri> UserImages
-    {
-      get { return _userImages; }
-      set
-      {
-        if (_userImages != value)
-        {
-          _userImages = value;
-
-          NotifyOfPropertyChange(() => UserImages);
-        }
-      }
-    }*/
 
     private AsyncObservableCollection<string> _captureDevicesNames;
     public AsyncObservableCollection<string> CaptureDevicesNames
