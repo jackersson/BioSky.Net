@@ -28,7 +28,6 @@ namespace BioAccessDevice
       _serialPort.ReadTimeout  = 1000;
       _serialPort.WriteTimeout = 1000;
 
-
       _commandFactory = new AccessDeviceCommandFactory(); 
       _commands       = new ConcurrentQueue<ICommand> ();
 
@@ -44,8 +43,7 @@ namespace BioAccessDevice
     }
 
     public void Enqueque(AccessDeviceCommands commandName)
-    {
-     // string type = "BioAccessDevice.Commands." + commandName;      
+    {        
       Enqueque((AccessDeviceCommand)_commandFactory.GetCommand(commandName));      
     }
 
@@ -125,12 +123,23 @@ namespace BioAccessDevice
           }
           else
           {
+            Exception errorMesage = command.ErrorMessage();
             if ( !IsActive() )
             {
-              Notify(command.ErrorMessage());
+              Notify(errorMesage);
               Thread.Sleep(1000);
               Open();
-            }            
+            }     
+            else if (errorMesage != null)
+            {
+              Notify(errorMesage);
+            }  
+            else
+            {
+              AccessDeviceActivity notification = new AccessDeviceActivity();
+              Notify(new AccessDeviceActivity() { CommandID = AccessDeviceCommands.CommandReady });
+            } 
+
           }
         }  
         

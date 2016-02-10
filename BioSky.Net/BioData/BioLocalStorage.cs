@@ -37,7 +37,7 @@ namespace BioData
         LocalStoragePath = "F:\\GRPCs\\ClientFolder\\";
 
       if (faceServicePath == null)
-        FaceServiceStoragePath = "192.168.1.127:50051";
+        FaceServiceStoragePath = "192.168.1.178:50052";
 
       if (databaseServicePath == null)
         DatabaseServiceStoragePath = "192.168.1.178:50051";
@@ -45,7 +45,8 @@ namespace BioData
       if (Language == null)
         Language = "en";
 
-
+      // "192.168.1.127:50052" Taras
+      //"192.168.1.178:50051"  Serg
     }
     public void SaveGeneralSettings(string local, string face, string service, string language)
     {

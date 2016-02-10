@@ -50,24 +50,26 @@ namespace BioShell
 
       var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-      //TODO handle exceptions
+      try
+      {
+        dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
+        dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
+        dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
+        dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioEngine.dll"));
+       
+        var pattern = "BioModule.dll";
 
-      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
-      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
-      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
-      dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioEngine.dll"));
-      // dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
-
-
-
-      var pattern = "BioModule.dll";
-
-      Directory
-          .GetFiles(exeDir, pattern)          
-          .Select(Assembly.LoadFrom)
-          .Select(loader.LoadModule)
-          .Where(module => module != null)
-          .ForEach(module => module.Init());
+        Directory
+            .GetFiles(exeDir, pattern)
+            .Select(Assembly.LoadFrom)
+            .Select(loader.LoadModule)
+            .Where(module => module != null)
+            .ForEach(module => module.Init());
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message);
+      }
 
       DisplayRootViewFor<BioShellViewModel>();
     }
