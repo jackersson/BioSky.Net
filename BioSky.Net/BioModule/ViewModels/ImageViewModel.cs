@@ -144,6 +144,9 @@ namespace BioModule.ViewModels
 
     public void Update(Person user)
     {
+      if (user == null)
+        CurrentImageSource = null;
+
       User = user;
     }
 
@@ -181,6 +184,7 @@ namespace BioModule.ViewModels
       {
         CurrentImagePhoto = null;
         CurrentImageSource = null;
+        Zoom(_imageViewWidth, _imageViewHeight);       
       }
     }
     #endregion

@@ -1,0 +1,63 @@
+﻿<metro:MetroWindow x:Class="BioModule.Views.CustomTextDialogView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                   xmlns:local="clr-namespace:BioModule.Views"
+                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                   xmlns:cal="http://www.caliburnproject.org" 
+                   xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+                   xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"                   
+                   xmlns:lex="http://wpflocalizeextension.codeplex.com" 
+                   lex:LocalizeDictionary.DesignCulture="uk-UA"
+                   lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+                   lex:ResxLocalizationProvider.DefaultDictionary="lang"
+                   mc:Ignorable="d" 
+                   SizeToContent="WidthAndHeight"
+                   WindowStartupLocation="CenterOwner"
+                   ShowMaxRestoreButton="False"
+                   ResizeMode="NoResize"                   
+                   d:DesignHeight="300" d:DesignWidth="300">
+
+    <metro:MetroWindow.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </metro:MetroWindow.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="48"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" 
+               VerticalAlignment="Stretch"  Width="32" Height="32"
+               Source="{Binding CustomDialogIcon}" />
+
+        <TextBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Width="230"
+                 Text="{Binding Text}" TextWrapping="Wrap" Margin="0,0,10,0"/>
+
+        <Button 
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
+                 cal:Message.Attach="[Event Click]=[Action Apply]"
+                 Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="2" Grid.Column="2" >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
+        </Button>
+
+        <Button 
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Cancel}"
+                 cal:Message.Attach="[Event Click]=[Action Cancel]"
+                 Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="2" Grid.Column="3" >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
+        </Button>
+
+    </Grid>
+</metro:MetroWindow>

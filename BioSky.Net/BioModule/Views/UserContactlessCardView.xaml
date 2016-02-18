@@ -55,7 +55,8 @@
         <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
-                cal:Message.Attach="[Event Click]=[Action Remove('false')]"
+                IsEnabled="{Binding IsDeleteButtonEnabled}"                
+                cal:Message.Attach="[Event Click] = [Action OnDeleteCards]"
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" />
         </Button>

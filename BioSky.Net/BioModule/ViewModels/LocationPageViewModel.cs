@@ -34,10 +34,10 @@ namespace BioModule.ViewModels
       _bioService    = _locator.GetProcessor<IServiceManager>();
 
       _locationAccessDevicesView  = new LocationAccessDevicesViewModel(_locator, _windowManager);
-      _locationCaptureDevicesView = new LocationCaptureDevicesViewModel(_locator, _windowManager);
+      //_locationCaptureDevicesView = new LocationCaptureDevicesViewModel(_locator, _windowManager);
 
       Items.Add(LocationAccessDevicesView);
-      Items.Add(LocationCaptureDevicesView);
+      //Items.Add(LocationCaptureDevicesView);
       Items.Add(new LocationUsersNotifyViewModel   (_locator, _windowManager));
 
       ActiveItem = Items[0];
@@ -47,23 +47,50 @@ namespace BioModule.ViewModels
       DisplayName = "LocationSettings";
     }
 
+    #region Update
     public void Update(Location location)
     {
       if (location != null)
       {
         CurrentLocation = location.Clone();
-        RevertLocation =  location.Clone();
+        RevertLocation = location.Clone();
 
         CurrentLocation.EntityState = EntityState.Modified;
-      }      
-      else      
-        CurrentLocation = new Location() { LocationName = "", Description = "", EntityState = EntityState.Added };        
-      
+      }
+      else
+        CurrentLocation = new Location() { LocationName = "", Description = "", EntityState = EntityState.Added };
+
 
       foreach (IScreen scrn in Items)
-        _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });  
+        _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });
 
     }
+    public void UpdateData(LocationList list)
+    {
+      _database.Locations.DataUpdated -= UpdateData;
+
+      if (list != null)
+      {
+        Location location = list.Locations.FirstOrDefault();
+        if (location != null)
+        {
+          if (location.EntityState == EntityState.Deleted)
+          {
+            location = null;
+            MessageBox.Show("Location successfully Deleted");
+          }
+          else if (location.EntityState == EntityState.Added)
+            MessageBox.Show("Location successfully Added");
+          else
+            MessageBox.Show("Location successfully Updated");
+
+          Update(location);
+        }
+      }
+    }
+    #endregion
+
+    #region BioService
     public async Task LocationUpdatePerformer(EntityState state)
     {
       CurrentLocation.EntityState = state;
@@ -84,14 +111,14 @@ namespace BioModule.ViewModels
         }
       }
       else
-        location = CurrentLocation;   
-       
+        location = CurrentLocation;
+
 
       LocationList locationList = new LocationList();
 
-      RepeatedField<AccessDevice> accessDevices   = LocationAccessDevicesView.GetAccessDevices()  ;
-      RepeatedField<CaptureDevice> captureDevices = LocationCaptureDevicesView.GetCaptureDevices();
-      
+      RepeatedField<AccessDevice> accessDevices = LocationAccessDevicesView.GetAccessDevices();
+      RepeatedField<CaptureDevice> captureDevices = LocationAccessDevicesView.GetCaptureDevices();
+
       foreach (AccessDevice item in accessDevices)
       {
         AccessDevice accessDevice = null;
@@ -127,33 +154,11 @@ namespace BioModule.ViewModels
       catch (RpcException e)
       {
         Console.WriteLine(e.Message);
-      } 
-    }
-
-    public void UpdateData(LocationList list)
-    {
-      _database.Locations.DataUpdated -= UpdateData;
-
-      if (list != null)
-      {
-        Location location = list.Locations.FirstOrDefault();
-        if (location != null)
-        {
-          if (location.EntityState == EntityState.Deleted)
-          {
-            location = null;
-            MessageBox.Show("Location successfully Deleted");
-          }
-          else if (location.EntityState == EntityState.Added)          
-            MessageBox.Show("Location successfully Added");          
-          else          
-            MessageBox.Show("Location successfully Updated");         
-
-          Update(location);
-        }
       }
     }
+    #endregion
 
+    #region Interface
     public async void Apply()
     {
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
@@ -167,7 +172,7 @@ namespace BioModule.ViewModels
         catch (Exception e)
         {
           Console.WriteLine(e.Message);
-        } 
+        }
       }
     }
 
@@ -175,8 +180,8 @@ namespace BioModule.ViewModels
     {
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
 
-      if (result == true)      
-        Update(RevertLocation);     
+      if (result == true)
+        Update(RevertLocation);
     }
 
     public void Delete()
@@ -188,7 +193,9 @@ namespace BioModule.ViewModels
     {
       ActiveItem.Activate();
     }
+    #endregion
 
+    #region UI
     private Location _currentLocation;
     public Location CurrentLocation
     {
@@ -244,10 +251,16 @@ namespace BioModule.ViewModels
       }
     }
 
+    #endregion
+
+    #region GlobalVariables
+
     private readonly IProcessorLocator    _locator      ;
     private readonly FastMethodInvoker    _methodInvoker;
     private          IBioSkyNetRepository _database     ;
     private          IWindowManager       _windowManager;
-    private readonly IServiceManager      _bioService   ;
+    private readonly IServiceManager      _bioService;
+
+    #endregion
   }
 }

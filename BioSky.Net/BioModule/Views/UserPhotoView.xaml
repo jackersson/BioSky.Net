@@ -20,6 +20,7 @@
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <utils:MultiThumbnailConverter x:Key="MultiThumbnailConverter"></utils:MultiThumbnailConverter>
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
@@ -65,17 +66,33 @@
                    Height="32" Width="32" />
         </Button>
 
-        <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
+        <ListBox BorderThickness="1" HorizontalAlignment="Stretch" x:Name="ListBoxView"
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
                  Grid.Row="5" Margin="0, 5, 0, 0"                
                  SelectedItem="{Binding SelectedItem}"
                  ItemsSource="{Binding UserImages}"  
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
-                 
+                 cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
+                    <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}" Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="{lex:Loc SetThumbnail}"  
+                              IsEnabled="{Binding CanSetThumbnail, Mode=TwoWay}"
+                              cal:Message.Attach="[Event Click] = [Action OnSetThumbnail()]"/>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}"
+                               Width="16" Height="16" >
+                            <Image.Visibility>
+                                <MultiBinding Converter="{StaticResource MultiThumbnailConverter}">
+                                    <Binding Path="Id"/>
+                                    <Binding ElementName="GridLayout" Path="DataContext.User.Thumbnailid"></Binding>
+                                </MultiBinding>
+                            </Image.Visibility>
+                        </Image>
                         <Image Source="{Binding FileLocation, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
                     </StackPanel>
                 </DataTemplate>

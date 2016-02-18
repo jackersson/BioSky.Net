@@ -26,6 +26,7 @@ using BioModule.Utils;
 using BioService;
 using BioContracts;
 using Google.Protobuf.Collections;
+using Grpc.Core;
 
 
 namespace BioModule.ViewModels
@@ -65,38 +66,83 @@ namespace BioModule.ViewModels
     #endregion
 
     #region BioService
-    private void DatabaseService_PersonsUpdated(/*PersonList list, Result result*/)
-    {
-      //PersonUpdateResultProcessing(list, result);
 
+    public async Task UsersDeletePerformer(EntityState state)
+    {
+      PersonList personList = new PersonList();
+
+
+      foreach (long id in SelectedItemIds)
+      {
+        Person person = new Person() { Id = id, EntityState = EntityState.Deleted };
+        personList.Persons.Add(person);
+      }
+
+      try
+      {
+        _database.Persons.DataUpdated += UpdateData;
+        await _bioService.DatabaseService.PersonUpdate(personList);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine(e.Message);
+      }
     }
+
+    private void UpdateData(PersonList list)
+    {
+      _database.Persons.DataUpdated -= UpdateData;
+
+      if (list != null)
+      {
+        Person person = list.Persons.FirstOrDefault();
+        if (person != null)
+        {
+          if (person.EntityState == EntityState.Deleted)
+          {
+            if(list.Persons.Count > 1)
+              MessageBox.Show( list.Persons.Count + " users successfully Deleted");
+            else
+              MessageBox.Show("User successfully Deleted");
+          }
+        }
+      }
+    }   
 
     #endregion
 
     #region Interface
-    public void OnDeleteUsers()
+    public async void OnDeleteUsers()
     {
-      //await UserUpdatePerformer(DbState.Remove);   
-/*
-      Person p = new Person() { Firstname = "Test", Lastname = "Test" };
-      Users.Add(p);*/
-    }
+      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+
+      if (result == true)
+      {
+         try
+        {
+          await UsersDeletePerformer(EntityState.Deleted);
+        }
+        catch (Exception e)
+        {
+          Console.WriteLine(e.Message);
+        } 
+      }
+    } 
+
+
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)
     {
-
       IList selectedRecords = e.AddedItems as IList;
       IList unselectedRecords = e.RemovedItems as IList;
 
-      foreach (Person currentUser in selectedRecords)
-      {
+      foreach (Person currentUser in selectedRecords)      
         SelectedItemIds.Add(currentUser.Id);
-      }
+      
 
-      foreach (Person currentUser in unselectedRecords)
-      {
+      foreach (Person currentUser in unselectedRecords)      
         SelectedItemIds.Remove(currentUser.Id);
-      }
+      
 
       if (SelectedItemIds.Count >= 1)
         IsDeleteButtonEnabled = true;

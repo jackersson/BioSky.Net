@@ -19,15 +19,17 @@ namespace BioModule.ViewModels
 
   public class UserContactlessCardViewModel : Screen, IObserver<AccessDeviceActivity>, IUpdatable
   {
-    public UserContactlessCardViewModel(IBioEngine bioEngine, IProcessorLocator locator)
+    public UserContactlessCardViewModel(IBioEngine bioEngine, IProcessorLocator locator, IWindowManager windowManager)
     {
       DisplayName = "Cards";
 
-      _locator = locator;
-      _bioEngine = bioEngine;
-      _selector = locator.GetProcessor<ViewModelSelector>();
-      _bioService = _locator.GetProcessor<IServiceManager>();
+      _locator       = locator      ;
+      _bioEngine     = bioEngine    ;
+      _windowManager = windowManager;
 
+      _selector   = locator.GetProcessor<ViewModelSelector>();
+      _bioService = _locator.GetProcessor<IServiceManager>();
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
       AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
       AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
@@ -146,7 +148,72 @@ namespace BioModule.ViewModels
     }
     #endregion
 
+    #region BioService
+
+    public async Task CardDeletePerformer()
+    {
+      PersonList personList = new PersonList();
+
+      Person person = new Person()
+      {
+          EntityState = EntityState.Unchanged
+        , Id = _user.Id
+      };
+
+      Card card = SelectedCard;
+      card.EntityState = EntityState.Deleted;
+
+      person.Cards.Add(card);
+      personList.Persons.Add(person);
+
+      try
+      {
+        _database.Persons.DataUpdated += UpdateData;
+        await _bioService.DatabaseService.PersonUpdate(personList);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine(e.Message);
+      }
+    }
+
+    private void UpdateData(PersonList list)
+    {
+      _database.Persons.DataUpdated -= UpdateData;
+
+      if (list != null)
+      {
+        Person person = list.Persons.FirstOrDefault();
+        if (person != null)
+        {
+          if (person.Cards.Count > 1)
+            MessageBox.Show(person.Cards.Count + " cards successfully Deleted");
+          else
+            MessageBox.Show("Card successfully Deleted");
+        }
+      }
+    }
+
+    #endregion
+
     #region Interface
+
+    public async void OnDeleteCards()
+    {
+      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+
+      if (result == true)
+      {
+        try
+        {
+          await CardDeletePerformer();
+        }
+        catch (Exception e)
+        {
+          Console.WriteLine(e.Message);
+        }
+      }
+    }
     public void Apply()
     {
       //await CardUpdatePerformer(EntityState.Unchanged);
@@ -286,11 +353,15 @@ namespace BioModule.ViewModels
 
     #region Global Variables
 
-    private Person _user;
-    private readonly IBioEngine _bioEngine;
-    private readonly IProcessorLocator _locator;
-    private readonly ViewModelSelector _selector;
-    private readonly IServiceManager _bioService;
+    private          Person               _user         ;
+    private readonly IBioEngine           _bioEngine    ;
+    private readonly IProcessorLocator    _locator      ;
+    private readonly ViewModelSelector    _selector     ;
+    private readonly IServiceManager      _bioService   ;
+    private readonly IWindowManager       _windowManager;
+    private readonly IBioSkyNetRepository _database     ; 
+
+
 
     #endregion
 

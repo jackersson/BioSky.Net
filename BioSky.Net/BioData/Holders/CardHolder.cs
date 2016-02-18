@@ -18,10 +18,10 @@ namespace BioData.Holders
         Update(card, card.UniqueNumber);        
     }
 
-    public override void Remove(Card obj, string key)
+    public override void Remove(string key)
     {
-      base.Remove(obj, key);
-      var item = Data.Where(x => x.Id == obj.Id).FirstOrDefault();
+      base.Remove(key);
+      var item = Data.Where(x => x.UniqueNumber == key).FirstOrDefault();
       if (item != null)
       {
         Data.Remove(item);

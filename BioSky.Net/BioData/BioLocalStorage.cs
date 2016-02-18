@@ -45,6 +45,8 @@ namespace BioData
       if (Language == null)
         Language = "en";
 
+      SaveGeneralSettings(LocalStoragePath, FaceServiceStoragePath, DatabaseServiceStoragePath, Language);
+
       // "192.168.1.127:50052" Taras
       //"192.168.1.178:50051"  Serg
     }

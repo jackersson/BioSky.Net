@@ -73,6 +73,9 @@
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Column="5" Grid.Row="0" HorizontalAlignment="Stretch" 
+                IsEnabled="{Binding IsDeleteButtonEnabled}"
+                ToolTip="{lex:Loc Delete}"
+                cal:Message.Attach="[Event Click] = [Action OnDeleteLocation]"
                 VerticalAlignment="Stretch">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>

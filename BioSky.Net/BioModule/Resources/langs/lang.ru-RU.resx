@@ -205,7 +205,7 @@
     <value>Помощь</value>
   </data>
   <data name="AccessDevices" xml:space="preserve">
-    <value>Доступніе приборы</value>
+    <value>Доступные приборы</value>
   </data>
   <data name="UploadPhoto" xml:space="preserve">
     <value>Загрузить фото</value>
@@ -262,7 +262,7 @@
     <value>Пользователи</value>
   </data>
   <data name="UsersToNotify" xml:space="preserve">
-    <value>Пользователи для опопвещения</value>
+    <value>Пользователи для оповещения</value>
   </data>
   <data name="Country" xml:space="preserve">
     <value>Страна</value>

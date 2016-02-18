@@ -65,9 +65,9 @@
                 <DataTemplate DataType="{x:Type vm:LocationAccessDevicesViewModel}">
                     <local:LocationAccessDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationAccessDevicesView>
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:LocationCaptureDevicesViewModel}">
+                <!--<DataTemplate DataType="{x:Type vm:LocationCaptureDevicesViewModel}">
                     <local:LocationCaptureDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationCaptureDevicesView>
-                </DataTemplate>
+                </DataTemplate>-->
                 <DataTemplate DataType="{x:Type vm:LocationUsersNotifyViewModel}">
                     <local:LocationUsersNotifyView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationUsersNotifyView>
                 </DataTemplate>

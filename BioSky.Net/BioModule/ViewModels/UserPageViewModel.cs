@@ -41,7 +41,7 @@ namespace BioModule.ViewModels
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
       Items.Add(new UserInformationViewModel    ());
-      Items.Add(new UserContactlessCardViewModel(bioEngine, _locator));
+      Items.Add(new UserContactlessCardViewModel(bioEngine, _locator, _windowManager));
       Items.Add(new UserPhotoViewModel          (bioEngine, CurrentImageView, _locator, _windowManager));
      
       ActiveItem = Items[0];
@@ -83,6 +83,8 @@ namespace BioModule.ViewModels
 
         _userPageMode = UserPageMode.NewUser;
         DisplayName = "AddNewUser";
+        CurrentImageView.UpdateImage(null,null);
+
       }
 
       CurrentImageView.Update(_user);
@@ -107,22 +109,26 @@ namespace BioModule.ViewModels
     {
       _user.EntityState = state;     
 
-      Photo photo = CurrentImageView.CurrentImagePhoto;
-      if (photo != null)
+      if(_user.EntityState != EntityState.Deleted)
       {
-        photo.OriginType = PhotoOriginType.Loaded;
-
-        Photo thumbnail = null;
-        bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out thumbnail);
-        if (photoExists)
+        Photo photo = CurrentImageView.CurrentImagePhoto;
+        if (photo != null)
         {
-          if (thumbnail.GetHashCode() != photo.GetHashCode())
+          photo.OriginType = PhotoOriginType.Loaded;
+
+          Photo thumbnail = null;
+          bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out thumbnail);
+          if (photoExists)
+          {
+            if (thumbnail.GetHashCode() != photo.GetHashCode())
+              _user.Thumbnail = photo;
+          }
+          else
             _user.Thumbnail = photo;
-        }           
-        else        
-          _user.Thumbnail = photo;
-        
-      }
+
+        } 
+      }   
+
 
       PersonList personList = new PersonList();
       personList.Persons.Add(_user);   
@@ -244,22 +250,14 @@ namespace BioModule.ViewModels
 
     #region Global Variables
 
-    private Person _user;
-
-    private BioContracts.Common.BioImageUtils _bioUtils;
-
-    private readonly FastMethodInvoker _methodInvoker;
-
-    private readonly IProcessorLocator _locator;
-
-    private IWindowManager _windowManager;
-
-    private UserPageMode _userPageMode;
-
-    private IBioSkyNetRepository _database;
-
-    private readonly IServiceManager _bioService;
-
+    private Person                            _user         ;
+    private BioContracts.Common.BioImageUtils _bioUtils     ;
+    private readonly FastMethodInvoker        _methodInvoker;
+    private readonly IProcessorLocator        _locator      ;
+    private IWindowManager                    _windowManager;
+    private UserPageMode                      _userPageMode ;
+    private IBioSkyNetRepository              _database     ;
+    private readonly IServiceManager          _bioService   ;
     #endregion
   }
 }

@@ -47,8 +47,11 @@ namespace BioModule.ViewModels
 
     } 
     public void ShowAboutDialog()
-    {      
-      _windowManager.ShowDialog(new AboutDialogViewModel());      
+    {
+      string s = "ewfrnfglnsgnejgnbjetntnbkjtnet/n dsgjwnewhuhekbnkenbetknbknjdfjsbxmjnf/n wdgbscfvrjenbvfvjrenenvlwefn/n";
+     // _windowManager.ShowDialog(new AboutDialogViewModel());    
+       _windowManager.ShowDialog(new CustomTextDialogViewModel("Test Dialog", s, DialogStatus.Info));      
+  
     }
     public void ShowLogInDialog()
     {      

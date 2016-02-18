@@ -102,8 +102,8 @@ namespace BioModule.ViewModels
       
     }
     public void OnMouseRightButtonDown( DragableItem IsDragableItem)
-    {      
-      if(_performer.CanRemove())
+    {
+      if (_performer.CanRemove())
       {
         MenuRemoveStatus = (IsDragableItem != null);
         SelectedItem = IsDragableItem;

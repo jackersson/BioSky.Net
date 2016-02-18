@@ -23,10 +23,10 @@ namespace BioData.Holders
       to.MergeFrom(from);
     }
 
-    public override void Remove(Person obj, long key)
+    public override void Remove(long key)
     {
-      base.Remove(obj, key);
-      var item = Data.Where(x => x.Id == obj.Id).FirstOrDefault();
+      base.Remove(key);
+      var item = Data.Where(x => x.Id == key).FirstOrDefault();
       if (item != null)
       {
         Data.Remove(item);

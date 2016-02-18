@@ -64,6 +64,41 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _trackingListIconSource;
 
     private static BitmapSource _loaderIconSource;
+    private static BitmapSource _informationCircleIconSource;
+    private static BitmapSource _leftArrowIconSource;
+    private static BitmapSource _rightArrowIconSource;
+
+
+
+
+    public static BitmapSource LeftArrowIconSource
+    {
+      get
+      {
+        if (_leftArrowIconSource == null)
+          _leftArrowIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.left_arrow);
+        return _leftArrowIconSource;
+      }
+    }
+    public static BitmapSource RightArrowIconSource
+    {
+      get
+      {
+        if (_rightArrowIconSource == null)
+          _rightArrowIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.right_arrow);
+        return _rightArrowIconSource;
+      }
+    }
+
+    public static BitmapSource InformationCircleIconSource
+    {
+      get
+      {
+        if (_informationCircleIconSource == null)
+          _informationCircleIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.info_circle);
+        return _informationCircleIconSource;
+      }
+    }
 
     public static BitmapSource LoaderIconSource
     {
@@ -252,6 +287,8 @@ namespace BioModule.ResourcesLoader
         return _userInformationIconSource;
       }
     }
+
+
 
     public static BitmapSource UserFacesIconSource
     {

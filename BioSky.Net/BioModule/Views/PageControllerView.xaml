@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="BioModule.Views.PageControllerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com" 
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             mc:Ignorable="d"              
+             d:DesignHeight="50" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="32"/>
+            <ColumnDefinition Width="32"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Text}" 
+                   Grid.Column="0" Margin="0,0,10,0"
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Right" FontWeight="Bold"></TextBlock>
+
+        <Button  Background="White"
+                 HorizontalAlignment="Stretch"
+                 IsEnabled="{Binding IsLeftArrowEnabled}"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Return}"
+                 cal:Message.Attach="[Event Click]=[Action OnLeftClick]"
+                 Grid.Row="6" Grid.Column="1" Width="32" Height="32" >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}" />
+        </Button>
+
+        <Button  Background="White"
+                 HorizontalAlignment="Stretch"
+                 IsEnabled="{Binding IsRightArrowEnabled}"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Forward}"
+                 cal:Message.Attach="[Event Click]=[Action OnRightClick]"
+                 Grid.Row="6" Grid.Column="2" Width="32" Height="32" >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}" />
+        </Button>
+
+    </Grid>    
+</UserControl>
