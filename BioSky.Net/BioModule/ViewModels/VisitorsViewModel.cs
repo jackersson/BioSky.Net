@@ -24,7 +24,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Data;
 using Grpc.Core;
-
+using WPFLocalizeExtension.Extensions;
 
 namespace BioModule.ViewModels
 {
@@ -32,7 +32,7 @@ namespace BioModule.ViewModels
   {
     public VisitorsViewModel(IProcessorLocator locator, IWindowManager windowManager)
     {
-      DisplayName = "Visitors_";
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Visitors_");
 
       _locator       = locator;
       _windowManager = windowManager;

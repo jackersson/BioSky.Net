@@ -20,6 +20,7 @@ using Google.Protobuf.Collections;
 using System.Reflection;
 using BioService;
 using Grpc.Core;
+using WPFLocalizeExtension.Extensions;
 
 namespace BioModule.ViewModels
 {
@@ -42,8 +43,7 @@ namespace BioModule.ViewModels
 
       _visitorsView = new VisitorsViewModel(locator, _windowManager);
 
-
-      DisplayName = "Tracking_";
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
       _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
     }
@@ -141,10 +141,18 @@ namespace BioModule.ViewModels
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)
     {
-      if (SelectedTrackLocation == null)
-        return;
+      if (SelectedTrackLocation != null)
+      {
+        TrackTabControlView.Update(SelectedTrackLocation);
+        IsDeleteButtonEnabled = true;
+      }
+      else
+        IsDeleteButtonEnabled = false;
+    }
 
-      TrackTabControlView.Update(SelectedTrackLocation);
+    public void OpenTabAddNewLocation()
+    {
+      _selector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings, new object[] { null });
     }
 
     public void ShowLocationFlayout()

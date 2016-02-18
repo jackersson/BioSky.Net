@@ -72,7 +72,7 @@ namespace BioModule.ViewModels
       if (user == null)
         return;
 
-      if (user.EntityState == EntityState.Added)
+      if (user.Id <= 0)
         return;
 
       IsEnabled = true;

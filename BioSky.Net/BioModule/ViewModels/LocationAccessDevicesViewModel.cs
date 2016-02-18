@@ -35,17 +35,14 @@ namespace BioModule.ViewModels
       _bioEngine     = _locator.GetProcessor<IBioEngine>();
 
 
-      _captureDevicesList = new ObservableCollection<DragableItem>();
-      _accessDevicesList   = new ObservableCollection<DragableItem>();
+      _captureDevicesList = new ObservableCollection<LocationItem>();
+      _accessDevicesList   = new ObservableCollection<LocationItem>();
 
       AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
       AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
 
       CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
       CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
-
-
-     // _bioEngine.Database().PersonHolder.DataChanged += RefreshData;
 
       RefreshData();
       RefreshCaptureDevices();
@@ -69,14 +66,17 @@ namespace BioModule.ViewModels
 
       foreach (AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
       {
-        DragableItem dragableItem = new DragableItem() { ItemContext = item.Clone(), ItemEnabled = true, DisplayName = item.Portname };
+        LocationItem dragableItem = new LocationItem() { ItemContext = item.Clone(), ItemEnabled = true, DisplayName = item.Portname };
 
         if (_location.Id <= 0)
         {
           if (item.Type == AccessDevice.Types.AccessDeviceType.DeviceNone)
             AddToGeneralDeviceList(dragableItem, false, true);
           else
-            AddToGeneralDeviceList(dragableItem, true, true);
+          {
+            dragableItem.ItemInUse = true;
+            AddToGeneralDeviceList(dragableItem, false, true);
+          }
 
           continue;
         }
@@ -94,6 +94,11 @@ namespace BioModule.ViewModels
                 break;
             }
           }
+          else
+          {
+            dragableItem.ItemInUse = true;
+            AddToGeneralDeviceList(dragableItem, false, true);
+          }
         }
       }
 
@@ -102,8 +107,8 @@ namespace BioModule.ViewModels
         if (!IsDeviceUsed(deviceName, true))
         {
           AccessDevice device = new AccessDevice() { Portname = deviceName };
-          DragableItem dragableItem = new DragableItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Portname };
-          AddToGeneralDeviceList(dragableItem, true, true);
+          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Portname };
+          AddToGeneralDeviceList(dragableItem, false, true);
         }
       }
     }
@@ -114,14 +119,17 @@ namespace BioModule.ViewModels
 
       foreach (CaptureDevice item in _bioEngine.Database().CaptureDeviceHolder.Data)
       {
-        DragableItem dragableItem = new DragableItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
+        LocationItem dragableItem = new LocationItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
 
         if (_location.Id <= 0)
         {
           if (item.Locationid <= 0)
             AddToGeneralDeviceList(dragableItem, false, false);
           else
-            AddToGeneralDeviceList(dragableItem, true, false);
+          {
+            dragableItem.ItemInUse = true;
+            AddToGeneralDeviceList(dragableItem, false, false);
+          }
 
           continue;
         }
@@ -129,8 +137,11 @@ namespace BioModule.ViewModels
         {
           if (item.Locationid == _location.Id)          
             AddToGeneralDeviceList(dragableItem, true, false);          
-          else if (item.Locationid <= 0)
+          else
+          {
+            dragableItem.ItemInUse = true;
             AddToGeneralDeviceList(dragableItem, false, false);
+          }
         }
       }
 
@@ -139,8 +150,8 @@ namespace BioModule.ViewModels
         if (!IsDeviceUsed(deviceName, false))
         {
           CaptureDevice device = new CaptureDevice() { Devicename = deviceName, };
-          DragableItem dragableItem = new DragableItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename };
-          AddToGeneralDeviceList(dragableItem, true, false);
+          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename };
+          AddToGeneralDeviceList(dragableItem, false, false);
         }
       }
     }
@@ -149,7 +160,7 @@ namespace BioModule.ViewModels
     {
       if (isAccessDevices)
       {
-        foreach (DragableItem item in AccessDevicesList)
+        foreach (LocationItem item in AccessDevicesList)
         {
           if (item.DisplayName == deviceName)
             return true;
@@ -160,7 +171,7 @@ namespace BioModule.ViewModels
       }
       else
       {
-        foreach (DragableItem item in CaptureDevicesList)
+        foreach (LocationItem item in CaptureDevicesList)
         {
           if (item.DisplayName == deviceName)
             return true;
@@ -170,19 +181,18 @@ namespace BioModule.ViewModels
         return false;
       }
     }
-    public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true, bool isAccessDevice = true)
+    public void AddToGeneralDeviceList(LocationItem item, bool isEnabled = true, bool isAccessDevice = true)
     {
       if (item == null)
         return;
 
-      DragableItem newItem = item.Clone();
+      LocationItem newItem = item.Clone();
       newItem.ItemEnabled = isEnabled;
 
       if(isAccessDevice)
         AccessDevicesList.Add(newItem);      
       else
-        CaptureDevicesList.Add(newItem);
-      
+        CaptureDevicesList.Add(newItem);      
     }
 
 
@@ -195,7 +205,7 @@ namespace BioModule.ViewModels
     {
       RepeatedField<CaptureDevice> captureDevices = new RepeatedField<CaptureDevice>();
 
-      foreach (DragableItem item in CaptureDevicesList)
+      foreach (LocationItem item in CaptureDevicesList)
       {
         if(item.ItemEnabled == true)
         {
@@ -212,7 +222,7 @@ namespace BioModule.ViewModels
     {
       RepeatedField<AccessDevice> accessDevices = new RepeatedField<AccessDevice>();
 
-      foreach (DragableItem item in AccessDevicesList)
+      foreach (LocationItem item in AccessDevicesList)
       {
         if (item.ItemEnabled == true)
         {
@@ -235,11 +245,18 @@ namespace BioModule.ViewModels
       switch (source)
       {
         case "CaptureDevice":
-          SelectedCaptureDevice.ItemEnabled = false;
+          if (SelectedCaptureDevice.ItemInUse == true)
+            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Camera used by another Location", DialogStatus.Error));
+          else
+            SelectedCaptureDevice.ItemEnabled = false;
+
           break;
         case "AccessDevice":
-          SelectedAccessDevice.ItemEnabled = false;
-          //AccessDevicesList.Remove(dragableItem, true);
+          if(SelectedAccessDevice.ItemInUse == true)
+            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Device used by another Location", DialogStatus.Error));
+          else
+            SelectedAccessDevice.ItemEnabled = false;
+
           break;
       }
     }
@@ -249,46 +266,51 @@ namespace BioModule.ViewModels
       switch (source)
       {
         case "CaptureDevice":
-          foreach (DragableItem item in CaptureDevicesList)
-            item.ItemEnabled = false;
-          SelectedCaptureDevice.ItemEnabled = true;
+          if (SelectedCaptureDevice.ItemInUse == true)
+            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Camera used by another Location", DialogStatus.Error));
+          else
+          {
+            foreach (LocationItem item in CaptureDevicesList)
+              item.ItemEnabled = false;
+            SelectedCaptureDevice.ItemEnabled = true;
+          }         
+
           break;
         case "AccessDevice":
-          foreach (DragableItem item in AccessDevicesList)
-            item.ItemEnabled = false;
-          SelectedAccessDevice.ItemEnabled = true;
+          if (SelectedAccessDevice.ItemInUse == true)
+            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Device used by another Location", DialogStatus.Error));
+          else
+          {
+            foreach (LocationItem item in AccessDevicesList)
+              item.ItemEnabled = false;
+            SelectedAccessDevice.ItemEnabled = true;
+          }
+
           break;
       }
     }
-    public void EnableItem(DragableItem sourceitem, ObservableCollection<DragableItem> generalList)
+    public void EnableItem(LocationItem sourceitem, ObservableCollection<LocationItem> generalList)
     {
-      foreach (DragableItem item in generalList)
+      foreach (LocationItem item in generalList)
       {
         if (item.DisplayName == sourceitem.DisplayName)
           item.ItemEnabled = true;
       }
     }
-
-
-
-    public void OnMouseRightButtonDownAccess(DragableItem IsDragableItem)
+    public void OnMouseRightButtonDownAccess(LocationItem IsDragableItem)
     {      
       MenuRemoveStatus = (SelectedAccessDevice != null);
       SelectedAccessDevice = IsDragableItem;
     }
-
     public void OnSelectionChangeAccess()
     {
       MenuRemoveStatus = (SelectedAccessDevice != null);
-
     }
-
-    public void OnMouseRightButtonDownCapture(DragableItem IsDragableItem)
+    public void OnMouseRightButtonDownCapture(LocationItem IsDragableItem)
     {
       MenuRemoveStatus = (SelectedCaptureDevice != null);
       SelectedCaptureDevice = IsDragableItem;
     }
-
     public void OnSelectionChangeCapture()
     {
       MenuRemoveStatus = (SelectedCaptureDevice != null);
@@ -337,8 +359,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private DragableItem _selectedAccessDevice;
-    public DragableItem SelectedAccessDevice
+    private LocationItem _selectedAccessDevice;
+    public LocationItem SelectedAccessDevice
     {
       get { return _selectedAccessDevice; }
       set
@@ -352,8 +374,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private DragableItem _selectedCaptureDevice;
-    public DragableItem SelectedCaptureDevice
+    private LocationItem _selectedCaptureDevice;
+    public LocationItem SelectedCaptureDevice
     {
       get { return _selectedCaptureDevice; }
       set
@@ -382,8 +404,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<DragableItem> _accessDevicesList;
-    public ObservableCollection<DragableItem> AccessDevicesList
+    private ObservableCollection<LocationItem> _accessDevicesList;
+    public ObservableCollection<LocationItem> AccessDevicesList
     {
       get { return _accessDevicesList; }
       set
@@ -396,8 +418,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<DragableItem> _captureDevicesList;
-    public ObservableCollection<DragableItem> CaptureDevicesList
+    private ObservableCollection<LocationItem> _captureDevicesList;
+    public ObservableCollection<LocationItem> CaptureDevicesList
     {
       get { return _captureDevicesList; }
       set
@@ -421,5 +443,58 @@ namespace BioModule.ViewModels
     private          IWindowManager    _windowManager;
 
     #endregion
-  }   
+  }
+
+  public class LocationItem : PropertyChangedBase
+  {
+    public object ItemContext { get; set; }
+
+    private bool _itemEnabled;
+    public bool ItemEnabled
+    {
+      get { return _itemEnabled; }
+      set
+      {
+        if (_itemEnabled != value)
+        {
+          _itemEnabled = value;
+          NotifyOfPropertyChange(() => ItemEnabled);
+          NotifyOfPropertyChange(() => DisplayName);
+        }
+      }
+    }
+
+    private bool _itemInUse;
+    public bool ItemInUse
+    {
+      get { return _itemInUse; }
+      set
+      {
+        if (_itemInUse != value)
+        {
+          _itemInUse = value;
+          NotifyOfPropertyChange(() => ItemInUse);
+          NotifyOfPropertyChange(() => DisplayName);
+        }
+      }
+    }
+
+    public LocationItem Clone()
+    {
+      return new LocationItem()
+      {
+        ItemContext = this.ItemContext
+      , ItemEnabled = this.ItemEnabled
+      , DisplayName = this.DisplayName
+      , ItemInUse = this.ItemInUse
+
+      };
+    }
+
+    public string DisplayName
+    {
+      get;
+      set;
+    }
+  }
 }

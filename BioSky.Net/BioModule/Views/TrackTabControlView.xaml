@@ -42,8 +42,7 @@
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
-                        <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False" />
-                        <TextBlock Text="{Binding Result, ElementName=Proxy}" FontSize="14" />
+                        <TextBlock Text="{Binding DisplayName}" FontSize="14" />
                     </Grid>
                 </DataTemplate>
             </TabControl.ItemTemplate>

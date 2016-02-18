@@ -19,6 +19,10 @@ using BioService;
 using System.IO;
 using Grpc.Core;
 
+using WPFLocalizeExtension.Extensions;
+using WPFLocalizeExtension.Providers;
+using XAMLMarkupExtensions.Base;
+
 namespace BioModule.ViewModels
 {
   enum UserPageMode
@@ -82,7 +86,9 @@ namespace BioModule.ViewModels
         };
 
         _userPageMode = UserPageMode.NewUser;
-        DisplayName = "AddNewUser";
+        DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
+
+        //DisplayName = "AddNewUser";
         CurrentImageView.UpdateImage(null,null);
 
       }

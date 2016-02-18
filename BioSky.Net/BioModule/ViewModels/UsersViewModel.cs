@@ -27,6 +27,7 @@ using BioService;
 using BioContracts;
 using Google.Protobuf.Collections;
 using Grpc.Core;
+using WPFLocalizeExtension.Extensions;
 
 
 namespace BioModule.ViewModels
@@ -35,7 +36,7 @@ namespace BioModule.ViewModels
   {
     public UsersViewModel(IProcessorLocator locator, IWindowManager windowManager)
     {
-      DisplayName = "Users_";
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Users_");
 
       _locator       = locator;
       _windowManager = windowManager;

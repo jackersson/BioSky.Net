@@ -81,6 +81,12 @@ namespace BioModule.ViewModels
           }
           else if (location.EntityState == EntityState.Added)
             MessageBox.Show("Location successfully Added");
+          else if (location.EntityState == EntityState.Unchanged)
+          {
+            location.LocationName = RevertLocation.LocationName;
+            location.Description = RevertLocation.Description;
+            MessageBox.Show("Location successfully Updated");
+          }
           else
             MessageBox.Show("Location successfully Updated");
 

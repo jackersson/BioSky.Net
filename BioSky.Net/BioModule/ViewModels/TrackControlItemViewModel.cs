@@ -14,6 +14,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using BioModule.Utils;
 using System.Drawing;
+using WPFLocalizeExtension.Extensions;
+
 
 namespace BioModule.ViewModels
 {
@@ -88,7 +90,7 @@ namespace BioModule.ViewModels
     } 
     private void Initialize(IProcessorLocator locator)
     {
-      DisplayName = "Location";
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
 
       UserVerified = true;
       UserVerificationIconVisible = false;

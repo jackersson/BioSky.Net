@@ -19,10 +19,20 @@
              d:DesignHeight="320" d:DesignWidth="300"
              
              >
-    <UserControl.Resources>          
+    <UserControl.Resources>   
+        <ResourceDictionary>
         <utils:StringToGenderConverter x:Key="converterGender" />
         <utils:StringToRightsConverter x:Key="converterRights" />
         <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
+            <ResourceDictionary>
+                    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
+                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+                </Style>
+            </ResourceDictionary>
+        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources> 
 
     <Grid>
@@ -59,16 +69,31 @@
                 <DatePicker x:Name="DateOfBirthBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                     
                          Controls:TextBoxHelper.Watermark="{lex:Loc DateOfBirth}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         
                          cal:Message.Attach="[Event SelectedDateChanged]=[Action OnDateofBirthChanged(DateOfBirthBox.Text)]"
                          Text="{Binding User.Dateofbirth, Converter={StaticResource ConvertLongToDateTime}, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <ComboBox ItemsSource="{Binding GenderSources}"
-                          
+                
+                
+                <ComboBox ItemsSource="{Binding GenderSources}"                          
                           SelectedItem="{Binding User.Gender, Converter={StaticResource converterGender}, UpdateSourceTrigger=PropertyChanged}"
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                           Controls:TextBoxHelper.Watermark="{lex:Loc Gender}"
-                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                           />
+                          Controls:TextBoxHelper.UseFloatingWatermark="True">
+                    <ComboBox.Style>
+                        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
+                            <Setter Property="ItemTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <lex:LocProxy Source="{Binding}" x:Name="GenderProxy" PrependType="True" />
+                                            <TextBlock Text="{Binding Result, ElementName=GenderProxy}" Margin="2" FontWeight="Normal" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
 
                 <TextBox x:Name="CountryBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
@@ -98,7 +123,22 @@
                           SelectedItem="{Binding User.Rights, Converter={StaticResource converterRights}, UpdateSourceTrigger=PropertyChanged}" 
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                           Controls:TextBoxHelper.Watermark="{lex:Loc Rights}"
-                          Controls:TextBoxHelper.UseFloatingWatermark="True"/> 
+                          Controls:TextBoxHelper.UseFloatingWatermark="True">
+                    <ComboBox.Style>
+                        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
+                            <Setter Property="ItemTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <lex:LocProxy Source="{Binding}" x:Name="GenderProxy" PrependType="True" />
+                                            <TextBlock Text="{Binding Result, ElementName=GenderProxy}" Margin="2" FontWeight="Normal" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
             </StackPanel>
         </ScrollViewer>
     </Grid>

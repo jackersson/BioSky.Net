@@ -78,8 +78,9 @@ namespace BioModule.ViewModels
     public void OnDateofBirthChanged(string text)
     {
       try
-      {      
-        DateTime dt = DateTime.ParseExact(text, "M/d/yyyy", CultureInfo.InvariantCulture);
+      {
+        string dateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+        DateTime dt = DateTime.ParseExact(text, dateFormat, CultureInfo.InvariantCulture);
         User.Dateofbirth = dt.Ticks;
       }
       catch ( Exception ex)
