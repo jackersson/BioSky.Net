@@ -67,10 +67,20 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _informationCircleIconSource;
     private static BitmapSource _leftArrowIconSource;
     private static BitmapSource _rightArrowIconSource;
+    private static BitmapSource _downArrowIconSource;
 
 
 
 
+    public static BitmapSource DownArrowIconSource
+    {
+      get
+      {
+        if (_downArrowIconSource == null)
+          _downArrowIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.down_arrow);
+        return _downArrowIconSource;
+      }
+    }
     public static BitmapSource LeftArrowIconSource
     {
       get

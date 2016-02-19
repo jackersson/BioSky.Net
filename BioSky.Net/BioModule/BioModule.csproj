@@ -245,6 +245,7 @@
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
+    <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
     <Compile Include="ViewModels\YesNoDialogViewModel.cs" />
@@ -314,6 +315,9 @@
     </Compile>
     <Compile Include="Views\PageControllerView.xaml.cs">
       <DependentUpon>PageControllerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PhotoInfoExpanderView.xaml.cs">
+      <DependentUpon>PhotoInfoExpanderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolBarView.xaml.cs">
       <DependentUpon>ToolBarView.xaml</DependentUpon>
@@ -448,6 +452,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PageControllerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PhotoInfoExpanderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -612,6 +620,7 @@
   <ItemGroup>
     <None Include="Resources\info_circle.png" />
     <None Include="Resources\left_arrow.png" />
+    <None Include="Resources\down_arrow.png" />
     <Content Include="Resources\loader.PNG" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\loadphotos.png" />

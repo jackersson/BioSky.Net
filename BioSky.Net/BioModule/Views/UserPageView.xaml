@@ -94,7 +94,11 @@
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
         </Button>
 
-        <Button ToolTip="{lex:Loc RevertChanges}" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button ToolTip="{lex:Loc RevertChanges}" 
+                Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" 
+                cal:Message.Attach="[Event Click] = [Action Revert]"
+                >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 

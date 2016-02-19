@@ -86,7 +86,7 @@ namespace BioModule.ViewModels
     }
     public void OnDataContextChanged()
     {
-      ImageView = new ImageViewModel();
+      ImageView = new ImageViewModel(_locator, _windowManager);
     } 
     private void Initialize(IProcessorLocator locator)
     {

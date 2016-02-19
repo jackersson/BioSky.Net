@@ -163,9 +163,48 @@ namespace BioModule.ViewModels
       }
     }
 
+    public void OnMouseDoubleClick(Visitor visitor)
+    {
+      if (visitor != null)
+      {    
+        if(visitor.Personid <= 0)        
+          ShowVisitorAsUser(visitor);      
+        else        
+          ShowPerson(visitor.Id);        
+      }
+    }
+
+    public void OnAddVisitorAsUser()
+    {
+      if (SelectedItem != null)
+        ShowVisitorAsUser(SelectedItem);
+    }
+
+    public void ShowVisitorAsUser(Visitor visitor)
+    {
+      Photo photo = null;
+      bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(visitor.Photoid, out photo);
+      if (photoExists)
+      {
+        Person user = new Person()
+        {
+          Firstname = ""
+          , Lastname = ""
+          , Thumbnailid = 0
+          , Gender = Person.Types.Gender.Male
+          , Rights = Person.Types.Rights.Operator
+          , EntityState = EntityState.Added
+          , Thumbnail = photo
+        };
+
+        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
+                   , new object[] { user }); 
+      }
+    }
+
     public void OnDataContextChanged()
     {
-      ImageView      = new ImageViewModel()         ;
+      ImageView      = new ImageViewModel(_locator, _windowManager)         ;
       PageController = new PageControllerViewModel();
     }
 
@@ -250,23 +289,25 @@ namespace BioModule.ViewModels
       SelectedItem = visitor;
     }
 
+    public void ShowPerson(long visitorId)
+    {
+      Visitor visitor = null;
+      bool visitorFound = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(visitorId, out visitor);
+
+      if (visitorFound)
+      {
+        Person person = null;
+        bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
+        _selector.ShowContent(ShowableContentControl.TabControlContent
+                             , ViewModelsID.UserPage
+                             , new object[] { person });
+      }
+    }
+
     public void ShowUserPage()
     {
-      foreach (long id in SelectedItemIds)
-      {
-
-        Visitor visitor = null;
-        bool visitorFound = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(id, out visitor);
-
-        if (visitorFound)
-        {
-          Person person = null;
-          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
-          _selector.ShowContent(ShowableContentControl.TabControlContent
-                               , ViewModelsID.UserPage
-                               , new object[] { person });
-        }
-      }
+      foreach (long id in SelectedItemIds)      
+        ShowPerson(id);      
     }
     #endregion
 

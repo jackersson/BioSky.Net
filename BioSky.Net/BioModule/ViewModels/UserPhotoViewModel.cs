@@ -33,9 +33,9 @@ namespace BioModule.ViewModels
     public UserPhotoViewModel( IBioEngine        bioEngine, IImageUpdatable imageViewer
                              , IProcessorLocator locator  , IWindowManager  windowManager)
     {
-      _locator             = locator;
-      _bioEngine           = bioEngine;
-      _imageViewer         = imageViewer;
+      _locator             = locator      ;
+      _bioEngine           = bioEngine    ;
+      _imageViewer         = imageViewer  ;
       _windowManager       = windowManager;
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -136,6 +136,8 @@ namespace BioModule.ViewModels
     }
     public void EnrollFromCamera()
     {
+      _windowManager.ShowDialog(new CameraDialogViewModel(_bioEngine, _locator));
+/*
       if (CaptureDeviceConnected && !_enroller.Busy)
       {
         _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
@@ -147,7 +149,7 @@ namespace BioModule.ViewModels
         MessageBox.Show("Choose CaptureDevice first ! ");      
 
       if (_enroller.Busy)      
-        MessageBox.Show("Wait for finnishing previous operation");
+        MessageBox.Show("Wait for finnishing previous operation");*/
       
     }
     public void Subscribe()
@@ -178,8 +180,7 @@ namespace BioModule.ViewModels
     #endregion  
 
     private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
-    {
-      
+    {      
       if (feedback.Progress == 100)
       {
         _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;

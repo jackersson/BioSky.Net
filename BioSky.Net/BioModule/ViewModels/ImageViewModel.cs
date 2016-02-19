@@ -24,10 +24,17 @@ namespace BioModule.ViewModels
 {
   public class ImageViewModel : Screen, IImageUpdatable
   {
-    public ImageViewModel()
+    public ImageViewModel(IProcessorLocator locator, IWindowManager  windowManager)
     {
       _bioUtils = new BioContracts.Common.BioImageUtils();
+      _locator       = locator      ;
+      _windowManager = windowManager;
 
+      if(_locator != null)
+        _bioEngine = _locator.GetProcessor<IBioEngine>();
+
+      PhotoInfoExpanderView = new PhotoInfoExpanderViewModel();
+      
       ZoomToFitState = true;
       CurrentImagePhoto = null;   
     }
@@ -43,7 +50,7 @@ namespace BioModule.ViewModels
     }
     public Photo UploadPhoto()
     {
-      var dialog = OpenFileDialog();
+      var dialog = OpenFileDialog();      
       if (dialog.ShowDialog() == true)
       {
         string filename = dialog.FileName;
@@ -229,9 +236,41 @@ namespace BioModule.ViewModels
       if (CalculatedImageScale > CalculatedImageScaleY)
         CalculatedImageScale = CalculatedImageScaleY;     
     }
+
+    public void EnrollFromPhoto()
+    {
+      OnEnrollFromPhoto();
+    }
+
+    public void EnrollFromCamera()
+    {
+      _windowManager.ShowDialog(new CameraDialogViewModel(_bioEngine, _locator));
+      OnEnrollFromCamera();
+    }
     #endregion
 
     #region UI
+
+    public delegate void OnEnrollFromPhotoHandler();
+    public event OnEnrollFromPhotoHandler EnrollFromPhotoChanged;
+
+    public void OnEnrollFromPhoto()
+    {
+      if (EnrollFromPhotoChanged != null)
+        EnrollFromPhotoChanged();
+    }
+
+    public delegate void OnEnrollFromCameraHandler();
+    public event OnEnrollFromCameraHandler EnrollFromCameraChanged;
+
+    public void OnEnrollFromCamera()
+    {
+      if (EnrollFromCameraChanged != null)
+        EnrollFromCameraChanged();
+    }
+
+
+
     double _calculatedImageScale;
     public double CalculatedImageScale
     {
@@ -256,6 +295,20 @@ namespace BioModule.ViewModels
         {
           _calculatedImageScaleY = value;
           NotifyOfPropertyChange(() => CalculatedImageScaleY);
+        }
+      }
+    }
+
+    private PhotoInfoExpanderViewModel _photoInfoExpanderView;
+    private PhotoInfoExpanderViewModel PhotoInfoExpanderView
+    {
+      get { return _photoInfoExpanderView; }
+      set
+      {
+        if (_photoInfoExpanderView != value)
+        {
+          _photoInfoExpanderView = value;
+          NotifyOfPropertyChange(() => PhotoInfoExpanderView);
         }
       }
     }
@@ -538,7 +591,11 @@ namespace BioModule.ViewModels
     private const double ZOOM_TO_FIT_RATE = 90;
     private const double ZOOM_RATIO = 100D;
 
-    private BioContracts.Common.BioImageUtils _bioUtils;
+    private BioContracts.Common.BioImageUtils _bioUtils     ;
+    private readonly IBioEngine               _bioEngine    ;
+    private readonly IProcessorLocator        _locator      ;
+    private          IWindowManager           _windowManager;
+
 
     #endregion
   }

@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"             
-             xmlns:vm="clr-namespace:BioModule.ViewModels"      
+             xmlns:vm="clr-namespace:BioModule.ViewModels"     
+             xmlns:local="clr-namespace:BioModule.Views"             
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cal="http://www.caliburnproject.org"
@@ -52,6 +53,14 @@
             </Grid>
         </Border>
 
+        <!--*****************************************PhotoInfoExpanderView**************************************************-->
+        <Grid Name="SlideGrid" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">
+            <ContentControl>
+                <local:PhotoInfoExpanderView DataContext="{Binding PhotoInfoExpanderView}"></local:PhotoInfoExpanderView>
+            </ContentControl>          
+        </Grid>
+        <!--*****************************************PhotoInfoExpanderView**************************************************-->
+
         <Grid HorizontalAlignment="Center" 
               Visibility="{ Binding ProgressRingVisibility
                           , Converter={StaticResource BooleanToVisibilityConverter}}"             
@@ -89,15 +98,17 @@
                    >
             </Image>
         </Grid>
-
-        <Slider x:Name="Slider" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="10,0,10,0"
+        <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="10,0,10,0" Panel.ZIndex="5">
+            <Rectangle Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Rectangle>
+            <Slider x:Name="Slider" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="10,0,10,0"
                 HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
-                    Minimum="30"
+                    Minimum="30"  
                     Maximum="150"
                     Value="{Binding ZoomRate, Mode=TwoWay}"
                     LargeChange="20"
                     SmallChange="10"                   
                     />
+        </Grid>
     </Grid>
 </UserControl>

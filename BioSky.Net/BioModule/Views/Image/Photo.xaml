@@ -32,6 +32,7 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="48"/>
+            <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
         <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
             <Grid>
@@ -118,6 +119,18 @@
                 ToolTip="{lex:Loc UploadPhoto}"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}" />
+        </Button>
+
+        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromCamera]" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc EnrollFromCamera}"
+                >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}" />
+        </Button>
+
+        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromPhoto]" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc EnrollFromImageFile}"
+                >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}" />
         </Button>
     </Grid>
 </UserControl>
