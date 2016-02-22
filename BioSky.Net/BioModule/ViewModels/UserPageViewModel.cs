@@ -65,7 +65,7 @@ namespace BioModule.ViewModels
 
     public void Update(Person user)
     {
-      if (user.Thumbnail != null)
+      if (user != null && user.Thumbnail != null)
       {
         UpdateFromVisitor(user);
         return;

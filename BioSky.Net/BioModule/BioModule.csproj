@@ -246,6 +246,7 @@
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
+    <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
     <Compile Include="ViewModels\YesNoDialogViewModel.cs" />
@@ -318,6 +319,9 @@
     </Compile>
     <Compile Include="Views\PhotoInfoExpanderView.xaml.cs">
       <DependentUpon>PhotoInfoExpanderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProgressRingView.xaml.cs">
+      <DependentUpon>ProgressRingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolBarView.xaml.cs">
       <DependentUpon>ToolBarView.xaml</DependentUpon>
@@ -456,6 +460,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PhotoInfoExpanderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ProgressRingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

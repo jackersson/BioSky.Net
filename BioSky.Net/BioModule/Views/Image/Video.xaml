@@ -56,47 +56,20 @@
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
         <Grid Name="SlideGrid" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">
             <ContentControl>
-                <local:PhotoInfoExpanderView DataContext="{Binding PhotoInfoExpanderView}"></local:PhotoInfoExpanderView>
+                <local:PhotoInfoExpanderView cal:View.Model="{Binding PhotoInfoExpanderView}" ></local:PhotoInfoExpanderView>
             </ContentControl>          
         </Grid>
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
 
-        <Grid HorizontalAlignment="Center" 
-              Visibility="{ Binding ProgressRingVisibility
-                          , Converter={StaticResource BooleanToVisibilityConverter}}"             
+        <Grid HorizontalAlignment="Center"             
               VerticalAlignment="Top" 
               Grid.Column="0" Grid.ColumnSpan="4">
 
-            <Controls:ProgressRing Grid.ColumnSpan="4" HorizontalAlignment="Center" 
-                                   Visibility="{Binding ProgressRingProgressVisibility
-                                  , Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   VerticalAlignment="Bottom">
-
-            </Controls:ProgressRing>
-
-            <Ellipse Grid.ColumnSpan="4" Width="44" Height="44" 
-                 StrokeThickness="1"
-                 Margin="0,0,0,9" 
-                 Fill="#FF02B3FF"
-                 Visibility="{Binding ProgressRingStatus
-                            , Converter={StaticResource BooleanToVisibilityConverter}}"
-                 HorizontalAlignment="Center" VerticalAlignment="Bottom">
-
-            </Ellipse>
-
-            <TextBlock Text="{Binding ProgressRingText}"   Grid.ColumnSpan="4" HorizontalAlignment="Center" 
-                 Margin="0,0,0,23" 
-                   VerticalAlignment="Bottom" Foreground="#FF0A3B4F" FontWeight="Bold" 
-                       Visibility="{Binding ProgressRingTextVisibility
-                            , Converter={StaticResource BooleanToVisibilityConverter}}">
-
-            </TextBlock>
-            <Image Source="{Binding ProgressRingIconSource}" Width="40" Height="40"
-                   Visibility="{Binding ProgressRingImageVisibility
-                            , Converter={StaticResource BooleanToVisibilityConverter}}"
-                   
-                   >
-            </Image>
+            <Grid HorizontalAlignment="Center"             
+              VerticalAlignment="Top" 
+              Grid.Column="0" Grid.ColumnSpan="4">
+                <local:ProgressRingView cal:View.Model="{Binding ProgressRingView}"></local:ProgressRingView>
+            </Grid>
         </Grid>
         <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="10,0,10,0" Panel.ZIndex="5">
             <Rectangle Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Rectangle>
