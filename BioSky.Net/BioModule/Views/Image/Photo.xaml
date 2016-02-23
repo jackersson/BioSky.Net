@@ -29,13 +29,13 @@
             <ColumnDefinition Width="96*"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="48"/>
-            <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
-        <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
+        <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5">
             <Grid>
                 <ScrollViewer x:Name="CurrentImageScrollViewer" 
                               cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
@@ -55,7 +55,7 @@
 
         <Grid HorizontalAlignment="Center"             
               VerticalAlignment="Top" 
-              Grid.Column="0" Grid.ColumnSpan="4">
+              Grid.Column="0" Grid.ColumnSpan="5">
             <local:ProgressRingView cal:View.Model="{Binding ProgressRingView}"></local:ProgressRingView>
         </Grid>
 
@@ -78,28 +78,31 @@
 
         </Controls:ToggleSwitch>
 
-        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
+        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
+                Grid.Row="1" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
                 ToolTip="{lex:Loc Cancel}"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
-        <Button cal:Message.Attach="[Event Click] = [Action UploadClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
+        <!--<Button cal:Message.Attach="[Event Click] = [Action UploadClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
                 ToolTip="{lex:Loc UploadPhoto}"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}" />
-        </Button>
+        </Button>-->
 
-        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromCamera]" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
+        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromCamera]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
                 ToolTip="{lex:Loc EnrollFromCamera}"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}" />
         </Button>
 
-        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromPhoto]" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
+        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromPhoto]" 
+                Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
                 ToolTip="{lex:Loc EnrollFromImageFile}"
                 >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}" />
+            <Image Width="24" Height="24" 
+                   Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}" />
         </Button>
     </Grid>
 </UserControl>

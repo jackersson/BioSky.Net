@@ -3,22 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org"             
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"             
              xmlns:vm="clr-namespace:BioModule.ViewModels"      
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance vm:PhotoInfoExpanderViewModel, IsDesignTimeCreatable=False}"             
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid x:Name="GridLayout">
         <Expander BorderBrush="#00119EDA" Background="#00119EDA"  
                       ExpandDirection="Up" RenderTransformOrigin="0.5,0.5">
             
@@ -26,7 +27,21 @@
             <Expander.ContentTemplate>
                 <DataTemplate>
                     <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="100" Panel.ZIndex="-1">
-                        <Rectangle Name="FloatRectangle" Fill="Red"  Height="100"  ></Rectangle>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel  Grid.Column="0"  VerticalAlignment="Bottom">
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Text="Age:"></TextBlock>
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Text="Gender:"></TextBlock>
+                        </StackPanel>
+                        <StackPanel x:Name="DataPanel" DataContext="{Binding ElementName=GridLayout, Path=DataContext }"  Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Text="{Binding Age}" ></TextBlock>
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Text="{Binding Gender}"></TextBlock>
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </Expander.ContentTemplate>

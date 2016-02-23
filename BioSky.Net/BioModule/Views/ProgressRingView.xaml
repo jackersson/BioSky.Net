@@ -1,5 +1,5 @@
 ﻿<UserControl x:Class="BioModule.Views.ProgressRingView"
- xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -12,6 +12,7 @@
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             d:DataContext="{d:DesignInstance vm:ProgressRingViewModel, IsDesignTimeCreatable=False}"             
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
 

@@ -71,10 +71,13 @@ namespace BioModule.ViewModels
         if (_location.Id <= 0)
         {
           if (item.Type == AccessDevice.Types.AccessDeviceType.DeviceNone)
+          {
+            dragableItem.ItemNotUse = true;
             AddToGeneralDeviceList(dragableItem, false, true);
+          }
           else
           {
-            dragableItem.ItemInUse = true;
+            dragableItem.ItemNotUse = false;
             AddToGeneralDeviceList(dragableItem, false, true);
           }
 
@@ -84,6 +87,7 @@ namespace BioModule.ViewModels
         {
           if (item.Locationid == _location.Id)
           {
+            dragableItem.ItemNotUse = true;
             switch (item.Type)
             {
               case AccessDevice.Types.AccessDeviceType.DeviceIn:
@@ -96,7 +100,7 @@ namespace BioModule.ViewModels
           }
           else
           {
-            dragableItem.ItemInUse = true;
+            dragableItem.ItemNotUse = false;
             AddToGeneralDeviceList(dragableItem, false, true);
           }
         }
@@ -107,7 +111,7 @@ namespace BioModule.ViewModels
         if (!IsDeviceUsed(deviceName, true))
         {
           AccessDevice device = new AccessDevice() { Portname = deviceName };
-          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Portname };
+          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Portname, ItemNotUse = true };
           AddToGeneralDeviceList(dragableItem, false, true);
         }
       }
@@ -124,10 +128,13 @@ namespace BioModule.ViewModels
         if (_location.Id <= 0)
         {
           if (item.Locationid <= 0)
+          {
+            dragableItem.ItemNotUse = true;
             AddToGeneralDeviceList(dragableItem, false, false);
+          }
           else
           {
-            dragableItem.ItemInUse = true;
+            dragableItem.ItemNotUse = false;
             AddToGeneralDeviceList(dragableItem, false, false);
           }
 
@@ -135,11 +142,14 @@ namespace BioModule.ViewModels
         }
         else
         {
-          if (item.Locationid == _location.Id)          
-            AddToGeneralDeviceList(dragableItem, true, false);          
+          if (item.Locationid == _location.Id)    
+          {
+            dragableItem.ItemNotUse = true;
+            AddToGeneralDeviceList(dragableItem, true, false); 
+          }
           else
           {
-            dragableItem.ItemInUse = true;
+            dragableItem.ItemNotUse = false;
             AddToGeneralDeviceList(dragableItem, false, false);
           }
         }
@@ -150,7 +160,7 @@ namespace BioModule.ViewModels
         if (!IsDeviceUsed(deviceName, false))
         {
           CaptureDevice device = new CaptureDevice() { Devicename = deviceName, };
-          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename };
+          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename, ItemNotUse = true };
           AddToGeneralDeviceList(dragableItem, false, false);
         }
       }
@@ -245,14 +255,14 @@ namespace BioModule.ViewModels
       switch (source)
       {
         case "CaptureDevice":
-          if (SelectedCaptureDevice.ItemInUse == true)
+          if (SelectedCaptureDevice.ItemNotUse == false)
             _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Camera used by another Location", DialogStatus.Error));
           else
             SelectedCaptureDevice.ItemEnabled = false;
 
           break;
         case "AccessDevice":
-          if(SelectedAccessDevice.ItemInUse == true)
+          if(SelectedAccessDevice.ItemNotUse == false)
             _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Device used by another Location", DialogStatus.Error));
           else
             SelectedAccessDevice.ItemEnabled = false;
@@ -266,7 +276,7 @@ namespace BioModule.ViewModels
       switch (source)
       {
         case "CaptureDevice":
-          if (SelectedCaptureDevice.ItemInUse == true)
+          if (SelectedCaptureDevice.ItemNotUse == false)
             _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Camera used by another Location", DialogStatus.Error));
           else
           {
@@ -277,7 +287,7 @@ namespace BioModule.ViewModels
 
           break;
         case "AccessDevice":
-          if (SelectedAccessDevice.ItemInUse == true)
+          if (SelectedAccessDevice.ItemNotUse == false)
             _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Device used by another Location", DialogStatus.Error));
           else
           {
@@ -464,16 +474,16 @@ namespace BioModule.ViewModels
       }
     }
 
-    private bool _itemInUse;
-    public bool ItemInUse
+    private bool _itemNotUse;
+    public bool ItemNotUse
     {
-      get { return _itemInUse; }
+      get { return _itemNotUse; }
       set
       {
-        if (_itemInUse != value)
+        if (_itemNotUse != value)
         {
-          _itemInUse = value;
-          NotifyOfPropertyChange(() => ItemInUse);
+          _itemNotUse = value;
+          NotifyOfPropertyChange(() => ItemNotUse);
           NotifyOfPropertyChange(() => DisplayName);
         }
       }
@@ -486,7 +496,7 @@ namespace BioModule.ViewModels
         ItemContext = this.ItemContext
       , ItemEnabled = this.ItemEnabled
       , DisplayName = this.DisplayName
-      , ItemInUse = this.ItemInUse
+      , ItemNotUse = this.ItemNotUse
 
       };
     }

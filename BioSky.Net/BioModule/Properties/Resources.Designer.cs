@@ -323,6 +323,16 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap thumnail {
+            get {
+                object obj = ResourceManager.GetObject("thumnail", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap tracking {
             get {
                 object obj = ResourceManager.GetObject("tracking", resourceCulture);

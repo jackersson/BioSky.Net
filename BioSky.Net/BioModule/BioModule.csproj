@@ -634,6 +634,7 @@
     <None Include="Resources\loadphotos.png" />
     <None Include="Resources\screenshot.png" />
     <None Include="Resources\right_arrow.png" />
+    <None Include="Resources\thumnail.png" />
     <Content Include="Resources\tracking.png" />
   </ItemGroup>
   <ItemGroup>

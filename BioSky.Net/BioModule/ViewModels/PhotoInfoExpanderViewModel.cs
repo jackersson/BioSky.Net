@@ -14,7 +14,36 @@ namespace BioModule.ViewModels
   {
     public PhotoInfoExpanderViewModel()
     {
-      
+      Age = "34567890";
+      Gender = "Male"; 
+    }
+
+    private string _age;
+    public string Age
+    {
+      get { return _age; }
+      set
+      {
+        if (_age != value)
+        {
+          _age = value;
+          NotifyOfPropertyChange(() => Age);
+        }
+      }
+    }
+
+    private string _gender;
+    public string Gender
+    {
+      get { return _gender; }
+      set
+      {
+        if (_gender != value)
+        {
+          _gender = value;
+          NotifyOfPropertyChange(() => Gender);
+        }
+      }
     }
   }
 }

@@ -68,10 +68,20 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _leftArrowIconSource;
     private static BitmapSource _rightArrowIconSource;
     private static BitmapSource _downArrowIconSource;
+    private static BitmapSource _thumbnailIconSource;
 
 
 
 
+    public static BitmapSource ThumbnailIconSource
+    {
+      get
+      {
+        if (_thumbnailIconSource == null)
+          _thumbnailIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.thumnail);
+        return _thumbnailIconSource;
+      }
+    }
     public static BitmapSource DownArrowIconSource
     {
       get

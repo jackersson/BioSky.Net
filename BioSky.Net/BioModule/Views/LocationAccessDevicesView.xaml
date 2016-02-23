@@ -64,9 +64,6 @@
                                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
                                        Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"  >                                    
                                 </Image>
-                                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" 
-                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemInUse, Converter={StaticResource BooleanToVisibilityConverter}}"  >                                    
-                                </Image>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -97,17 +94,24 @@
                           >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
                                 <TextBlock  Text="{Binding DisplayName}" HorizontalAlignment="Stretch"/>
                                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
                                        Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"  >
                                 </Image>
                                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" 
-                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemInUse, Converter={StaticResource BooleanToVisibilityConverter}}"  >
+                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemNotUse, Converter={StaticResource BooleanToVisibilityConverter}}"  >
                                 </Image>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Setters>
+                                <Setter Property="IsEnabled" Value="{Binding ItemNotUse}" />
+                            </Style.Setters>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
 
                     <ListBox.ContextMenu>
                         <ContextMenu IsEnabled="True">
