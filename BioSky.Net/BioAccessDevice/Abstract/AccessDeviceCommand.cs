@@ -31,8 +31,7 @@ namespace BioAccessDevice.Abstract
     protected byte[]               _response;
     // Constructor
     public AccessDeviceCommand(  )
-    {            
-      
+    {                  
       _utils = new SerialPortUtils();
     }
 
