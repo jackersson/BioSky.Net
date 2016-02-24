@@ -56,13 +56,10 @@
 
         <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" 
                  Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                 Width="48" Height="48">
+                 Width="48" Height="48" ToolTip="{lex:Loc AddNewLocation}"
+                 cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"
+                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <cal:ActionMessage MethodName="AddMenu" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
         </Button>
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}"
@@ -73,6 +70,9 @@
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Column="5" Grid.Row="0" HorizontalAlignment="Stretch" 
+                IsEnabled="{Binding IsDeleteButtonEnabled}"
+                ToolTip="{lex:Loc Delete}"
+                cal:Message.Attach="[Event Click] = [Action OnDeleteLocation]"
                 VerticalAlignment="Stretch">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>

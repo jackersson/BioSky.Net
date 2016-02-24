@@ -12,17 +12,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for ImageView.xaml
+  /// Interaction logic for CameraDialogView.xaml
   /// </summary>
-  public partial class ImageView : UserControl
+  public partial class CameraDialogView : MetroWindow
   {
-    public ImageView()
+    public CameraDialogView()
     {
       InitializeComponent();
-    }   
+    }
   }
 }

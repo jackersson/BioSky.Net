@@ -23,6 +23,8 @@ using Microsoft.Win32;
 using BioContracts.Common;
 using System.Windows;
 using Grpc.Core;
+using Google.Protobuf.Collections;
+using System.Collections;
 
 namespace BioModule.ViewModels
 {
@@ -31,9 +33,9 @@ namespace BioModule.ViewModels
     public UserPhotoViewModel( IBioEngine        bioEngine, IImageUpdatable imageViewer
                              , IProcessorLocator locator  , IWindowManager  windowManager)
     {
-      _locator             = locator;
-      _bioEngine           = bioEngine;
-      _imageViewer         = imageViewer;
+      _locator             = locator      ;
+      _bioEngine           = bioEngine    ;
+      _imageViewer         = imageViewer  ;
       _windowManager       = windowManager;
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -42,7 +44,8 @@ namespace BioModule.ViewModels
 
       _serviceManager = locator.GetProcessor<IServiceManager>();
 
-      UserImages = new AsyncObservableCollection<Photo>();
+      UserImages      = new AsyncObservableCollection<Photo>();
+      IsItemThumbnail = new ObservableCollection<bool>()      ;
 
       _bioUtils = new BioImageUtils();
       
@@ -63,7 +66,7 @@ namespace BioModule.ViewModels
       if (user == null)
         return;
 
-      if (user.EntityState == EntityState.Added)
+      if (user.Id <= 0)
         return;
 
       IsEnabled = true;
@@ -88,8 +91,14 @@ namespace BioModule.ViewModels
 
       UserImages.Clear();
      
-      foreach (Photo personPhoto in list)      
-        UserImages.Add(personPhoto);             
+      foreach (Photo personPhoto in list)
+      {
+        UserImages.Add(personPhoto);
+        if (personPhoto.Id == _user.Thumbnailid)
+          IsItemThumbnail.Add(true);
+        else
+          IsItemThumbnail.Add(false);
+      }
     }
 
     #endregion
@@ -127,6 +136,8 @@ namespace BioModule.ViewModels
     }
     public void EnrollFromCamera()
     {
+      _windowManager.ShowDialog(new CameraDialogViewModel(_bioEngine, _locator));
+/*
       if (CaptureDeviceConnected && !_enroller.Busy)
       {
         _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
@@ -138,7 +149,7 @@ namespace BioModule.ViewModels
         MessageBox.Show("Choose CaptureDevice first ! ");      
 
       if (_enroller.Busy)      
-        MessageBox.Show("Wait for finnishing previous operation");
+        MessageBox.Show("Wait for finnishing previous operation");*/
       
     }
     public void Subscribe()
@@ -169,8 +180,7 @@ namespace BioModule.ViewModels
     #endregion  
 
     private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
-    {
-      
+    {      
       if (feedback.Progress == 100)
       {
         _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
@@ -208,13 +218,90 @@ namespace BioModule.ViewModels
 
       }
       if (_imageViewer != null)
-        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);
-
-      
+        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);      
     }
 
-    
+    public async Task PhotoDeletePerformer()
+    {
+      PersonList personList = new PersonList();
 
+      Person person = new Person()
+      {
+        EntityState = EntityState.Unchanged
+        , Id        = _user.Id
+      };
+
+      Photo photo = SelectedItem;
+      photo.EntityState = EntityState.Deleted;
+
+      person.Photos.Add(photo);
+      personList.Persons.Add(person);   
+
+      try
+      {
+        _database.Persons.DataUpdated += UpdateData;
+        await _serviceManager.DatabaseService.PersonUpdate(personList);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine(e.Message);
+      }
+    }
+
+    private void UpdateData(PersonList list)
+    {
+      _database.Persons.DataUpdated -= UpdateData;
+
+      if (list != null)
+      {
+        Person person = list.Persons.FirstOrDefault();
+        if (person != null)
+        {
+          foreach (Photo photo in person.Photos)
+          {
+            if(photo.Id == _user.Thumbnail.Id)            
+              _imageViewer.UpdateImage(null, null);             
+          }
+
+          if (person.Photos.Count > 1)
+            MessageBox.Show(person.Photos.Count + " photos successfully Deleted");
+          else
+            MessageBox.Show("Photo successfully Deleted");
+        }
+      }
+    }
+
+    public async Task ThumbnailUpdatePerformer()
+    {
+      _user.EntityState = EntityState.Modified;
+      _user.Thumbnailid = SelectedItem.Id;
+
+      PersonList personList = new PersonList();
+      personList.Persons.Add(_user);
+
+      try
+      {
+        _database.Persons.DataUpdated += UpdateThumbnail;
+        await _serviceManager.DatabaseService.PersonUpdate(personList);
+      }
+      catch (RpcException e)
+      {
+        Console.WriteLine(e.Message);
+      }
+    }
+
+    private void UpdateThumbnail(PersonList list)
+    {
+      _database.Persons.DataUpdated -= UpdateData;
+
+      if (list != null)
+      {
+        Person person = list.Persons.FirstOrDefault();
+        if (person != null)        
+          MessageBox.Show("Thumbnail successfully updated");
+        
+      }
+    }
 
     #endregion
 
@@ -244,17 +331,17 @@ namespace BioModule.ViewModels
     }
     public void OnSelectionChange()
     {
+      /*
       if (SelectedItem != null)
-        _imageViewer.UpdateImage(SelectedItem, _database.LocalStorage.LocalStoragePath);
+        _imageViewer.UpdateImage(SelectedItem, _database.LocalStorage.LocalStoragePath);*/
     }
 
     public void UploadClick()
     {
-      Photo photo = _imageViewer.UploadPhoto();
-      
+      Photo photo = _imageViewer.UploadPhoto();      
     }   
    
-    public void DeletePhoto()
+    public async void DeletePhoto()
     {
       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
 
@@ -263,14 +350,14 @@ namespace BioModule.ViewModels
         if (SelectedItem == null)
           return;
 
-        SelectedItem.EntityState = EntityState.Deleted;
-
-        PhotoList photoList = new PhotoList();
-        photoList.Photos.Add(SelectedItem);
-
-       // _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
-
-        //await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
+        try
+        {
+          await PhotoDeletePerformer();
+        }
+        catch (Exception e)
+        {
+          Console.WriteLine(e.Message);
+        } 
       } 
     } 
 
@@ -285,12 +372,20 @@ namespace BioModule.ViewModels
           photo.EntityState = EntityState.Deleted;
           photoList.Photos.Add(photo);
         }
-
-      //  _database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
-
-        //await _serviceManager.DatabaseService.PhotoUpdateRequest(photoList);
       }
+    }
 
+    public void OnMouseRightButtonDown(Photo photo)
+    {
+      CanSetThumbnail = (photo != null);
+      SelectedItem = photo;
+    }
+
+    public async void OnSetThumbnail()
+    {
+      _imageViewer.UpdateImage(SelectedItem, _database.LocalStorage.LocalStoragePath);
+      _user.Thumbnailid = SelectedItem.Id;
+      await ThumbnailUpdatePerformer();
     }
 
     #endregion
@@ -304,6 +399,35 @@ namespace BioModule.ViewModels
     public string AvaliableDevicesCount
     {
       get { return String.Format("Available Devices ({0})", _captureDevicesNames.Count); }
+    }
+
+    private ObservableCollection<bool> _isItemThumbnail;
+    public ObservableCollection<bool> IsItemThumbnail
+    {
+      get { return _isItemThumbnail; }
+      set
+      {
+        if (_isItemThumbnail != value)
+        {
+          _isItemThumbnail = value;
+
+          NotifyOfPropertyChange(() => IsItemThumbnail);
+        }
+      }
+    }
+
+    private bool _canSetThumbnail;
+    public bool CanSetThumbnail
+    {
+      get { return _canSetThumbnail; }
+      set
+      {
+        if (_canSetThumbnail != value)
+        {
+          _canSetThumbnail = value;
+          NotifyOfPropertyChange(() => CanSetThumbnail);
+        }
+      }
     }
 
     private bool _isEnabled;
@@ -404,7 +528,7 @@ namespace BioModule.ViewModels
     }
 
     private Person _user;
-    private Person User
+    public Person User
     {
       get { return _user; }
       set

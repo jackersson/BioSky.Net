@@ -75,7 +75,7 @@ namespace BioData.Holders.Base
           break;
 
         case EntityState.Deleted:
-          Remove(obj, key);
+          Remove(key);
           break;
       }
 
@@ -117,7 +117,7 @@ namespace BioData.Holders.Base
       to = from;
     }
 
-    public virtual void Remove(TValue obj, TKey key)
+    public virtual void Remove(TKey key)
     {
       _dataSet.Remove(key);
     }

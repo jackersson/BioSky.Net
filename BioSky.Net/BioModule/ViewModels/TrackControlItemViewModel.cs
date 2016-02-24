@@ -14,6 +14,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using BioModule.Utils;
 using System.Drawing;
+using WPFLocalizeExtension.Extensions;
+
 
 namespace BioModule.ViewModels
 {
@@ -31,43 +33,20 @@ namespace BioModule.ViewModels
       _locator = locator;
       _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      _windowManager       = locator.GetProcessor<IWindowManager>();
       
       Initialize(locator);
       
       if ( location != null )
        Update(location);
     }
-    public void OnDataContextChanged()
-    {
-      ImageView = new ImageViewModel();      
-    }
 
-    protected override void OnActivate()
-    {
-      if (_visitorsView != null)
-        ActivateItem(_visitorsView);
-      base.OnActivate();
-    }
-
-    private void Initialize(IProcessorLocator locator)
-    {
-      DisplayName = "Location";
-
-      UserVerified = true;
-      UserVerificationIconVisible = false;
-      CardDetectedIconVisible = false;
-
-      _visitorsView = new VisitorsViewModel(locator);
-
-      Items.Add(_visitorsView);
-
-    }
-
+    #region Update
     public void Update(TrackLocation trackLocation)
     {
 
-      if (CurrentLocation != null)      
-        CurrentLocation.FrameChanged -= OnNewFrame;      
+      if (CurrentLocation != null)
+        CurrentLocation.FrameChanged -= OnNewFrame;
 
       if (trackLocation == null)
         return;
@@ -80,26 +59,71 @@ namespace BioModule.ViewModels
       trackLocation.FrameChanged += OnNewFrame;
       _visitorsView.Update();
     }
+    private void OnNewFrame(object sender, ref Bitmap bitmap)
+    {
+      if (bitmap == null || ImageView == null)
+        return;
 
+      ImageView.UpdateImage(ref bitmap);
+    }
     private void TrackLocation_EnrollFeedbackChanged(object sender, BioService.EnrollmentFeedback feedback)
     {
       if (ImageView != null && feedback != null)
         ImageView.ShowProgress(feedback.Progress, feedback.Success);
     }
-
     private void CurrentLocation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => OkIconSource);
     }
-    
-    private void OnNewFrame(object sender, ref Bitmap bitmap)
-    {
-      if (bitmap == null || ImageView == null)
-        return;
-      
-      ImageView.UpdateImage(ref bitmap);
-    }
+    #endregion
 
+    #region Interface
+    protected override void OnActivate()
+    {
+      if (_visitorsView != null)
+        ActivateItem(_visitorsView);
+      base.OnActivate();
+    }
+    public void OnDataContextChanged()
+    {
+      ImageView = new ImageViewModel(_locator, _windowManager);
+    } 
+    private void Initialize(IProcessorLocator locator)
+    {
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
+
+      UserVerified = true;
+      UserVerificationIconVisible = false;
+      CardDetectedIconVisible = false;
+
+      _visitorsView = new VisitorsViewModel(locator, _windowManager);
+
+      Items.Add(_visitorsView);
+
+    }
+    #endregion
+
+    #region UI
+
+    public BitmapSource OkIconSource
+    {
+      get
+      {
+        if (CurrentLocation == null)
+          return ResourceLoader.ErrorIconSource;
+        else
+          return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
+      }
+    }
+    public BitmapSource VerificationIconSource
+    {
+      get
+      {
+        return UserVerified ? ResourceLoader.VerificationIconSource
+                            : ResourceLoader.VerificationFailedIconSource;
+      }
+    } 
+    
     private VisitorsViewModel _visitorsView;
     public VisitorsViewModel VisitorsView
     {
@@ -121,7 +145,7 @@ namespace BioModule.ViewModels
       get { return _imageView; }
       set
       {
-        if ( _imageView != value)
+        if (_imageView != value)
         {
           _imageView = value;
           NotifyOfPropertyChange(() => ImageView);
@@ -133,16 +157,17 @@ namespace BioModule.ViewModels
     private bool _accessDeviceOK;
     public bool AccessDeviceOK
     {
-      get { return _accessDeviceOK; }      
-      set {
-        if ( _accessDeviceOK != value )
+      get { return _accessDeviceOK; }
+      set
+      {
+        if (_accessDeviceOK != value)
         {
           _accessDeviceOK = value;
-        
-          NotifyOfPropertyChange(() => OkIconSource);         
+
+          NotifyOfPropertyChange(() => OkIconSource);
         }
       }
-      
+
     }
 
     private bool _userVerified;
@@ -151,7 +176,7 @@ namespace BioModule.ViewModels
       get { return _userVerified; }
       set
       {
-        if ( _userVerified != value)
+        if (_userVerified != value)
         {
           _userVerified = value;
 
@@ -201,32 +226,18 @@ namespace BioModule.ViewModels
         {
           _location = value;
           NotifyOfPropertyChange(() => CurrentLocation);
-          NotifyOfPropertyChange(() => AccessDeviceOK );
+          NotifyOfPropertyChange(() => AccessDeviceOK);
         }
       }
     }
+    #endregion
 
+    #region Global Variables
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IAccessDeviceEngine  _accessDeviceEngine ;
     private readonly IProcessorLocator    _locator            ;
-
-
-    //**************************************************** UI **********************************************
-    public BitmapSource OkIconSource
-    {
-      get
-      {
-        if (CurrentLocation == null)
-          return ResourceLoader.ErrorIconSource;
-        else
-          return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;       
-      }
-    }
-
-    public BitmapSource VerificationIconSource
-    {
-      get { return UserVerified ? ResourceLoader.VerificationIconSource 
-                                : ResourceLoader.VerificationFailedIconSource; }
-    }      
+    private readonly IWindowManager       _windowManager      ;
+    #endregion
+     
   }  
 }

@@ -19,6 +19,10 @@ using BioService;
 using System.IO;
 using Grpc.Core;
 
+using WPFLocalizeExtension.Extensions;
+using WPFLocalizeExtension.Providers;
+using XAMLMarkupExtensions.Base;
+
 namespace BioModule.ViewModels
 {
   enum UserPageMode
@@ -37,12 +41,17 @@ namespace BioModule.ViewModels
       _bioService          = _locator.GetProcessor<IServiceManager>();
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      CurrentImageView = new ImageViewModel();
+      CurrentImageView = new ImageViewModel(_locator, _windowManager);
+      UserPhotoView    = new UserPhotoViewModel(bioEngine, CurrentImageView, _locator, _windowManager);
+
+      CurrentImageView.EnrollFromPhotoChanged += UserPhotoView.EnrollFromPhoto;
+      CurrentImageView.EnrollFromCameraChanged += UserPhotoView.EnrollFromCamera;
+
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
       Items.Add(new UserInformationViewModel    ());
-      Items.Add(new UserContactlessCardViewModel(bioEngine, _locator));
-      Items.Add(new UserPhotoViewModel          (bioEngine, CurrentImageView, _locator, _windowManager));
+      Items.Add(new UserContactlessCardViewModel(bioEngine, _locator, _windowManager));
+      Items.Add(UserPhotoView);
      
       ActiveItem = Items[0];
       OpenTab();
@@ -56,9 +65,16 @@ namespace BioModule.ViewModels
 
     public void Update(Person user)
     {
+      if (user != null && user.Thumbnail != null)
+      {
+        UpdateFromVisitor(user);
+        return;
+      }
+
       if (user != null)
       {
         _user = user.Clone();
+        _revertUser = user.Clone();
         _userPageMode = UserPageMode.ExistingUser;
 
        
@@ -82,14 +98,27 @@ namespace BioModule.ViewModels
         };
 
         _userPageMode = UserPageMode.NewUser;
-        DisplayName = "AddNewUser";
+        DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
+
+        //DisplayName = "AddNewUser";
+        CurrentImageView.UpdateImage(null,null);
+
       }
 
       CurrentImageView.Update(_user);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
-    }      
+    }
+    
+    public void UpdateFromVisitor(Person user)
+    {
+      _user = user.Clone();
+      _revertUser = user.Clone();
+      CurrentImageView.UpdateImage(null, _database.LocalStorage.LocalStoragePath + user.Thumbnail.FileLocation);
+      CurrentImageView.Update(_user);
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
+    }
 
 
     #endregion
@@ -107,22 +136,26 @@ namespace BioModule.ViewModels
     {
       _user.EntityState = state;     
 
-      Photo photo = CurrentImageView.CurrentImagePhoto;
-      if (photo != null)
+      if(_user.EntityState != EntityState.Deleted)
       {
-        photo.OriginType = PhotoOriginType.Loaded;
-
-        Photo thumbnail = null;
-        bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out thumbnail);
-        if (photoExists)
+        Photo photo = CurrentImageView.CurrentImagePhoto;
+        if (photo != null)
         {
-          if (thumbnail.GetHashCode() != photo.GetHashCode())
+          photo.OriginType = PhotoOriginType.Loaded;
+
+          Photo thumbnail = null;
+          bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out thumbnail);
+          if (photoExists)
+          {
+            if (thumbnail.GetHashCode() != photo.GetHashCode())
+              _user.Thumbnail = photo;
+          }
+          else
             _user.Thumbnail = photo;
-        }           
-        else        
-          _user.Thumbnail = photo;
-        
-      }
+
+        } 
+      }   
+
 
       PersonList personList = new PersonList();
       personList.Persons.Add(_user);   
@@ -200,6 +233,14 @@ namespace BioModule.ViewModels
       }
     }
 
+    public void Revert()
+    {
+      if (_revertUser.EntityState == EntityState.Added)
+        Update(null);
+      else
+        Update(_revertUser);
+    }
+
 
     public async void Remove()
     {
@@ -240,26 +281,33 @@ namespace BioModule.ViewModels
       }
     }
 
+    private UserPhotoViewModel _userPhotoView;
+    public UserPhotoViewModel UserPhotoView
+    {
+      get { return _userPhotoView; }
+      private set
+      {
+        if (_userPhotoView != value)
+        {
+          _userPhotoView = value;
+          NotifyOfPropertyChange(() => UserPhotoView);
+        }
+      }
+    }
+
     #endregion
 
     #region Global Variables
 
-    private Person _user;
-
-    private BioContracts.Common.BioImageUtils _bioUtils;
-
-    private readonly FastMethodInvoker _methodInvoker;
-
-    private readonly IProcessorLocator _locator;
-
-    private IWindowManager _windowManager;
-
-    private UserPageMode _userPageMode;
-
-    private IBioSkyNetRepository _database;
-
-    private readonly IServiceManager _bioService;
-
+    private Person                            _revertUser   ;
+    private Person                            _user         ;
+    private BioContracts.Common.BioImageUtils _bioUtils     ;
+    private readonly FastMethodInvoker        _methodInvoker;
+    private readonly IProcessorLocator        _locator      ;
+    private IWindowManager                    _windowManager;
+    private UserPageMode                      _userPageMode ;
+    private IBioSkyNetRepository              _database     ;
+    private readonly IServiceManager          _bioService   ;
     #endregion
   }
 }

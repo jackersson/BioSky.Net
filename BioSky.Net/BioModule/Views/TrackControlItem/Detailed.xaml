@@ -63,7 +63,7 @@
 -->
             <ContentControl Grid.Column="0" Grid.Row="1" 
                         Grid.ColumnSpan="6" Margin="0,2,5,0"             
-                        cal:View.Model="{Binding ImageView}">
+                        cal:View.Model="{Binding ImageView}" cal:View.Context="Video" >
             </ContentControl>
 
             <Label Grid.Column="0" Content="{Binding CurrentLocation.Caption}" HorizontalAlignment="Left" 

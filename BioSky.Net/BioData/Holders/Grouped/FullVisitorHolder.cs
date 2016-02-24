@@ -35,6 +35,7 @@ namespace BioData.Holders.Grouped
       Google.Protobuf.Collections.RepeatedField<Visitor> data   = updated.Visitors;
       Google.Protobuf.Collections.RepeatedField<Visitor> result = results.Visitors;
 
+      bool success = false;
       foreach (Visitor visitor in data)
       {
         Visitor resultedVisitor = result.FirstOrDefault();
@@ -42,25 +43,41 @@ namespace BioData.Holders.Grouped
         if (resultedVisitor != null)
           updatedVisitor.Id = resultedVisitor.Id;
 
-        Photo resultedPhoto = resultedVisitor.Photo;
-        Photo updatedPhoto = new Photo(updatedVisitor.Photo);
-        if (resultedPhoto != null && updatedPhoto != null)
+        if(resultedVisitor.EntityState != EntityState.Deleted)
         {
-          updatedPhoto.Id = resultedPhoto.Id;
+          Photo resultedPhoto = resultedVisitor.Photo;
+          Photo updatedPhoto = new Photo(updatedVisitor.Photo);
+          if (resultedPhoto != null && updatedPhoto != null)
+          {
+            updatedPhoto.Id = resultedPhoto.Id;
 
-          updatedPhoto.FileLocation = resultedPhoto.FileLocation;
-          updatedPhoto.FirLocation  = resultedPhoto.FirLocation ;
+            updatedPhoto.FileLocation = resultedPhoto.FileLocation;
+            updatedPhoto.FirLocation = resultedPhoto.FirLocation;
 
-          _photos.UpdateItem(updatedPhoto, updatedPhoto.Id, updatedPhoto.EntityState, updatedVisitor.Dbresult);
+            _photos.UpdateItem(updatedPhoto, updatedPhoto.Id, updatedPhoto.EntityState, updatedVisitor.Dbresult);
 
-          updatedPhoto.EntityState = EntityState.Unchanged;
-          updatedPhoto.Dbresult    = ResultStatus.Success;
+            updatedPhoto.EntityState = EntityState.Unchanged;
+            updatedPhoto.Dbresult = ResultStatus.Success;
+          }
         }
+        else 
+        {
+          if(resultedVisitor.Photoid != null)
+          {
+            _photos.Remove(resultedVisitor.Photoid);
+          }
+        }
+
         
         _visitors.UpdateItem(updatedVisitor, updatedVisitor.Id, updatedVisitor.EntityState, updatedVisitor.Dbresult);
         visitor.EntityState = EntityState.Unchanged;
-        visitor.Dbresult    = ResultStatus.Success;
+        visitor.Dbresult = ResultStatus.Success;
+        success = visitor.Dbresult == ResultStatus.Success;
       }
+
+      if (success)
+        OnDataUpdated(results);
+
 
       OnDataChanged();
     }
@@ -69,6 +86,11 @@ namespace BioData.Holders.Grouped
     {
       if (DataChanged != null)
         DataChanged();
+    }
+    private void OnDataUpdated(VisitorList list)
+    {
+      if (DataUpdated != null)
+        DataUpdated(list);
     }
 
 

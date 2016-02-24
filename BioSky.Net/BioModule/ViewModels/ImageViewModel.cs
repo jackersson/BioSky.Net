@@ -24,14 +24,29 @@ namespace BioModule.ViewModels
 {
   public class ImageViewModel : Screen, IImageUpdatable
   {
-    public ImageViewModel()
+    public ImageViewModel(IProcessorLocator locator, IWindowManager  windowManager)
     {
       _bioUtils = new BioContracts.Common.BioImageUtils();
+      _locator       = locator      ;
+      _windowManager = windowManager;
+
+      if(_locator != null)
+        _bioEngine = _locator.GetProcessor<IBioEngine>();
+
+      PhotoInfoExpanderView = new PhotoInfoExpanderViewModel();
+      ProgressRingView      = new ProgressRingViewModel();
 
       ZoomToFitState = true;
-      CurrentImagePhoto = null;   
+      CurrentImagePhoto = null; 
     }
     #region Update
+
+    public void ShowProgress(int progress, bool status)
+    {
+      ProgressRingView.ShowProgress(progress, status);
+    }
+
+
     public void UploadClick(double viewWidth, double viewHeight)
     {
       var dialog = OpenFileDialog();
@@ -43,7 +58,7 @@ namespace BioModule.ViewModels
     }
     public Photo UploadPhoto()
     {
-      var dialog = OpenFileDialog();
+      var dialog = OpenFileDialog();      
       if (dialog.ShowDialog() == true)
       {
         string filename = dialog.FileName;
@@ -144,6 +159,9 @@ namespace BioModule.ViewModels
 
     public void Update(Person user)
     {
+      if (user == null)
+        CurrentImageSource = null;
+
       User = user;
     }
 
@@ -181,6 +199,7 @@ namespace BioModule.ViewModels
       {
         CurrentImagePhoto = null;
         CurrentImageSource = null;
+        Zoom(_imageViewWidth, _imageViewHeight);       
       }
     }
     #endregion
@@ -225,9 +244,41 @@ namespace BioModule.ViewModels
       if (CalculatedImageScale > CalculatedImageScaleY)
         CalculatedImageScale = CalculatedImageScaleY;     
     }
+
+    public void EnrollFromPhoto()
+    {      
+      OnEnrollFromPhoto();
+    }
+
+    public void EnrollFromCamera()
+    {
+      _windowManager.ShowDialog(new CameraDialogViewModel(_bioEngine, _locator));
+      OnEnrollFromCamera();
+    }
     #endregion
 
     #region UI
+
+    public delegate void OnEnrollFromPhotoHandler();
+    public event OnEnrollFromPhotoHandler EnrollFromPhotoChanged;
+
+    public void OnEnrollFromPhoto()
+    {
+      if (EnrollFromPhotoChanged != null)
+        EnrollFromPhotoChanged();
+    }
+
+    public delegate void OnEnrollFromCameraHandler();
+    public event OnEnrollFromCameraHandler EnrollFromCameraChanged;
+
+    public void OnEnrollFromCamera()
+    {
+      if (EnrollFromCameraChanged != null)
+        EnrollFromCameraChanged();
+    }
+
+
+
     double _calculatedImageScale;
     public double CalculatedImageScale
     {
@@ -252,6 +303,34 @@ namespace BioModule.ViewModels
         {
           _calculatedImageScaleY = value;
           NotifyOfPropertyChange(() => CalculatedImageScaleY);
+        }
+      }
+    }
+
+    private PhotoInfoExpanderViewModel _photoInfoExpanderView;
+    public PhotoInfoExpanderViewModel PhotoInfoExpanderView
+    {
+      get { return _photoInfoExpanderView; }
+      set
+      {
+        if (_photoInfoExpanderView != value)
+        {
+          _photoInfoExpanderView = value;
+          NotifyOfPropertyChange(() => PhotoInfoExpanderView);
+        }
+      }
+    }
+
+    private ProgressRingViewModel _progressRingView;
+    public ProgressRingViewModel ProgressRingView
+    {
+      get { return _progressRingView; }
+      set
+      {
+        if (_progressRingView != value)
+        {
+          _progressRingView = value;
+          NotifyOfPropertyChange(() => ProgressRingView);
         }
       }
     }
@@ -383,146 +462,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-    #endregion
-
-    #region ProgressRing
-
-    //TODO refactor as soon as possible (To difficult to understand)
-    public async void ShowProgress(int progress, bool status)
-    {
-      ProgressRingVisibility         = true ;
-      ProgressRingTextVisibility     = true ;
-      ProgressRingImageVisibility    = false ;
-      ProgressRingStatus             = true ;
-      ProgressRingProgressVisibility = true ;
-
-      ProgressRingText = progress + "%";
-      if (progress == 100)
-      {
-        ProgressRingTextVisibility = false;
-        ProgressRingImageVisibility = true;
-        ProgressRingStatus = false;
-        ProgressRingProgressVisibility = false;
-
-        ProgressRingIconSource = status ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
-
-        await Task.Delay(3000);
-        ProgressRingVisibility = false;
-      } 
-      
-
-    }
-
-    private void Show(bool show = true)
-    {
-      ProgressRingVisibility         = false;
-      ProgressRingImageVisibility    = false;
-      ProgressRingTextVisibility     = true ;
-      ProgressRingProgressVisibility = true ;
-      ProgressRingText = "0%";
-    }
-   
-    private bool _progressRingVisibility;
-    public bool ProgressRingVisibility
-    {
-      get { return _progressRingVisibility; }
-      set
-      {
-        if (_progressRingVisibility != value)
-        {
-          _progressRingVisibility = value;
-          NotifyOfPropertyChange(() => ProgressRingVisibility);
-        }
-      }
-    }
-
-    private bool _progressRingStatus;
-    public bool ProgressRingStatus
-    {
-      get { return _progressRingStatus; }
-      set
-      {
-        if (_progressRingStatus != value)
-        {
-          _progressRingStatus = value;
-          NotifyOfPropertyChange(() => ProgressRingStatus);
-        }
-      }
-    }
-
-    private string _progressRingText;
-    public string ProgressRingText
-    {
-      get { return _progressRingText; }
-      set
-      {
-        if (_progressRingText != value)
-        {
-          _progressRingText = value;
-          NotifyOfPropertyChange(() => ProgressRingText);
-        }
-      }
-    }
-
-    private bool _progressRingTextVisibility;
-    public bool ProgressRingTextVisibility
-    {
-      get { return _progressRingTextVisibility; }
-      set
-      {
-        if (_progressRingTextVisibility != value)
-        {
-          _progressRingTextVisibility = value;
-          NotifyOfPropertyChange(() => ProgressRingTextVisibility);
-        }
-      }
-    }
-
-    private bool _progressRingImageVisibility;
-    public bool ProgressRingImageVisibility
-    {
-      get { return _progressRingImageVisibility; }
-      set
-      {
-        if (_progressRingImageVisibility != value)
-        {
-          _progressRingImageVisibility = value;
-          NotifyOfPropertyChange(() => ProgressRingImageVisibility);
-        }
-      }
-    }
-
-    private bool _progressRingProgressVisibility;
-    public bool ProgressRingProgressVisibility
-    {
-      get { return _progressRingProgressVisibility; }
-      set
-      {
-        if (_progressRingProgressVisibility != value)
-        {
-          _progressRingProgressVisibility = value;
-          NotifyOfPropertyChange(() => ProgressRingProgressVisibility);
-        }
-      }
-    }
-
-    private BitmapSource _progressRingIconSource;
-    public BitmapSource ProgressRingIconSource
-    {
-      get
-      {
-        return _progressRingIconSource;
-      }
-      set
-      {
-        if (_progressRingIconSource != value)
-        {
-          _progressRingIconSource = value;
-          NotifyOfPropertyChange(() => ProgressRingIconSource);
-        }
-      }
-    }
-    #endregion
+    #endregion    
 
     #region Global Variables
 
@@ -534,7 +474,11 @@ namespace BioModule.ViewModels
     private const double ZOOM_TO_FIT_RATE = 90;
     private const double ZOOM_RATIO = 100D;
 
-    private BioContracts.Common.BioImageUtils _bioUtils;
+    private BioContracts.Common.BioImageUtils _bioUtils     ;
+    private readonly IBioEngine               _bioEngine    ;
+    private readonly IProcessorLocator        _locator      ;
+    private          IWindowManager           _windowManager;
+
 
     #endregion
   }

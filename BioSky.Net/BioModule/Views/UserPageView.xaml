@@ -94,7 +94,11 @@
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
         </Button>
 
-        <Button ToolTip="{lex:Loc RevertChanges}" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button ToolTip="{lex:Loc RevertChanges}" 
+                Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" 
+                cal:Message.Attach="[Event Click] = [Action Revert]"
+                >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
@@ -103,17 +107,12 @@
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" />
         </Button>
-       
-        <local:ImageView  Content="{Binding CurrentImageView}" Grid.Column="0"
-                          HorizontalAlignment="Stretch"  Margin="0,0,0,5"
-                          VerticalAlignment="Stretch"                     
-                          Grid.RowSpan="6">
-            <local:ImageView.Resources>
-                <DataTemplate DataType="{x:Type vm:ImageViewModel}">
-                    <local:ImageView Content="CurrentImageView" DataContext="{Binding Mode=OneWay}"/>
-                </DataTemplate>
-            </local:ImageView.Resources>
-        </local:ImageView>
 
+        <ContentControl Grid.Column="0"
+                        HorizontalAlignment="Stretch"  Margin="0,0,0,5"
+                        VerticalAlignment="Stretch"                     
+                        Grid.RowSpan="6"                                  
+                        cal:View.Model="{Binding CurrentImageView}" cal:View.Context="Photo" >
+        </ContentControl>
     </Grid>
 </UserControl>

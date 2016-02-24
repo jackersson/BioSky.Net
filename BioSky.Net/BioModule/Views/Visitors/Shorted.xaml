@@ -58,14 +58,15 @@
 
 
         <ListBox Grid.Column="0" HorizontalAlignment="Stretch" 
-                 Grid.ColumnSpan="5"                 
+                 Grid.ColumnSpan="5" BorderThickness="1"               
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
                  ItemsSource="{Binding Source={StaticResource SortedVisitors}}" 
                  SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
-                                     [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)]"
+                                     [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)];
+                                     [Event MouseDoubleClick]     = [Action OnMouseDoubleClick($mouseSelectedItem)]"
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -79,6 +80,10 @@
                                 <MenuItem Header="{lex:Loc Remove}" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
+                              />
+                                <MenuItem Header="Add Visitor as User" 
+                              IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
+                              cal:Message.Attach="[Event Click] = [Action OnAddVisitorAsUser]"
                               />
                             </ContextMenu>
                         </StackPanel.ContextMenu>

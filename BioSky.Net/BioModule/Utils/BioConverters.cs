@@ -23,6 +23,7 @@ namespace BioModule.Utils
   public class ConverterInitializer
   {
 
+    #region UI 
     private static ConvertPhotoIdToImage _photoIDConverter;
     public static ConvertPhotoIdToImage PhotoIDConverter
     {
@@ -87,6 +88,9 @@ namespace BioModule.Utils
         }
       }
     }
+    #endregion
+
+    
     public ConverterInitializer( IBioSkyNetRepository database )
     {
       PhotoIDConverter                  = new ConvertPhotoIdToImage          (database );
@@ -418,4 +422,35 @@ namespace BioModule.Utils
     }
   }
   #endregion
+
+
+
+#region Multi Converters
+
+
+  #region MultiThumbnailConverter
+  public class MultiThumbnailConverter : IMultiValueConverter
+  {
+    public object Convert(object[] values, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      if (values[0] == null || values[1] == null)
+        return System.Windows.Visibility.Collapsed;
+
+      if (values[0].ToString() == values[1].ToString())
+        return System.Windows.Visibility.Visible;
+      else
+        return System.Windows.Visibility.Collapsed;
+
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+  #endregion
+
+#endregion
 }

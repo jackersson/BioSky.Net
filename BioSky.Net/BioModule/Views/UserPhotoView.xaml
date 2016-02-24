@@ -20,6 +20,7 @@
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <utils:MultiThumbnailConverter x:Key="MultiThumbnailConverter"></utils:MultiThumbnailConverter>
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
@@ -36,24 +37,7 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
         
-        <Button Width="48" Height="48" Grid.Column="2" 
-                Style="{DynamicResource MetroCircleButtonStyle}" 
-                Grid.Row="0"                 
-                ToolTip="{lex:Loc EnrollFromCamera}"
-                cal:Message.Attach="[Event Click]=[Action EnrollFromCamera]"  >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}" 
-                   Height="24" Width="24" />
-        </Button>
 
-        <Button Width="48" Height="48" Grid.Column="3" 
-                Style="{DynamicResource MetroCircleButtonStyle}" 
-                Grid.Row="0"               
-                ToolTip="{lex:Loc EnrollFromImageFile}"
-                cal:Message.Attach="[Event Click]=[Action EnrollFromPhoto]"               
-                >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}"
-                   Height="24" Width="24" />
-        </Button>
 
         <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
@@ -65,17 +49,33 @@
                    Height="32" Width="32" />
         </Button>
 
-        <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
+        <ListBox BorderThickness="1" HorizontalAlignment="Stretch" x:Name="ListBoxView"
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
                  Grid.Row="5" Margin="0, 5, 0, 0"                
                  SelectedItem="{Binding SelectedItem}"
                  ItemsSource="{Binding UserImages}"  
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
-                 
+                 cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
+                    <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}" Orientation="Horizontal">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="{lex:Loc SetThumbnail}"  
+                              IsEnabled="{Binding CanSetThumbnail, Mode=TwoWay}"
+                              cal:Message.Attach="[Event Click] = [Action OnSetThumbnail()]"/>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=ThumbnailIconSource}"
+                               Width="16" Height="16" >
+                            <Image.Visibility>
+                                <MultiBinding Converter="{StaticResource MultiThumbnailConverter}">
+                                    <Binding Path="Id"/>
+                                    <Binding ElementName="GridLayout" Path="DataContext.User.Thumbnailid"></Binding>
+                                </MultiBinding>
+                            </Image.Visibility>
+                        </Image>
                         <Image Source="{Binding FileLocation, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
                     </StackPanel>
                 </DataTemplate>
@@ -86,19 +86,5 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
-
-
-        <ComboBox ItemsSource="{Binding CaptureDevicesNames}"
-                  SelectedItem="{Binding SelectedCaptureDevice, Mode=TwoWay}" 
-                  Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch" 
-                  Grid.Row="0"                    
-                  Grid.Column="1">            
-        </ComboBox>
-
-        <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" 
-               VerticalAlignment="Stretch" 
-               Source="{Binding CaptureDeviceConnectedIcon}" />
     </Grid>
 </UserControl>

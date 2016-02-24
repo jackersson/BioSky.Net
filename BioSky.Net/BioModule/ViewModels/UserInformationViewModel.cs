@@ -26,6 +26,7 @@ namespace BioModule.ViewModels
     {           
       DisplayName = "Information";
       IsEnabled = true;
+      CountryNames = GetCountryNames();
     }
 
     #region Update
@@ -78,8 +79,9 @@ namespace BioModule.ViewModels
     public void OnDateofBirthChanged(string text)
     {
       try
-      {      
-        DateTime dt = DateTime.ParseExact(text, "M/d/yyyy", CultureInfo.InvariantCulture);
+      {
+        string dateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+        DateTime dt = DateTime.ParseExact(text, dateFormat, CultureInfo.InvariantCulture);
         User.Dateofbirth = dt.Ticks;
       }
       catch ( Exception ex)
@@ -102,6 +104,47 @@ namespace BioModule.ViewModels
       }
     }
 
+    private string[] _countryNames;
+    public string[] CountryNames
+    {
+      get { return _countryNames; }
+      set
+      {
+        if (_countryNames != value)
+        {
+          _countryNames = value;
+          NotifyOfPropertyChange(() => CountryNames);
+        }
+      }
+    }
+
     #endregion    
+
+
+
+
+    public string[] GetCountryNames()
+    {
+      Dictionary<string, string> CountryNameDictonary = new Dictionary<string, string>();
+
+      foreach (System.Globalization.CultureInfo ci in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures))
+      {
+        System.Globalization.RegionInfo ri = new System.Globalization.RegionInfo(ci.Name);
+        if (!CountryNameDictonary.ContainsKey(ri.NativeName))
+        {
+          CountryNameDictonary.Add(ri.NativeName, ri.TwoLetterISORegionName);
+        }
+      }
+
+      var OrderedNames = CountryNameDictonary.OrderBy(p => p.Key);
+
+      Dictionary<string, string> Countries = new Dictionary<string, string>();
+      foreach (KeyValuePair<string, string> val in OrderedNames)
+      {
+        Countries.Add(val.Key, val.Value);
+      }
+
+      return Countries.Keys.ToArray();
+    }
   }
 }

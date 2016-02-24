@@ -103,7 +103,9 @@
                 <DataTemplate>
                     <Grid Background="Transparent">
                         <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False"/>
-                        <TextBlock Text="{Binding Result, ElementName=Proxy}" TextAlignment="Center" TextTrimming="WordEllipsis" />
+                        <!--<TextBlock Text="{Binding Result, ElementName=Proxy}" TextAlignment="Center" TextTrimming="WordEllipsis" />-->
+
+                        <TextBlock Text="{Binding DisplayName}" TextAlignment="Center" TextTrimming="WordEllipsis" />
                     </Grid>
                 </DataTemplate>
             </dragablz:TabablzControl.CustomHeaderItemTemplate>

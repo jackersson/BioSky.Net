@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:dd="clr-namespace:BioModule.DragDrop" 
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"             
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -16,11 +16,10 @@
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance vm:LocationAccessDevicesViewModel, IsDesignTimeCreatable=False}"
              >
-
+    
     <UserControl.Resources>
-        <ResourceDictionary>              
-            <local:DragPreviewView x:Key="DragPreviewControl" />
-        </ResourceDictionary>     
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
     </UserControl.Resources>
     
     <Grid>
@@ -29,7 +28,7 @@
         <ScrollViewer CanContentScroll="True" 
                       VerticalScrollBarVisibility="Visible"
                       HorizontalAlignment="Stretch">
-            <Grid>
+            <Grid x:Name="GridLayout">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="10"/>
@@ -41,45 +40,91 @@
                     <RowDefinition Height="32"/>
                     <RowDefinition Height="128"/>
                 </Grid.RowDefinitions>
-                
-                <Label Grid.Row="0" Grid.Column="0" Content="{lex:Loc In}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-                <Label Grid.Row="2" Grid.Column="0" Content="{lex:Loc Out}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
-                <Label Grid.Row="0" Grid.Column="2" Content="{lex:Loc All}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
-                <local:DragablListBoxView 
-                    DataContext="{Binding DevicesList}" Grid.Row="1"
-                    Grid.Column="2" Grid.RowSpan="3" Margin="1"  
-                    
-                    dd:DragDrop.DropTargets="{Binding ElementName=DropTargets}"
-                    dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}"
-                    dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">                    
-                </local:DragablListBoxView>
-                
-                <ItemsControl Name="DropTargets" Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" 
-                              Margin="5,0,5,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                    
-                    <local:DragablListBoxView 
-                        x:Name="DevicesIn"
-                       DataContext="{Binding DevicesInList}" Height="130"
-                       dd:DragDrop.IsDropTarget="true"
-                       dd:DragDrop.DropTargets="{Binding ElementName=DevicesOut}"
-                       dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}" 
-                       dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">
-                    </local:DragablListBoxView>
+                <Label Grid.Row="0" Grid.Column="0" Content="{lex:Loc AccessDevices}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
-                    <local:DragablListBoxView  
-                        x:Name="DevicesOut"
-                      DataContext="{Binding DevicesOutList}" Height="130" Margin="0,27,0,0"
-                      dd:DragDrop.IsDropTarget="true"                         
-                      dd:DragDrop.DropTargets="{Binding ElementName=DevicesIn}"
-                      dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}" 
-                      dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">
-                    </local:DragablListBoxView>
-                    
-                </ItemsControl>               
+
+
+
+                <ListBox x:Name="AccessDevices"
+                          BorderThickness="1" Grid.Row="1" Grid.Column="0" Margin="1"                      
+                           SelectedIndex="0"                           
+                          ItemsSource="{Binding AccessDevicesList}"
+                          SelectedItem="{Binding SelectedAccessDevice}"                     
+                          ScrollViewer.CanContentScroll="False" SelectionMode="Single"                                                                    
+                          DataContext="{Binding Mode=OneWay}"
+                          cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDownAccess($mouseSelectedItem)];
+                          [Event SelectionChanged] = [Action OnSelectionChangeAccess()]" 
+                         
+                          >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                <TextBlock  Text="{Binding DisplayName}" HorizontalAlignment="Stretch"/>
+                                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"  >                                    
+                                </Image>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <ListBox.ContextMenu>
+                      <ContextMenu IsEnabled="True">
+                            <MenuItem Header="{lex:Loc Activate}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnActivate('AccessDevice')]"/>
+
+                            <MenuItem Header="{lex:Loc Remove}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnRemove('AccessDevice')]"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+
+                <Label Grid.Row="0" Grid.Column="2" Content="{lex:Loc CaptureDevices}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+
+
+                <ListBox x:Name="CaptureDevices"
+                          BorderThickness="1" Grid.Row="1" Grid.Column="2" Margin="1"                      
+                           SelectedIndex="0"                           
+                          ItemsSource="{Binding CaptureDevicesList}"
+                          SelectedItem="{Binding SelectedCaptureDevice}"                     
+                          ScrollViewer.CanContentScroll="False" SelectionMode="Single"                                                                    
+                          DataContext="{Binding Mode=OneWay}"
+                          cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDownCapture($mouseSelectedItem)];
+                          [Event SelectionChanged] = [Action OnSelectionChangeCapture()]"                          
+                          >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                                <TextBlock  Text="{Binding DisplayName}" HorizontalAlignment="Stretch"/>
+                                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"  >
+                                </Image>
+                                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" 
+                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemNotUse, Converter={StaticResource BooleanToVisibilityConverter}}"  >
+                                </Image>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Setters>
+                                <Setter Property="IsEnabled" Value="{Binding ItemNotUse}" />
+                            </Style.Setters>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+
+                    <ListBox.ContextMenu>
+                        <ContextMenu IsEnabled="True">
+                            <MenuItem Header="{lex:Loc Activate}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnActivate('CaptureDevice')]"/>
+
+                            <MenuItem Header="{lex:Loc Remove}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnRemove('CaptureDevice')]"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
             </Grid>
         </ScrollViewer>
-
     </Grid>
 
     

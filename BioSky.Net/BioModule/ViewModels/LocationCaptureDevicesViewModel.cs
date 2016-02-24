@@ -36,6 +36,7 @@ namespace BioModule.ViewModels
   
     }
 
+    #region Update
     public void AddToGeneralDeviceList(DragableItem item, bool isEnabled = true)
     {
       if (item == null)
@@ -71,21 +72,69 @@ namespace BioModule.ViewModels
             DevicesInList.Add(dragableItem);
             AddToGeneralDeviceList(dragableItem, false);
           }
-          else if (item.Locationid <= 0)          
-            AddToGeneralDeviceList(dragableItem, true);          
+          else if (item.Locationid <= 0)
+            AddToGeneralDeviceList(dragableItem, true);
           else
-            AddToGeneralDeviceList(dragableItem, false);          
+            AddToGeneralDeviceList(dragableItem, false);
         }
       }
 
       foreach (string deviceName in CaptureDevicesNames)
       {
-        CaptureDevice device = new CaptureDevice() { Devicename = deviceName, };
-        DragableItem dragableItem = new DragableItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename };
-        AddToGeneralDeviceList(dragableItem, true);
+        if (!IsDeviceUsed(deviceName))
+        {
+          CaptureDevice device = new CaptureDevice() { Devicename = deviceName, };
+          DragableItem dragableItem = new DragableItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename };
+          AddToGeneralDeviceList(dragableItem, true);
+        }
       }
     }
+    public bool IsDeviceUsed(string deviceName)
+    {
+      foreach (DragableItem item in DevicesList.DragableItems)
+      {
+        if (item.DisplayName == deviceName)
+          return true;
+        else
+          continue;
+      }
+      return false;
+    }
+    public void Update(Location location)
+    {
+      _location = location;
+      RefreshData();
+    }    
 
+    #endregion
+
+    #region BioService
+    public RepeatedField<CaptureDevice> GetCaptureDevices()
+    {
+      RepeatedField<CaptureDevice> captureDevices = new RepeatedField<CaptureDevice>();
+
+      foreach (DragableItem item in DevicesInList.DragableItems)
+      {
+        CaptureDevice captureDevice = (CaptureDevice)item.ItemContext;
+        captureDevices.Add(captureDevice);
+      }
+
+      return captureDevices;
+    }
+    #endregion
+
+    #region Interface
+    public void Apply()
+    {
+
+    }
+    public void Remove(bool all)
+    {
+
+    }
+    #endregion
+
+    #region UI
     private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       RefreshData();
@@ -105,22 +154,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    public RepeatedField<CaptureDevice> GetCaptureDevices()
-    {
-      RepeatedField<CaptureDevice> captureDevices = new RepeatedField<CaptureDevice>();
-
-      foreach (DragableItem item in DevicesInList.DragableItems)
-      {
-        CaptureDevice captureDevice = (CaptureDevice)item.ItemContext;
-        captureDevices.Add(captureDevice);
-      }
-
-      return captureDevices;
-    }
-
-
-
 
     private DragablListBoxViewModel _devicesList;
     public DragablListBoxViewModel DevicesList
@@ -150,23 +183,13 @@ namespace BioModule.ViewModels
       }
     }
 
-    public void Update(Location location)
-    {
-      _location = location;
-      RefreshData();
-    }
-    public void Apply()
-    {
+    #endregion
 
-    }
-    public void Remove(bool all)
-    {
-
-    }
-
+    #region Global Variables
     private          Location          _location  ;
     private readonly IProcessorLocator _locator   ;
     private readonly IBioEngine        _bioEngine ;
     private readonly IServiceManager   _bioService;
+    #endregion
   }
 }

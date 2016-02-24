@@ -50,8 +50,8 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="48"/>
             </Grid.ColumnDefinitions>
 
@@ -65,7 +65,8 @@
                  SelectionMode="Extended"
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
-                                     [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)]"
+                                     [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)];
+                                     [Event MouseDoubleClick]     = [Action OnMouseDoubleClick($mouseSelectedItem)]"
                  >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -79,6 +80,10 @@
                                     <MenuItem Header="Remove" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
+                              />
+                                    <MenuItem Header="Add Visitor as User" 
+                              IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
+                              cal:Message.Attach="[Event Click] = [Action OnAddVisitorAsUser]"
                               />
                                 </ContextMenu>
                             </StackPanel.ContextMenu>
@@ -127,8 +132,18 @@
                 </ListBox.ItemsPanel>
             </ListBox>
             
-            <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
-                ToolTip="{lex:Loc Delete}"
+            <local:PageControllerView
+                Grid.Column="2" Grid.ColumnSpan="2" Margin="1,1,1,1"
+                DataContext="{Binding PageController}">                
+            </local:PageControllerView>
+            
+  
+            
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0"
+                    HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
+                    IsEnabled="{Binding IsDeleteButtonEnabled}"                    
+                    ToolTip="{lex:Loc Delete}"
+                    cal:Message.Attach="[Event Click] = [Action OnDeleteVisitors]"
                 >
                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
             </Button>
@@ -156,9 +171,9 @@
             </TextBox>
         </Grid>
         <Grid Margin="0,5,0,0"  cal:Message.Attach="[Event Loaded] = [Action OnDataContextChanged()]">
-            <local:ImageView                    
-                    DataContext="{Binding ImageView}">
-                </local:ImageView>            
+            <ContentControl                                      
+                        cal:View.Model="{Binding ImageView}" cal:View.Context="Photo" >
+            </ContentControl>
         </Grid>
     </Grid>
 </UserControl>
