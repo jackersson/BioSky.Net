@@ -25,7 +25,7 @@ namespace BioModule.ViewModels
     public void Apply()
     {
       DialogResult = true;
-      this.TryClose(DialogResult);
+      TryClose(DialogResult);
     }
 
     private bool _dialogResult;

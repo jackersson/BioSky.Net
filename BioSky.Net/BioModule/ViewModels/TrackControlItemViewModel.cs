@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
-using System.Windows;
 
 using BioContracts;
-using System.Collections.ObjectModel;
-using System.Windows.Data;
-using BioModule.Utils;
 using System.Drawing;
 using WPFLocalizeExtension.Extensions;
 
@@ -68,8 +58,8 @@ namespace BioModule.ViewModels
     }
     private void TrackLocation_EnrollFeedbackChanged(object sender, BioService.EnrollmentFeedback feedback)
     {
-      if (ImageView != null && feedback != null)
-        ImageView.ShowProgress(feedback.Progress, feedback.Success);
+      //if (ImageView != null && feedback != null)
+      //  ImageView.ShowProgress(feedback.Progress, feedback.Success);
     }
     private void CurrentLocation_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {

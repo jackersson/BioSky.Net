@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Caliburn.Micro;
 using System.Windows.Media.Imaging;
@@ -10,47 +6,40 @@ using BioModule.ResourcesLoader;
 
 namespace BioModule.ViewModels
 {
-   public class ProgressRingViewModel : Screen
+  public class ProgressRingViewModel : Screen
    {
      public ProgressRingViewModel()
      {
-       ProgressRingVisibility = false;
-       ProgressRingImageVisibility = false;
-       ProgressRingTextVisibility = false;
-       ProgressRingProgressVisibility = false;
-       ProgressRingText = "0%";
+       SetValues();
      }
 
      public async void ShowProgress(int progress, bool status)
-     {
-       ProgressRingVisibility = true;
-       ProgressRingTextVisibility = true;
-       ProgressRingImageVisibility = false;
-       ProgressRingStatus = true;
-       ProgressRingProgressVisibility = true;
-
-       ProgressRingText = progress + "%";
+     {         
        if (progress == 100)
-       {
-         ProgressRingTextVisibility = false;
-         ProgressRingImageVisibility = true;
-         ProgressRingStatus = false;
-         ProgressRingProgressVisibility = false;
-
+       {         
+         SetValues(true, true, false, false, false, progress + "%");
          ProgressRingIconSource = status ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
-
+       
          await Task.Delay(3000);
          ProgressRingVisibility = false;
        }
+       else       
+         SetValues(true, false, true, true, true, progress + "%");       
      }
 
-     private void Show(bool show = true)
+     private void SetValues( bool   RingVisibility         = false
+                           , bool   RingImageVisibility    = false
+                           , bool   RingTextVisibility     = false
+                           , bool   RingProgressVisibility = false
+                           , bool   RingStatus             = false
+                           , string RingText = "0")
      {
-       ProgressRingVisibility = false;
-       ProgressRingImageVisibility = false;
-       ProgressRingTextVisibility = true;
-       ProgressRingProgressVisibility = true;
-       ProgressRingText = "0%";
+       ProgressRingVisibility         = RingVisibility;
+       ProgressRingImageVisibility    = RingTextVisibility;
+       ProgressRingTextVisibility     = RingTextVisibility;
+       ProgressRingProgressVisibility = RingProgressVisibility;
+       ProgressRingStatus             = RingStatus;
+       ProgressRingText               = RingText;
      }
 
      #region UI

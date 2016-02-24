@@ -18,7 +18,7 @@
     <NuGetPackageImportStamp>cfd30d0d</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -211,6 +211,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BioDataLoader.cs" />
+    <Compile Include="Utils\BioLogger.cs" />
+    <Compile Include="Utils\BioNotifier.cs" />
     <Compile Include="ViewModels\BioShellViewModel.cs" />
     <Compile Include="Views\BioShellView.xaml.cs">
       <DependentUpon>BioShellView.xaml</DependentUpon>

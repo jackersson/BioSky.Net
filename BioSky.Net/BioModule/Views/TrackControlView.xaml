@@ -24,7 +24,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-            <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
+           
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
@@ -77,40 +77,7 @@
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>
         
-        <ComboBox x:Name="LocationItems"
-            Margin="2,5,0,0" Grid.Row="0"  Grid.Column="0" BorderThickness="1"
-                   ItemsSource="{Binding TrackControlItems}" Grid.ColumnSpan="1"   
-                  Controls:TextBoxHelper.Watermark="{Binding SelectedItems}"  
-                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                   >       
-            <ComboBox.ItemTemplateSelector>
-                <utils:ComboBoxItemTemplateSelector>
-                    <utils:ComboBoxItemTemplateSelector.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" >
-                                <CheckBox 
-                                    IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                    cal:Action.TargetWithoutContext="{Binding ElementName=Test, Path=DataContext}"
-                                    cal:Message.Attach="[Event Checked]=[Action OnChecked];
-                                                        [Event Unchecked]=[Action OnChecked]"                       
-                                                                    />
-                                <TextBlock Text="{Binding Caption}"></TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </utils:ComboBoxItemTemplateSelector.ItemTemplate>
-                    <utils:ComboBoxItemTemplateSelector.SelectedItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" >
-                                <TextBlock  Text="{Binding ElementName=LocationItems, Path=DataContext.SelectedItems}"                                                                   
-                                            VerticalAlignment="Center" 
-                                            HorizontalAlignment="Center" ></TextBlock>
-                            </StackPanel>
-                        </DataTemplate>
-                    </utils:ComboBoxItemTemplateSelector.SelectedItemTemplate>
-                </utils:ComboBoxItemTemplateSelector>
-            </ComboBox.ItemTemplateSelector>
-        </ComboBox>
-        
+       
         
         <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0" 
                   IsChecked="{Binding IsAllChecked}"

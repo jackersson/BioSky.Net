@@ -14,17 +14,15 @@ namespace BioModule.ViewModels
 {
   public class CameraDialogViewModel : Screen
   {
-    public CameraDialogViewModel(IBioEngine bioEngine, IProcessorLocator locator , string title = "CameraDialog")
+    public CameraDialogViewModel(IProcessorLocator locator , string title = "CameraDialog")
     {
-      _locator   = locator;
-      _bioEngine = bioEngine;
-
+      _locator             = locator;      
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-
-      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
-
+   
+      CaptureDevicesNames = _captureDeviceEngine.GetCaptureDevicesNames();
 
       CaptureDeviceConnected = false;
+
       Update(title);
     }
     #region Update
@@ -36,97 +34,57 @@ namespace BioModule.ViewModels
 
     #region Interface
     public void Apply()
-    {
-      DialogResult = true;
-      this.TryClose(DialogResult);
+    {      
+      TryClose(true);
     }
 
     public void Cancel()
-    {
-      DialogResult = false;
-      this.TryClose(DialogResult);
+    {     
+      TryClose(false);
     }
 
     private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-      NotifyOfPropertyChange(() => CaptureDevicesNames);
-      if (ActiveCaptureDevice == null)
-        NotifyOfPropertyChange(() => AvaliableDevicesCount);
+      NotifyOfPropertyChange(() => CaptureDevicesNames);    
+      NotifyOfPropertyChange(() => AvaliableDevicesCount);
     }
     protected override void OnActivate()
     {
       CaptureDeviceConnected = false;
       CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
-      //RefreshData();
+     
       base.OnActivate();
     }
     protected override void OnDeactivate(bool close)
     {
       CaptureDeviceConnected = false;
-
-      if (ActiveCaptureDevice != null)
-        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);
-
-        SelectedCaptureDevice = null;
-      //_imageViewer.Clear();
+      SelectedCaptureDevice  = null ;     
 
       CaptureDevicesNames.CollectionChanged -= CaptureDevicesNames_CollectionChanged;
 
       base.OnDeactivate(close);
     }
-
-    private void OnNewFrame(object sender, ref Bitmap bitmap)
-    {
-      if (bitmap == null)
-        return;
-
-      CaptureDeviceConnected = true;
-
-      //_imageViewer.UpdateImage(ref bitmap);
-    }
+       
     public void Subscribe()
     {
-      CaptureDeviceConnected = false;
-      if (SelectedCaptureDevice == null)
+      if (SelectedCaptureDevice == null || _captureDeviceEngine == null)
         return;
+          
+      _captureDeviceEngine.Add(SelectedCaptureDevice);
 
-      if (ActiveCaptureDevice != null)
-        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);
-
-      ActiveCaptureDevice = SelectedCaptureDevice;
-
-      if (!_captureDeviceEngine.CaptureDeviceActive(ActiveCaptureDevice))
-        _captureDeviceEngine.Add(ActiveCaptureDevice);
-
-      _captureDeviceEngine.Subscribe(OnNewFrame, ActiveCaptureDevice);
+      CaptureDeviceConnected = _captureDeviceEngine.CaptureDeviceActive(SelectedCaptureDevice);
     }
     #endregion
-
-
-
-
+    
     #region UI
-
-    private bool _dialogResult;
-    public bool DialogResult
-    {
-      get { return _dialogResult; }
-      set
-      {
-        if (_dialogResult != value)
-        {
-          _dialogResult = value;
-          NotifyOfPropertyChange(() => DialogResult);
-        }
-      }
-    }
+   
     public BitmapSource CaptureDeviceConnectedIcon
     {
       get { return CaptureDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
     }
     public string AvaliableDevicesCount
     {
-      get { return String.Format("Available Devices ({0})", _captureDevicesNames.Count); }
+      get { return string.Format("Available Devices ({0})", _captureDevicesNames.Count); }
     }
 
     private AsyncObservableCollection<string> _captureDevicesNames;
@@ -175,20 +133,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private string _activeCaptureDevice;
-    public string ActiveCaptureDevice
-    {
-      get { return _activeCaptureDevice; }
-      set
-      {
-        if (_activeCaptureDevice != value)
-        {
-          _activeCaptureDevice = value;
-
-          NotifyOfPropertyChange(() => ActiveCaptureDevice);
-        }
-      }
-    }
+   
     #endregion
 
     #region Global Variables

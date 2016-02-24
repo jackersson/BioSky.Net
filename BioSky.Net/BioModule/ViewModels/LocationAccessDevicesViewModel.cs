@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using BioModule.ViewModels;
 using System.Windows.Input;
-using BioModule.DragDrop;
 
 using System.Windows.Data;
 using System.Windows.Controls;
@@ -36,7 +35,7 @@ namespace BioModule.ViewModels
 
 
       _captureDevicesList = new ObservableCollection<LocationItem>();
-      _accessDevicesList   = new ObservableCollection<LocationItem>();
+      _accessDevicesList  = new ObservableCollection<LocationItem>();
 
       AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
       AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
@@ -328,10 +327,7 @@ namespace BioModule.ViewModels
 
     public void Apply()
     {
-    }
-    public void Remove(bool all)
-    {
-    }
+    }  
     #endregion
 
     #region UI

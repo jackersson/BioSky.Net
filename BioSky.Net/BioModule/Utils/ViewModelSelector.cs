@@ -57,19 +57,10 @@ namespace BioModule.Utils
         flag = _showableControls.TryGetValue(contentControl, out showableControl);
         if ( flag )
           showableControl.ShowContent(pageType, args);
-      }
-        //_tabControl.OpenTab(pageType, args);
+      }        
     }
 
-    /*
-    public void ShowFlyout(ViewModelsID pageID, object[] args = null)
-    {
-      Type pageType;
-      bool flag = _viewModels.TryGetValue(pageID, out pageType);
-      if (flag)
-        _flyoutControl.ShowContent(pageType, args);
-    }
-      */
+ 
     private Dictionary<ViewModelsID, Type> _viewModels;
     private Dictionary<ShowableContentControl, IShowableContent> _showableControls;
 

@@ -56,8 +56,7 @@ namespace BioShell
       {
         _shellViewModel.MainMenu = value;
       }
-    }
-    
+    }    
 
     public IBioModule LoadModule(Assembly assembly)
     {

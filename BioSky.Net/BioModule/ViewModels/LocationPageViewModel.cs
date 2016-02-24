@@ -243,19 +243,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private LocationCaptureDevicesViewModel _locationCaptureDevicesView;
-    public LocationCaptureDevicesViewModel LocationCaptureDevicesView
-    {
-      get { return _locationCaptureDevicesView; }
-      set
-      {
-        if (_locationCaptureDevicesView != value)
-        {
-          _locationCaptureDevicesView = value;
-          NotifyOfPropertyChange(() => LocationCaptureDevicesView);
-        }
-      }
-    }
+  
 
     #endregion
 

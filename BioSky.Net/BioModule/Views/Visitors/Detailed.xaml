@@ -28,7 +28,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
-            <utils:ConvertStatusToImage x:Key="ConvertTextToImage" />
+            
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>

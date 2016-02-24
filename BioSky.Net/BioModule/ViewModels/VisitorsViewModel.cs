@@ -51,11 +51,11 @@ namespace BioModule.ViewModels
       _database.PhotoHolder.DataChanged   += RefreshData;
       _database.Visitors.DataChanged += RefreshData;
 
-/*
-      if (Visitors != null)
-        VisitorsCollectionView = new PagingCollectionView(Visitors, 5);*/
 
-      VisitorsCollectionView = (PagingCollectionView)CollectionViewSource.GetDefaultView(Visitors);
+      //if (Visitors != null)
+      //VisitorsCollectionView = new PagingCollectionView(Visitors, 5);
+      
+    //  VisitorsCollectionView = (PagingCollectionView)CollectionViewSource.GetDefaultView(Visitors);
     } 
 
 
@@ -68,18 +68,16 @@ namespace BioModule.ViewModels
       Visitors = _database.VisitorHolder.Data;
       GetLastVisitor();
 
-      VisitorsCollectionView = CollectionViewSource.GetDefaultView(Visitors);
-      VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
-/*
+      VisitorsCollectionView = new PagingCollectionView(Visitors, 10);
+     // VisitorsCollectionView.AddSortDescription(SortDescriptionByTime);
+      //VisitorsCollectionView = CollectionViewSource.GetDefaultView(Visitors);
+      // VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
+      /*
       if (Visitors != null)
       {
         VisitorsCollectionView = new PagingCollectionView(Visitors, 5);
         VisitorsCollectionView.AddSortDescription(SortDescriptionByTime);
       }*/
-
-
-      
-      
     }
     private void GetLastVisitor()
     {

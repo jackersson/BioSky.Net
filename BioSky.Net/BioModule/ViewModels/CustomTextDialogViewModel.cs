@@ -19,40 +19,45 @@ namespace BioModule.ViewModels
   }
   public class CustomTextDialogViewModel : Screen
   {
-    public CustomTextDialogViewModel(string title = "CustomtextDialog", string text = "", DialogStatus status = DialogStatus.Info)
+    public CustomTextDialogViewModel( string title = "CustomtextDialog"
+                                    , string text = ""
+                                    , DialogStatus status = DialogStatus.Info)
     {
       Update(title, text, status);
     }
 
-    public void Update(string title = "CustomtextDialog", string text = "", DialogStatus status = DialogStatus.Info)
+    public void Update( string title = "CustomtextDialog"
+                      , string text = ""
+                      , DialogStatus status = DialogStatus.Info)
     {
       DisplayName = title ;
       Text        = text  ;
-      Status      = status;
+      _status     = status;
     }
 
     public void Apply()
-    {
-      DialogResult = true;
-      this.TryClose(DialogResult);
+    {      
+      this.TryClose(true);
     }
 
     public void Cancel()
-    {
-      DialogResult = false;
-      this.TryClose(DialogResult);
+    {      
+      this.TryClose(false);
     }
+
     public BitmapSource CustomDialogIcon
     {
       get 
       {
-        if (Status == DialogStatus.Error)
-          return ResourceLoader.ErrorIconSource;
-        else if (Status == DialogStatus.Ok)
-          return ResourceLoader.OkIconSource;
-        else if (Status == DialogStatus.Info)
-          return ResourceLoader.InformationCircleIconSource;
-
+        switch (_status)
+        {
+          case DialogStatus.Error:
+            return ResourceLoader.ErrorIconSource;
+          case DialogStatus.Ok:
+            return ResourceLoader.OkIconSource;
+          case DialogStatus.Info:
+            return ResourceLoader.InformationCircleIconSource;
+        }        
         return ResourceLoader.InformationCircleIconSource;
       }
     }
@@ -73,31 +78,6 @@ namespace BioModule.ViewModels
     }
 
     private DialogStatus _status;
-    public DialogStatus Status
-    {
-      get { return _status; }
-      set
-      {
-        if (_status != value)
-        {
-          _status = value;
-          NotifyOfPropertyChange(() => Status);
-        }
-      }
-    }
-
-    private bool _dialogResult;
-    public bool DialogResult
-    {
-      get { return _dialogResult; }
-      set
-      {
-        if (_dialogResult != value)
-        {
-          _dialogResult = value;
-          NotifyOfPropertyChange(() => DialogResult);
-        }
-      }
-    }
+  
   }
 }

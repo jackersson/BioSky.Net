@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\BioShell\bin\Debug\de\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -152,6 +152,8 @@
     <Compile Include="IFullHolder.cs" />
     <Compile Include="IHolder.cs" />
     <Compile Include="ILocalStorage.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="INotifier.cs" />
     <Compile Include="IProcessorLocator.cs" />
     <Compile Include="IServiceManager.cs" />
     <Compile Include="IShowableContent.cs" />

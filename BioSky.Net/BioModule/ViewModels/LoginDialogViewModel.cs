@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 using Caliburn.Micro;
-using System.Windows.Media.Imaging;
-using BioModule.ResourcesLoader;
 using System.Security;
-using System.Windows.Controls;
 using System.Reflection;
 
 namespace BioModule.ViewModels

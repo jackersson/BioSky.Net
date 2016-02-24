@@ -44,8 +44,8 @@ namespace BioModule.ViewModels
       CurrentImageView = new ImageViewModel(_locator, _windowManager);
       UserPhotoView    = new UserPhotoViewModel(bioEngine, CurrentImageView, _locator, _windowManager);
 
-      CurrentImageView.EnrollFromPhotoChanged += UserPhotoView.EnrollFromPhoto;
-      CurrentImageView.EnrollFromCameraChanged += UserPhotoView.EnrollFromCamera;
+     // CurrentImageView.EnrollFromPhotoChanged += UserPhotoView.EnrollFromPhoto;
+      //CurrentImageView.EnrollFromCameraChanged += UserPhotoView.EnrollFromCamera;
 
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
@@ -105,7 +105,7 @@ namespace BioModule.ViewModels
 
       }
 
-      CurrentImageView.Update(_user);
+      //CurrentImageView.Update(_user);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
@@ -116,7 +116,7 @@ namespace BioModule.ViewModels
       _user = user.Clone();
       _revertUser = user.Clone();
       CurrentImageView.UpdateImage(null, _database.LocalStorage.LocalStoragePath + user.Thumbnail.FileLocation);
-      CurrentImageView.Update(_user);
+     // CurrentImageView.Update(_user);
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
     }
 
@@ -179,7 +179,7 @@ namespace BioModule.ViewModels
 
       Photo photo = null;
       bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out photo);
-      if (photoExists)
+      //if (photoExists)
         CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
     }
     

@@ -32,6 +32,7 @@ namespace BioModule.ViewModels
        _languages.Add("ru-RU");
        _languages.Add("uk-UA");
 
+         
      }
      public void LanguageChanged()
      {
@@ -52,20 +53,21 @@ namespace BioModule.ViewModels
        string faceService      = _database.LocalStorage.FaceServiceStoragePath    ;
        string databaseService  = _database.LocalStorage.DatabaseServiceStoragePath;
 
-       SeparateIpPort(faceService, out _faceServiceIP, out _faceServicePort);
+       SeparateIpPort(faceService    , out _faceServiceIP    , out _faceServicePort    );
        SeparateIpPort(databaseService, out _databaseServiceIP, out _databaseServicePort);
      }
+
      public void SeparateIpPort(string full, out string ip, out string port)
      {
        int i = full.IndexOf(":");
        if(i != 0)
        {
-         ip = full.Substring(0, i);
+         ip   = full.Substring(0, i);
          port = full.Substring(i + 1, full.Length - ip.Length - 1);
        }
        else
        {
-         ip = null;
+         ip   = null;
          port = null;
        }
      }
@@ -79,18 +81,18 @@ namespace BioModule.ViewModels
        var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
 
        if(result == true)
-         _database.LocalStorage.SaveGeneralSettings(LocalStoragePath, FaceServiceIP + ":" + FaceServicePort
-                                                   , DatabaseServiceIP + ":" + DatabaseServicePort, SelectedLanguage); 
+         _database.LocalStorage.SaveGeneralSettings( LocalStoragePath
+                                                   , FaceServiceIP + ":" + FaceServicePort
+                                                   , DatabaseServiceIP + ":" + DatabaseServicePort
+                                                   , SelectedLanguage); 
      }
 
      public void Revert()
      {
        var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
 
-       if (result == true)
-       {
-         RefreshData();
-       }       
+       if (result == true)       
+         RefreshData();       
      }
 
      public void OpenFolder()
@@ -99,10 +101,8 @@ namespace BioModule.ViewModels
 
        var result = folderBrowserDialog.ShowDialog();
 
-       if (result == DialogResult.OK)
-       {
-         LocalStoragePath = folderBrowserDialog.SelectedPath;
-       }
+       if (result == DialogResult.OK)       
+         LocalStoragePath = folderBrowserDialog.SelectedPath;       
      }
 
      private ObservableCollection<string> _languages;

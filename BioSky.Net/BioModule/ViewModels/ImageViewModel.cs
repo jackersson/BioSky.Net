@@ -25,40 +25,22 @@ namespace BioModule.ViewModels
   public class ImageViewModel : Screen, IImageUpdatable
   {
     public ImageViewModel(IProcessorLocator locator, IWindowManager  windowManager)
-    {
-      _bioUtils = new BioContracts.Common.BioImageUtils();
+    {     
       _locator       = locator      ;
       _windowManager = windowManager;
 
-      if(_locator != null)
-        _bioEngine = _locator.GetProcessor<IBioEngine>();
-
-      PhotoInfoExpanderView = new PhotoInfoExpanderViewModel();
-      ProgressRingView      = new ProgressRingViewModel();
+    
+      _bioUtils     = new BioContracts.Common.BioImageUtils();
+      _bioFileUtils = new BioFileUtils();
 
       ZoomToFitState = true;
       CurrentImagePhoto = null; 
     }
     #region Update
-
-    public void ShowProgress(int progress, bool status)
+       
+    public Photo UploadPhotoFromFile()
     {
-      ProgressRingView.ShowProgress(progress, status);
-    }
-
-
-    public void UploadClick(double viewWidth, double viewHeight)
-    {
-      var dialog = OpenFileDialog();
-      if (dialog.ShowDialog() == true)
-      {
-        Zoom(viewWidth, viewHeight);
-        UpdateImage(null, dialog.FileName);        
-      }
-    }
-    public Photo UploadPhoto()
-    {
-      var dialog = OpenFileDialog();      
+      var dialog = _bioFileUtils.OpenFileDialog();      
       if (dialog.ShowDialog() == true)
       {
         string filename = dialog.FileName;
@@ -71,17 +53,7 @@ namespace BioModule.ViewModels
       }
       return null;
     }
-
-   
-    public OpenFileDialog OpenFileDialog()
-    {
-      OpenFileDialog openFileDialog = new OpenFileDialog();
-      openFileDialog.Multiselect = false;
-      openFileDialog.Filter = "All files (*.*)|*.*";
-      openFileDialog.InitialDirectory = Environment.CurrentDirectory;
-
-      return openFileDialog;
-    }
+         
 
     public void UpdateImage(ref Bitmap img)
     {     
@@ -101,89 +73,50 @@ namespace BioModule.ViewModels
       }
     }
 
-    public void SavePhoto(string path)
+    private BitmapImage SetImageFromFile(string fileName = "")
     {
-      Directory.CreateDirectory(Path.GetDirectoryName(path));
+      if (!File.Exists(fileName))
+        return null;
+       
+      BitmapImage bmp    = GetImageSource(fileName);
+      CurrentImageSource = bmp;
+      Zoom(_imageViewWidth, _imageViewHeight);
 
-      if (CurrentImagePhoto.Description == null)
-        return;
-
-      byte[] data = CurrentImagePhoto.Description.ToByteArray();
-      var fs = new BinaryWriter(new FileStream(path, FileMode.CreateNew, FileAccess.Write));
-      fs.Write(data);
-      fs.Close();
-    }
-    public void MovePhoto(string pathFrom, string pathTo)
-    {
-      Directory.CreateDirectory(Path.GetDirectoryName(pathTo));
-
-      try
-      {
-        File.Move(pathFrom, pathTo); // Try to move
-        Console.WriteLine("Moved"); // Success
-      }
-      catch (IOException ex)
-      {
-        Console.WriteLine(ex); // Write error
-      }
-      
-    }
-    public BitmapImage SetImageFromFile(string fileName)
-    {
-      if (File.Exists(fileName))
-      {
-        //Bitmap bmp = (Bitmap)Image.FromFile(fileName);
-        BitmapImage bmp = GetImageSource(fileName);
-        CurrentImageSource = bmp;//BitmapConversion.BitmapToBitmapSource(bmp);
-
-        Zoom(_imageViewWidth, _imageViewHeight);
-        return bmp;
-      }
-
-      //CurrentImageSource = null;
-
-      return null;
+      return bmp;      
     }
 
     public BitmapImage GetImageSource(string fileName)
     {
+      if (!File.Exists(fileName))
+        return null;
+
       BitmapImage image = new BitmapImage();
             
       image.BeginInit();
-      image.UriSource = new Uri(fileName);
+      image.UriSource   = new Uri(fileName);
       image.CacheOption = BitmapCacheOption.OnLoad;
       image.EndInit();
 
       return image;
     }
 
-    public void Update(Person user)
-    {
-      if (user == null)
-        CurrentImageSource = null;
-
-      User = user;
-    }
-
-    public void UpdateImage(Photo photo, string path)
+    public void UpdateImage(Photo photo, string prefixPath = "")
     {
       if (photo != null)
       {
-        string photoLocation = path + "\\" + photo.FileLocation;
+        string photoLocation = prefixPath + "\\" + photo.FileLocation;
 
         var result = SetImageFromFile(photoLocation);        
         if(result != null)
           CurrentImagePhoto = photo;
       }
-      else if(photo == null && path != null)
+      else if(photo == null && prefixPath != null)
       {
-        BitmapImage bmp = SetImageFromFile(path);
-        if (bmp == null)
-        {
-          CurrentImageSource = null;
-        }
+        BitmapImage bmp = SetImageFromFile(prefixPath);
+        if (bmp == null)        
+          CurrentImageSource = null;        
         
-        Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(path ));
+        Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(prefixPath));
         Photo newphoto = new Photo()
         {
             EntityState = EntityState.Added
@@ -195,7 +128,7 @@ namespace BioModule.ViewModels
         };
         CurrentImagePhoto = newphoto;
       }
-      else if (photo == null && path == null)
+      else if (photo == null && prefixPath == null)
       {
         CurrentImagePhoto = null;
         CurrentImageSource = null;
@@ -208,13 +141,13 @@ namespace BioModule.ViewModels
     public void Clear()
     {
       CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
+      CurrentImagePhoto = null;
     }
 
     public void CancelClick(double viewWidth, double viewHeight)
     {
-      CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
-      Zoom(viewWidth, viewHeight);
-      CurrentImagePhoto = null;
+      Clear();
+      Zoom(viewWidth, viewHeight);      
     }
 
 
@@ -247,18 +180,19 @@ namespace BioModule.ViewModels
 
     public void EnrollFromPhoto()
     {      
-      OnEnrollFromPhoto();
+      //OnEnrollFromPhoto();
     }
 
     public void EnrollFromCamera()
     {
-      _windowManager.ShowDialog(new CameraDialogViewModel(_bioEngine, _locator));
-      OnEnrollFromCamera();
+      _windowManager.ShowDialog(new CameraDialogViewModel(_locator));
+     // OnEnrollFromCamera();
     }
     #endregion
 
     #region UI
-
+    /*
+    //??????
     public delegate void OnEnrollFromPhotoHandler();
     public event OnEnrollFromPhotoHandler EnrollFromPhotoChanged;
 
@@ -277,7 +211,7 @@ namespace BioModule.ViewModels
         EnrollFromCameraChanged();
     }
 
-
+      */
 
     double _calculatedImageScale;
     public double CalculatedImageScale
@@ -307,6 +241,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    /*
     private PhotoInfoExpanderViewModel _photoInfoExpanderView;
     public PhotoInfoExpanderViewModel PhotoInfoExpanderView
     {
@@ -334,6 +269,7 @@ namespace BioModule.ViewModels
         }
       }
     }
+    */
 
     double _calculatedImageWidth;
     private double CalculatedImageWidth
@@ -420,20 +356,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private Bitmap _currentImageBitmap;
-    public Bitmap CurrentImageBitmap
-    {
-      get { return _currentImageBitmap; }
-      set
-      {
-        if (_currentImageBitmap != value)
-        {
-          _currentImageBitmap = value;
-          NotifyOfPropertyChange(() => CurrentImageBitmap);
-        }
-      }
-    }
+     
 
     private Photo _currentImagePhoto;
     public Photo CurrentImagePhoto
@@ -448,20 +371,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private Person _user;
-    public Person User
-    {
-      get { return _user; }
-      set
-      {
-        if (_user != value)
-        {
-          _user = value;
-          NotifyOfPropertyChange(() => User);
-        }
-      }
-    }
+      
     #endregion    
 
     #region Global Variables
@@ -475,7 +385,7 @@ namespace BioModule.ViewModels
     private const double ZOOM_RATIO = 100D;
 
     private BioContracts.Common.BioImageUtils _bioUtils     ;
-    private readonly IBioEngine               _bioEngine    ;
+    private BioFileUtils                      _bioFileUtils ; 
     private readonly IProcessorLocator        _locator      ;
     private          IWindowManager           _windowManager;
 

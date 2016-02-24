@@ -16,42 +16,43 @@ using System.Windows.Input;
 using System.Threading;
 using System.Globalization;
 using BioContracts;
+using BioShell.Utils;
 
 namespace BioShell
 {
   public class BioShellBootstrapper : BootstrapperBase
   {
-    private readonly IWindsorContainer _container = new WindsorContainer();
-
     public BioShellBootstrapper()
     {
       Initialize();
     }
-
-
+    
     protected override void OnExit(object sender, EventArgs e)
     {
-      Console.WriteLine("Exit");
-      IBioStarter starter = _container.Resolve<IBioStarter>();
-      if (starter != null)
-      {
-       // Thread.Sleep(1000);
-        starter.Stop();
+      try
+      {        
+         IBioStarter starter = _container.Resolve<IBioStarter>();
+         if (starter != null)                       
+             starter.Stop();          
+
+         Thread.Sleep(5000);
       }
-
-      Thread.Sleep(5000);
+      catch (Exception ex)
+      {
+        Notifier.Notify(ex);
+      }
     }
-
+    
     protected override void OnStartup(object sender, StartupEventArgs e)
     {
-      
-      var loader     = _container.Resolve<BioModuleLoader>();
-      var dataloader = _container.Resolve<BioDataLoader>();
-
-      var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
       try
       {
+        var loader     = _container.Resolve<BioModuleLoader>();
+        var dataloader = _container.Resolve<BioDataLoader>();
+
+        var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+      
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
@@ -68,7 +69,7 @@ namespace BioShell
       }
       catch (Exception ex)
       {
-        MessageBox.Show(ex.Message);
+        Notifier.Notify(ex);
       }
 
       DisplayRootViewFor<BioShellViewModel>();
@@ -76,7 +77,6 @@ namespace BioShell
 
     protected override void Configure()
     {
-
       Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("ru-RU"); 
 
 
@@ -108,6 +108,26 @@ namespace BioShell
           : _container.Kernel.HasComponent(key)
               ? _container.Resolve(key, service)
               : base.GetInstance(service, key);
+    }
+
+    private readonly IWindsorContainer _container = new WindsorContainer();
+
+    private INotifier _notifier;
+    private INotifier Notifier
+    {
+      get
+      {
+        if (_notifier == null)
+          _notifier = _container.Resolve<INotifier>();
+
+        return _notifier == null ? new BioNotifier() : _notifier;
+      }
+      set
+      {
+        if (_notifier != value && value != null)
+          _notifier = value;
+
+      }
     }
   }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
@@ -12,7 +6,7 @@ using Caliburn.Micro;
 
 using BioContracts;
 using BioShell.ViewModels;
-using MahApps.Metro.Controls.Dialogs;
+using BioShell.Utils;
 
 namespace BioShell
 {
@@ -29,6 +23,7 @@ namespace BioShell
                .Register(Component.For<BioShellViewModel>())
                .Register(Component.For<BioModuleLoader>())
                .Register(Component.For<BioDataLoader>())
+               .Register(Component.For<INotifier>().ImplementedBy<BioNotifier>())
                .Register(Component.For<IBioShell>().ImplementedBy<BioShellImpl>());
 
     }

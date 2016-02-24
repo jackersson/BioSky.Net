@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Caliburn.Micro;
-using BioModule.ResourcesLoader;
-using System.Windows.Media.Imaging;
-
-using BioContracts;
+﻿using Caliburn.Micro;
 using BioModule.Utils;
-
 
 namespace BioModule.ViewModels
 {
@@ -23,12 +12,16 @@ namespace BioModule.ViewModels
 
     public void OpenTabAddNewPerson()
     {
-      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.UserPage, new object[] { null });
+      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent
+                                    , ViewModelsID.UserPage
+                                    , new object[] { null });
     }
 
     public void OpenTabAddNewLocation()
     {
-      _viewModelSelector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings, new object[] { null });
+      _viewModelSelector.ShowContent( ShowableContentControl.FlyoutControlContent
+                                    , ViewModelsID.LocationSettings
+                                    , new object[] { null });
     }
 
     public void OpenTabVisitors()

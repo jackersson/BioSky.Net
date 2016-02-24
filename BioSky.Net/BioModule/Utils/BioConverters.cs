@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
-//using static BioService.Person.Types;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows;
@@ -341,26 +340,7 @@ namespace BioModule.Utils
   }
 
   #endregion
-
-  #region ConvertStatusToImage
-  public class ConvertStatusToImage : IValueConverter
-  {
-    private BioStatusResource _resource = new BioStatusResource();
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      if (value != null)
-      {
-        return _resource.GetBitmapSource(value.ToString());
-      }
-      return null;
-    }
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-    {
-      throw new NotImplementedException();
-    }
-  }
-
-  #endregion
+   
 
   #region ActivatedDevicesConverter
   public class ActivatedDevicesConverter : IValueConverter

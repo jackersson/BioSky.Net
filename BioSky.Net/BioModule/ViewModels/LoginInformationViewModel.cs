@@ -11,6 +11,7 @@ using BioModule.ResourcesLoader;
 
 namespace BioModule.ViewModels
 {
+  //Top right corner (User information)
   public class LoginInformationViewModel : PropertyChangedBase
   {
     public LoginInformationViewModel()

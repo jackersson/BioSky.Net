@@ -10,7 +10,7 @@ using Castle.Windsor;
 using Castle.Windsor.Installer;
 
 namespace BioShell
-{
+{  
   class BioDataLoader
   {
     private readonly IWindsorContainer _mainContainer;
@@ -24,11 +24,7 @@ namespace BioShell
     {
       try
       {
-        var moduleInstaller = FromAssembly.Instance(assembly);
-
-        //var modulecontainer = new WindsorContainer();
-
-        //_mainContainer.AddChildContainer(modulecontainer);
+        var moduleInstaller = FromAssembly.Instance(assembly);        
 
         _mainContainer.Install(moduleInstaller);
 
@@ -38,8 +34,7 @@ namespace BioShell
         return true;
       }
       catch (Exception)
-      {
-        //TODO: good exception handling 
+      {        
         return false;
       }
     }

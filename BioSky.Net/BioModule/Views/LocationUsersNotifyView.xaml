@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org" 
-             xmlns:dd="clr-namespace:BioModule.DragDrop" 
+          
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
@@ -13,11 +13,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <local:DragPreviewView x:Key="DragPreviewControl" />
-        </ResourceDictionary>
-    </UserControl.Resources>
+   
     
     <Grid>
         <Canvas  ZIndex="5" x:Name="OverlayCanvas"></Canvas>
@@ -33,25 +29,7 @@
                     <RowDefinition Height="288"/>
                 </Grid.RowDefinitions>
 
-                <local:DragablListBoxView x:Name="NotifyList"  
-                         Grid.Column="0" Grid.Row="1" 
-                         DataContext="{Binding UsersNotifyList}"
-                         dd:DragDrop.IsDropTarget="True"
-                         BorderThickness="1"                                                    
-                         dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}"
-                         dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}"
-                    >
-                </local:DragablListBoxView>    
-
-                <local:DragablListBoxView  
-                         Grid.Column="3" Grid.Row="1"
-                         DataContext="{Binding UsersList}"
-                         BorderThickness="1"                        
-                         dd:DragDrop.DropTargets="{Binding ElementName=NotifyList}"
-                         dd:DragDrop.DragDropPreviewControl="{StaticResource DragPreviewControl}"
-                         dd:DragDrop.DragDropContainer="{Binding ElementName=OverlayCanvas}">              
-                </local:DragablListBoxView>
-
+                
                 <Label  Content="{lex:Loc UsersToNotify}" Grid.Column="0" Grid.Row="0"
                         HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 

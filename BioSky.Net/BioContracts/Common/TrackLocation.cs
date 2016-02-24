@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {  
-
-
   public class TrackLocation : PropertyChangedBase
   {
     public event FrameEventHandler FrameChanged;
@@ -272,7 +270,7 @@ namespace BioContracts
       StopCaptureDevices();
     }
     
-    public object ScreenViewModel { get; set; }
+    public IScreen ScreenViewModel { get; set; }
 
     public string Caption
     {

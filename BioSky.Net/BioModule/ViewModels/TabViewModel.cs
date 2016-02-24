@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
-using System.Collections.ObjectModel;
 using BioContracts;
-using System.Windows;
-
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.SubSystems.Configuration;
-using Castle.Windsor;
-using System.Reflection;
 using BioModule.Utils;
 
 namespace BioModule.ViewModels
@@ -46,9 +35,6 @@ namespace BioModule.ViewModels
       if (ActiveItem != null)
         ActiveItem.Activate();
     }
-
-
-
 
     private FastMethodInvoker _methodInvoker;
     private IProcessorLocator _locator ;

@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BioModule.Utils
-{
+{  
   public interface IUpdatable
   {
-    void Apply();
-    void Remove(bool all);
+    void Apply(); 
   }
 }

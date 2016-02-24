@@ -218,31 +218,7 @@ namespace BioModule.ViewModels
     {
       //await CardUpdatePerformer(EntityState.Unchanged);
     }
-
-    public void Remove(bool all)
-    {
-      /*
-      if(!all)
-      {
-        if (selectedCard != null)
-          await CardUpdatePerformer(EntityState.Deleted);
-      }
-      else if(all)
-      {
-        /*
-        CardList cardList = new CardList();
-        foreach(Card card in UserCards)
-        {
-          card.Dbstate = DbState.Remove;
-          cardList.Cards.Add(card);
-        }
-
-        _bioEngine.Database().CardHolder.DataUpdated += CardHolder_DataUpdated;
-
-        await _bioService.DatabaseService.CardUpdateRequest(cardList);
-        */
-      //  }
-    }
+       
 
     #endregion
 

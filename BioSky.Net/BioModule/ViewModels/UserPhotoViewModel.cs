@@ -136,7 +136,7 @@ namespace BioModule.ViewModels
     }
     public void EnrollFromCamera()
     {
-      _windowManager.ShowDialog(new CameraDialogViewModel(_bioEngine, _locator));
+      _windowManager.ShowDialog(new CameraDialogViewModel(_locator));
 /*
       if (CaptureDeviceConnected && !_enroller.Busy)
       {
@@ -217,8 +217,8 @@ namespace BioModule.ViewModels
         }
 
       }
-      if (_imageViewer != null)
-        _imageViewer.ShowProgress(feedback.Progress, feedback.Success);      
+//if (_imageViewer != null)
+      //  _imageViewer.ShowProgress(feedback.Progress, feedback.Success);      
     }
 
     public async Task PhotoDeletePerformer()
@@ -314,7 +314,7 @@ namespace BioModule.ViewModels
     {
       if (!_enroller.Busy)
       {
-        Photo photo = _imageViewer.UploadPhoto();
+        Photo photo = _imageViewer.UploadPhotoFromFile();
 
         if (photo == null || photo.Description.Length <= 0)
         {
@@ -338,7 +338,7 @@ namespace BioModule.ViewModels
 
     public void UploadClick()
     {
-      Photo photo = _imageViewer.UploadPhoto();      
+      Photo photo = _imageViewer.UploadPhotoFromFile();      
     }   
    
     public async void DeletePhoto()
@@ -360,20 +360,6 @@ namespace BioModule.ViewModels
         } 
       } 
     } 
-
-    public void Remove(bool all)
-    {
-      if(all)
-      {
-        PhotoList photoList = new PhotoList();
-
-        foreach(Photo photo in UserImages)
-        {
-          photo.EntityState = EntityState.Deleted;
-          photoList.Photos.Add(photo);
-        }
-      }
-    }
 
     public void OnMouseRightButtonDown(Photo photo)
     {

@@ -4,11 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Win32;
 
 namespace BioModule.Utils
 {
   public class BioFileUtils
   {
+
+    public OpenFileDialog OpenFileDialog()
+    {
+      OpenFileDialog openFileDialog = new OpenFileDialog();
+      openFileDialog.Multiselect = false;
+      openFileDialog.Filter = "All files (*.*)|*.*";
+      openFileDialog.InitialDirectory = Environment.CurrentDirectory;
+
+      return openFileDialog;
+    }
     private string GetParametr(string parametr)
     {
       string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";

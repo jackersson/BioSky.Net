@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
 
@@ -58,12 +52,7 @@ namespace BioShell.ViewModels
         }
       }
     }
-
-    public BitmapSource LogoIconSource
-    {
-      get { return ResourceLoader.LogoIconSource; }
-    }
-
+       
     private object _flyoutControl;
     public object FlyoutControl
     {
@@ -76,6 +65,12 @@ namespace BioShell.ViewModels
           NotifyOfPropertyChange(() => FlyoutControl);
         }
       }
-    }    
+    }
+
+    public BitmapSource LogoIconSource
+    {
+      get { return ResourceLoader.LogoIconSource; }
+    }
+
   }
 }

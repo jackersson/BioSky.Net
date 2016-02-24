@@ -41,12 +41,7 @@ namespace BioModule.ViewModels
     public void Apply()
     {
 
-    }
-
-    public void Remove(bool all)
-    {
-
-    }
+    }   
 
     #endregion
 

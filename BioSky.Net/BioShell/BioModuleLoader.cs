@@ -14,6 +14,8 @@ using BioContracts;
 
 namespace BioShell
 {
+
+  //loads everything where Init() is required
   class BioModuleLoader
   {
     private readonly IWindsorContainer _mainContainer;
@@ -43,8 +45,7 @@ namespace BioShell
         return module;
       }
       catch (Exception )
-      {
-        //TODO: good exception handling 
+      {        
         return null;
       }
     }

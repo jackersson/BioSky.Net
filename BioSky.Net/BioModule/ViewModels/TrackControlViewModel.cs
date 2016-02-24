@@ -1,23 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using BioContracts;
 using Caliburn.Micro;
 using System.Collections.ObjectModel;
-using BioModule.ResourcesLoader;
-//using BioModule.Model;
 
 using System.Windows;
-using System.Windows.Media.Imaging;
-
-using System.Windows.Data;
 using BioModule.Utils;
 using System.Windows.Controls;
-using Google.Protobuf.Collections;
-using System.Reflection;
 using BioService;
 using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
@@ -74,7 +65,8 @@ namespace BioModule.ViewModels
       if (SelectedTrackLocation == null)
         return;
 
-      Location location = new Location() { Id = SelectedTrackLocation.LocationID, EntityState = EntityState.Deleted };
+      Location location = new Location() { Id = SelectedTrackLocation.LocationID
+                                         , EntityState = EntityState.Deleted };
       locationList.Locations.Add(location);      
 
       try
@@ -131,7 +123,8 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      _visitorsView.Update();
+      if (_visitorsView != null)
+        _visitorsView.Update();
     }
     public void OnMouseRightButtonDown(TrackLocation trackLocation)
     {
@@ -152,14 +145,19 @@ namespace BioModule.ViewModels
 
     public void OpenTabAddNewLocation()
     {
-      _selector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings, new object[] { null });
+      _selector.ShowContent( ShowableContentControl.FlyoutControlContent
+                           , ViewModelsID.LocationSettings
+                           , new object[] { null });
     }
 
     public void ShowLocationFlayout()
     {
+      if (SelectedTrackLocation != null)
+        return;
+
       long id = SelectedTrackLocation.LocationID;
       Location location = null;
-      bool visitorFound = _bioEngine.Database().LocationHolder.DataSet.TryGetValue(id, out location);
+      bool found = _bioEngine.Database().LocationHolder.DataSet.TryGetValue(id, out location);
 
       _selector.ShowContent(ShowableContentControl.FlyoutControlContent
                            , ViewModelsID.LocationSettings
@@ -249,8 +247,7 @@ namespace BioModule.ViewModels
 
     #endregion
 
-    //******************************************ComboBoxLocationCheck**************************
-
+   
     private string _selectedItems;
     public string SelectedItems
     {
@@ -265,29 +262,6 @@ namespace BioModule.ViewModels
 
         NotifyOfPropertyChange(() => SelectedItems);
       }
-    }
-
-    /*
-    public void OnChecked()
-    {
-      string caption = "";
-
-      int count = 0;
-      foreach (TrackLocation pair in _bioEngine.TrackLocationEngine().TrackLocations())
-      {
-        caption += pair.IsChecked ? (pair.Caption + ";") : "";
-        if (pair.IsChecked)
-          ++count;
-      }
-
-      if (count >= _bioEngine.TrackLocationEngine().TrackLocations().Count)
-        caption = "All";
-
-      if (count == 0)
-        caption = "None";
-
-      SelectedItems = caption;
-    }
-    */
+    }    
   }   
 }
