@@ -39,13 +39,15 @@ namespace BioEngine.CaptureDevices
 
       if (fi == null)      
         return;
-        
-      _videoSource = new VideoCaptureDevice(fi.MonikerString);
+
+      VideoCaptureDevice vs = new VideoCaptureDevice(fi.MonikerString);
+      _videoSource = vs;
      
       _videoSource.PlayingFinished += _videoSource_PlayingFinished;
       _videoSource.NewFrame += _videoSource_NewFrame;
       _videoSource.Start();
-  
+
+
     }
 
     private void _videoSource_PlayingFinished(object sender, ReasonToFinishPlaying reason)
