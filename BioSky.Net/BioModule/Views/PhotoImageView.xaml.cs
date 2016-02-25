@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BioModule.Views.Image
+namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for Photo.xaml
+  /// Interaction logic for PhotoImageView.xaml
   /// </summary>
-  public partial class Photo : UserControl
+  public partial class PhotoImageView : UserControl
   {
-    public Photo()
+    public PhotoImageView()
     {
       InitializeComponent();
     }

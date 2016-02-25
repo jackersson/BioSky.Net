@@ -164,10 +164,9 @@ namespace BioModule.ViewModels
       {
         foreach (long id in SelectedItemIds)
         {
-          Person person = null;
-          bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(id, out person);
+          Person person = _bioEngine.Database().PersonHolder.GetValue(id);
 
-          if (personFound)
+          if (person != null)
           {
             _selector.ShowContent(ShowableContentControl.TabControlContent
                                  , ViewModelsID.UserPage

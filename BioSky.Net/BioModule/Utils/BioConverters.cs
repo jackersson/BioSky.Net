@@ -142,15 +142,13 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
-        Person person = null;
-        bool personFound = _personHolder.DataSet.TryGetValue((long)value, out person);
+        Person person = _personHolder.GetValue((long)value);
         
         if(person != null)
         {
-          Photo photo = null;
-          bool photoFound = _photoHolder.DataSet.TryGetValue(person.Thumbnailid, out photo);
+          Photo photo = _photoHolder.GetValue(person.Thumbnailid);
 
-          if (photoFound)
+          if (photo != null)
           {
             string fullFilePathway = _database.LocalStorage.LocalStoragePath + photo.FileLocation;
             if (File.Exists(fullFilePathway))
@@ -215,9 +213,8 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
-        Location location = null;
-        bool locationFound = _locationHolder.DataSet.TryGetValue((long)value, out location);      
-        return (locationFound) ? location.LocationName : "";
+        Location location = _locationHolder.GetValue((long)value);
+        return (location != null) ? location.LocationName : "";
       }
       return null;
     }
@@ -243,9 +240,8 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
-        Person person = null;
-        bool personFound = _personHolder.DataSet.TryGetValue((long)value, out person);
-        if (personFound)
+        Person person = _personHolder.GetValue((long)value);
+        if (person != null)
           return person.Firstname;
       }
       return "Undefined";
@@ -271,9 +267,8 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
-        Person person = null;
-        bool personFound = _personHolder.DataSet.TryGetValue((long)value, out person);
-        if (personFound)
+        Person person = _personHolder.GetValue((long)value);
+        if (person != null)
           return person.Lastname;
       }
       return null;

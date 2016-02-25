@@ -118,16 +118,15 @@ namespace BioContracts
       CardNumber = cardNumber;
       observer = null;
       observer = sender;
-      Card card;
-      bool cardFound = _database.CardHolder.DataSet.TryGetValue(cardNumber, out card);
+      Card card = _database.CardHolder.GetValue(cardNumber);
 
       
       sender.Reset();
-      Person person = null;
-      if (cardFound)
+
+      if (card != null)
       {        
-        bool personFound = _database.PersonHolder.DataSet.TryGetValue(card.Personid, out person);
-        if (personFound)
+        Person person = _database.PersonHolder.GetValue(card.Personid);
+        if (person != null)
         {         
           try
           {

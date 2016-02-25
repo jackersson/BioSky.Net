@@ -48,26 +48,28 @@ namespace BioModule.ViewModels
       
       LocationId = -1;
 
-      _database.PhotoHolder.DataChanged  += RefreshData;
-      _database.Visitors.DataChanged     += RefreshData;      
+      _database.PhotoHolder.DataChanged   += RefreshData;
+      _database.Visitors.DataChanged += RefreshData;
+
+
+      //if (Visitors != null)
+      //VisitorsCollectionView = new PagingCollectionView(Visitors, 5);
+      
+    //  VisitorsCollectionView = (PagingCollectionView)CollectionViewSource.GetDefaultView(Visitors);
     } 
+
+
 
     #region Database
 
     private void RefreshData()
     {
-      if (!IsActive)
-        return;
-
       Visitors = null;
       Visitors = _database.VisitorHolder.Data;
       GetLastVisitor();
 
-      if (Visitors == null)
-        return;
-
       VisitorsCollectionView = new PagingCollectionView(Visitors, 10);
-      VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);     
+      VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
     }
     private void GetLastVisitor()
     {
@@ -85,9 +87,8 @@ namespace BioModule.ViewModels
 
       foreach (long id in SelectedItemIds)
       {
-        Visitor visitor = null;
-        bool visitorExists = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(id, out visitor);
-        if (visitorExists)
+        Visitor visitor = _bioEngine.Database().VisitorHolder.GetValue(id);
+        if (visitor != null)
         {
           Visitor newVisitor = new Visitor()
           {
@@ -170,9 +171,8 @@ namespace BioModule.ViewModels
 
     public void ShowVisitorAsUser(Visitor visitor)
     {
-      Photo photo = null;
-      bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(visitor.Photoid, out photo);
-      if (photoExists)
+      Photo photo = _bioEngine.Database().PhotoHolder.GetValue(visitor.Photoid);
+      if (photo != null)
       {
         Person user = new Person()
         {
@@ -228,25 +228,19 @@ namespace BioModule.ViewModels
         if (ImageView == null)
           return;
 
-        Visitor visitor = null;
-        bool visitorExists = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(SelectedItemIds[0], out visitor);
-        if (visitorExists)
+        Visitor visitor = _bioEngine.Database().VisitorHolder.GetValue(SelectedItemIds[0]);
+        if (visitor != null)
         {
-          Photo photo = null;
-          bool photoExists = _bioEngine.Database().PhotoHolder.DataSet.TryGetValue(visitor.Photoid, out photo);
-          if (photoExists)            
-            ImageView.UpdateImage(photo, _bioEngine.Database().LocalStorage.LocalStoragePath);
-          else
-            ImageView.UpdateImage(null, null);
+          Photo photo = _bioEngine.Database().PhotoHolder.GetValue(visitor.Photoid);
+
+          ImageView.UpdateImage(photo, _bioEngine.Database().LocalStorage.LocalStoragePath);
         }
       }
     }
 
     public void OnSearchTextChanged(string s)
-    {
-      
-      SearchText = s;
-      
+    {      
+      SearchText = s;     
 
       VisitorsCollectionView.Filter = item =>
       {
@@ -255,8 +249,7 @@ namespace BioModule.ViewModels
 
         Visitor vitem = item as Visitor;       
         
-        Person person = null;
-        bool personFound = _database.PersonHolder.DataSet.TryGetValue((long)vitem.Personid, out person);
+        Person person = _database.PersonHolder.GetValue((long)vitem.Personid);
 
         if (person == null)
           return false;
@@ -267,11 +260,7 @@ namespace BioModule.ViewModels
           return true;
         }
         return false;
-      };
-
-
-
-      
+      };      
     }
     public void OnMouseRightButtonDown(Visitor visitor)
     {
@@ -281,13 +270,11 @@ namespace BioModule.ViewModels
 
     public void ShowPerson(long visitorId)
     {
-      Visitor visitor = null;
-      bool visitorFound = _bioEngine.Database().VisitorHolder.DataSet.TryGetValue(visitorId, out visitor);
+      Visitor visitor = _bioEngine.Database().VisitorHolder.GetValue(visitorId);
 
-      if (visitorFound)
+      if (visitor != null)
       {
-        Person person = null;
-        bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(visitor.Personid, out person);
+        Person person = _bioEngine.Database().PersonHolder.GetValue(visitor.Personid);
         _selector.ShowContent(ShowableContentControl.TabControlContent
                              , ViewModelsID.UserPage
                              , new object[] { person });
@@ -502,100 +489,5 @@ namespace BioModule.ViewModels
     private readonly IServiceManager      _bioService   ;
     private readonly IBioSkyNetRepository _database     ;
     #endregion
-  }
-
-  public class PagingCollectionView : ListCollectionView
-  {
-    private readonly IList _innerList;
-    private readonly int _itemsPerPage;
-
-    private int _currentPage = 1;
-
-    public PagingCollectionView( IList innerList, int itemsPerPage)
-                               : base(innerList)
-    {
-      this._innerList = innerList;
-      this._itemsPerPage = itemsPerPage;
-    }
-    
-    public override int Count
-    {
-      get
-      {
-        //all pages except the last
-        if (CurrentPage < PageCount)
-          return this._itemsPerPage;
-
-        //last page
-        int remainder = _innerList.Count % this._itemsPerPage;
-
-        return remainder == 0 ? this._itemsPerPage : remainder;
-      }
-    }
-    
-
-    public int CurrentPage
-    {
-      get { return this._currentPage; }
-      set
-      {
-        this._currentPage = value;
-        this.OnPropertyChanged(new PropertyChangedEventArgs("CurrentPage"));
-      }
-    }
-
-    public int ItemsPerPage { get { return this._itemsPerPage; } }
-
-    public int PageCount
-    {
-      get
-      {
-        return (this._innerList.Count + this._itemsPerPage - 1)
-            / this._itemsPerPage;
-      }
-    }
-
-    private int EndIndex
-    {
-      get
-      {
-        var end = this._currentPage * this._itemsPerPage - 1;
-        return (end > this._innerList.Count) ? this._innerList.Count : end;
-      }
-    }
-
-    private int StartIndex
-    {
-      get { return (this._currentPage - 1) * this._itemsPerPage; }
-    }
-
-    public override object GetItemAt(int index)
-    {
-      var offset = index % (this._itemsPerPage);         
-      return base.GetItemAt(this.StartIndex + offset);
-    }
-    
-    public void MoveToNextPage()
-    {
-      if (this._currentPage < this.PageCount)
-      {
-        this.CurrentPage += 1;
-      }
-      this.Refresh();
-    }
-
-    public void MoveToPreviousPage()
-    {
-      if (this._currentPage > 1)
-      {
-        this.CurrentPage -= 1;
-      }
-      this.Refresh();
-    }
-
-    public void AddSortDescription(SortDescription sortDescription)
-    {      
-      this.SortDescriptions.Add(sortDescription);
-    }
-  }
+  } 
 }

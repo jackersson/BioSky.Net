@@ -33,6 +33,13 @@ namespace BioData.Holders
       to.MergeFrom(from);
     }
 
+    public AccessDevice GetValue(long id)
+    {
+      AccessDevice accessDevice = null;
+      bool accessDeviceExists = DataSet.TryGetValue(id, out accessDevice);
+      return accessDevice;
+    }
+
     /*
     public override void Update(IList<AccessDevice> list, Result result)
     {

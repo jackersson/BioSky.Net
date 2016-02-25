@@ -53,14 +53,6 @@
             </Grid>
         </Border>
 
-        <!--*****************************************PhotoInfoExpanderView**************************************************-->
-        <Grid Name="SlideGrid" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">
-            <ContentControl>
-                <local:PhotoInfoExpanderView cal:View.Model="{Binding PhotoInfoExpanderView}" ></local:PhotoInfoExpanderView>
-            </ContentControl>          
-        </Grid>
-        <!--*****************************************PhotoInfoExpanderView**************************************************-->
-
         <Grid HorizontalAlignment="Center"             
               VerticalAlignment="Top" 
               Grid.Column="0" Grid.ColumnSpan="4">

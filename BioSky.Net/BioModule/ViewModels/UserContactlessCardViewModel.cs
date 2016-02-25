@@ -121,13 +121,11 @@ namespace BioModule.ViewModels
     {
       CanAddNewCard = false;
 
-      Card card;
-      bool cardFound = _bioEngine.Database().CardHolder.DataSet.TryGetValue(cardNumber, out card);
-      if (cardFound)
+      Card card = _bioEngine.Database().CardHolder.GetValue(cardNumber);
+      if (card != null)
       {
-        Person person;
-        bool personFound = _bioEngine.Database().PersonHolder.DataSet.TryGetValue(card.Personid, out person);
-        if (personFound)
+        Person person = _bioEngine.Database().PersonHolder.GetValue(card.Personid);
+        if (person != null)
         {
           CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
         }

@@ -67,6 +67,7 @@ namespace BioModule.ViewModels
     {
       if (user != null && user.Thumbnail != null)
       {
+        //Add User as Visitor
         UpdateFromVisitor(user);
         return;
       }
@@ -78,10 +79,9 @@ namespace BioModule.ViewModels
         _userPageMode = UserPageMode.ExistingUser;
 
        
-        Photo photo = null;
-        bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out photo);
-        if (photoExists)
-          CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+        Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
+
+        CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
 
         DisplayName = (_user.Firstname + " " + _user.Lastname);
       }
@@ -101,7 +101,7 @@ namespace BioModule.ViewModels
         DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
 
         //DisplayName = "AddNewUser";
-        CurrentImageView.UpdateImage(null,null);
+        CurrentImageView.UpdateImage(null, null);
 
       }
 
@@ -115,7 +115,7 @@ namespace BioModule.ViewModels
     {
       _user = user.Clone();
       _revertUser = user.Clone();
-      CurrentImageView.UpdateImage(null, _database.LocalStorage.LocalStoragePath + user.Thumbnail.FileLocation);
+      CurrentImageView.UpdateImageFromPath(_database.LocalStorage.LocalStoragePath + user.Thumbnail.FileLocation);
      // CurrentImageView.Update(_user);
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
     }
@@ -143,9 +143,8 @@ namespace BioModule.ViewModels
         {
           photo.OriginType = PhotoOriginType.Loaded;
 
-          Photo thumbnail = null;
-          bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out thumbnail);
-          if (photoExists)
+          Photo thumbnail = _database.PhotoHolder.GetValue(_user.Thumbnailid);
+          if (thumbnail != null)
           {
             if (thumbnail.GetHashCode() != photo.GetHashCode())
               _user.Thumbnail = photo;
@@ -177,10 +176,9 @@ namespace BioModule.ViewModels
     {
       _database.PhotoHolder.DataChanged -= UpdatePhoto;
 
-      Photo photo = null;
-      bool photoExists = _database.PhotoHolder.DataSet.TryGetValue(_user.Thumbnailid, out photo);
-      //if (photoExists)
-        CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+      Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
+
+      CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
     }
     
     private void UpdateData(PersonList list)
