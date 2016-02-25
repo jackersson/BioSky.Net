@@ -220,6 +220,7 @@
     <Compile Include="Utils\FastMethodInvoker.cs" />
     <Compile Include="Utils\IImageUpdatable.cs" />
     <Compile Include="Utils\IUpdatable.cs" />
+    <Compile Include="Utils\PagingCollectionView.cs" />
     <Compile Include="Utils\ViewModelSelector.cs" />
     <Compile Include="ViewModels\AboutDialogViewModel.cs" />
     <Compile Include="ViewModels\CameraDialogViewModel.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
+    <Compile Include="ViewModels\PhotoImageViewModel.cs" />
     <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
@@ -266,9 +268,6 @@
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Image\Photo.xaml.cs">
-      <DependentUpon>Photo.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Image\Video.xaml.cs">
       <DependentUpon>Video.xaml</DependentUpon>
     </Compile>
@@ -295,6 +294,9 @@
     </Compile>
     <Compile Include="Views\PageControllerView.xaml.cs">
       <DependentUpon>PageControllerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PhotoImageView.xaml.cs">
+      <DependentUpon>PhotoImageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PhotoInfoExpanderView.xaml.cs">
       <DependentUpon>PhotoInfoExpanderView.xaml</DependentUpon>
@@ -386,10 +388,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Image\Photo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Image\Video.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -423,6 +421,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PageControllerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PhotoImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

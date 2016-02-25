@@ -25,6 +25,7 @@ namespace BioContracts
 
     void Update(IList<TValue> objects);
 
+    TValue GetValue(TKey id);
    // void Update(IList<TValue> objects);
   }
 

@@ -127,9 +127,8 @@ namespace BioModule.ViewModels
 
       foreach (AccessDevice item in accessDevices)
       {
-        AccessDevice accessDevice = null;
-        bool accessDeviceExist = _database.AccessDeviceHolder.DataSet.TryGetValue(item.Id, out accessDevice);
-        if (accessDeviceExist)
+        AccessDevice accessDevice = _database.AccessDeviceHolder.GetValue(item.Id);
+        if (accessDevice != null)
           item.EntityState = EntityState.Added;
         else
           item.EntityState = EntityState.Added;
@@ -139,9 +138,8 @@ namespace BioModule.ViewModels
 
       foreach (CaptureDevice item in captureDevices)
       {
-        CaptureDevice captureDevice = null;
-        bool captureDeviceExist = _database.CaptureDeviceHolder.DataSet.TryGetValue(item.Id, out captureDevice);
-        if (captureDeviceExist)
+        CaptureDevice captureDevice = _database.CaptureDeviceHolder.GetValue(item.Id);
+        if (captureDevice != null)
           item.EntityState = EntityState.Added;
         else
           item.EntityState = EntityState.Added;

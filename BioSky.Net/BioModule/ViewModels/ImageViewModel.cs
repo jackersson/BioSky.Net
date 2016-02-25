@@ -37,7 +37,36 @@ namespace BioModule.ViewModels
       CurrentImagePhoto = null; 
     }
     #region Update
-       
+    public void UpdateImage(Photo photo, string prefixPath = "")
+    {
+      if (photo != null)
+      {
+        string photoLocation = prefixPath + "\\" + photo.FileLocation;
+
+        var result = SetImageFromFile(photoLocation);
+        if (result != null)
+          CurrentImagePhoto = photo;
+      }
+      else
+        Clear();
+    }
+    public void UpdateImage(ref Bitmap img)
+    {
+      if (img == null)
+        return;
+
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
+      newFrame.Freeze();
+
+      CurrentImageSource = newFrame;
+
+      if (_width != _imageViewWidth || _height != _imageViewHeight)
+      {
+        _width = _imageViewWidth;
+        _height = _imageViewHeight;
+        Zoom(_imageViewWidth, _imageViewHeight);
+      }
+    }
     public Photo UploadPhotoFromFile()
     {
       var dialog = _bioFileUtils.OpenFileDialog();      
@@ -47,32 +76,31 @@ namespace BioModule.ViewModels
         if (File.Exists(filename))
         {
           Zoom(_imageViewWidth, _imageViewHeight);
-          UpdateImage(null, filename);
+          UpdateImageFromPath(filename);
           return CurrentImagePhoto;
         }
       }
       return null;
     }
-         
+    public void UpdateImageFromPath(string path)
+    {
+      BitmapImage bmp = SetImageFromFile(path);
+      if (bmp == null)
+        CurrentImageSource = null;
 
-    public void UpdateImage(ref Bitmap img)
-    {     
-      if (img == null)
-        return;
-
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
-      newFrame.Freeze();
-      
-      CurrentImageSource = newFrame;
-
-      if (_width != _imageViewWidth || _height != _imageViewHeight)
+      Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(path));
+      Photo newphoto = new Photo()
       {
-        _width = _imageViewWidth;
-        _height = _imageViewHeight;
-        Zoom(_imageViewWidth, _imageViewHeight); 
-      }
-    }
-
+        EntityState = EntityState.Added
+        , Description = description
+        , FileLocation = ""
+        , FirLocation = ""
+        , SizeType = PhotoSizeType.Full
+        , OriginType = PhotoOriginType.Loaded
+      };
+      CurrentImagePhoto = newphoto;
+    } 
+    
     private BitmapImage SetImageFromFile(string fileName = "")
     {
       if (!File.Exists(fileName))
@@ -100,48 +128,15 @@ namespace BioModule.ViewModels
       return image;
     }
 
-    public void UpdateImage(Photo photo, string prefixPath = "")
-    {
-      if (photo != null)
-      {
-        string photoLocation = prefixPath + "\\" + photo.FileLocation;
 
-        var result = SetImageFromFile(photoLocation);        
-        if(result != null)
-          CurrentImagePhoto = photo;
-      }
-      else if(photo == null && prefixPath != null)
-      {
-        BitmapImage bmp = SetImageFromFile(prefixPath);
-        if (bmp == null)        
-          CurrentImageSource = null;        
-        
-        Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(prefixPath));
-        Photo newphoto = new Photo()
-        {
-            EntityState = EntityState.Added
-          , Description = description
-          , FileLocation = ""
-          , FirLocation = ""
-          , SizeType = PhotoSizeType.Full
-          , OriginType = PhotoOriginType.Loaded
-        };
-        CurrentImagePhoto = newphoto;
-      }
-      else if (photo == null && prefixPath == null)
-      {
-        CurrentImagePhoto = null;
-        CurrentImageSource = null;
-        Zoom(_imageViewWidth, _imageViewHeight);       
-      }
-    }
     #endregion
 
     #region Interface
     public void Clear()
     {
-      CurrentImageSource = ResourceLoader.UserDefaultImageIconSource;
       CurrentImagePhoto = null;
+      CurrentImageSource = null;
+      Zoom(_imageViewWidth, _imageViewHeight);
     }
 
     public void CancelClick(double viewWidth, double viewHeight)

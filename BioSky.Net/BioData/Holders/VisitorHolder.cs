@@ -39,6 +39,13 @@ namespace BioData.Holders
         Data.Remove(item);
       }
     }
+
+    public Visitor GetValue(long id)
+    {
+      Visitor visitor = null;
+      bool visitorExists = DataSet.TryGetValue(id, out visitor);
+      return visitor;
+    }
     /*
 
     public override void Update(IList<Visitor> list, Result result)

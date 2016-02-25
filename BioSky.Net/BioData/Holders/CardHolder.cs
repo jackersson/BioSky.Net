@@ -33,6 +33,13 @@ namespace BioData.Holders
       to.MergeFrom(from);
     }
 
+    public Card GetValue(string id)
+    {
+      Card card = null;
+      bool cardExists = DataSet.TryGetValue(id, out card);
+      return card;
+    }
+
     /*
     public override void Update(IList<Card> list, Result result)
     {

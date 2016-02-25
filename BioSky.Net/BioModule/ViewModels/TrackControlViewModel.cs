@@ -156,8 +156,7 @@ namespace BioModule.ViewModels
         return;
 
       long id = SelectedTrackLocation.LocationID;
-      Location location = null;
-      bool found = _bioEngine.Database().LocationHolder.DataSet.TryGetValue(id, out location);
+      Location location = _bioEngine.Database().LocationHolder.GetValue(id);
 
       _selector.ShowContent(ShowableContentControl.FlyoutControlContent
                            , ViewModelsID.LocationSettings

@@ -33,6 +33,13 @@ namespace BioData.Holders
       to.MergeFrom(from);
     }
 
+    public Location GetValue(long id)
+    {
+      Location location = null;
+      bool locationExists = DataSet.TryGetValue(id, out location);
+      return location;
+    }
+
     /*
     public override void Update(IList<Location> list, Result result)
     {

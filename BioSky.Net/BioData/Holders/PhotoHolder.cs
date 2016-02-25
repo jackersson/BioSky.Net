@@ -98,6 +98,13 @@ namespace BioData.Holders
         FullPhotoRequested(list);
     }
 
+    public Photo GetValue(long id)
+    {
+      Photo photo = null;
+      bool photoExist = DataSet.TryGetValue(id, out photo);
+      return photo;
+    }
+
    
     PhotoList _noDescriptionPhotos;
 

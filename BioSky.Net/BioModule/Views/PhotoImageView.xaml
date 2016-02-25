@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BioModule.Views.Image.Photo"
+﻿<UserControl x:Class="BioModule.Views.PhotoImageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -58,6 +58,14 @@
               Grid.Column="0" Grid.ColumnSpan="5">
             <local:ProgressRingView cal:View.Model="{Binding ProgressRingView}"></local:ProgressRingView>
         </Grid>
+
+        <!--*****************************************PhotoInfoExpanderView**************************************************-->
+        <Grid Name="SlideGrid" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">
+            <ContentControl>
+                <local:PhotoInfoExpanderView cal:View.Model="{Binding PhotoInfoExpanderView}" ></local:PhotoInfoExpanderView>
+            </ContentControl>
+        </Grid>
+        <!--*****************************************PhotoInfoExpanderView**************************************************-->
 
         <Slider x:Name="Slider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
