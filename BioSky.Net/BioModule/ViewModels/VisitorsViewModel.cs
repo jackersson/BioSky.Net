@@ -48,36 +48,26 @@ namespace BioModule.ViewModels
       
       LocationId = -1;
 
-      _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.Visitors.DataChanged += RefreshData;
-
-
-      //if (Visitors != null)
-      //VisitorsCollectionView = new PagingCollectionView(Visitors, 5);
-      
-    //  VisitorsCollectionView = (PagingCollectionView)CollectionViewSource.GetDefaultView(Visitors);
+      _database.PhotoHolder.DataChanged  += RefreshData;
+      _database.Visitors.DataChanged     += RefreshData;      
     } 
-
-
 
     #region Database
 
     private void RefreshData()
     {
+      if (!IsActive)
+        return;
+
       Visitors = null;
       Visitors = _database.VisitorHolder.Data;
       GetLastVisitor();
 
+      if (Visitors == null)
+        return;
+
       VisitorsCollectionView = new PagingCollectionView(Visitors, 10);
-     // VisitorsCollectionView.AddSortDescription(SortDescriptionByTime);
-      //VisitorsCollectionView = CollectionViewSource.GetDefaultView(Visitors);
-      // VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
-      /*
-      if (Visitors != null)
-      {
-        VisitorsCollectionView = new PagingCollectionView(Visitors, 5);
-        VisitorsCollectionView.AddSortDescription(SortDescriptionByTime);
-      }*/
+      VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);     
     }
     private void GetLastVisitor()
     {
@@ -257,7 +247,7 @@ namespace BioModule.ViewModels
       
       SearchText = s;
       
-/*
+
       VisitorsCollectionView.Filter = item =>
       {
         if (String.IsNullOrEmpty(SearchText))
@@ -277,7 +267,7 @@ namespace BioModule.ViewModels
           return true;
         }
         return false;
-      };*/
+      };
 
 
 
@@ -514,45 +504,20 @@ namespace BioModule.ViewModels
     #endregion
   }
 
-  public class PagingCollectionView : CollectionView
+  public class PagingCollectionView : ListCollectionView
   {
     private readonly IList _innerList;
     private readonly int _itemsPerPage;
 
     private int _currentPage = 1;
 
-    public PagingCollectionView(IList innerList, int itemsPerPage)
-      : base(innerList)
+    public PagingCollectionView( IList innerList, int itemsPerPage)
+                               : base(innerList)
     {
       this._innerList = innerList;
       this._itemsPerPage = itemsPerPage;
     }
-
-    /*
-            public override int Count
-            {
-                get 
-                { 
-                    if (this._currentPage < this.PageCount) // page 1..n-1
-                    {
-                        return this._itemsPerPage;
-                    }
-                    else // page n
-                    {
-                        var itemsLeft = this._innerList.Count % this._itemsPerPage;
-                        if (0 == itemsLeft)
-                        {
-                            return this._itemsPerPage; // exactly itemsPerPage left
-                        }
-                        else
-                        {
-                            // return the remaining items
-                            return itemsLeft;
-                        }
-                    }
-                }
-            }*/
-
+    
     public override int Count
     {
       get
@@ -567,6 +532,7 @@ namespace BioModule.ViewModels
         return remainder == 0 ? this._itemsPerPage : remainder;
       }
     }
+    
 
     public int CurrentPage
     {
@@ -605,10 +571,10 @@ namespace BioModule.ViewModels
 
     public override object GetItemAt(int index)
     {
-      var offset = index % (this._itemsPerPage);
-      return this._innerList[this.StartIndex + offset];
+      var offset = index % (this._itemsPerPage);         
+      return base.GetItemAt(this.StartIndex + offset);
     }
-
+    
     public void MoveToNextPage()
     {
       if (this._currentPage < this.PageCount)

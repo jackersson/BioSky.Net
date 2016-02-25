@@ -35,7 +35,7 @@ namespace BioModule.ViewModels
       if (location == null)
         return;
 
-      Items[0] = /*(TrackControlItemViewModel)*/location.ScreenViewModel;      
+      Items[0] = location.ScreenViewModel;      
       ActiveItem = Items[0];
       OpenTab();
     }

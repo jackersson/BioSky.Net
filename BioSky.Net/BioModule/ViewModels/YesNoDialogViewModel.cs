@@ -24,14 +24,12 @@ namespace BioModule.ViewModels
     }
 
     public void Apply()
-    {
-      DialogResult = true;
-      this.TryClose(DialogResult);
+    {      
+      this.TryClose(true);
     }
     public void Cancel()
-    {
-      DialogResult = false;
-      this.TryClose(DialogResult);
+    {      
+      this.TryClose(false);
     }
 
     private string _dialogMessage;
@@ -46,20 +44,6 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => DialogMessage);
         }
       }
-    }
-
-    private bool _dialogResult;
-    public bool DialogResult
-    {
-      get { return _dialogResult; }
-      set
-      {
-        if (_dialogResult != value)
-        {
-          _dialogResult = value;
-          NotifyOfPropertyChange(() => DialogResult);
-        }
-      }
-    }
+    }   
   }
 }
