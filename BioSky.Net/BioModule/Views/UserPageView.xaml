@@ -112,7 +112,8 @@
                         HorizontalAlignment="Stretch"  Margin="0,0,0,5"
                         VerticalAlignment="Stretch"                     
                         Grid.RowSpan="6"                                  
-                        cal:View.Model="{Binding CurrentImageView}" cal:View.Context="Photo" >
+                        >
+            <local:PhotoImageView cal:View.Model="{Binding CurrentPhotoImageView}"></local:PhotoImageView>
         </ContentControl>
     </Grid>
 </UserControl>

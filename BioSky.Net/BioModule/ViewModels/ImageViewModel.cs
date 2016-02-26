@@ -172,17 +172,6 @@ namespace BioModule.ViewModels
       if (CalculatedImageScale > CalculatedImageScaleY)
         CalculatedImageScale = CalculatedImageScaleY;     
     }
-
-    public void EnrollFromPhoto()
-    {      
-      //OnEnrollFromPhoto();
-    }
-
-    public void EnrollFromCamera()
-    {
-      _windowManager.ShowDialog(new CameraDialogViewModel(_locator));
-     // OnEnrollFromCamera();
-    }
     #endregion
 
     #region UI

@@ -9,14 +9,17 @@ using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
 using BioContracts;
 using System.Drawing;
+using System.Reflection;
 
 namespace BioModule.ViewModels
 {
   public class CameraDialogViewModel : Screen
   {
-    public CameraDialogViewModel(IProcessorLocator locator , string title = "CameraDialog")
+    public CameraDialogViewModel(IProcessorLocator locator , IScreen screen, string title = "CameraDialog")
     {
-      _locator             = locator;      
+      _locator             = locator;
+      _screen              = screen ;
+
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
    
       CaptureDevicesNames = _captureDeviceEngine.GetCaptureDevicesNames();
@@ -34,7 +37,12 @@ namespace BioModule.ViewModels
 
     #region Interface
     public void Apply()
-    {      
+    {
+      MethodInfo method = _screen.GetType().GetMethod("SetCaptureDevice");
+      if (method != null)
+        method.Invoke(_screen, new object[] { SelectedCaptureDevice, CaptureDeviceConnected });
+
+      this.TryClose(true); 
       TryClose(true);
     }
 
@@ -140,6 +148,8 @@ namespace BioModule.ViewModels
     private readonly IBioEngine           _bioEngine          ;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IProcessorLocator    _locator            ;
+    private readonly IScreen              _screen             ;
+
 
     #endregion
 

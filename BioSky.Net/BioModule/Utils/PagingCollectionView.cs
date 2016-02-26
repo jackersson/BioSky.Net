@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Collections;
 using System.ComponentModel;
+using BioModule.ViewModels;
 
 namespace BioModule.Utils
 {
@@ -17,20 +18,45 @@ namespace BioModule.Utils
 
     private int _currentPage = 1;
 
-    public PagingCollectionView(IList innerList, int itemsPerPage)
+    public PagingCollectionView(IList innerList, int itemsPerPage, PageControllerViewModel pageController)
       : base(innerList)
     {
-      //this._innerList = innerList;
-      this._itemsPerPage = itemsPerPage;      
+      this._innerList = innerList;
+      this._itemsPerPage = itemsPerPage;
+
+      _pageController = pageController;
+
+      _pageController.PageChanged += PageChanged;
+      
+    }
+
+    PageControllerViewModel _pageController;
+
+    public void UpdatePageController()
+    {
+      if (_pageController != null)
+        _pageController.UpdateData(StartIndex, EndIndex, ItemsPerPage);
+    }
+
+    public void PageChanged(bool rightSide)
+    {
+      if (rightSide)
+        MoveToNextPage();
+      else
+        MoveToPreviousPage();
+
+
     }
 
     public override int Count
     {
       get
-      {       
+      {
+        //all pages except the last
         if (CurrentPage < PageCount)
           return this._itemsPerPage;
-        
+
+        //last page
         int remainder = _innerList.Count % this._itemsPerPage;
 
         return remainder == 0 ? this._itemsPerPage : remainder;
@@ -89,9 +115,10 @@ namespace BioModule.Utils
 
     public void MoveToPreviousPage()
     {
-      if (this._currentPage > 1)      
+      if (this._currentPage > 1)
+      {
         this.CurrentPage -= 1;
-      
+      }
       this.Refresh();
     }
   }

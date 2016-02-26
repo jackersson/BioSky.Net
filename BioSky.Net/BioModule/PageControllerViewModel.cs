@@ -12,20 +12,37 @@ namespace BioModule.ViewModels
 {
   public class PageControllerViewModel : Screen
   {
-    public PageControllerViewModel(int onePageCount = 25, int all = 0)
+    public string _startIndex   = "0";
+    public string _endIndex = "0";
+    public string _onePageCount = "0";
+    public PageControllerViewModel()
     {
-      Text = "1 -" + onePageCount + "of " + all;
+      //Text = _startIndex + "-" + _onePageCount + "of " + _endIndex;
       IsRightArrowEnabled = true;
+    }
+
+    public void UpdateData(int startIndex, int endIndex, int onePageCount)
+    {
+      Text = startIndex + " - " + onePageCount + " of " + endIndex;
     }
 
     public void OnRightClick()
     {
-
+      OnPageChanged(true);
     }
 
     public void OnLeftClick()
     {
+      OnPageChanged(false);
+    }
 
+    public delegate void OnPageChangedHandler(bool pageChangeOnRight);
+    public event OnPageChangedHandler PageChanged;
+
+    public void OnPageChanged(bool pageChangeOnRight)
+    {
+      if (PageChanged != null)
+        PageChanged(pageChangeOnRight);
     }
 
     private string _text;
@@ -34,7 +51,11 @@ namespace BioModule.ViewModels
       get { return _text; }
       set
       {
-        if (_text != value)
+        if(value == null)
+        {
+           _text = _startIndex + "-" + _onePageCount + "of " + _endIndex;
+        }
+        else if (_text != value)
         {
           _text = value;
           NotifyOfPropertyChange(() => Text);
