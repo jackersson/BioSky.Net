@@ -43,6 +43,8 @@ namespace BioModule.ViewModels
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
       _selectedItemIds = new ObservableCollection<long>();
+      PageController   = new PageControllerViewModel();
+
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
@@ -50,12 +52,7 @@ namespace BioModule.ViewModels
 
       _database.PhotoHolder.DataChanged   += RefreshData;
       _database.Visitors.DataChanged += RefreshData;
-
-
-      //if (Visitors != null)
-      //VisitorsCollectionView = new PagingCollectionView(Visitors, 5);
-      
-    //  VisitorsCollectionView = (PagingCollectionView)CollectionViewSource.GetDefaultView(Visitors);
+    
     } 
 
 
@@ -68,8 +65,10 @@ namespace BioModule.ViewModels
       Visitors = _database.VisitorHolder.Data;
       GetLastVisitor();
 
-      VisitorsCollectionView = new PagingCollectionView(Visitors, 10);
+      VisitorsCollectionView = new PagingCollectionView(Visitors, 10, PageController);
       VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
+
+      
     }
     private void GetLastVisitor()
     {
@@ -193,7 +192,6 @@ namespace BioModule.ViewModels
     public void OnDataContextChanged()
     {
       ImageView      = new ImageViewModel(_locator, _windowManager)         ;
-      PageController = new PageControllerViewModel();
     }
 
     protected override void OnActivate()

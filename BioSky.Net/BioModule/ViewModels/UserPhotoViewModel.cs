@@ -49,13 +49,6 @@ namespace BioModule.ViewModels
 
       _bioUtils = new BioImageUtils();
       
-      _enroller = new Enroller(_captureDeviceEngine, _serviceManager);
-
-      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
-
-      CaptureDeviceConnected = false;
-
-
       _database.Persons.DataChanged += RefreshData;
       _database.PhotoHolder.DataChanged += RefreshData;      
     }  
@@ -105,122 +98,27 @@ namespace BioModule.ViewModels
 
     #region BioService
 
-    #region CaptureDevices
-    private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    public async void GetFeedBackPhoto(Photo feedbackPhoto)
     {
-      NotifyOfPropertyChange(() => CaptureDevicesNames);
-      if (ActiveCaptureDevice == null)
-        NotifyOfPropertyChange(() => AvaliableDevicesCount);
-    }
-    protected override void OnActivate()
-    {
-      CaptureDeviceConnected = false;
-      CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
-      RefreshData();
-      base.OnActivate();
-    }
-
-    protected override void OnDeactivate(bool close)
-    {
-      CaptureDeviceConnected = false;
-
-      if (ActiveCaptureDevice != null)
-        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);
-
-      SelectedCaptureDevice = null;
-      //_imageViewer.Clear();
-
-      CaptureDevicesNames.CollectionChanged -= CaptureDevicesNames_CollectionChanged;
-
-      base.OnDeactivate(close);
-    }
-    public void EnrollFromCamera()
-    {
-      _windowManager.ShowDialog(new CameraDialogViewModel(_locator));
-/*
-      if (CaptureDeviceConnected && !_enroller.Busy)
-      {
-        _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
-        EnrollmentData data = new EnrollmentData();
-        _enroller.Start(ActiveCaptureDevice, data);
-      }
-
-      if (!CaptureDeviceConnected)      
-        MessageBox.Show("Choose CaptureDevice first ! ");      
-
-      if (_enroller.Busy)      
-        MessageBox.Show("Wait for finnishing previous operation");*/
-      
-    }
-    public void Subscribe()
-    {
-      CaptureDeviceConnected = false;
-      if (SelectedCaptureDevice == null)
+      if (feedbackPhoto == null)
         return;
 
-      if (ActiveCaptureDevice != null)
-        _captureDeviceEngine.Unsubscribe(OnNewFrame, ActiveCaptureDevice);
+      PersonList personList = new PersonList();
 
-      ActiveCaptureDevice = SelectedCaptureDevice;
+      Person personWithPhoto = new Person() { Id = _user.Id };
+      feedbackPhoto.Personid = _user.Id;
+      personWithPhoto.Photos.Add(feedbackPhoto);
+      personList.Persons.Add(personWithPhoto);
 
-      if (!_captureDeviceEngine.CaptureDeviceActive(ActiveCaptureDevice))
-        _captureDeviceEngine.Add(ActiveCaptureDevice);
-
-      _captureDeviceEngine.Subscribe(OnNewFrame, ActiveCaptureDevice);
-    }
-    private void OnNewFrame(object sender, ref Bitmap bitmap)
-    {
-      if (bitmap == null)
-        return;
-
-      CaptureDeviceConnected = true;
-
-      _imageViewer.UpdateImage(ref bitmap);
-    }
-    #endregion  
-
-    private async void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
-    {      
-      if (feedback.Progress == 100)
+      try
       {
-        _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
-
-        NewPhoto = new Photo();
-        NewPhoto = _enroller.GetImage();
-        Photo feedbackPhoto = feedback.Photo;
-
-
-        if (NewPhoto != null && feedbackPhoto != null)
-        {
-          PersonList personList = new PersonList();
-          feedbackPhoto.EntityState = EntityState.Added    ;
-          feedbackPhoto.Description = NewPhoto.Description ;         
-          feedbackPhoto.Personid    = _user.Id             ;
-          feedbackPhoto.SizeType    = PhotoSizeType.Full   ;
-          feedbackPhoto.OriginType  = PhotoOriginType.Loaded;
-
-          Person personWithPhoto = new Person() { Id = _user.Id };
-          personWithPhoto.Photos.Add(feedbackPhoto);
-
-          personList.Persons.Add(personWithPhoto);
-
-          //_database.PhotoHolder.DataUpdated += PhotoHolder_DataUpdated;
-
-          try
-          {
-            await _serviceManager.DatabaseService.PersonUpdate(personList);
-          }          
-          catch (RpcException e)
-          {
-            Console.WriteLine(e.Message);            
-          }
-        }
-
+        await _serviceManager.DatabaseService.PersonUpdate(personList);
       }
-//if (_imageViewer != null)
-      //  _imageViewer.ShowProgress(feedback.Progress, feedback.Success);      
+      catch (RpcException e)
+      {
+        Console.WriteLine(e.Message);
+      }
     }
-
     public async Task PhotoDeletePerformer()
     {
       PersonList personList = new PersonList();
@@ -310,25 +208,6 @@ namespace BioModule.ViewModels
     {
 
     }
-    public void EnrollFromPhoto()
-    {
-      if (!_enroller.Busy)
-      {
-        Photo photo = _imageViewer.UploadPhotoFromFile();
-
-        if (photo == null || photo.Description.Length <= 0)
-        {
-          MessageBox.Show("Upload New photo");
-          return;
-        }
-
-        _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
-        EnrollmentData data = new EnrollmentData();
-        _enroller.Start(photo, data);       
-      }
-      else     
-        MessageBox.Show("Wait for finnishing previous operation");
-    }
     public void OnSelectionChange()
     {
       /*
@@ -378,15 +257,6 @@ namespace BioModule.ViewModels
 
     #region UI
 
-    public BitmapSource CaptureDeviceConnectedIcon
-    {
-      get { return CaptureDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
-    }
-    public string AvaliableDevicesCount
-    {
-      get { return String.Format("Available Devices ({0})", _captureDevicesNames.Count); }
-    }
-
     private ObservableCollection<bool> _isItemThumbnail;
     public ObservableCollection<bool> IsItemThumbnail
     {
@@ -430,21 +300,6 @@ namespace BioModule.ViewModels
       }
     }
 
-    private string _activeCaptureDevice;
-    public string ActiveCaptureDevice
-    {
-      get { return _activeCaptureDevice; }
-      set
-      {
-        if (_activeCaptureDevice != value)
-        {
-          _activeCaptureDevice = value;
-
-          NotifyOfPropertyChange(() => ActiveCaptureDevice);
-        }
-      }
-    }
-
     private AsyncObservableCollection<Photo> _userImages;
     public AsyncObservableCollection<Photo> UserImages
     {
@@ -456,21 +311,6 @@ namespace BioModule.ViewModels
           _userImages = value;
 
           NotifyOfPropertyChange(() => UserImages);
-        }
-      }
-    }
-    
-    private AsyncObservableCollection<string> _captureDevicesNames;
-    public AsyncObservableCollection<string> CaptureDevicesNames
-    {
-      get { return _captureDevicesNames; }
-      set
-      {
-        if (_captureDevicesNames != value)
-        {
-          _captureDevicesNames = value;
-
-          NotifyOfPropertyChange(() => CaptureDevicesNames);
         }
       }
     }
@@ -526,38 +366,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private bool _captureDeviceConnected;
-    public bool CaptureDeviceConnected
-    {
-      get { return _captureDeviceConnected; }
-      set
-      {
-        if (_captureDeviceConnected != value)
-        {
-          _captureDeviceConnected = value;
-          NotifyOfPropertyChange(() => CaptureDeviceConnected);
-          NotifyOfPropertyChange(() => CaptureDeviceConnectedIcon);
-        }
-      }
-    }
-
-    private string _selectedCaptureDevice;
-    public string SelectedCaptureDevice
-    {
-      get { return _selectedCaptureDevice; }
-      set
-      {
-        if (_selectedCaptureDevice != value)
-        {
-          _selectedCaptureDevice = value;
-          NotifyOfPropertyChange(() => SelectedCaptureDevice);
-
-          Subscribe();
-        }
-      }
-    }
-
     #endregion
 
     #region Global Variables

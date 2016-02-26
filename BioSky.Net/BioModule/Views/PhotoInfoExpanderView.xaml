@@ -14,7 +14,7 @@
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:PhotoInfoExpanderViewModel, IsDesignTimeCreatable=False}"             
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="100" d:DesignWidth="300">
 
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
@@ -50,17 +50,27 @@
             <Expander.Template>
                 <ControlTemplate  TargetType="{x:Type Expander}">
                     
-                    <DockPanel>
-                        <Grid DockPanel.Dock="Bottom">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        
+                        
+                        <Grid >
                             <ToggleButton x:Name="ExpanderButton" DockPanel.Dock="Bottom" Background="White"
-                                      Width="50" Height="50"                                         
+                                      Width="26" Height="26" BorderThickness="0"                                       
                                       IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                       Style="{DynamicResource MetroCircleToggleButtonStyle}"
                                       Padding="1.5,0"                                     
                                           >
                                 <Image Width="24" Height="24" Name="ArrowImage" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
                                    VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
-                                   Source="{Binding Source={StaticResource ResourceLoader}, Path=DownArrowIconSource}">
+                                   Source="{Binding Source={StaticResource ResourceLoader}, Path=InformationCircleIconSource}">
                                     <Image.RenderTransform>
                                         <RotateTransform Angle="0" />
                                     </Image.RenderTransform>
@@ -69,19 +79,19 @@
 
 
 
-                            <Grid.Triggers>
-                                <!-- Animate arrow when toggled-->
+                            <!--<Grid.Triggers>
+                                
                                 <EventTrigger SourceName="ExpanderButton" RoutedEvent="ToggleButton.Unchecked">                             
                                         <BeginStoryboard>
                                             <Storyboard>
                                             <DoubleAnimation Storyboard.TargetName="ArrowImage" 
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
                              From="180" To="0" BeginTime="00:00:00.000" Duration="00:00:01.000" />
-                                            <!--<DoubleAnimation
+                                            <DoubleAnimation
                                 Storyboard.TargetName="ArrowImage" 
                                 Storyboard.TargetProperty="Opacity"
                                 From="1.0" To="0.0" Duration="0:0:3" 
-                                AutoReverse="True" RepeatBehavior="Forever" />-->
+                                AutoReverse="True" RepeatBehavior="Forever" />
 
                                         </Storyboard>
                                         </BeginStoryboard>
@@ -92,31 +102,31 @@
                                             <DoubleAnimation Storyboard.TargetName="ArrowImage" 
                              Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)" 
                              From="0" To="180" BeginTime="00:00:00.000" Duration="00:00:01.000" />
-                                           <!-- <DoubleAnimation
+                                           <DoubleAnimation
                                 Storyboard.TargetName="ArrowImage" 
                                 Storyboard.TargetProperty="Opacity"
                                 From="1.0" To="0.0" Duration="0:0:3" 
-                                AutoReverse="True" RepeatBehavior="Forever" />-->
+                                AutoReverse="True" RepeatBehavior="Forever" />
 
                                         </Storyboard>
 
                                     </BeginStoryboard>
                                 </EventTrigger>
-                            </Grid.Triggers>
+                            </Grid.Triggers>-->
                         </Grid>
 
 
                         <ContentPresenter x:Name="ExpanderContent"
                                           Visibility="Collapsed"
-                                          DockPanel.Dock="Top">
+                                          Grid.RowSpan="2" Grid.ColumnSpan="2">
                             <ContentPresenter.LayoutTransform>
                                 <ScaleTransform ScaleY="0"/>
                             </ContentPresenter.LayoutTransform>
                         </ContentPresenter>
-                        
-                    </DockPanel>
-                    
-                    
+
+                    </Grid>
+
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsExpanded" Value="True">
                             <Setter TargetName="ExpanderContent" 

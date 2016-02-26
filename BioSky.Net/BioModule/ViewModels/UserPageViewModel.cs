@@ -41,10 +41,10 @@ namespace BioModule.ViewModels
       _bioService          = _locator.GetProcessor<IServiceManager>();
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      CurrentImageView = new ImageViewModel(_locator, _windowManager);
-      UserPhotoView    = new UserPhotoViewModel(bioEngine, CurrentImageView, _locator, _windowManager);
+      CurrentPhotoImageView = new PhotoImageViewModel(_locator, _windowManager);
+      UserPhotoView = new UserPhotoViewModel(bioEngine, CurrentPhotoImageView, _locator, _windowManager);
 
-     // CurrentImageView.EnrollFromPhotoChanged += UserPhotoView.EnrollFromPhoto;
+      CurrentPhotoImageView.FeedbackPhotoReceive += UserPhotoView.GetFeedBackPhoto;
       //CurrentImageView.EnrollFromCameraChanged += UserPhotoView.EnrollFromCamera;
 
       _bioUtils = new BioContracts.Common.BioImageUtils();
@@ -81,7 +81,7 @@ namespace BioModule.ViewModels
        
         Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
 
-        CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+        CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
 
         DisplayName = (_user.Firstname + " " + _user.Lastname);
       }
@@ -101,7 +101,7 @@ namespace BioModule.ViewModels
         DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
 
         //DisplayName = "AddNewUser";
-        CurrentImageView.UpdateImage(null, null);
+        CurrentPhotoImageView.UpdateImage(null, null);
 
       }
 
@@ -115,7 +115,7 @@ namespace BioModule.ViewModels
     {
       _user = user.Clone();
       _revertUser = user.Clone();
-      CurrentImageView.UpdateImageFromPath(_database.LocalStorage.LocalStoragePath + user.Thumbnail.FileLocation);
+      CurrentPhotoImageView.UpdateImageFromPath(_database.LocalStorage.LocalStoragePath + user.Thumbnail.FileLocation);
      // CurrentImageView.Update(_user);
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
     }
@@ -138,7 +138,7 @@ namespace BioModule.ViewModels
 
       if(_user.EntityState != EntityState.Deleted)
       {
-        Photo photo = CurrentImageView.CurrentImagePhoto;
+        Photo photo = CurrentPhotoImageView.CurrentImagePhoto;
         if (photo != null)
         {
           photo.OriginType = PhotoOriginType.Loaded;
@@ -178,7 +178,7 @@ namespace BioModule.ViewModels
 
       Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
 
-      CurrentImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+      CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
     }
     
     private void UpdateData(PersonList list)
@@ -265,16 +265,16 @@ namespace BioModule.ViewModels
       ActiveItem.Activate();
     }
 
-    private ImageViewModel _currentImageView;
-    public ImageViewModel CurrentImageView
+    private PhotoImageViewModel _currentPhotoImageView;
+    public PhotoImageViewModel CurrentPhotoImageView
     {
-      get { return _currentImageView; }
+      get { return _currentPhotoImageView; }
       private set
       {
-        if (_currentImageView != value)
+        if (_currentPhotoImageView != value)
         {
-          _currentImageView = value;
-          NotifyOfPropertyChange(() => CurrentImageView);
+          _currentPhotoImageView = value;
+          NotifyOfPropertyChange(() => CurrentPhotoImageView);
         }
       }
     }
