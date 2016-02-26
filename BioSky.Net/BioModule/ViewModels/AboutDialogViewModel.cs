@@ -12,8 +12,9 @@ namespace BioModule.ViewModels
 {
   public class AboutDialogViewModel : Screen
   {
-    public AboutDialogViewModel(string title = "About")
+    public AboutDialogViewModel(IWindowManager windowManager, string title = "About")
     {
+      _windowManager = windowManager;
       Update(title);
     }
 
@@ -21,25 +22,16 @@ namespace BioModule.ViewModels
     {
       DisplayName = title;      
     }
+    public void Show()
+    {
+      _windowManager.ShowDialog(this);
+    }
 
     public void Apply()
     {
-      DialogResult = true;
-      TryClose(DialogResult);
+      TryClose(true);
     }
 
-    private bool _dialogResult;
-    public bool DialogResult
-    {
-      get { return _dialogResult; }
-      set
-      {
-        if (_dialogResult != value)
-        {
-          _dialogResult = value;
-          NotifyOfPropertyChange(() => DialogResult);
-        }
-      }
-    }
+    private IWindowManager _windowManager;
   }
 }

@@ -13,6 +13,7 @@
                    lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
                    lex:ResxLocalizationProvider.DefaultDictionary="lang"
                    mc:Ignorable="d" 
+                   SizeToContent="WidthAndHeight"
                    WindowStartupLocation="CenterOwner"
                    ShowMaxRestoreButton="False"
                    ResizeMode="NoResize"                   

@@ -183,6 +183,16 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap help_dialog {
+            get {
+                object obj = ResourceManager.GetObject("help_dialog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap info {
             get {
                 object obj = ResourceManager.GetObject("info", resourceCulture);
@@ -196,6 +206,16 @@ namespace BioModule.Properties {
         internal static System.Drawing.Bitmap info_circle {
             get {
                 object obj = ResourceManager.GetObject("info_circle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap info_dialog {
+            get {
+                object obj = ResourceManager.GetObject("info_dialog", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -43,7 +43,7 @@ namespace BioModule.ViewModels
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
       _selectedItemIds = new ObservableCollection<long>();
-      PageController   = new PageControllerViewModel();
+      PageController   = new PageControllerViewModel(this);
 
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
@@ -53,9 +53,23 @@ namespace BioModule.ViewModels
       _database.PhotoHolder.DataChanged   += RefreshData;
       _database.Visitors.DataChanged += RefreshData;
     
-    } 
+    }
 
+    #region PageController
+    public void MovePage(bool isRightSide)
+    {
+      if (Visitors.Count <= 0)
+        return;
 
+      if(isRightSide)      
+        VisitorsCollectionView.MoveToNextPage();      
+      else      
+        VisitorsCollectionView.MoveToPreviousPage();      
+
+      PageController.UpdateData(VisitorsCollectionView.GetPagingData());
+    }
+
+    #endregion
 
     #region Database
 
@@ -65,10 +79,14 @@ namespace BioModule.ViewModels
       Visitors = _database.VisitorHolder.Data;
       GetLastVisitor();
 
-      VisitorsCollectionView = new PagingCollectionView(Visitors, 10, PageController);
-      VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
-
-      
+      if (Visitors.Count > 0)
+      {
+        VisitorsCollectionView = new PagingCollectionView(Visitors, 10);
+        VisitorsCollectionView.Sort(SortDescriptionByTime);
+        PageController.UpdateData(VisitorsCollectionView.GetPagingData());
+      }
+      else
+        PageController.UpdateData(new PagingData() { startIndex = 0, endIndex = 0, count = 0, itemsPerPage = 0 });
     }
     private void GetLastVisitor()
     {
@@ -136,7 +154,7 @@ namespace BioModule.ViewModels
 
     public async void OnDeleteVisitors()
     {
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (result == true)
       {
@@ -240,7 +258,7 @@ namespace BioModule.ViewModels
     {      
       SearchText = s;     
 
-      VisitorsCollectionView.Filter = item =>
+      VisitorsCollectionView.Filtering = item =>
       {
         if (String.IsNullOrEmpty(SearchText))
           return true;
@@ -446,8 +464,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ICollectionView _visitorsCollectionView;
-    public ICollectionView VisitorsCollectionView
+    private IPagingCollectionView _visitorsCollectionView;
+    public IPagingCollectionView VisitorsCollectionView
     {
       get { return _visitorsCollectionView; }
       set

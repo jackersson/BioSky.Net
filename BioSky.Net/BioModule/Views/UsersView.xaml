@@ -45,8 +45,8 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
@@ -99,6 +99,11 @@
             </ListBox.ItemsPanel>
         </ListBox>
 
+        <local:PageControllerView
+                Grid.Column="1" Grid.ColumnSpan="2" Margin="1,1,1,1"
+                DataContext="{Binding PageController}">
+        </local:PageControllerView>
+
         <Button  Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="3" 
                  Grid.Row="0" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" 
@@ -115,7 +120,7 @@
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>       
 
-        <TextBox x:Name="SearchBox" Margin="0, 5, 0, 5"  Grid.Column="0"  Grid.Row="0"   
+        <TextBox x:Name="SearchBox" Margin="0, 5, 0, 5"  Grid.Column="0"  Grid.Row="0" Grid.ColumnSpan="2"  
                          Controls:TextBoxHelper.Watermark="{lex:Loc Search}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True" 

@@ -15,34 +15,53 @@ namespace BioModule.ViewModels
   {
       Error
     , Ok
-    , Info    
+    , Info  
+    , Help
+    , Info2
   }
   public class CustomTextDialogViewModel : Screen
   {
-    public CustomTextDialogViewModel( string title = "CustomtextDialog"
-                                    , string text = ""
-                                    , DialogStatus status = DialogStatus.Info)
+    public CustomTextDialogViewModel( IWindowManager windowManager
+                                    , string title = "CustomtextDialog"
+                                    , string text = "" 
+                                    , DialogStatus status = DialogStatus.Info
+                                    , int fontSize = 14)
     {
-      Update(title, text, status);
+      _windowManager = windowManager;
+      Update(title, text, status, fontSize);
     }
 
     public void Update( string title = "CustomtextDialog"
                       , string text = ""
-                      , DialogStatus status = DialogStatus.Info)
+                      , DialogStatus status = DialogStatus.Info
+                      , int fontSize = 14)
     {
-      DisplayName = title ;
-      Text        = text  ;
-      _status     = status;
+      DisplayName = title   ;
+      Text        = text    ;
+      _status     = status  ;
+      FontSize    = fontSize;
+    }
+
+    public void Show()
+    {
+      _windowManager.ShowDialog(this);
     }
 
     public void Apply()
-    {      
+    {
+      DialogResult = true;
       this.TryClose(true);
     }
 
     public void Cancel()
-    {      
+    {
+      DialogResult = false;
       this.TryClose(false);
+    }
+
+    public bool GetDialogResult()
+    {
+      return DialogResult;
     }
 
     public BitmapSource CustomDialogIcon
@@ -57,11 +76,27 @@ namespace BioModule.ViewModels
             return ResourceLoader.OkIconSource;
           case DialogStatus.Info:
             return ResourceLoader.InformationCircleIconSource;
+          case DialogStatus.Help:
+            return ResourceLoader.HelpDialogIconSource;
+          case DialogStatus.Info2:
+            return ResourceLoader.InfoDialogIconSource;  
         }        
         return ResourceLoader.InformationCircleIconSource;
       }
     }
 
+    private bool _dialogResult;
+    public bool DialogResult
+    {
+      get { return _dialogResult; }
+      set
+      {
+        if (_dialogResult != value)
+        {
+          _dialogResult = value;
+        }
+      }
+    }
 
     private string _text;
     public string Text
@@ -77,7 +112,22 @@ namespace BioModule.ViewModels
       }
     }
 
-    private DialogStatus _status;
+    private int _fontSize;
+    public int FontSize
+    {
+      get { return _fontSize; }
+      set
+      {
+        if (_fontSize != value)
+        {
+          _fontSize = value;
+          NotifyOfPropertyChange(() => FontSize);
+        }
+      }
+    }
+    private DialogStatus   _status       ;
+    private IWindowManager _windowManager;
+
   
   }
 }

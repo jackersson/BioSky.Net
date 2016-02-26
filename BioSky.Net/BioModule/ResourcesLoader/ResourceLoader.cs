@@ -69,9 +69,29 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _rightArrowIconSource;
     private static BitmapSource _downArrowIconSource;
     private static BitmapSource _thumbnailIconSource;
+    private static BitmapSource _infoDialogIconSource;
+    private static BitmapSource _helpDialogIconSource;
 
 
+    public static BitmapSource HelpDialogIconSource
+    {
+      get
+      {
+        if (_helpDialogIconSource == null)
+          _helpDialogIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.help_dialog);
+        return _helpDialogIconSource;
+      }
+    }
 
+    public static BitmapSource InfoDialogIconSource
+    {
+      get
+      {
+        if (_infoDialogIconSource == null)
+          _infoDialogIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.info_dialog);
+        return _infoDialogIconSource;
+      }
+    }
 
     public static BitmapSource ThumbnailIconSource
     {
