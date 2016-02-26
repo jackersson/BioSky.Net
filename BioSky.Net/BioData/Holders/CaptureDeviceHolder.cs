@@ -32,36 +32,6 @@ namespace BioData.Holders
     {
       to.MergeFrom(from);
     }
-
-    public CaptureDevice GetValue(long id)
-    {
-      CaptureDevice captureDevice = null;
-      bool captureDeviceExists = DataSet.TryGetValue(id, out captureDevice);
-      return captureDevice;
-    }
-
-    /*
-    public override void Update(IList<CaptureDevice> list,  result)
-    {
-      foreach (ResultPair currentResult in result.Status)
-      {
-        CaptureDevice captureDevice = null;
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          if (currentResult.State == DbState.Insert)
-            captureDevice = currentResult.CaptureDevice;
-          else
-            captureDevice = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
-
-          if (captureDevice != null)
-          {
-            captureDevice.Dbstate = DbState.None;
-            UpdateItem(captureDevice, captureDevice.Id, currentResult.State);
-          }
-        }
-      }
-      base.Update(list, result);
-    }
-    */
+       
   }
 }

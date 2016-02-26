@@ -31,38 +31,7 @@ namespace BioData.Holders
     protected override void CopyFrom(Card from, Card to)
     {
       to.MergeFrom(from);
-    }
-
-    public Card GetValue(string id)
-    {
-      Card card = null;
-      bool cardExists = DataSet.TryGetValue(id, out card);
-      return card;
-    }
-
-    /*
-    public override void Update(IList<Card> list, Result result)
-    {
-      foreach (ResultPair currentResult in result.Status)
-      {
-        Card card = null;
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          if (currentResult.State == DbState.Insert)
-            card = currentResult.Card;
-          else
-            card = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
-
-          if (card != null)
-          {
-            card.Dbstate = DbState.None;
-            UpdateItem(card, card.UniqueNumber, currentResult.State);
-          }
-        }
-      }
-      base.Update(list, result);
-    }
-    */
+    }    
 
   }
 }

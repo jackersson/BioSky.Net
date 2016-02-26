@@ -49,26 +49,21 @@ namespace BioModule.ViewModels
       LocationId = -1;
 
       _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.Visitors.DataChanged += RefreshData;
-
-
-      //if (Visitors != null)
-      //VisitorsCollectionView = new PagingCollectionView(Visitors, 5);
-      
-    //  VisitorsCollectionView = (PagingCollectionView)CollectionViewSource.GetDefaultView(Visitors);
+      _database.Visitors.DataChanged      += RefreshData;
     } 
-
-
-
+    
     #region Database
 
     private void RefreshData()
     {
+      if (!IsActive)
+        return;
+
       Visitors = null;
       Visitors = _database.VisitorHolder.Data;
-      GetLastVisitor();
+      GetLastVisitor();   
 
-      VisitorsCollectionView = new PagingCollectionView(Visitors, 10);
+      VisitorsCollectionView = new PagingCollectionView(Visitors, PAGES_COUNT);
       VisitorsCollectionView.SortDescriptions.Add(SortDescriptionByTime);
     }
     private void GetLastVisitor()
@@ -81,7 +76,7 @@ namespace BioModule.ViewModels
 
     #region BioService
 
-    public async Task VisitorsDeletePerformer(EntityState state)
+    public async Task VisitorsDeletePerformer()
     {
       VisitorList visitorList = new VisitorList();
 
@@ -92,7 +87,7 @@ namespace BioModule.ViewModels
         {
           Visitor newVisitor = new Visitor()
           {
-            Id = id
+              Id = id
             , EntityState = EntityState.Deleted
             , Photoid = visitor.Photoid
           };
@@ -143,7 +138,7 @@ namespace BioModule.ViewModels
       {
         try
         {
-          await VisitorsDeletePerformer(EntityState.Deleted);
+          await VisitorsDeletePerformer();
         }
         catch (Exception e)
         {
@@ -488,6 +483,8 @@ namespace BioModule.ViewModels
     private readonly IBioEngine           _bioEngine    ;
     private readonly IServiceManager      _bioService   ;
     private readonly IBioSkyNetRepository _database     ;
+
+    private int PAGES_COUNT = 20;
     #endregion
   } 
 }

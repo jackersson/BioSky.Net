@@ -128,20 +128,13 @@ namespace BioData.Holders.Base
         DataChanged();
     }
 
-    public TValue GetValue(TKey id)
+    public virtual TValue GetValue(TKey id)
     {
       TValue value;
       bool valueExists = DataSet.TryGetValue(id, out value);
       return value;
     }
-
-    /*
-    protected void OnDataUpdated(IList<TValue> list, Result result)
-    {
-      if (DataUpdated != null)
-        DataUpdated(list, result);
-    }
-    */
+   
 
     public event DataChangedHandler         DataChanged;
    // public event DataUpdatedHandler<TValue> DataUpdated;

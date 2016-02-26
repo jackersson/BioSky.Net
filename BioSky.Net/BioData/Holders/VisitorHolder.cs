@@ -40,35 +40,5 @@ namespace BioData.Holders
       }
     }
 
-    public Visitor GetValue(long id)
-    {
-      Visitor visitor = null;
-      bool visitorExists = DataSet.TryGetValue(id, out visitor);
-      return visitor;
-    }
-    /*
-
-    public override void Update(IList<Visitor> list, Result result)
-    {
-      foreach (ResultPair currentResult in result.Status)
-      {
-        Visitor visitor = null;
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          if (currentResult.State == DbState.Insert)
-            visitor = currentResult.Visitor;
-          else
-            visitor = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
-
-          if (visitor != null)
-          {
-            visitor.Dbstate = DbState.None;
-            UpdateItem(visitor, visitor.Id, currentResult.State);
-          }
-        }
-      }
-      base.Update(list, result);
-    }
-    */
   }  
 }

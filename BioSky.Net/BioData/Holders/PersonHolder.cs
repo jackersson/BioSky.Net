@@ -32,15 +32,5 @@ namespace BioData.Holders
         Data.Remove(item);
       }
     }
-
-    public Person GetValue(long id)
-    {
-      Person person = null;
-      bool personExists = DataSet.TryGetValue(id, out person);
-      return person;
-    }
-
-   
-
   }
 }

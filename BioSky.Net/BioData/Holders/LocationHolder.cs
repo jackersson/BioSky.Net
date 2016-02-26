@@ -31,37 +31,7 @@ namespace BioData.Holders
     protected override void CopyFrom(Location from, Location to)
     {
       to.MergeFrom(from);
-    }
+    }    
 
-    public Location GetValue(long id)
-    {
-      Location location = null;
-      bool locationExists = DataSet.TryGetValue(id, out location);
-      return location;
-    }
-
-    /*
-    public override void Update(IList<Location> list, Result result)
-    {
-      foreach (ResultPair currentResult in result.Status)
-      {
-        Location location = null;
-        if (currentResult.Status == ResultStatus.Success)
-        {
-          if (currentResult.State == DbState.Insert)
-            location = currentResult.Location;
-          else
-            location = list.Where(x => x.Id == currentResult.Id).FirstOrDefault();
-
-          if (location != null)
-          {
-            location.Dbstate = DbState.None;
-            UpdateItem(location, location.Id, currentResult.State);
-          }
-        }
-      }
-      base.Update(list, result);
-    }
-    */
   }
 }

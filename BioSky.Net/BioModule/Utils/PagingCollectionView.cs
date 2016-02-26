@@ -20,19 +20,17 @@ namespace BioModule.Utils
     public PagingCollectionView(IList innerList, int itemsPerPage)
       : base(innerList)
     {
-      this._innerList = innerList;
-      this._itemsPerPage = itemsPerPage;
-    }  
+      //this._innerList = innerList;
+      this._itemsPerPage = itemsPerPage;      
+    }
 
     public override int Count
     {
       get
-      {
-        //all pages except the last
+      {       
         if (CurrentPage < PageCount)
           return this._itemsPerPage;
-
-        //last page
+        
         int remainder = _innerList.Count % this._itemsPerPage;
 
         return remainder == 0 ? this._itemsPerPage : remainder;
@@ -91,10 +89,9 @@ namespace BioModule.Utils
 
     public void MoveToPreviousPage()
     {
-      if (this._currentPage > 1)
-      {
+      if (this._currentPage > 1)      
         this.CurrentPage -= 1;
-      }
+      
       this.Refresh();
     }
   }
