@@ -7,43 +7,52 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
+using System.Reflection;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
   public class PageControllerViewModel : Screen
   {
     public string _startIndex   = "0";
-    public string _endIndex = "0";
+    public string _endIndex     = "0";
     public string _onePageCount = "0";
-    public PageControllerViewModel()
+    public PageControllerViewModel(IScreen screen)
     {
-      //Text = _startIndex + "-" + _onePageCount + "of " + _endIndex;
+      _screen = screen;
       IsRightArrowEnabled = true;
+      IsLeftArrowEnabled  = true;
     }
 
-    public void UpdateData(int startIndex, int endIndex, int onePageCount)
+    public void UpdateData(PagingData data)
     {
-      Text = startIndex + " - " + onePageCount + " of " + endIndex;
+      IsRightArrowEnabled = true;
+      IsLeftArrowEnabled  = true;
+
+      Text = data.startIndex + " - " + data.endIndex + " of " + data.count;
+
+      if(data.endIndex == data.count)
+        IsRightArrowEnabled = false;
+
+      if(data.startIndex == 1)
+        IsLeftArrowEnabled = false;      
     }
 
     public void OnRightClick()
     {
-      OnPageChanged(true);
+      MethodInfo method = _screen.GetType().GetMethod("MovePage");
+      if (method != null)
+        method.Invoke(_screen, new object[] { true});
     }
 
     public void OnLeftClick()
     {
-      OnPageChanged(false);
+      MethodInfo method = _screen.GetType().GetMethod("MovePage");
+      if (method != null)
+        method.Invoke(_screen, new object[] { false });
     }
 
-    public delegate void OnPageChangedHandler(bool pageChangeOnRight);
-    public event OnPageChangedHandler PageChanged;
 
-    public void OnPageChanged(bool pageChangeOnRight)
-    {
-      if (PageChanged != null)
-        PageChanged(pageChangeOnRight);
-    }
 
     private string _text;
     public string Text
@@ -51,7 +60,7 @@ namespace BioModule.ViewModels
       get { return _text; }
       set
       {
-        if(value == null)
+        if(value == null || value == string.Empty)
         {
            _text = _startIndex + "-" + _onePageCount + "of " + _endIndex;
         }
@@ -90,6 +99,8 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    private readonly IScreen _screen;
  
   }
 }

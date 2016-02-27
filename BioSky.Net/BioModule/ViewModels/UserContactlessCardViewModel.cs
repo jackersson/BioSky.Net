@@ -198,7 +198,7 @@ namespace BioModule.ViewModels
 
     public async void OnDeleteCards()
     {
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (result == true)
       {

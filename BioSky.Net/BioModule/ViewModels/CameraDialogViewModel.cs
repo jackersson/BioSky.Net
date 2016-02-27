@@ -13,12 +13,18 @@ using System.Reflection;
 
 namespace BioModule.ViewModels
 {
+  public class CameraDialogResult
+  {
+    public string selectedCaptureDevice ;
+    public bool   captureDeviceConnected;
+  }
   public class CameraDialogViewModel : Screen
   {
-    public CameraDialogViewModel(IProcessorLocator locator , IScreen screen, string title = "CameraDialog")
+    public CameraDialogViewModel(IProcessorLocator locator , IWindowManager windowManager, string title = "CameraDialog")
     {
-      _locator             = locator;
-      _screen              = screen ;
+      _locator             = locator      ;
+      _windowManager       = windowManager;
+
 
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
    
@@ -33,14 +39,20 @@ namespace BioModule.ViewModels
     {
       DisplayName = title;
     }
+    public void Show()
+    {
+      _windowManager.ShowDialog(this);
+    }
     #endregion
 
     #region Interface
     public void Apply()
     {
-      MethodInfo method = _screen.GetType().GetMethod("SetCaptureDevice");
-      if (method != null)
-        method.Invoke(_screen, new object[] { SelectedCaptureDevice, CaptureDeviceConnected });
+      DialogResult = new CameraDialogResult()
+      { 
+        captureDeviceConnected = CaptureDeviceConnected
+        , selectedCaptureDevice = SelectedCaptureDevice
+      };
 
       this.TryClose(true); 
       TryClose(true);
@@ -51,6 +63,10 @@ namespace BioModule.ViewModels
       TryClose(false);
     }
 
+    public CameraDialogResult GetDialogResult()
+    {
+      return DialogResult;
+    }
     private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => CaptureDevicesNames);    
@@ -141,14 +157,26 @@ namespace BioModule.ViewModels
       }
     }
 
+    private CameraDialogResult _dialogResult;
+    public CameraDialogResult DialogResult
+    {
+      get { return _dialogResult; }
+      set
+      {
+        if (_dialogResult != value)
+        {
+          _dialogResult = value;
+        }
+      }
+    }
+
    
     #endregion
 
     #region Global Variables
-    private readonly IBioEngine           _bioEngine          ;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private readonly IProcessorLocator    _locator            ;
-    private readonly IScreen              _screen             ;
+    private          IWindowManager       _windowManager      ;
 
 
     #endregion

@@ -11,41 +11,23 @@ using BioModule.ViewModels;
 
 namespace BioModule.Utils
 {
-  public class PagingCollectionView : ListCollectionView
+  public class PagingCollectionView : ListCollectionView, IPagingCollectionView
   {
     private readonly IList _innerList;
     private readonly int _itemsPerPage;
 
     private int _currentPage = 1;
 
-    public PagingCollectionView(IList innerList, int itemsPerPage, PageControllerViewModel pageController)
+    public PagingCollectionView(IList innerList, int itemsPerPage)
       : base(innerList)
     {
       this._innerList = innerList;
-      this._itemsPerPage = itemsPerPage;
-
-      _pageController = pageController;
-
-      _pageController.PageChanged += PageChanged;
-      
+      this._itemsPerPage = itemsPerPage;      
     }
 
-    PageControllerViewModel _pageController;
-
-    public void UpdatePageController()
+    public void Sort(SortDescription description)
     {
-      if (_pageController != null)
-        _pageController.UpdateData(StartIndex, EndIndex, ItemsPerPage);
-    }
-
-    public void PageChanged(bool rightSide)
-    {
-      if (rightSide)
-        MoveToNextPage();
-      else
-        MoveToPreviousPage();
-
-
+      this.SortDescriptions.Add(description);
     }
 
     public override int Count
@@ -121,5 +103,31 @@ namespace BioModule.Utils
       }
       this.Refresh();
     }
+
+
+    public Predicate<object> Filtering
+    {
+      get { return this.Filter; }
+      set
+      {
+       
+          this.Filter = value;
+        
+      }
+    }
+
+    public PagingData GetPagingData()
+    {
+      return new PagingData() { startIndex = StartIndex, endIndex = EndIndex
+                              , itemsPerPage = ItemsPerPage, count = _innerList.Count};
+    }  
+  }
+
+  public class PagingData
+  {
+    public int startIndex  ;
+    public int endIndex    ;
+    public int itemsPerPage;
+    public int count       ;
   }
 }

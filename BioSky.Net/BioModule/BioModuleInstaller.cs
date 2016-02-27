@@ -38,12 +38,14 @@ namespace BioModule
 
         //container.Resolve();
 
-        container            
+        container
             .Register(Component.For<VisitorsViewModel>())
             .Register(Component.For<LocationPageViewModel>())
-            .Register(Component.For<GeneralSettingsPageViewModel>())        
+            .Register(Component.For<GeneralSettingsPageViewModel>())
             .Register(Component.For<TrackControlViewModel>())
-            .Register(Component.For<UserPageViewModel>().LifestyleTransient());
+            .Register(Component.For<UserPageViewModel>().LifestyleTransient())
+            .Register(Component.For<DialogsHolder>());
+
 
 
         //container.Register(Component.For<IWindsorContainer>().Instance(container));

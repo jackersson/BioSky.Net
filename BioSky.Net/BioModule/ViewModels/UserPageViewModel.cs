@@ -209,7 +209,7 @@ namespace BioModule.ViewModels
     public async void Apply()
     {   
 
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (result == true)     
       {
@@ -235,7 +235,7 @@ namespace BioModule.ViewModels
 
     public async void Remove()
     {
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (result == true)
       {

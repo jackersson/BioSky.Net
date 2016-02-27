@@ -46,14 +46,13 @@ namespace BioModule.ViewModels
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
 
       _selectedItemIds = new ObservableCollection<long>();
+      PageController   = new PageControllerViewModel(this);
+
 
       _database.Persons.DataChanged += RefreshData;      
       _database.PhotoHolder.DataChanged  += RefreshData;
 
-      IsDeleteButtonEnabled = false;     
-
-      UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
-      
+      IsDeleteButtonEnabled = false;   
     }
     #region Database
     private void RefreshData()
@@ -66,8 +65,31 @@ namespace BioModule.ViewModels
       Users = _database.PersonHolder.Data;
 
       UsersCollectionView = null;
-      UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
+
+      if (Users.Count > 0)
+      {
+        UsersCollectionView = new PagingCollectionView(Users, 10);
+        PageController.UpdateData(UsersCollectionView.GetPagingData());
+      }
+      else
+        PageController.UpdateData(new PagingData() { startIndex = 0, endIndex = 0, count = 0, itemsPerPage = 0 });
     }  
+
+    #endregion
+
+    #region PageController
+    public void MovePage(bool isRightSide)
+    {
+      if (Users.Count <= 0)
+        return;
+
+      if (isRightSide)
+        UsersCollectionView.MoveToNextPage();
+      else
+        UsersCollectionView.MoveToPreviousPage();
+
+      PageController.UpdateData(UsersCollectionView.GetPagingData());
+    }
 
     #endregion
 
@@ -120,7 +142,7 @@ namespace BioModule.ViewModels
     #region Interface
     public async void OnDeleteUsers()
     {
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (result == true)
       {
@@ -184,7 +206,7 @@ namespace BioModule.ViewModels
     {
       SearchText = s;
 
-      UsersCollectionView.Filter = item =>
+      UsersCollectionView.Filtering = item =>
       {
         Person vitem = item as Person;
         if (vitem == null) return false;
@@ -232,8 +254,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ICollectionView _usersCollectionView;
-    public ICollectionView UsersCollectionView
+    private IPagingCollectionView _usersCollectionView;
+    public IPagingCollectionView UsersCollectionView
     {
       get { return _usersCollectionView; }
       set
@@ -243,6 +265,20 @@ namespace BioModule.ViewModels
           _usersCollectionView = value;
 
           NotifyOfPropertyChange(() => UsersCollectionView);
+        }
+      }
+    }
+
+    private PageControllerViewModel _pageController;
+    public PageControllerViewModel PageController
+    {
+      get { return _pageController; }
+      set
+      {
+        if (_pageController != value)
+        {
+          _pageController = value;
+          NotifyOfPropertyChange(() => PageController);
         }
       }
     }

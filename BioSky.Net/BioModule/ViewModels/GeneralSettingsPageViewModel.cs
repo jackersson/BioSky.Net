@@ -14,6 +14,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Forms;
 using BioModule.ViewModels;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -78,7 +79,7 @@ namespace BioModule.ViewModels
 
      public void Apply()
      {
-       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+       var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
        if(result == true)
          _database.LocalStorage.SaveGeneralSettings( LocalStoragePath
@@ -89,7 +90,7 @@ namespace BioModule.ViewModels
 
      public void Revert()
      {
-       var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+       var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
        if (result == true)       
          RefreshData();       

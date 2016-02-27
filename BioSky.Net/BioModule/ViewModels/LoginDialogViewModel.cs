@@ -5,12 +5,24 @@ using System.Reflection;
 
 namespace BioModule.ViewModels
 {
+  public enum LoginDialogStatus
+  {
+      SignIn
+    , Register 
+  }
+  public class LoginDialogResult
+  {
+    public SecureString      password;
+    public string            userName;
+    public LoginDialogStatus status  ;
+  }
+
   public class LoginDialogViewModel : Screen
   {
-    public LoginDialogViewModel(IScreen screen , string title = "Login Form")
+    public LoginDialogViewModel(IWindowManager windowManager, string title = "Login Form")
     {
+      _windowManager = windowManager;
       Update(title);
-      _screen = screen;
     }
 
     public void Update(string title = "Login Form")
@@ -20,38 +32,38 @@ namespace BioModule.ViewModels
 
     public void Register(SecureString password)
     {
-      //register logic     
-
       UserPassword = password;
-      DialogResult = true;
-
-      MethodInfo method = _screen.GetType().GetMethod("UpdateUserPassword");
-      if (method != null)
-        method.Invoke(_screen, new object[] { DialogResult, UserName, UserPassword });
-
+      DialogResult = new LoginDialogResult() { status = LoginDialogStatus.Register
+                                             , userName = UserName
+                                             , password = UserPassword }; ;
       this.TryClose(true);      
     }
     public void Login(SecureString password)
     {
-      //login logic
-
       UserPassword = password;
-      DialogResult = false;
-
-      MethodInfo method = _screen.GetType().GetMethod("UpdateUserPassword");
-      if (method != null)
-        method.Invoke(_screen, new object[] { DialogResult, UserName, UserPassword });
+      DialogResult = new LoginDialogResult() { status = LoginDialogStatus.SignIn
+                                             , userName = UserName
+                                             , password = UserPassword};
 
       this.TryClose(true);
     }
     public void Cancel()
-    {      
-      
+    {
+      DialogResult = null;
       this.TryClose(false);
     }
+    public void Show()
+    {
+      _windowManager.ShowDialog(this);
+    }
 
-    private bool _dialogResult;
-    public bool DialogResult
+    public LoginDialogResult GetDialogResult()
+    {
+      return DialogResult;
+    }
+
+    private LoginDialogResult _dialogResult;
+    public LoginDialogResult DialogResult
     {
       get { return _dialogResult; }
       set
@@ -92,6 +104,6 @@ namespace BioModule.ViewModels
       }
     }
 
-    private readonly IScreen _screen;
+    private IWindowManager _windowManager;
   }
 }

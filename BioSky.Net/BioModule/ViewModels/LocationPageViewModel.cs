@@ -165,7 +165,7 @@ namespace BioModule.ViewModels
     #region Interface
     public async void Apply()
     {
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (result == true)
       {
@@ -182,7 +182,7 @@ namespace BioModule.ViewModels
 
     public void Revert()
     {
-      var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
+      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (result == true)
         Update(RevertLocation);
