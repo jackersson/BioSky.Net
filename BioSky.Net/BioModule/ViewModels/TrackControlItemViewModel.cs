@@ -47,7 +47,7 @@ namespace BioModule.ViewModels
       trackLocation.EnrollFeedbackChanged += TrackLocation_EnrollFeedbackChanged;
 
       trackLocation.FrameChanged += OnNewFrame;
-      _visitorsView.Update();
+      //!!!_visitorsView.Update();
     }
     private void OnNewFrame(object sender, ref Bitmap bitmap)
     {

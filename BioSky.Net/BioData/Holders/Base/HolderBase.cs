@@ -1,14 +1,7 @@
 ﻿using BioContracts;
 using BioService;
 using Caliburn.Micro;
-using Google.Protobuf;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioData.Holders.Base
 {

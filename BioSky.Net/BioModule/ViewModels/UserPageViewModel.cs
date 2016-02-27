@@ -63,64 +63,57 @@ namespace BioModule.ViewModels
 
     #region Update
 
+    private bool ContainRequiredFields(Person user)
+    {
+      if (user == null)
+        return false;
+
+      return (user.Firstname != "" && user.Firstname != "");
+    }
+
+    private Person ResetUser(Person user)
+    {
+      if (user == null)
+        return null;
+
+      user.Firstname   = "";
+      user.Lastname    = "";
+      user.Thumbnailid = user.Thumbnailid <= 0 ? 0 : user.Thumbnailid;
+      user.Gender      = Person.Types.Gender.Male;
+      user.Rights      = Person.Types.Rights.Operator;
+
+      _userPageMode = UserPageMode.NewUser;
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
+
+      return user;  
+    }
+
     public void Update(Person user)
     {
-      if (user != null && user.Thumbnail != null)
-      {
-        //Add User as Visitor
-        UpdateFromVisitor(user);
-        return;
-      }
-
-      if (user != null)
+      
+      if (user != null )
       {
         _user = user.Clone();
-        _revertUser = user.Clone();
-        _userPageMode = UserPageMode.ExistingUser;
-
-       
-        Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
-
-        CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
-
-        DisplayName = (_user.Firstname + " " + _user.Lastname);
-      }
-      else
-      {
-        _user = new Person()
+        if (ContainRequiredFields(user))
         {
-            Firstname = ""
-          , Lastname = ""
-          , Thumbnailid = 0
-          , Gender = Person.Types.Gender.Male
-          , Rights = Person.Types.Rights.Operator
-          , EntityState = EntityState.Added
-        };
-
-        _userPageMode = UserPageMode.NewUser;
-        DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
-
-        //DisplayName = "AddNewUser";
-        CurrentPhotoImageView.UpdateImage(null, null);
-
+          _revertUser = user.Clone();
+          _userPageMode = UserPageMode.ExistingUser;
+          DisplayName = (_user.Firstname + " " + _user.Lastname);
+        }
+        else        
+          _user = ResetUser(user);       
+                 
       }
+      else      
+        _user = ResetUser(new Person());      
 
-      //CurrentImageView.Update(_user);
+      Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
+      CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
     }
     
-    public void UpdateFromVisitor(Person user)
-    {
-      _user = user.Clone();
-      _revertUser = user.Clone();
-      CurrentPhotoImageView.UpdateImageFromPath(_database.LocalStorage.LocalStoragePath + user.Thumbnail.FileLocation);
-     // CurrentImageView.Update(_user);
-      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
-    }
-
-
     #endregion
     
     #region Database
@@ -164,7 +157,7 @@ namespace BioModule.ViewModels
         _database.Persons.DataUpdated += UpdateData;
         _database.PhotoHolder.DataChanged += UpdatePhoto;
 
-        await _bioService.DatabaseService.PersonUpdate(personList);
+        //await _bioService.DatabaseService.PersonUpdate(personList);
       }
       catch (RpcException e)
       {

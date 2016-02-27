@@ -5,7 +5,7 @@ using System;
 
 using WPFLocalizeExtension.Engine;
 using System.Globalization;
-
+using BioContracts.Services;
 
 namespace BioEngine
 {
@@ -14,7 +14,9 @@ namespace BioEngine
     public BioStarter(IProcessorLocator locator)
     {
       _bioEngine      = locator.GetProcessor<IBioEngine>();
+      _notifier       = locator.GetProcessor<INotifier>();
       _serviceManager = locator.GetProcessor<IServiceManager>();
+
       _localStorage   = _bioEngine.Database().LocalStorage;
     }
 
@@ -35,8 +37,7 @@ namespace BioEngine
       }
       catch (RpcException e)
       {
-        Console.WriteLine("RPC failed " + e);
-        throw;
+        _notifier.Notify(e);
       }
     }
 
@@ -56,27 +57,31 @@ namespace BioEngine
     {
       try
       {
+        IDatabaseService service = _serviceManager.DatabaseService;
         BioService.CommandPersons commandPerson = new BioService.CommandPersons();
-        await _serviceManager.DatabaseService.PersonsSelect(commandPerson);
+        await service.PersonDataClient.Select(commandPerson);
 
         BioService.CommandVisitors commandVisitor = new BioService.CommandVisitors();
-        await _serviceManager.DatabaseService.VisitorsSelect(commandVisitor);
+        await service.VisitorDataClient.Select(commandVisitor);
 
         BioService.CommandLocations commandLocation = new BioService.CommandLocations();
-        await _serviceManager.DatabaseService.LocationsSelect(commandLocation);
+        await service.LocationDataClient.Select(commandLocation);
 
+        /* not here
         BioService.CommandPhoto commandPhoto = new BioService.CommandPhoto();
-        await _serviceManager.DatabaseService.PhotosSelect(commandPhoto);
-
+        await service.PhotoDataClient.Select(commandPhoto);
+        */
       }
-      catch (Exception ex)
+      catch (Exception e)
       {
-        Console.WriteLine(ex.Message);
+        _notifier.Notify(e);
       }
     }
 
     private IServiceManager _serviceManager;
     private IBioEngine      _bioEngine     ;
     private ILocalStorage   _localStorage  ;
+
+    private readonly INotifier _notifier;
   }
 }

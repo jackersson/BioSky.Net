@@ -138,6 +138,10 @@
     <Compile Include="BioFaceService.cs" />
     <Compile Include="BioGrpcInstaller.cs" />
     <Compile Include="BioServiceManager.cs" />
+    <Compile Include="DatabaseClient\LocationDataClient.cs" />
+    <Compile Include="DatabaseClient\PersonDataClient.cs" />
+    <Compile Include="DatabaseClient\PhotoDataClient.cs" />
+    <Compile Include="DatabaseClient\VisitorDataClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +153,7 @@
       <Name>BioContracts</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Clien\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

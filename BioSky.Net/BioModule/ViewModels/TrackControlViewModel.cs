@@ -32,7 +32,7 @@ namespace BioModule.ViewModels
 
       TrackTabControlView = new TrackTabControlViewModel(_locator);
 
-      _visitorsView = new VisitorsViewModel(locator, _windowManager);
+      _visitorsView = new VisitorsViewModel(locator);
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
@@ -71,8 +71,8 @@ namespace BioModule.ViewModels
 
       try
       {
-        _database.Locations.DataUpdated += UpdateData;
-        await _bioService.DatabaseService.LocationUpdate(locationList);
+       // _database.Locations.DataUpdated += UpdateData;
+       // await _bioService.DatabaseService.LocationUpdate(locationList);
       }
       catch (RpcException e)
       {
@@ -123,8 +123,9 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      if (_visitorsView != null)
-        _visitorsView.Update();
+      //TODO refresh
+      //if (_visitorsView != null)
+        //_visitorsView.Update();
     }
     public void OnMouseRightButtonDown(TrackLocation trackLocation)
     {

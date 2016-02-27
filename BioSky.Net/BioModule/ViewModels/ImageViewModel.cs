@@ -24,10 +24,10 @@ namespace BioModule.ViewModels
 {
   public class ImageViewModel : Screen, IImageUpdatable
   {
-    public ImageViewModel(IProcessorLocator locator, IWindowManager  windowManager)
+    public ImageViewModel(IProcessorLocator locator)
     {     
       _locator       = locator      ;
-      _windowManager = windowManager;
+      //_windowManager = windowManager;
 
     
       _bioUtils     = new BioContracts.Common.BioImageUtils();

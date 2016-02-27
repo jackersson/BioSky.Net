@@ -1,184 +1,44 @@
-﻿using System;
-using System.Threading.Tasks;
-
-using BioContracts;
+﻿using BioContracts;
 using BioService;
-using Grpc.Core;
 using BioContracts.Services;
+using BioGRPC.DatabaseClient;
 
 namespace BioGRPC
 {
   public class BioDatabaseService : IDatabaseService
   { 
-    public BioDatabaseService(IProcessorLocator locator, BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    public BioDatabaseService( IProcessorLocator locator
+                             , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    {    
+      _visitorDataClient   = new VisitorDataClient (locator, client);
+      _photoDataClient     = new PhotoDataClient   (locator, client);
+      _personDataClient    = new PersonDataClient  (locator, client);
+      _locationDataClient  = new LocationDataClient(locator, client);
+    }
+    
+    private IDataClient<Visitor, CommandVisitors> _visitorDataClient;
+    public IDataClient<Visitor, CommandVisitors> VisitorDataClient
     {
-      _client    = client;
-      _locator   = locator;
-
-      _database = _locator.GetProcessor<IBioSkyNetRepository>();
-
-      _database.PhotoHolderByPerson.FullPhotoRequested += PhotoHolderByPerson_FullPhotoRequested;
+      get { return _visitorDataClient; }     
     }
 
-    private async void PhotoHolderByPerson_FullPhotoRequested(PhotoList list)
+    private IDataClient<Photo, CommandPhoto> _photoDataClient;
+    public IDataClient<Photo, CommandPhoto> PhotoDataClient
     {
-      CommandPhoto cmd = new CommandPhoto();
-      cmd.Description = true;
-
-      foreach (Photo ph in list.Photos)      
-        cmd.TargetPhoto.Add(new Photo() { Id = ph.Id });
-
-      await PhotosSelect(cmd);
+      get { return _photoDataClient; }
     }
 
-    public async Task PersonsSelect(CommandPersons command)
+    private IDataClient<Person, CommandPersons> _personDataClient;
+    public IDataClient<Person, CommandPersons> PersonDataClient
     {
-      try
-      {
-        PersonList call = await _client.PersonSelectAsync(command);
-        _database.Persons.Init(call);
-
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
+      get { return _personDataClient; }
     }
 
-    public async Task VisitorsSelect(CommandVisitors command)
+    private IDataClient<Location, CommandLocations> _locationDataClient;
+    public IDataClient<Location, CommandLocations> LocationDataClient
     {
-      try
-      {
-        VisitorList call = await _client.VisitorSelectAsync(command);
-        _database.Visitors.Init(call);
+      get { return _locationDataClient; }
+    }    
 
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task LocationsSelect(CommandLocations command)
-    {
-      try
-      {
-        LocationList call = await _client.LocationSelectAsync(command);
-        _database.Locations.Init(call);
-
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task PhotosSelect(CommandPhoto command)
-    {
-      try
-      {
-        PhotoList call = await _client.PhotoSelectAsync(command);
-
-        _database.PhotoHolder.Update(call.Photos);
-
-        Console.WriteLine("Photos count = " + call.Photos.Count);
-        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
-
-        // Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task PersonUpdate(PersonList persons)
-    {
-      try
-      {
-        PersonList call = await _client.PersonUpdateAsync(persons);
-        _database.Persons.Update(persons, call);
-
-      //  Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task VisitorUpdate(VisitorList visitors)
-    {
-      try
-      {
-        VisitorList call = await _client.VisitorUpdateAsync(visitors);
-        _database.Visitors.Update(visitors, call);
-        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
-
-      //  Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task LocationUpdate(LocationList locations)
-    {
-      try
-      {
-        LocationList call = await _client.LocationUpdateAsync(locations);
-        _database.Locations.Update(locations, call);
-
-      //  Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-    public async Task AddSocket(SocketConfiguration config)
-    {
-      try
-      {
-        Response call = await _client.AddSocketAsync(config);
-        //_database.CaptureDeviceHolder.Update(call.CaptureDevices);
-
-        Console.WriteLine(call.ToString());
-      }
-      catch (RpcException e)
-      {
-        Log("RPC failed " + e);
-        throw;
-      }
-    }
-
-
-
-
-    private void Log(string s, params object[] args)
-    {
-      Console.WriteLine(string.Format(s, args));
-    }
-
-    private void Log(string s)
-    {
-      Console.WriteLine(s);
-    }
-
-    private readonly IProcessorLocator                                      _locator;
-    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
-    private readonly IBioSkyNetRepository                                   _database; 
   }
 }

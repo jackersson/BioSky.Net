@@ -58,8 +58,13 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
+
+      if (!IsActive)
+        return;
+
       Users = null;
       Users = _database.PersonHolder.Data;
+
       UsersCollectionView = null;
       UsersCollectionView = CollectionViewSource.GetDefaultView(Users);
     }  
