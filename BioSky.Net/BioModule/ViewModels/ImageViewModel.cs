@@ -26,16 +26,15 @@ namespace BioModule.ViewModels
   {
     public ImageViewModel(IProcessorLocator locator)
     {     
-      _locator       = locator      ;
-      //_windowManager = windowManager;
-
+      _locator       = locator      ;      
     
       _bioUtils     = new BioContracts.Common.BioImageUtils();
       _bioFileUtils = new BioFileUtils();
 
-      ZoomToFitState = true;
+      ZoomToFitState    = true;
       CurrentImagePhoto = null; 
     }
+
     #region Update
     public void UpdateImage(Photo photo, string prefixPath = "")
     {
@@ -175,28 +174,7 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
-    /*
-    //??????
-    public delegate void OnEnrollFromPhotoHandler();
-    public event OnEnrollFromPhotoHandler EnrollFromPhotoChanged;
-
-    public void OnEnrollFromPhoto()
-    {
-      if (EnrollFromPhotoChanged != null)
-        EnrollFromPhotoChanged();
-    }
-
-    public delegate void OnEnrollFromCameraHandler();
-    public event OnEnrollFromCameraHandler EnrollFromCameraChanged;
-
-    public void OnEnrollFromCamera()
-    {
-      if (EnrollFromCameraChanged != null)
-        EnrollFromCameraChanged();
-    }
-
-      */
-
+ 
     double _calculatedImageScale;
     public double CalculatedImageScale
     {
@@ -224,36 +202,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    /*
-    private PhotoInfoExpanderViewModel _photoInfoExpanderView;
-    public PhotoInfoExpanderViewModel PhotoInfoExpanderView
-    {
-      get { return _photoInfoExpanderView; }
-      set
-      {
-        if (_photoInfoExpanderView != value)
-        {
-          _photoInfoExpanderView = value;
-          NotifyOfPropertyChange(() => PhotoInfoExpanderView);
-        }
-      }
-    }
-
-    private ProgressRingViewModel _progressRingView;
-    public ProgressRingViewModel ProgressRingView
-    {
-      get { return _progressRingView; }
-      set
-      {
-        if (_progressRingView != value)
-        {
-          _progressRingView = value;
-          NotifyOfPropertyChange(() => ProgressRingView);
-        }
-      }
-    }
-    */
 
     double _calculatedImageWidth;
     private double CalculatedImageWidth

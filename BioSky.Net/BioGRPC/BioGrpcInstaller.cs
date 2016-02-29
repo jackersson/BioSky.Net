@@ -18,7 +18,6 @@ namespace BioGRPC
       try
       { 
         container.Register(Component.For<IServiceManager>().ImplementedBy<BioServiceManager>());       
-
       }
       catch (Exception ex)
       {

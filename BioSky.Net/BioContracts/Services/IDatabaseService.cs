@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace BioContracts.Services
 {
-
   public interface IDatabaseService
   {
     IDataClient<Visitor , CommandVisitors>  VisitorDataClient  { get; }

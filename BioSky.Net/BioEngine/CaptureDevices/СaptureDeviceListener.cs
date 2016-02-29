@@ -13,6 +13,7 @@ using System.Threading;
 
 namespace BioEngine.CaptureDevices
 {
+  //Todo add camera settings
   public class СaptureDeviceListener : Threadable
   {
     private IVideoSource _videoSource;
@@ -52,7 +53,7 @@ namespace BioEngine.CaptureDevices
 
     private void _videoSource_PlayingFinished(object sender, ReasonToFinishPlaying reason)
     {
-      this.Start();
+      Start();
     }
     
 
@@ -104,6 +105,9 @@ namespace BioEngine.CaptureDevices
         for (int i = 0; (i < 50) && (_videoSource.IsRunning); i++)
           Thread.Sleep(100);
 
+        if (_videoSource.IsRunning)
+          _videoSource.Stop();
+        
         _videoSource = null;
       }
       catch (Exception ex)
@@ -117,8 +121,7 @@ namespace BioEngine.CaptureDevices
       if (_videoSource == null)
         return false;
       return _videoSource.IsRunning;
-    }
-    
+    }    
 
     public void Kill()
     {

@@ -131,7 +131,7 @@
                 <ContextMenu IsEnabled="True" >
                     <MenuItem Header="{lex:Loc OpenSettings}"  
                               IsEnabled="{Binding CanOpenSettings, Mode=TwoWay}"
-                              cal:Message.Attach="[Event Click] = [Action ShowLocationFlayout()]"
+                              cal:Message.Attach="[Event Click] = [Action ShowLocationFlyout()]"
                               />
                 </ContextMenu>
             </DataGrid.ContextMenu>

@@ -28,28 +28,25 @@ using BioContracts;
 using Google.Protobuf.Collections;
 using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
-
+using BioContracts.Services;
 
 namespace BioModule.ViewModels
 {
   public class UsersViewModel : Screen
   {
-    public UsersViewModel(IProcessorLocator locator, IWindowManager windowManager)
+    public UsersViewModel(IProcessorLocator locator)
     {
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Users_");
 
-      _locator       = locator;
-      _windowManager = windowManager;
-      _bioEngine     = locator.GetProcessor<IBioEngine>();
-      _selector      = locator.GetProcessor<ViewModelSelector>();
-      _bioService    = _locator.GetProcessor<IServiceManager>();
+      _locator       = locator;     
+      _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      _notifier      = _locator.GetProcessor<INotifier>();
 
-      _selectedItemIds = new ObservableCollection<long>();
-      PageController   = new PageControllerViewModel(this);
+      _selectedPersons = new ObservableCollection<Person>();
+      PageController   = new PageControllerViewModel();
 
-
-      _database.Persons.DataChanged += RefreshData;      
+      _database.Persons.DataChanged      += RefreshData;      
       _database.PhotoHolder.DataChanged  += RefreshData;
 
       IsDeleteButtonEnabled = false;   
@@ -57,125 +54,60 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
-
       if (!IsActive)
         return;
 
       Users = null;
       Users = _database.PersonHolder.Data;
 
-      UsersCollectionView = null;
-
-      if (Users.Count > 0)
-      {
-        UsersCollectionView = new PagingCollectionView(Users, 10);
-        PageController.UpdateData(UsersCollectionView.GetPagingData());
-      }
-      else
-        PageController.UpdateData(new PagingData() { startIndex = 0, endIndex = 0, count = 0, itemsPerPage = 0 });
-    }  
-
-    #endregion
-
-    #region PageController
-    public void MovePage(bool isRightSide)
-    {
-      if (Users.Count <= 0)
+      if (Users == null)
         return;
 
-      if (isRightSide)
-        UsersCollectionView.MoveToNextPage();
-      else
-        UsersCollectionView.MoveToPreviousPage();
+      UsersCollectionView = null;
+      UsersCollectionView = new PagingCollectionView(Users, PAGES_COUNT);    
 
-      PageController.UpdateData(UsersCollectionView.GetPagingData());
-    }
+      PageController.UpdateData(UsersCollectionView);     
+    }  
 
-    #endregion
-
-    #region BioService
-
-    public async Task UsersDeletePerformer(EntityState state)
-    {
-      PersonList personList = new PersonList();
-
-
-      foreach (long id in SelectedItemIds)
-      {
-        Person person = new Person() { Id = id, EntityState = EntityState.Deleted };
-        personList.Persons.Add(person);
-      }
-
-      try
-      {
-        _database.Persons.DataUpdated += UpdateData;
-        await _bioService.DatabaseService.PersonUpdate(personList);
-      }
-      catch (RpcException e)
-      {
-        Console.WriteLine(e.Message);
-      }
-    }
-
-    private void UpdateData(PersonList list)
-    {
-      _database.Persons.DataUpdated -= UpdateData;
-
-      if (list != null)
-      {
-        Person person = list.Persons.FirstOrDefault();
-        if (person != null)
-        {
-          if (person.EntityState == EntityState.Deleted)
-          {
-            if(list.Persons.Count > 1)
-              MessageBox.Show( list.Persons.Count + " users successfully Deleted");
-            else
-              MessageBox.Show("User successfully Deleted");
-          }
-        }
-      }
-    }   
-
-    #endregion
+    #endregion    
+   
 
     #region Interface
     public async void OnDeleteUsers()
     {
-      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      var result = false;// _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      
+      if (result == false)
+        return;
 
-      if (result == true)
+      try
       {
-         try
-        {
-          await UsersDeletePerformer(EntityState.Deleted);
-        }
-        catch (Exception e)
-        {
-          Console.WriteLine(e.Message);
-        } 
+        await _bioService.PersonDataClient.Delete(SelectedPersons);
       }
-    } 
+      catch (Exception e)
+      {
+        _notifier.Notify(e);
+      }      
+    }
 
 
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)
     {
-      IList selectedRecords = e.AddedItems as IList;
+      IList selectedRecords   = e.AddedItems as IList;
       IList unselectedRecords = e.RemovedItems as IList;
 
+      if (selectedRecords == null || unselectedRecords == null)
+        return;
+
       foreach (Person currentUser in selectedRecords)      
-        SelectedItemIds.Add(currentUser.Id);
-      
+        SelectedPersons.Add(currentUser);      
 
-      foreach (Person currentUser in unselectedRecords)      
-        SelectedItemIds.Remove(currentUser.Id);
-      
-
-      if (SelectedItemIds.Count >= 1)
-        IsDeleteButtonEnabled = true;
-      else
-        IsDeleteButtonEnabled = false;
+      foreach (Person currentUser in unselectedRecords)
+        SelectedPersons.Remove(currentUser);  
+           
+      IsDeleteButtonEnabled = (SelectedPersons.Count >= 1) ? true : false;
+     
     }
     protected override void OnActivate()
     {
@@ -184,28 +116,26 @@ namespace BioModule.ViewModels
     }
     public void ShowUserPage(bool isExistingUser)
     {
-      //TODO refactor
+
       if (!isExistingUser)
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage, new object[] { null });
+      {
+        _selector.ShowContent(ShowableContentControl.TabControlContent
+                             , ViewModelsID.UserPage
+                             , new object[] { null });
+      }
       else
       {
-        foreach (long id in SelectedItemIds)
+        foreach (Person person in SelectedPersons)
         {
-          Person person = _bioEngine.Database().PersonHolder.GetValue(id);
+          _selector.ShowContent(ShowableContentControl.TabControlContent
+                                , ViewModelsID.UserPage
+                                , new object[] { person });
 
-          if (person != null)
-          {
-            _selector.ShowContent(ShowableContentControl.TabControlContent
-                                 , ViewModelsID.UserPage
-                                 , new object[] { person });
-          }
         }
       }
     }
-    public void OnSearchTextChanged(string s)
-    {
-      SearchText = s;
-
+    public void OnSearchTextChanged(string SearchText)
+    {     
       UsersCollectionView.Filtering = item =>
       {
         Person vitem = item as Person;
@@ -215,10 +145,9 @@ namespace BioModule.ViewModels
           return true;
 
         if ((item as Person).Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
-            (item as Person).Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
-        {
+            (item as Person).Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)        
           return true;
-        }
+        
         return false;
       };
     }
@@ -230,30 +159,15 @@ namespace BioModule.ViewModels
 
     public void OnMouseDoubleClick(Person user)
     {
-      if (user != null)
-      {
-        _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
-                             , new object[] { user });
-      }
+      if (user == null)
+        return;
+      
+      _selector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UserPage
+                           , new object[] { user });      
     }
     #endregion
 
     #region UI
-    private string _searchText;
-    public string SearchText
-    {
-      get { return _searchText; }
-      set
-      {
-        if (_searchText != value)
-        {
-          _searchText = value;
-
-          NotifyOfPropertyChange(() => SearchText);
-        }
-      }
-    }
-
     private IPagingCollectionView _usersCollectionView;
     public IPagingCollectionView UsersCollectionView
     {
@@ -353,16 +267,16 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ObservableCollection<long> _selectedItemIds;
-    public ObservableCollection<long> SelectedItemIds
+    private ObservableCollection<Person> _selectedPersons;
+    public ObservableCollection<Person> SelectedPersons
     {
-      get { return _selectedItemIds; }
+      get { return _selectedPersons; }
       set
       {
-        if (_selectedItemIds != value)
+        if (_selectedPersons != value)
         {
-          _selectedItemIds = value;
-          NotifyOfPropertyChange(() => SelectedItemIds);
+          _selectedPersons = value;
+          NotifyOfPropertyChange(() => SelectedPersons);
         }
       }
     }
@@ -370,13 +284,14 @@ namespace BioModule.ViewModels
 
     #endregion
 
-    #region Global Variables
-    private readonly IWindowManager       _windowManager;
-    private readonly IProcessorLocator    _locator      ;
-    private readonly ViewModelSelector    _selector     ;
-    private readonly IBioEngine           _bioEngine    ;    
-    private readonly IServiceManager      _bioService   ;
-    private readonly IBioSkyNetRepository _database;
+    #region Global Variables  
+    private readonly IProcessorLocator    _locator   ;
+    private readonly ViewModelSelector    _selector  ;   
+    private readonly IDatabaseService     _bioService;
+    private readonly IBioSkyNetRepository _database  ;
+    private readonly INotifier            _notifier  ;
+
+    private int PAGES_COUNT = 10;
     #endregion
   } 
 }

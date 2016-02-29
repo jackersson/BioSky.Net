@@ -12,49 +12,47 @@ using System.Timers;
 
 namespace BioContracts.Common
 {
-  public class BiometricPerformerBase<T>
-  {
-    private readonly Timer resetTimer; 
-    public BiometricPerformerBase(ICaptureDeviceEngine captureDeviceEngine)
+  public class BiometricPerformerBase
+  {    
+    public BiometricPerformerBase(IProcessorLocator locator )
     {
-      _utils               = new BioImageUtils();  
+      _utils  = new BioImageUtils();
+      _photos = new RepeatedField<Photo>();
 
-      _captureDeviceEngine = captureDeviceEngine;
-
-      resetTimer = new Timer(10000);
+      _bioService          = locator.GetProcessor<IServiceManager>();
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      _notifier            = locator.GetProcessor<INotifier>();
+      
+      resetTimer = new Timer(MAX_CAPTURE_TIME);
       resetTimer.Elapsed += ResetTimer_Elapsed;
       resetTimer.Stop();
     }
 
-    private void ResetTimer_Elapsed(object sender, ElapsedEventArgs e)
-    {
-      resetTimer.Stop();
-      Reset();
-    }
-
-    public void Start(string deviceName, T data)
+    protected void Start(string deviceName)
     {
       if (_busy)
         return;
 
-      Init(deviceName, data);
-
-      _captureDeviceEngine.Subscribe(OnImage, deviceName);
+      Init(deviceName);      
     }
 
-    public void Start(Photo image, T data)
+    protected void Start(Photo photo)
     {
       if (_busy)
         return;
 
-      Init(null, data);
-
-      UpdateData(image);       
+      Init();
+      AddPhoto(photo);       
     }   
 
     public bool Busy
     {
        get { return _busy; }
+    }
+
+    public Photo GetCapturedPhoto()
+    {     
+      return _photos.FirstOrDefault();  
     }
 
     private void OnImage(object sender, ref Bitmap bitmap)
@@ -63,176 +61,256 @@ namespace BioContracts.Common
         return;
 
       Google.Protobuf.ByteString description = _utils.ImageToByteString(bitmap);
-      Photo image = new Photo() { Description = description };
-      UpdateData(image);
-
+      Photo photo = new Photo() { Description = description };
+      AddPhoto(photo);
     }
 
-    protected virtual void UpdateData( Photo image )
+    private void AddPhoto( Photo photo)
     {
-
+      _photos.Add(photo);
+      Check(_photos.Count);
     }
 
-    protected void Check(int count )
+    private void Check(int count )
     {
       if (count >= MAX_IMAGES_COUNT)
       {
         _captureDeviceEngine.Unsubscribe(OnImage, _deviceName);
-        PerformRequest();
+        SubscribeOnFeedback(true);
+        PerformRequest();        
+        Reset();
       }
     }
 
-    protected virtual void PerformRequest()
-    {
-      Console.WriteLine("Request performed");
-      Reset();
-    }
+    //Only this to override
+    protected virtual void PerformRequest() { }
+
+    protected virtual void SubscribeOnFeedback( bool subscribe ) { }
 
     private void Reset()
-    {
-    
-      _busy = false;     
+    {      
+      _busy = false;      
       _captureDeviceEngine.Unsubscribe(OnImage, _deviceName);      
     }
 
-    private void Init(string deviceName, T data)
+    private void Init(string deviceName)
     {
-      resetTimer.Start();
-      Reset();
-      _busy = true;
-      _data       = data;
-      _deviceName = deviceName;
-      if (deviceName != null)
-        _captureDeviceEngine.Add(deviceName);
+      Init();
+      _deviceName = deviceName;     
+      _captureDeviceEngine.Add(deviceName);
+      _captureDeviceEngine.Subscribe(OnImage, deviceName);
     }
 
-    protected T _data;
+    private void ResetTimer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+      resetTimer.Stop();
+      Reset();
+    }
+
+    private void Init()
+    {
+      resetTimer.Start();
+      SubscribeOnFeedback(false);
+      Reset();
+      _busy = true;      
+    }
+    
+    private readonly Timer resetTimer;
+    private const int MAX_CAPTURE_TIME = 10000;
 
     private string _deviceName;
     private bool   _busy      ;
-
+  
     private readonly BioImageUtils _utils;    
 
     private const int MAX_IMAGES_COUNT = 1;
-
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;    
+    protected RepeatedField<Photo> _photos;
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+    protected readonly IServiceManager _bioService;
+    protected readonly INotifier         _notifier;
   }
 
 
-  public class Enroller : BiometricPerformerBase<EnrollmentData>
+  public class Enroller : BiometricPerformerBase
   {
+    public Enroller( IProcessorLocator locator ) : base(locator) { }
 
-    public Enroller( ICaptureDeviceEngine captureDeviceEngine
-                   , IServiceManager bioService) : base(captureDeviceEngine)
+    public void Start(string deviceName, Person person)
     {
-      _bioService = bioService;
+      _person = null;
+      _person = person;
+
+      Start(deviceName);
     }
+    
 
     protected async override void PerformRequest()
     {   
-      await _bioService.FaceService.Enroll(_data);
-      base.PerformRequest();
+      try
+      {
+        EnrollmentData data = new EnrollmentData();
+        data.Images.Add(_photos);
+        await _bioService.FaceService.Enroll(data);
+      }
+      catch (Exception e)
+      {
+        _notifier.Notify(e);
+      }       
     }
 
-    public Photo GetImage()
-    {
-      if (_data != null && _data.Images.Count > 0)
-        return _data.Images[0];
-      else
-        return null;
-    }
+    private Person _person;
 
-    protected override void UpdateData(Photo item)
-    {
-      RepeatedField<Photo> images = _data.Images;
-      images.Add(item);    
-      Check(images.Count);
-    }
-
-    private readonly IServiceManager _bioService;
   }
 
+  public delegate void VisitorVerifiedEventHandler(Visitor visitor);
 
-  public class Verifyer : BiometricPerformerBase<VerificationData>
+
+  public class Verifyer : BiometricPerformerBase
   {
+    public event VisitorVerifiedEventHandler VisitorVerified;
 
-    public Verifyer( ICaptureDeviceEngine captureDeviceEngine
-                   , IServiceManager bioService) 
-                   : base(captureDeviceEngine)
+    public Verifyer( IProcessorLocator locator ) 
+                   : base(locator)
+    {}
+
+    public void Start( string deviceName, Visitor visitor)
     {
-      _bioService = bioService;
+      _visitor = null;
+      _visitor = visitor;
+      
+       Start(deviceName);
+    }
+
+    protected override void SubscribeOnFeedback(bool subscribe)
+    {
+      if (subscribe)
+        _bioService.FaceService.VerifyFeedbackChanged += OnFeedback;
+      else
+        _bioService.FaceService.VerifyFeedbackChanged -= OnFeedback;
     }
 
     protected async override void PerformRequest()
     {
       try
       {
-        await _bioService.FaceService.Verify(_data);
+        VerificationData data = new VerificationData();
+        data.Images.Add(_photos);
+        data.Personid  = _visitor.Personid;       
+        await _bioService.FaceService.Verify(data);
       }     
       catch (Exception e)
       {
-        Console.Write(e.Message);
-      }
-      base.PerformRequest();
+        _notifier.Notify(e);
+      }      
     }
 
-    public Photo GetImage()
+    private void OnVisitorVerified(Visitor visitor)
     {
-      if (_data != null && _data.Images.Count > 0)
-        return _data.Images[0];
-      else
-        return null;
+      if (VisitorVerified != null)
+        VisitorVerified(visitor);
     }
+
+    private void OnFeedback(object sender, VerificationFeedback feedback)
+    {
+      EnrollmentFeedback enrollFeedback = feedback.EnrollmentFeedback;
+      if (enrollFeedback == null)
+        return;
+
+      if (enrollFeedback.Progress == 100)
+      {
+        SubscribeOnFeedback(false);       
+       
+        Photo photo         = GetCapturedPhoto();
+        Photo feedbackPhoto = enrollFeedback.Photo;
+
+        if (photo == null)
+          photo = new Photo();
+
+        if (feedbackPhoto != null)
+          photo.Fir = feedbackPhoto.Fir;
+
+        photo.EntityState  = EntityState.Added;
+        photo.SizeType     = PhotoSizeType.Full;
+        photo.OriginType   = PhotoOriginType.Detected;
+        photo.Personid     = _visitor.Personid;
+
+        _visitor.Status = enrollFeedback.Success ? ResultStatus.Success : ResultStatus.Failed;
+        _visitor.Photo   = photo;
+
+        OnVisitorVerified(_visitor);       
+      }      
+    }
+       
 
     public VerificationData GetData()
     {
-      return _data;
+      return null;
     }
 
-    protected override void UpdateData(Photo item)
-    {
-      RepeatedField<Photo> images = _data.Images;
-      images.Add(item);
-      Check(images.Count);
-    }
-
-    private readonly IServiceManager _bioService;
+    private Visitor _visitor;
   }
 
 
   public class TrackLocationCaptureDeviceObserver
   {
+    public TrackLocationCaptureDeviceObserver(IProcessorLocator locator)
+    {
+      Init(locator);
+    }
+
+    public TrackLocationCaptureDeviceObserver(IProcessorLocator locator, string deviceName)
+    {
+      Init(locator);
+      Update(deviceName);
+    }
 
     public TrackLocationCaptureDeviceObserver(IProcessorLocator locator, CaptureDevice captureDevice)
     {
-      _locator       = locator;
-      _captureDevice = captureDevice;
-
-      _captureDeviceEngine = _locator.GetProcessor<ICaptureDeviceEngine>();        
-
-      _captureDeviceEngine.Add(_captureDevice.Devicename);     
+      Init(locator);
+      Update(captureDevice.Devicename);
     }   
+
+    public void Update(string deviceName)
+    {
+      DeviceName = deviceName;
+      _captureDeviceEngine.Add(DeviceName);
+    }
 
     public void Subscribe(FrameEventHandler handler)
     {
-      _captureDeviceEngine.Subscribe(handler, _captureDevice.Devicename);
+      _captureDeviceEngine.Subscribe(handler, DeviceName);
     }
 
     public void Unsubscribe(FrameEventHandler handler)
     {
-      _captureDeviceEngine.Unsubscribe(handler, _captureDevice.Devicename);
+      _captureDeviceEngine.Unsubscribe(handler, DeviceName);
     }
 
     public void Stop()
     {        
-      _captureDeviceEngine.Remove(_captureDevice.Devicename);
+      _captureDeviceEngine.Remove(DeviceName);
     }
 
+    private void Init(IProcessorLocator locator)
+    {
+      _locator = locator;
+      _captureDeviceEngine = _locator.GetProcessor<ICaptureDeviceEngine>();
+    }
 
-    private readonly CaptureDevice     _captureDevice; 
-    private readonly IProcessorLocator _locator      ;
+    private string _deviceName;
+    public string DeviceName
+    {
+      get { return _deviceName; }
+      private set
+      {
+        if (_deviceName != value)
+          _deviceName = value;
+      }
+    }
+       
+    private IProcessorLocator _locator      ;
 
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+    private ICaptureDeviceEngine _captureDeviceEngine;
   }
 
   public class BioImageUtils
@@ -251,15 +329,15 @@ namespace BioContracts.Common
       return byteArray;
     }
 
-    public Byte[] ImageToByte(Stream stream)
+    public byte[] ImageToByte(Stream stream)
     {
-     
-      Byte[] buffer = null;
+
+      byte[] buffer = null;
       if (stream != null && stream.Length > 0)
       {
         using (BinaryReader br = new BinaryReader(stream))
         {
-          buffer = br.ReadBytes((Int32)stream.Length);
+          buffer = br.ReadBytes((int)stream.Length);
         }
       }
 

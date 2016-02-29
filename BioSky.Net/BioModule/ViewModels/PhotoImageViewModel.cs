@@ -26,17 +26,16 @@ namespace BioModule.ViewModels
 {
   public class PhotoImageViewModel : ImageViewModel
   {
-    public PhotoImageViewModel(IProcessorLocator locator, IWindowManager windowManager)
-      : base(locator, windowManager)
+    public PhotoImageViewModel(IProcessorLocator locator)
+      : base(locator)
     {
-      _locator       = locator      ;
-      _windowManager = windowManager;
+      _locator       = locator;
 
 
       _serviceManager      = locator.GetProcessor<IServiceManager>();
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
 
-      _enroller = new Enroller(_captureDeviceEngine, _serviceManager);
+      _enroller = new Enroller(locator);
     }
 
     #region Interface
@@ -54,8 +53,8 @@ namespace BioModule.ViewModels
         }
 
         _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
-        EnrollmentData data = new EnrollmentData();
-        _enroller.Start(photo, data);
+        //EnrollmentData data = new EnrollmentData();
+        //_enroller.Start(photo, data);
       }
       else
         MessageBox.Show("Wait for finnishing previous operation");
@@ -63,7 +62,7 @@ namespace BioModule.ViewModels
 
     public void EnrollFromCamera()
     {
-      var result = _windowManager.ShowDialog(new CameraDialogViewModel(_locator, this));
+      var result = false; // _windowManager.ShowDialog(new CameraDialogViewModel(_locator, this));
       
       if(result == true)
       {
@@ -71,7 +70,7 @@ namespace BioModule.ViewModels
         {
           _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
           EnrollmentData data = new EnrollmentData();
-          _enroller.Start(selectedCaptureDevice, data);
+          //_enroller.Start(selectedCaptureDevice);
         }
 
         if (!captureDeviceConnected)
@@ -131,7 +130,7 @@ namespace BioModule.ViewModels
         _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
 
         Photo NewPhoto = new Photo();
-        NewPhoto = _enroller.GetImage();
+        NewPhoto = _enroller.GetCapturedPhoto();
         Photo feedbackPhoto = feedback.Photo;
 
 

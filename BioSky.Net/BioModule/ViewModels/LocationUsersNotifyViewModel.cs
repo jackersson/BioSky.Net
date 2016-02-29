@@ -14,13 +14,13 @@ namespace BioModule.ViewModels
 {
   public class LocationUsersNotifyViewModel : Screen, IUpdatable
   {
-    public LocationUsersNotifyViewModel(IProcessorLocator locator, IWindowManager windowManager)
+    public LocationUsersNotifyViewModel(IProcessorLocator locator)
     {
       DisplayName = "UsersNotification";
 
       _locator = locator;
       _bioService = _locator.GetProcessor<IServiceManager>();
-      _bioEngine = _locator.GetProcessor<IBioEngine>();           
+      _bioEngine  = _locator.GetProcessor<IBioEngine>();           
     }
 
    

@@ -52,12 +52,13 @@
                 </ScrollViewer>
             </Grid>
         </Border>
-
+<!--
         <Grid HorizontalAlignment="Center"             
               VerticalAlignment="Top" 
               Grid.Column="0" Grid.ColumnSpan="5">
             <local:ProgressRingView cal:View.Model="{Binding ProgressRingView}"></local:ProgressRingView>
         </Grid>
+        -->
 
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
         <Grid Name="SlideGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">

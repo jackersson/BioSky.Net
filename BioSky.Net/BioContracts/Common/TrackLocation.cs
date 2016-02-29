@@ -3,36 +3,36 @@ using BioContracts.Services;
 using BioService;
 using Caliburn.Micro;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioContracts
-{  
+{
   public class TrackLocation : PropertyChangedBase
-  {
-    public event FrameEventHandler FrameChanged;
-
-    public event EnrollFeedbackEventHandler EnrollFeedbackChanged;
+  {   
     public TrackLocation(IProcessorLocator locator, Location location)
     {
       _locator = locator;
-      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
-      _database            = locator.GetProcessor<IBioSkyNetRepository>();
-      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-      _bioService          = locator.GetProcessor<IServiceManager>();
+     
+      _database            = locator.GetProcessor<IBioSkyNetRepository>();     
+      _bioService          = locator.GetProcessor<IServiceManager>().DatabaseService;
+      _notifier            = locator.GetProcessor<INotifier>();
 
-      _accessDevices  = new Dictionary<string, TrackLocationAccessDeviceObserver>();
-      _captureDevices = new Dictionary<string, TrackLocationCaptureDeviceObserver>();
+      CaptureDeviceObserver = new TrackLocationCaptureDeviceObserver(locator);
+      AccessDeviceObserver  = new TrackLocationAccessDeviceObserver (locator);     
 
-      _database.Locations.DataChanged += RefreshData;     
-
-      _veryfier = new Verifyer(_captureDeviceEngine, _bioService);     
+      _veryfier = new Verifyer(_locator);     
 
       Update(location);
+    }
+
+    public void Update(Location location)
+    {
+      if (location == null)
+        return;
+
+      _location = location;
+      RefreshData();
     }
 
     private void RefreshData()
@@ -43,63 +43,64 @@ namespace BioContracts
 
     private void RefreshCaptureDevices()
     {
-      StopCaptureDevices();
+      
+      CaptureDevice newCaptureDevice = _database.CaptureDeviceHolder.Data
+                                      .Where(cap => cap.Locationid == _location.Id)
+                                      .FirstOrDefault();
 
-      List<CaptureDevice> capture_devices = _database.CaptureDeviceHolder.Data
-                                            .Where(cap => cap.Locationid == _location.Id)
-                                            .ToList();
+      if (newCaptureDevice.Devicename == CaptureDeviceObserver.DeviceName)
+        return;
+      
+      StopCaptureDevice();      
+      CaptureDeviceObserver.Update(newCaptureDevice.Devicename);
+      CaptureDeviceObserver.Subscribe(OnFrameChanged);       
+    }
 
-      foreach (CaptureDevice cd in capture_devices)
-      {       
-        TrackLocationCaptureDeviceObserver observer = new TrackLocationCaptureDeviceObserver(_locator, cd);
-        observer.Subscribe(OnFrameChanged);
-        _captureDevices.Add(cd.Devicename, observer);
-        CaptureDeviceName = cd.Devicename;
+    private async void OnVisitorVerified(Visitor visitor)
+    {
+      try
+      {
+        _veryfier.VisitorVerified -= OnVisitorVerified;
+        await _bioService.VisitorDataClient.Add(visitor);
+      }
+      catch (Exception e)
+      {
+        _notifier.Notify(e);
       }
     }
 
     private void OnFrameChanged(object sender, ref Bitmap bitmap)
     {
-      if (FrameChanged != null)
-      {
-        FrameChanged(sender,ref  bitmap);
-      }
+      if (FrameChanged != null)      
+        FrameChanged(sender,ref  bitmap);      
     }
 
-    private void StopAccessDevices()
-    {
-      foreach (KeyValuePair<string, TrackLocationAccessDeviceObserver> ac in _accessDevices)
-      {
-        ac.Value.AccessDeviceState -= OnAccessDeviceStateChanged;
-        _accessDevices.Remove(ac.Key);
-      }
+    private void StopAccessDevice()
+    {      
+      AccessDeviceObserver.AccessDeviceState -= OnAccessDeviceStateChanged;
+      AccessDeviceObserver.Stop();
     }
 
-    private void StopCaptureDevices( )
+    private void StopCaptureDevice( )
     {
-      foreach (KeyValuePair<string, TrackLocationCaptureDeviceObserver> ac in _captureDevices)
-      {
-        ac.Value.Unsubscribe(OnFrameChanged);
-        ac.Value.Stop();
-        _accessDevices.Remove(ac.Key);
-      }
+      CaptureDeviceObserver.Unsubscribe(OnFrameChanged);
+      CaptureDeviceObserver.Stop();    
     }
 
     private void RefreshAccessDevices()
     {
-      StopAccessDevices();
+      StopAccessDevice();
 
-      List<AccessDevice> access_devices = _database.AccessDeviceHolder.Data
-                                          .Where(ad => ad.Locationid == _location.Id)
-                                          .ToList();
+      AccessDevice newAccessDevice = _database.AccessDeviceHolder.Data
+                                     .Where(ad => ad.Locationid == _location.Id).FirstOrDefault();
 
-      foreach (AccessDevice ac in access_devices)
-      {        
-        TrackLocationAccessDeviceObserver observer = new TrackLocationAccessDeviceObserver(_locator, ac);
-        observer.AccessDeviceState += OnAccessDeviceStateChanged;
-        observer.CardDetected += OnCardDetected;
-        _accessDevices.Add(ac.Portname, observer);
-      }
+      if (newAccessDevice.Portname == AccessDeviceObserver.DeviceName)
+        return;
+
+      StopCaptureDevice();
+      AccessDeviceObserver.Update(newAccessDevice.Portname);
+      AccessDeviceObserver.AccessDeviceState += OnAccessDeviceStateChanged;
+      AccessDeviceObserver.CardDetected      += OnCardDetected            ;          
     }
 
     private void OnAccessDeviceStateChanged(bool status )
@@ -107,135 +108,72 @@ namespace BioContracts
       AccessDevicesStatus = status;      
     }
 
-    private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
+    public void Stop()
     {
+      StopAccessDevice();
+      StopCaptureDevice();
+    }
 
-      Console.WriteLine("Verifier busy = " + _veryfier.Busy);
+    public IScreen ScreenViewModel { get; set; }
+
+    public string Caption
+    {
+      get { return _location.LocationName; }
+    }
+
+    public Location CurrentLocation
+    {
+      get { return _location; }
+    }
+
+    private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
+    {      
       if (_veryfier.Busy)
         return;
-
-      CardNumber = "";
-      CardNumber = cardNumber;
-      observer = null;
-      observer = sender;
+      
       Card card = _database.CardHolder.GetValue(cardNumber);
 
+      Visitor visitor  = new Visitor() { Locationid   = _location.Id
+                                       , EntityState  = EntityState.Added
+                                       , Time         = DateTime.Now.Ticks                                           
+                                       , CardNumber   = cardNumber   };
       
-      sender.Reset();
-
       if (card != null)
       {        
         Person person = _database.PersonHolder.GetValue(card.Personid);
-        if (person != null)
-        {         
-          try
-          {
-            VerificationData verificationData = new VerificationData();
-            verificationData.Personid = person.Id;
-            _veryfier.Start(CaptureDeviceName, verificationData);
-            _bioService.FaceService.VerifyFeedbackChanged += FaceService_VerifyFeedbackChanged;
-          }
-          catch ( Exception e)
-          {
-            Console.WriteLine(e.Message);
-          }
-        }
-       
-      }
-    }
-
-    string CardNumber = "";
-    TrackLocationAccessDeviceObserver observer = null;
-
-
-    private async void FaceService_VerifyFeedbackChanged(object sender, VerificationFeedback feedback)
-    {      
-      EnrollmentFeedback enrollFeedback = feedback.EnrollmentFeedback;
-      if (enrollFeedback == null)
-        return;
-
-      long personid = 0;
-      ResultStatus success = ResultStatus.Failed;
-
-      if (enrollFeedback.Progress == 100)
-      {
-        _bioService.FaceService.VerifyFeedbackChanged -= FaceService_VerifyFeedbackChanged;
-        VerificationData data = _veryfier.GetData();
-        personid = data.Personid;
-        success  = enrollFeedback.Success ? ResultStatus.Success : ResultStatus.Failed;
-
-        if (observer != null)
-        {
-          if (success == ResultStatus.Success)
-            observer.Success();
-          else
-            observer.Failed();
-        }
-       
-
-        Photo image         = _veryfier.GetImage();
-        Photo feedbackPhoto = enrollFeedback.Photo;
-
-        if (image == null)
-          image = new Photo();
-
-        if (feedbackPhoto != null)
-          image.Fir = feedbackPhoto.Fir;
-
-
-        image.EntityState  = EntityState.Added;     
-        image.SizeType     = PhotoSizeType.Full;
-        image.OriginType   = PhotoOriginType.Detected;
-        image.Personid     = personid;
-
-        VisitorList list = new VisitorList();
-        Visitor visitor  = new Visitor() { Locationid    = _location.Id
-                                          , EntityState  = EntityState.Added
-                                          , Time         = DateTime.Now.Ticks
-                                          , Status       = success
-                                          , CardNumber   = CardNumber
-                                          , Personid     = personid };
-
-        visitor.Photo = image;
-
-        list.Visitors.Add(visitor);
-
-        try
-        {
-          await _bioService.DatabaseService.VisitorUpdate(list);
-        }
-        catch (Exception ex)
-        {
-          Console.WriteLine(ex.Message);
-        }
-        observer.Failed();
+        if (person != null)        
+          visitor.Personid = person.Id;         
       }
 
-
-      OnEnrollFeedbackChanged(enrollFeedback);
-      Console.WriteLine(enrollFeedback.Progress);
+      _veryfier.VisitorVerified -= OnVisitorVerified;
+      _veryfier.VisitorVerified += OnVisitorVerified; 
+      _veryfier.Start(CaptureDeviceObserver.DeviceName, visitor);     
     }
 
-    private void OnEnrollFeedbackChanged(EnrollmentFeedback feedback)
+    #region UI
+    private TrackLocationCaptureDeviceObserver _captureDeviceObserver;
+    public TrackLocationCaptureDeviceObserver CaptureDeviceObserver
     {
-      if (EnrollFeedbackChanged != null)
-        EnrollFeedbackChanged(null, feedback);
-    }
-
-    private string _captureDeviceName;
-    public string CaptureDeviceName
-    {
-      get { return _captureDeviceName; }
-      set
+      get { return _captureDeviceObserver; }
+      private set
       {
-        if (_captureDeviceName != value )
-        {
-          _captureDeviceName = value;          
-        }
+        if (_captureDeviceObserver != value)
+          _captureDeviceObserver = value;
       }
     }
 
-    
+    private TrackLocationAccessDeviceObserver _accessDeviceObserver;
+    public TrackLocationAccessDeviceObserver AccessDeviceObserver
+    {
+      get { return _accessDeviceObserver; }
+      private set
+      {
+        if (_accessDeviceObserver != value)
+          _accessDeviceObserver = value;
+      }
+    }
+
+
     private bool _accessDevicesStatus;
     public bool AccessDevicesStatus
     {
@@ -249,43 +187,20 @@ namespace BioContracts
         }
       }
     }
-    
 
-    public void Update(Location location)
-    {
-      _location = location;
-      RefreshData();
-    }
+    #endregion
 
-    public long LocationID
-    {
-      get { return _location.Id; }
-    }
-
-       
-    public void Stop()
-    {
-      StopAccessDevices();
-      StopCaptureDevices();
-    }
-    
-    public IScreen ScreenViewModel { get; set; }
-
-    public string Caption
-    {
-      get { return _location.LocationName; }
-    }
-
-    private Dictionary<string, TrackLocationAccessDeviceObserver>  _accessDevices ;
-    private Dictionary<string, TrackLocationCaptureDeviceObserver> _captureDevices;
+    #region Global Variables
+    public event FrameEventHandler          FrameChanged;
 
     private Verifyer _veryfier;
     private Location _location;
-    private readonly IAccessDeviceEngine  _accessDeviceEngine ;
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;
-    private readonly IServiceManager      _bioService         ;
+    
+    private readonly IDatabaseService     _bioService         ;
     private readonly IBioSkyNetRepository _database           ;
     private readonly IProcessorLocator    _locator            ;
-    
+    private readonly INotifier            _notifier           ;
+
+    #endregion
   }
 }

@@ -21,319 +21,123 @@ using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
-  public class LocationAccessDevicesViewModel : Screen, IUpdatable
+  public class LocationCaptureDevicesViewModel : Screen, IUpdatable
   {
-    public LocationAccessDevicesViewModel(IProcessorLocator locator, IWindowManager windowManager)
-    {
-      DisplayName = "AccessDevices";
-
-      _locator       = locator ;
-      _windowManager = windowManager;
-
-      _bioService    = _locator.GetProcessor<IServiceManager>();
-      _bioEngine     = _locator.GetProcessor<IBioEngine>();
-
-
-      _captureDevicesList = new ObservableCollection<LocationItem>();
-      _accessDevicesList  = new ObservableCollection<LocationItem>();
-
-      AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
-      AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
-
-      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
-      CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
-
-      RefreshData();
-      RefreshCaptureDevices();
+    public LocationCaptureDevicesViewModel(IProcessorLocator locator)
+    {    
+      _locator = locator;
+    
+      _bioEngine  = _locator.GetProcessor<IBioEngine>();
+      
+      _captureDevicesList = new AsyncObservableCollection<CaptureDeviceItem>();
+           
+      CaptureDevicesNames = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();   
     }
 
-    #region Update
+    public void RefreshConnectedDevices()
+    {
+      foreach (string deviceName in CaptureDevicesNames)
+      {
+        if (!IsDeviceUsed(deviceName))
+        {
+          CaptureDevice device         = new CaptureDevice()     { Devicename = deviceName };
+          CaptureDeviceItem deviceItem = new CaptureDeviceItem() { ItemContext = device
+                                                                 , ItemActive  = false                                                               
+                                                                 , ItemEnabled = true };
+          CaptureDevicesList.Add(deviceItem);
+        }
+      }
+    }
 
-    private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-      RefreshData();
-    }
-    public void Update(Location location)
-    {
-      _location = location.Clone();
-      RefreshData();
-      RefreshCaptureDevices();
-    }
     public void RefreshData()
-    {
-      AccessDevicesList.Clear();
-
-      foreach (AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
-      {
-        LocationItem dragableItem = new LocationItem() { ItemContext = item.Clone(), ItemEnabled = true, DisplayName = item.Portname };
-
-        if (_location.Id <= 0)
-        {
-          if (item.Type == AccessDevice.Types.AccessDeviceType.DeviceNone)
-          {
-            dragableItem.ItemNotUse = true;
-            AddToGeneralDeviceList(dragableItem, false, true);
-          }
-          else
-          {
-            dragableItem.ItemNotUse = false;
-            AddToGeneralDeviceList(dragableItem, false, true);
-          }
-
-          continue;
-        }
-        else
-        {
-          if (item.Locationid == _location.Id)
-          {
-            dragableItem.ItemNotUse = true;
-            switch (item.Type)
-            {
-              case AccessDevice.Types.AccessDeviceType.DeviceIn:
-                AddToGeneralDeviceList(dragableItem, true, true);
-                break;
-              case AccessDevice.Types.AccessDeviceType.DeviceNone:
-                AddToGeneralDeviceList(dragableItem, false, true);
-                break;
-            }
-          }
-          else
-          {
-            dragableItem.ItemNotUse = false;
-            AddToGeneralDeviceList(dragableItem, false, true);
-          }
-        }
-      }
-
-      foreach (string deviceName in AccessDevicesNames)
-      {
-        if (!IsDeviceUsed(deviceName, true))
-        {
-          AccessDevice device = new AccessDevice() { Portname = deviceName };
-          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Portname, ItemNotUse = true };
-          AddToGeneralDeviceList(dragableItem, false, true);
-        }
-      }
-    }
-
-    public void RefreshCaptureDevices()
     {
       CaptureDevicesList.Clear();
 
       foreach (CaptureDevice item in _bioEngine.Database().CaptureDeviceHolder.Data)
       {
-        LocationItem dragableItem = new LocationItem() { ItemContext = item, ItemEnabled = true, DisplayName = item.Devicename };
+        bool state = (_location.Id == item.Locationid);
+        CaptureDeviceItem deviceItem  = new CaptureDeviceItem() {  ItemContext = item
+                                                                 , ItemActive  = state
+                                                                 , ItemEnabled = state      };
 
-        if (_location.Id <= 0)
-        {
-          if (item.Locationid <= 0)
-          {
-            dragableItem.ItemNotUse = true;
-            AddToGeneralDeviceList(dragableItem, false, false);
-          }
-          else
-          {
-            dragableItem.ItemNotUse = false;
-            AddToGeneralDeviceList(dragableItem, false, false);
-          }
-
-          continue;
-        }
-        else
-        {
-          if (item.Locationid == _location.Id)    
-          {
-            dragableItem.ItemNotUse = true;
-            AddToGeneralDeviceList(dragableItem, true, false); 
-          }
-          else
-          {
-            dragableItem.ItemNotUse = false;
-            AddToGeneralDeviceList(dragableItem, false, false);
-          }
-        }
+        CaptureDevicesList.Add(deviceItem);        
       }
 
-      foreach (string deviceName in CaptureDevicesNames)
-      {
-        if (!IsDeviceUsed(deviceName, false))
-        {
-          CaptureDevice device = new CaptureDevice() { Devicename = deviceName, };
-          LocationItem dragableItem = new LocationItem() { ItemContext = device, ItemEnabled = true, DisplayName = device.Devicename, ItemNotUse = true };
-          AddToGeneralDeviceList(dragableItem, false, false);
-        }
-      }
+      RefreshConnectedDevices();
     }
 
-    public bool IsDeviceUsed(string deviceName, bool isAccessDevices)
+    public void Update(Location location)
     {
-      if (isAccessDevices)
-      {
-        foreach (LocationItem item in AccessDevicesList)
-        {
-          if (item.DisplayName == deviceName)
-            return true;
-          else
-            continue;
-        }
-        return false;
-      }
-      else
-      {
-        foreach (LocationItem item in CaptureDevicesList)
-        {
-          if (item.DisplayName == deviceName)
-            return true;
-          else
-            continue;
-        }
-        return false;
-      }
+      _location = location;
+      RefreshData();
     }
-    public void AddToGeneralDeviceList(LocationItem item, bool isEnabled = true, bool isAccessDevice = true)
+
+    protected override void OnActivate()
     {
-      if (item == null)
-        return;
-
-      LocationItem newItem = item.Clone();
-      newItem.ItemEnabled = isEnabled;
-
-      if(isAccessDevice)
-        AccessDevicesList.Add(newItem);      
-      else
-        CaptureDevicesList.Add(newItem);      
+      CaptureDevicesNames.CollectionChanged += CaptureDevicesNames_CollectionChanged;
+      RefreshData();
+      base.OnActivate();
     }
 
+    protected override void OnDeactivate(bool close)
+    {
+      CaptureDevicesNames.CollectionChanged -= CaptureDevicesNames_CollectionChanged;
 
-
- 
-    #endregion
-
-    #region BioService
+      base.OnDeactivate(close);
+    }
+      
     public RepeatedField<CaptureDevice> GetCaptureDevices()
     {
       RepeatedField<CaptureDevice> captureDevices = new RepeatedField<CaptureDevice>();
 
-      foreach (LocationItem item in CaptureDevicesList)
+      foreach (CaptureDeviceItem item in CaptureDevicesList)
       {
-        if(item.ItemEnabled == true)
+        if (item.ItemActive == true)
         {
-          CaptureDevice captureDevice = (CaptureDevice)item.ItemContext;
+          CaptureDevice captureDevice = item.ItemContext;
           captureDevices.Add(captureDevice);
         }
-
       }
 
       return captureDevices;
     }
 
-    public RepeatedField<AccessDevice> GetAccessDevices()
+    private AsyncObservableCollection<CaptureDeviceItem> _captureDevicesList;
+    public AsyncObservableCollection<CaptureDeviceItem> CaptureDevicesList
     {
-      RepeatedField<AccessDevice> accessDevices = new RepeatedField<AccessDevice>();
-
-      foreach (LocationItem item in AccessDevicesList)
+      get { return _captureDevicesList; }
+      set
       {
-        if (item.ItemEnabled == true)
+        if (_captureDevicesList != value)
         {
-          AccessDevice accessDevice = (AccessDevice)item.ItemContext;
-          accessDevice.Type = AccessDevice.Types.AccessDeviceType.DeviceIn;
-          accessDevices.Add(accessDevice);
+          _captureDevicesList = value;
+          NotifyOfPropertyChange(() => CaptureDevicesList);
         }
-
       }
-
-      return accessDevices;
     }
 
-    #endregion
-
-    #region Interface
-
-    public void OnRemove(string source)
+    public bool IsDeviceUsed(string deviceName)
     {
-      switch (source)
+       foreach (CaptureDeviceItem item in CaptureDevicesList)
+       {
+         if (item.ItemContext.Devicename == deviceName)
+           return true;        
+       }
+       return false;      
+    }
+
+    private CaptureDeviceItem _selectedCaptureDevice;
+    public CaptureDeviceItem SelectedCaptureDevice
+    {
+      get { return _selectedCaptureDevice; }
+      set
       {
-        case "CaptureDevice":
-          if (SelectedCaptureDevice.ItemNotUse == false)
-            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Camera used by another Location", DialogStatus.Error));
-          else
-            SelectedCaptureDevice.ItemEnabled = false;
-
-          break;
-        case "AccessDevice":
-          if(SelectedAccessDevice.ItemNotUse == false)
-            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Device used by another Location", DialogStatus.Error));
-          else
-            SelectedAccessDevice.ItemEnabled = false;
-
-          break;
+        if (_selectedCaptureDevice != value)
+        {
+          _selectedCaptureDevice = value;
+          NotifyOfPropertyChange(() => SelectedCaptureDevice);
+        }
       }
-    }
-
-    public void OnActivate(string source)
-    {
-      switch (source)
-      {
-        case "CaptureDevice":
-          if (SelectedCaptureDevice.ItemNotUse == false)
-            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Camera used by another Location", DialogStatus.Error));
-          else
-          {
-            foreach (LocationItem item in CaptureDevicesList)
-              item.ItemEnabled = false;
-            SelectedCaptureDevice.ItemEnabled = true;
-          }         
-
-          break;
-        case "AccessDevice":
-          if (SelectedAccessDevice.ItemNotUse == false)
-            _windowManager.ShowDialog(new CustomTextDialogViewModel("Warning", "Device used by another Location", DialogStatus.Error));
-          else
-          {
-            foreach (LocationItem item in AccessDevicesList)
-              item.ItemEnabled = false;
-            SelectedAccessDevice.ItemEnabled = true;
-          }
-
-          break;
-      }
-    }
-    public void EnableItem(LocationItem sourceitem, ObservableCollection<LocationItem> generalList)
-    {
-      foreach (LocationItem item in generalList)
-      {
-        if (item.DisplayName == sourceitem.DisplayName)
-          item.ItemEnabled = true;
-      }
-    }
-    public void OnMouseRightButtonDownAccess(LocationItem IsDragableItem)
-    {      
-      MenuRemoveStatus = (SelectedAccessDevice != null);
-      SelectedAccessDevice = IsDragableItem;
-    }
-    public void OnSelectionChangeAccess()
-    {
-      MenuRemoveStatus = (SelectedAccessDevice != null);
-    }
-    public void OnMouseRightButtonDownCapture(LocationItem IsDragableItem)
-    {
-      MenuRemoveStatus = (SelectedCaptureDevice != null);
-      SelectedCaptureDevice = IsDragableItem;
-    }
-    public void OnSelectionChangeCapture()
-    {
-      MenuRemoveStatus = (SelectedCaptureDevice != null);
-    }
-
-    public void Apply()
-    {
-    }  
-    #endregion
-
-    #region UI
-    private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-      RefreshCaptureDevices();
     }
 
     private AsyncObservableCollection<string> _captureDevicesNames;
@@ -345,11 +149,29 @@ namespace BioModule.ViewModels
         if (_captureDevicesNames != value)
         {
           _captureDevicesNames = value;
-
           NotifyOfPropertyChange(() => CaptureDevicesNames);
         }
       }
     }
+
+    public void OnRemove()
+    {    
+      if (SelectedCaptureDevice != null)
+        SelectedCaptureDevice.ItemEnabled = false;     
+    }
+
+    public void OnMouseRightButtonDownCapture(CaptureDeviceItem deviceItem)
+    {
+      MenuRemoveStatus = (SelectedCaptureDevice != null);
+      SelectedCaptureDevice = deviceItem;
+    }
+  
+    private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      RefreshConnectedDevices();
+    }
+
+    public void Apply() {}
 
     private bool _menuRemoveStatus;
     public bool MenuRemoveStatus
@@ -365,8 +187,162 @@ namespace BioModule.ViewModels
       }
     }
 
-    private LocationItem _selectedAccessDevice;
-    public LocationItem SelectedAccessDevice
+    #region Global Variables
+
+    private Location _location;
+    private readonly IProcessorLocator _locator  ;
+    private readonly IBioEngine        _bioEngine;    
+
+    #endregion
+  }
+
+
+  public class LocationAccessDevicesViewModel : Screen, IUpdatable
+  {
+    public LocationAccessDevicesViewModel(IProcessorLocator locator)
+    {
+      DisplayName = "AccessDevices";
+
+      _locator       = locator ;   
+          
+      _bioEngine     = _locator.GetProcessor<IBioEngine>();
+      
+      _accessDevicesList  = new AsyncObservableCollection<AccessDeviceItem>();
+
+      AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();      
+    }
+
+    #region Update
+
+    protected override void OnActivate()
+    {
+      AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
+      RefreshData();
+      base.OnActivate();
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      AccessDevicesNames.CollectionChanged -= AccessDevicesNames_CollectionChanged;
+      base.OnDeactivate(close);
+    }   
+
+    private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      RefreshConnectedDevices();
+    }
+    public void Update(Location location)
+    {
+      _location = location;
+      RefreshData();      
+    }
+    public void RefreshConnectedDevices()
+    {
+      foreach (string deviceName in AccessDevicesNames)
+      {
+        if (!IsDeviceUsed(deviceName))
+        {
+          AccessDevice     device     = new AccessDevice()     { Portname = deviceName };
+          AccessDeviceItem deviceItem = new AccessDeviceItem() { ItemContext = device
+                                                               , ItemActive  = false                                                               
+                                                               , ItemEnabled = true };
+          AccessDevicesList.Add(deviceItem);
+        }
+      }
+    }
+
+    public void RefreshData()
+    {
+      AccessDevicesList.Clear();
+
+      foreach (AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
+      {
+        bool state = (_location.Id == item.Locationid);
+        AccessDeviceItem deviceItem  = new AccessDeviceItem() {  ItemContext = item
+                                                               , ItemActive  = state
+                                                               , ItemEnabled = state      };
+
+        AccessDevicesList.Add(deviceItem);        
+      }
+
+      RefreshConnectedDevices();
+    }
+   
+    public bool IsDeviceUsed(string deviceName)
+    {      
+      foreach (AccessDeviceItem item in AccessDevicesList)
+      {
+        if (item.ItemContext.Portname == deviceName)
+          return true;          
+      }
+      return false;
+    }
+         
+    #endregion
+
+    #region BioService
+
+
+    public RepeatedField<AccessDevice> GetAccessDevices()
+    {
+      RepeatedField<AccessDevice> accessDevices = new RepeatedField<AccessDevice>();
+
+      foreach (AccessDeviceItem item in AccessDevicesList)
+      {
+        if (item.ItemActive)
+        {
+          AccessDevice accessDevice = item.ItemContext;       
+          accessDevices.Add(accessDevice);
+        }
+      }
+
+      return accessDevices;
+    }
+
+    #endregion
+
+    #region Interface
+
+    public void OnRemove(string source)
+    {      
+       SelectedAccessDevice.ItemEnabled = false;      
+    }
+
+    public void OnActivate(string source)
+    {        
+       foreach (AccessDeviceItem item in AccessDevicesList)
+         item.ItemEnabled = false;
+       SelectedAccessDevice.ItemEnabled = true;        
+    }
+    
+    public void OnMouseRightButtonDownAccess(AccessDeviceItem deviceItem)
+    {      
+      MenuRemoveStatus = (SelectedAccessDevice != null);
+      SelectedAccessDevice = deviceItem;
+    } 
+
+    public void Apply()  {}   
+    
+    #endregion
+
+    #region UI
+   
+    private bool _menuRemoveStatus;
+    public bool MenuRemoveStatus
+    {
+      get { return _menuRemoveStatus; }
+      set
+      {
+        if (_menuRemoveStatus != value)
+        {
+          _menuRemoveStatus = value;
+          NotifyOfPropertyChange(() => MenuRemoveStatus);
+        }
+      }
+    }
+
+    private AccessDeviceItem _selectedAccessDevice;
+    public AccessDeviceItem SelectedAccessDevice
     {
       get { return _selectedAccessDevice; }
       set
@@ -380,21 +356,6 @@ namespace BioModule.ViewModels
       }
     }
 
-    private LocationItem _selectedCaptureDevice;
-    public LocationItem SelectedCaptureDevice
-    {
-      get { return _selectedCaptureDevice; }
-      set
-      {
-        if (_selectedCaptureDevice != value)
-        {
-          _selectedCaptureDevice = value;
-
-          NotifyOfPropertyChange(() => SelectedCaptureDevice);
-        }
-      }
-    }
-
     private AsyncObservableCollection<string> _accessDevicesNames;
     public AsyncObservableCollection<string> AccessDevicesNames
     {
@@ -404,14 +365,13 @@ namespace BioModule.ViewModels
         if (_accessDevicesNames != value)
         {
           _accessDevicesNames = value;
-
           NotifyOfPropertyChange(() => AccessDevicesNames);
         }
       }
     }
 
-    private ObservableCollection<LocationItem> _accessDevicesList;
-    public ObservableCollection<LocationItem> AccessDevicesList
+    private AsyncObservableCollection<AccessDeviceItem> _accessDevicesList;
+    public AsyncObservableCollection<AccessDeviceItem> AccessDevicesList
     {
       get { return _accessDevicesList; }
       set
@@ -423,37 +383,79 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private ObservableCollection<LocationItem> _captureDevicesList;
-    public ObservableCollection<LocationItem> CaptureDevicesList
-    {
-      get { return _captureDevicesList; }
-      set
-      {
-        if (_captureDevicesList != value)
-        {
-          _captureDevicesList = value;
-          NotifyOfPropertyChange(() => CaptureDevicesList);
-        }
-      }
-    }
-
-
     #endregion
 
     #region Global Variables
+
     private          Location          _location     ;
     private readonly IProcessorLocator _locator      ;
     private readonly IBioEngine        _bioEngine    ;
-    private readonly IServiceManager   _bioService   ;
-    private          IWindowManager    _windowManager;
+  
 
     #endregion
   }
 
-  public class LocationItem : PropertyChangedBase
+  public class DevicesListViewModel : Conductor<IScreen>.Collection.AllActive, IUpdatable
   {
-    public object ItemContext { get; set; }
+    public DevicesListViewModel(IProcessorLocator locator)
+    {
+      _accessDevices  = new LocationAccessDevicesViewModel(locator);
+      _captureDevices = new LocationCaptureDevicesViewModel(locator);
+    }
+
+    protected override void OnActivate()
+    {
+      ActivateItem(_accessDevices);
+      ActivateItem(_captureDevices);
+      base.OnActivate();
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      DeactivateItem(_accessDevices , false);
+      DeactivateItem(_captureDevices, false);
+      base.OnDeactivate(close);
+    }
+
+    public void Update(Location location )
+    {
+      _accessDevices .Update(location);
+      _captureDevices.Update(location);
+    }
+
+    public void Apply() {}
+
+    private readonly LocationAccessDevicesViewModel  _accessDevices;
+    public LocationAccessDevicesViewModel AccessDevices
+    {
+      get { return _accessDevices; }
+    }
+
+    private readonly LocationCaptureDevicesViewModel _captureDevices;
+    public LocationCaptureDevicesViewModel CaptureDevices
+    {
+      get { return _captureDevices; }
+    }
+  }
+
+
+  public class DeviceItemBase<T> : PropertyChangedBase
+  {
+    public T ItemContext { get; set; }
+
+    private bool _itemActive;
+    public bool ItemActive
+    {
+      get { return _itemActive; }
+      set
+      {
+        if (_itemActive != value)
+        {
+          _itemActive = value;
+          NotifyOfPropertyChange(() => ItemActive);         
+        }
+      }
+    }
 
     private bool _itemEnabled;
     public bool ItemEnabled
@@ -464,43 +466,22 @@ namespace BioModule.ViewModels
         if (_itemEnabled != value)
         {
           _itemEnabled = value;
-          NotifyOfPropertyChange(() => ItemEnabled);
-          NotifyOfPropertyChange(() => DisplayName);
+          NotifyOfPropertyChange(() => ItemEnabled);  
         }
       }
     }
 
-    private bool _itemNotUse;
-    public bool ItemNotUse
+    public DeviceItemBase<T> Clone()
     {
-      get { return _itemNotUse; }
-      set
+      return new DeviceItemBase<T>()
       {
-        if (_itemNotUse != value)
-        {
-          _itemNotUse = value;
-          NotifyOfPropertyChange(() => ItemNotUse);
-          NotifyOfPropertyChange(() => DisplayName);
-        }
-      }
-    }
-
-    public LocationItem Clone()
-    {
-      return new LocationItem()
-      {
-        ItemContext = this.ItemContext
-      , ItemEnabled = this.ItemEnabled
-      , DisplayName = this.DisplayName
-      , ItemNotUse = this.ItemNotUse
-
+          ItemContext = this.ItemContext
+        , ItemActive  = this.ItemActive      
+        , ItemEnabled = this.ItemEnabled
       };
-    }
-
-    public string DisplayName
-    {
-      get;
-      set;
-    }
+    }    
   }
+
+  public class AccessDeviceItem : DeviceItemBase<AccessDevice>{}
+  public class CaptureDeviceItem : DeviceItemBase<CaptureDevice> { }
 }

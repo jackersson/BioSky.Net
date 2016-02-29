@@ -22,6 +22,7 @@ using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
 using WPFLocalizeExtension.Providers;
 using XAMLMarkupExtensions.Base;
+using BioContracts.Services;
 
 namespace BioModule.ViewModels
 {
@@ -32,25 +33,21 @@ namespace BioModule.ViewModels
   }
   public class UserPageViewModel : Conductor<IScreen>.Collection.OneActive
   {   
-    public UserPageViewModel(IProcessorLocator locator, IWindowManager windowManager) : base()
+    public UserPageViewModel(IProcessorLocator locator) : base()
     {
-      _locator = locator;
-      _windowManager = windowManager;
+      _locator    = locator;
+          
+      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
+      _notifier   = _locator.GetProcessor<INotifier>();
 
-      IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
-      _bioService          = _locator.GetProcessor<IServiceManager>();
-      _database            = _locator.GetProcessor<IBioSkyNetRepository>();
-
-      CurrentPhotoImageView = new PhotoImageViewModel(_locator, _windowManager);
-      UserPhotoView = new UserPhotoViewModel(bioEngine, CurrentPhotoImageView, _locator, _windowManager);
-
-      CurrentPhotoImageView.FeedbackPhotoReceive += UserPhotoView.GetFeedBackPhoto;
-      //CurrentImageView.EnrollFromCameraChanged += UserPhotoView.EnrollFromCamera;
+      CurrentPhotoImageView = new PhotoImageViewModel(_locator);
+      UserPhotoView         = new UserPhotoViewModel (CurrentPhotoImageView, _locator);
 
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
       Items.Add(new UserInformationViewModel    ());
-      Items.Add(new UserContactlessCardViewModel(bioEngine, _locator, _windowManager));
+      Items.Add(new UserContactlessCardViewModel(_locator));
       Items.Add(UserPhotoView);
      
       ActiveItem = Items[0];
@@ -81,16 +78,16 @@ namespace BioModule.ViewModels
       user.Thumbnailid = user.Thumbnailid <= 0 ? 0 : user.Thumbnailid;
       user.Gender      = Person.Types.Gender.Male;
       user.Rights      = Person.Types.Rights.Operator;
-
+     
       _userPageMode = UserPageMode.NewUser;
+      _revertUser   = null;
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
 
       return user;  
     }
 
     public void Update(Person user)
-    {
-      
+    {      
       if (user != null )
       {
         _user = user.Clone();
@@ -101,8 +98,7 @@ namespace BioModule.ViewModels
           DisplayName = (_user.Firstname + " " + _user.Lastname);
         }
         else        
-          _user = ResetUser(user);       
-                 
+          _user = ResetUser(user);                   
       }
       else      
         _user = ResetUser(new Person());      
@@ -116,138 +112,49 @@ namespace BioModule.ViewModels
     
     #endregion
     
-    #region Database
-
-
-
-
-    #endregion
-
-    #region BioService
-
-    public async Task UserUpdatePerformer(EntityState state)
-    {
-      _user.EntityState = state;     
-
-      if(_user.EntityState != EntityState.Deleted)
-      {
-        Photo photo = CurrentPhotoImageView.CurrentImagePhoto;
-        if (photo != null)
-        {
-          photo.OriginType = PhotoOriginType.Loaded;
-
-          Photo thumbnail = _database.PhotoHolder.GetValue(_user.Thumbnailid);
-          if (thumbnail != null)
-          {
-            if (thumbnail.GetHashCode() != photo.GetHashCode())
-              _user.Thumbnail = photo;
-          }
-          else
-            _user.Thumbnail = photo;
-
-        } 
-      }   
-
-
-      PersonList personList = new PersonList();
-      personList.Persons.Add(_user);   
-
-      try
-      {
-        _database.Persons.DataUpdated += UpdateData;
-        _database.PhotoHolder.DataChanged += UpdatePhoto;
-
-        //await _bioService.DatabaseService.PersonUpdate(personList);
-      }
-      catch (RpcException e)
-      {
-        Console.WriteLine(e.Message);
-      }      
-    }
-
-    public void UpdatePhoto()
-    {
-      _database.PhotoHolder.DataChanged -= UpdatePhoto;
-
-      Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
-
-      CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
-    }
-    
-    private void UpdateData(PersonList list)
-    {
-      _database.Persons.DataUpdated -= UpdateData;
-
-      if (list != null)
-      {
-        Person person = list.Persons.FirstOrDefault();
-        if (person != null)
-        {
-          if (person.EntityState == EntityState.Deleted)
-          {
-            person = null;
-            MessageBox.Show("User successfully Deleted");
-          }
-          else if (person.EntityState == EntityState.Added)
-          {
-            MessageBox.Show("User successfully Added");
-          }
-          else
-          {
-            MessageBox.Show("User successfully Updated");
-          }
-
-          Update(person);
-        }
-      }
-    }   
-
-    #endregion
-
     #region Interface
 
     public async void Apply()
-    {   
+    {
+      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
-      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
-
-      if (result == true)     
+      if (!result )
+        return;  
+      
+      try
       {
-        try
-        {
-          await UserUpdatePerformer((_userPageMode == UserPageMode.NewUser) ? EntityState.Added : EntityState.Modified); 
-        }
-        catch (Exception e)
-        {
-          Console.WriteLine(e.Message);
-        } 
+        if (_userPageMode == UserPageMode.ExistingUser)
+          await _bioService.PersonDataClient.Update(_user);
+        else
+          await _bioService.PersonDataClient.Add(_user);      
       }
+      catch (Exception e)
+      {
+        _notifier.Notify(e);
+      }       
     }
 
     public void Revert()
     {
-      if (_revertUser.EntityState == EntityState.Added)
-        Update(null);
-      else
+      if ( _revertUser != null)     
         Update(_revertUser);
     }
 
-
     public async void Remove()
     {
-      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      var result = false;// _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
-      if (result == true)
+      if (!result)
+        return;
+      
+      try
       {
-        try
-        {
-          await UserUpdatePerformer(EntityState.Deleted);
-        }
-        catch (Exception e)
-        {
-          Console.WriteLine(e.Message);
-        } 
-      }   
+        await _bioService.PersonDataClient.Delete(_user);      
+      }
+      catch (Exception e)
+      {
+        _notifier.Notify(e);
+      }       
     }
 
     #endregion
@@ -295,10 +202,11 @@ namespace BioModule.ViewModels
     private BioContracts.Common.BioImageUtils _bioUtils     ;
     private readonly FastMethodInvoker        _methodInvoker;
     private readonly IProcessorLocator        _locator      ;
-    private IWindowManager                    _windowManager;
+    private readonly INotifier                _notifier     ;
     private UserPageMode                      _userPageMode ;
     private IBioSkyNetRepository              _database     ;
-    private readonly IServiceManager          _bioService   ;
+    private readonly IDatabaseService         _bioService   ;
+
     #endregion
   }
 }

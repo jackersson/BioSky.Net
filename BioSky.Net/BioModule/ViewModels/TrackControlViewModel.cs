@@ -12,35 +12,33 @@ using System.Windows.Controls;
 using BioService;
 using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
+using BioContracts.Services;
 
 namespace BioModule.ViewModels
 {
-  public class TrackControlViewModel : Screen
+  public class TrackControlViewModel : Conductor<IScreen>.Collection.AllActive
   {
-    public TrackControlViewModel(IProcessorLocator locator, IWindowManager windowManager)
+    public TrackControlViewModel(IProcessorLocator locator)
     {
       _locator       = locator      ;
-      _windowManager = windowManager;
-
+     
       _bioEngine  = locator.GetProcessor<IBioEngine>();
       _selector   = locator.GetProcessor<ViewModelSelector>();
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
-      _bioService = _locator.GetProcessor<IServiceManager>();
-
-
-      _methodInvoker = new FastMethodInvoker();
-
+      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _notifier   = _locator.GetProcessor<INotifier>();
+      
       TrackTabControlView = new TrackTabControlViewModel(_locator);
 
       _visitorsView = new VisitorsViewModel(locator);
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
-      _bioEngine.TrackLocationEngine().TrackLocations.CollectionChanged += TrackLocations_CollectionChanged;
+      _bioEngine.TrackLocationEngine().LocationsChanged += OnLocationsChanged;
     }
 
     #region Update
-    public void TrackLocations_CollectionChanged(object sender, EventArgs args)
+    public void OnLocationsChanged()
     {
       foreach (TrackLocation location in TrackControlItems)
       {
@@ -56,76 +54,31 @@ namespace BioModule.ViewModels
 
     #endregion
 
-    #region BioService
-
-    public async Task LocationDeletePerformer(EntityState state)
-    {
-      LocationList locationList = new LocationList();
-
-      if (SelectedTrackLocation == null)
-        return;
-
-      Location location = new Location() { Id = SelectedTrackLocation.LocationID
-                                         , EntityState = EntityState.Deleted };
-      locationList.Locations.Add(location);      
-
-      try
-      {
-       // _database.Locations.DataUpdated += UpdateData;
-       // await _bioService.DatabaseService.LocationUpdate(locationList);
-      }
-      catch (RpcException e)
-      {
-        Console.WriteLine(e.Message);
-      }
-    }
-
-    private void UpdateData(LocationList list)
-    {
-      _database.Locations.DataUpdated -= UpdateData;
-
-      if (list != null)
-      {
-        Location location = list.Locations.FirstOrDefault();
-        if (location != null)
-        {
-          if (location.EntityState == EntityState.Deleted)
-          {
-            if (list.Locations.Count > 1)
-              MessageBox.Show(list.Locations.Count + " locations successfully Deleted");
-            else
-              MessageBox.Show("Location successfully Deleted");
-          }
-        }
-      }
-    }   
-
-    #endregion
-
     #region Interface
 
     public async void OnDeleteLocation()
     {
-      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      var result = false; // _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
-      if (result == true)
+      if (!result)
+        return;
+     
+      try
       {
-        try
-        {
-          await LocationDeletePerformer(EntityState.Deleted);
-        }
-        catch (Exception e)
-        {
-          Console.WriteLine(e.Message);
-        }
+        await _bioService.LocationDataClient.Delete(SelectedTrackLocation.CurrentLocation);
       }
+      catch (Exception e)
+      {
+        _notifier.Notify(e);
+      }
+      
     }
 
     protected override void OnActivate()
     {
-      //TODO refresh
-      //if (_visitorsView != null)
-        //_visitorsView.Update();
+      if (_visitorsView != null)
+        ActivateItem(_visitorsView);
+      base.OnActivate();    
     }
     public void OnMouseRightButtonDown(TrackLocation trackLocation)
     {
@@ -151,17 +104,14 @@ namespace BioModule.ViewModels
                            , new object[] { null });
     }
 
-    public void ShowLocationFlayout()
+    public void ShowLocationFlyout()
     {
       if (SelectedTrackLocation != null)
         return;
 
-      long id = SelectedTrackLocation.LocationID;
-      Location location = _bioEngine.Database().LocationHolder.GetValue(id);
-
       _selector.ShowContent(ShowableContentControl.FlyoutControlContent
                            , ViewModelsID.LocationSettings
-                           , new object[] { location });
+                           , new object[] { SelectedTrackLocation.CurrentLocation });
     }
     #endregion
 
@@ -180,7 +130,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-    public ObservableCollection<TrackLocation> TrackControlItems
+    public AsyncObservableCollection<TrackLocation> TrackControlItems
     {
       get { return _bioEngine.TrackLocationEngine().TrackLocations; }
     }
@@ -232,36 +182,19 @@ namespace BioModule.ViewModels
         }
       }
     }
-
     #endregion
 
     #region Global Vatiables
+
     private readonly IProcessorLocator    _locator      ;    
     private readonly IBioEngine           _bioEngine    ;
     private readonly ViewModelSelector    _selector     ;
-    private readonly FastMethodInvoker    _methodInvoker;
-    private readonly IWindowManager       _windowManager;
+      
     private readonly IBioSkyNetRepository _database     ;
-    private readonly IServiceManager      _bioService   ;
-
+    private readonly IDatabaseService     _bioService   ;
+    private readonly INotifier            _notifier     ;
 
     #endregion
 
-   
-    private string _selectedItems;
-    public string SelectedItems
-    {
-      get
-      {
-        return _selectedItems;
-      }
-      set
-      {
-        if (_selectedItems != value)
-          _selectedItems = value;
-
-        NotifyOfPropertyChange(() => SelectedItems);
-      }
-    }    
   }   
 }

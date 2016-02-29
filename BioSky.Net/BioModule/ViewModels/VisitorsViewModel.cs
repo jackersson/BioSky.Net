@@ -40,18 +40,19 @@ namespace BioModule.ViewModels
       _locator       = locator;
          
       _selector   = _locator.GetProcessor<ViewModelSelector>();
-      _bioService = _locator.GetProcessor<IDatabaseService>();
+      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier   = _locator.GetProcessor<INotifier>(); 
 
       _selectedVisitors     = new ObservableCollection<Visitor>();
+      PageController        = new PageControllerViewModel();
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
       _database.PhotoHolder.DataChanged   += RefreshData;
       _database.Visitors.DataChanged      += RefreshData;
     } 
-    
+        
     #region Database
 
     private void RefreshData()
@@ -61,8 +62,19 @@ namespace BioModule.ViewModels
 
       Visitors = null;
       Visitors = _database.VisitorHolder.Data;
-      GetLastVisitor();         
+
+      if (Visitors == null)
+        return;
+           
+      GetLastVisitor();
+
+      VisitorsCollectionView = null;
+      VisitorsCollectionView = new PagingCollectionView(Visitors, PAGES_COUNT);
+      VisitorsCollectionView.Sort(SortDescriptionByTime);
+
+      PageController.UpdateData(VisitorsCollectionView);
     }
+
     private void GetLastVisitor()
     {
       LastVisitor = null;     
@@ -122,10 +134,7 @@ namespace BioModule.ViewModels
     public void OnDataContextChanged()
     {
       if (ImageView == null)
-        ImageView     = new ImageViewModel(_locator);
-
-      if (PageController == null)
-        PageController = new PageControllerViewModel();
+        ImageView     = new ImageViewModel(_locator);      
     }
 
     protected override void OnActivate()
@@ -164,7 +173,7 @@ namespace BioModule.ViewModels
     public void OnSearchTextChanged(string SearchText)
     {        
       Dictionary<long, Person> dictionary = _database.PersonHolder.DataSet;
-      VisitorsCollectionView.Filter = item =>
+      VisitorsCollectionView.Filtering = item =>
       {
         if (String.IsNullOrEmpty(SearchText))
           return true;
@@ -316,8 +325,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ICollectionView _visitorsCollectionView;
-    public ICollectionView VisitorsCollectionView
+    private IPagingCollectionView _visitorsCollectionView;
+    public IPagingCollectionView VisitorsCollectionView
     {
       get { return _visitorsCollectionView; }
       set
@@ -340,7 +349,7 @@ namespace BioModule.ViewModels
     private readonly IBioSkyNetRepository _database     ;
     private readonly INotifier            _notifier     ;
 
-    private int PAGES_COUNT = 20;
+    private int PAGES_COUNT = 10;
     #endregion
   } 
 }

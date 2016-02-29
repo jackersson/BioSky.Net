@@ -14,9 +14,8 @@ namespace BioModule.ViewModels
     public TrackTabControlViewModel(IProcessorLocator locator)
     {
       _locator       = locator      ;
-      _windowManager = locator.GetProcessor<IWindowManager>();
-
-      _visitorsView = new VisitorsViewModel(_locator, _windowManager);
+     
+      _visitorsView  = new VisitorsViewModel(_locator);
 
       Items.Add(new TrackControlItemViewModel(_locator));
       Items.Add(_visitorsView);
@@ -55,7 +54,5 @@ namespace BioModule.ViewModels
     }
 
     private readonly IProcessorLocator _locator      ;
-    private readonly IWindowManager    _windowManager;
-
   }
 }

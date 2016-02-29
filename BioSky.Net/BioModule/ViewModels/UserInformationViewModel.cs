@@ -23,10 +23,11 @@ namespace BioModule.ViewModels
   public class UserInformationViewModel : Screen, IUpdatable
   {    
     public UserInformationViewModel()
-    {           
+    {
       DisplayName = "Information";
-      IsEnabled = true;
-      CountryNames = GetCountryNames();
+      IsEnabled    = true;
+      //TODO in one place
+      //CountryNames = //GetCountryNames();
     }
 
     #region Update
@@ -34,27 +35,14 @@ namespace BioModule.ViewModels
     {
       User = user;
     }
-
     #endregion
 
     #region Interface
-    public void Apply()
-    {
-
-    }   
+    public void Apply(){}   
 
     #endregion
 
-    #region UI
-    public List<string> GenderSources
-    {
-      get { return Enum.GetNames(typeof(BioService.Person.Types.Gender)).ToList(); }
-    }
-    public List<string> RightsSources
-    {
-      get { return Enum.GetNames(typeof(BioService.Person.Types.Rights)).ToList(); }
-    }
-
+    #region UI    
     private Person _user;
     public Person User
     {
@@ -63,13 +51,11 @@ namespace BioModule.ViewModels
       {
         if (_user != value)
         {
-          _user = value;
-          NotifyOfPropertyChange(() => GenderSources);
+          _user = value;       
           NotifyOfPropertyChange(() => User);
         }
       }
     }
-
 
     public void OnDateofBirthChanged(string text)
     {
@@ -99,6 +85,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    //TODO maybe not need all
     private string[] _countryNames;
     public string[] CountryNames
     {
@@ -112,34 +99,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    #endregion    
-
-
-
-
-    public string[] GetCountryNames()
-    {
-      Dictionary<string, string> CountryNameDictonary = new Dictionary<string, string>();
-
-      foreach (System.Globalization.CultureInfo ci in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures))
-      {
-        System.Globalization.RegionInfo ri = new System.Globalization.RegionInfo(ci.Name);
-        if (!CountryNameDictonary.ContainsKey(ri.NativeName))
-        {
-          CountryNameDictonary.Add(ri.NativeName, ri.TwoLetterISORegionName);
-        }
-      }
-
-      var OrderedNames = CountryNameDictonary.OrderBy(p => p.Key);
-
-      Dictionary<string, string> Countries = new Dictionary<string, string>();
-      foreach (KeyValuePair<string, string> val in OrderedNames)
-      {
-        Countries.Add(val.Key, val.Value);
-      }
-
-      return Countries.Keys.ToArray();
-    }
+    #endregion      
   }
 }

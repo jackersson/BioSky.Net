@@ -201,6 +201,7 @@ namespace BioAccessDevice
       return new Unsubscriber(_observers, observer);
     }
 
+   
     public IDisposable Unsubscribe(IObserver<AccessDeviceActivity> observer)
     {
       if (HasObserver(observer))

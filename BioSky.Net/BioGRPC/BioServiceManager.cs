@@ -59,9 +59,9 @@ namespace BioGRPC
       _databaseClientChannel = new Channel(configuration.DatabaseService, ChannelCredentials.Insecure);
 
       _facialClientChannel   = new Channel(configuration.FacialService  , ChannelCredentials.Insecure);
-       
-      BioService.BiometricFacialSevice.IBiometricFacialSeviceClient   facialClient   = BiometricFacialSevice.NewClient(_facialClientChannel);
-      BioService.BiometricDatabaseSevice.IBiometricDatabaseSeviceClient databaseClient = BiometricDatabaseSevice.NewClient(_databaseClientChannel);
+
+      BiometricFacialSevice.IBiometricFacialSeviceClient   facialClient   = BiometricFacialSevice.NewClient(_facialClientChannel);
+      BiometricDatabaseSevice.IBiometricDatabaseSeviceClient databaseClient = BiometricDatabaseSevice.NewClient(_databaseClientChannel);
 
       _faceService     = new BioFacialService  (_locator, facialClient  );
       _databaseService = new BioDatabaseService(_locator, databaseClient);

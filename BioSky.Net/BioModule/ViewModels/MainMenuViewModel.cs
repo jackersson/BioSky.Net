@@ -50,12 +50,12 @@ namespace BioModule.ViewModels
     {
       string s = "ewfrnfglnsgnejgnbjetntnbkjtnet/n dsgjwnewhuhekbnkenbetknbknjdfjsbxmjnf/n wdgbscfvrjenbvfvjrenenvlwefn/n";
      // _windowManager.ShowDialog(new AboutDialogViewModel());    
-       _windowManager.ShowDialog(new CustomTextDialogViewModel("Test Dialog", s, DialogStatus.Info));      
+       //_windowManager.ShowDialog(new CustomTextDialogViewModel("Test Dialog", s, DialogStatus.Info));      
   
     }
     public void ShowLogInDialog()
     {      
-      var result = _windowManager.ShowDialog(new LoginDialogViewModel(this));      
+      //var result = _windowManager.ShowDialog(new LoginDialogViewModel(this));      
     }
 
     public void ShowSettingsFlayout()

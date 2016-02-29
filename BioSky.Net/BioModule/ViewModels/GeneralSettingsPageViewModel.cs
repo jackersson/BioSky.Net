@@ -79,7 +79,7 @@ namespace BioModule.ViewModels
 
      public void Apply()
      {
-       var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
        if(result == true)
          _database.LocalStorage.SaveGeneralSettings( LocalStoragePath
@@ -90,7 +90,7 @@ namespace BioModule.ViewModels
 
      public void Revert()
      {
-       var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+       var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
        if (result == true)       
          RefreshData();       

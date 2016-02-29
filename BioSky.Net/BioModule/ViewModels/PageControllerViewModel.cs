@@ -13,45 +13,46 @@ using BioModule.Utils;
 namespace BioModule.ViewModels
 {
   public class PageControllerViewModel : Screen
-  {
-    public string _startIndex   = "0";
-    public string _endIndex     = "0";
-    public string _onePageCount = "0";
-    public PageControllerViewModel(IScreen screen)
-    {
-      _screen = screen;
-      IsRightArrowEnabled = true;
-      IsLeftArrowEnabled  = true;
+  {   
+    public PageControllerViewModel()
+    {    
+      IsRightArrowEnabled = IsLeftArrowEnabled = false;
+      Text = FormatPageText(0, 0, 0);     
     }
 
-    public void UpdateData(PagingData data)
+    public void UpdateData(IPageController controller)
     {
-      IsRightArrowEnabled = true;
-      IsLeftArrowEnabled  = true;
+      if (controller == null)
+        return;
 
-      Text = data.startIndex + " - " + data.endIndex + " of " + data.count;
+      _controller = controller;
 
-      if(data.endIndex == data.count)
-        IsRightArrowEnabled = false;
+      Text = FormatPageText(controller.StartIndex, controller.EndIndex, controller.ItemsCount);
 
-      if(data.startIndex == 1)
-        IsLeftArrowEnabled = false;      
+      IsRightArrowEnabled = (controller.EndIndex < controller.ItemsCount);
+      IsLeftArrowEnabled  = (controller.StartIndex > 1);     
+    }
+
+    private string FormatPageText( int startIndex, int endIndex, int itemsCount )
+    {
+      return string.Format("{0} - {1} of {2}", startIndex, endIndex, itemsCount);
     }
 
     public void OnRightClick()
     {
-      MethodInfo method = _screen.GetType().GetMethod("MovePage");
-      if (method != null)
-        method.Invoke(_screen, new object[] { true});
+      if (_controller == null)
+        return;
+
+      _controller.MoveToNextPage();
     }
 
     public void OnLeftClick()
     {
-      MethodInfo method = _screen.GetType().GetMethod("MovePage");
-      if (method != null)
-        method.Invoke(_screen, new object[] { false });
-    }
+      if (_controller == null)
+        return;
 
+      _controller.MoveToPreviousPage();
+    }
 
 
     private string _text;
@@ -59,12 +60,8 @@ namespace BioModule.ViewModels
     {
       get { return _text; }
       set
-      {
-        if(value == null || value == string.Empty)
-        {
-           _text = _startIndex + "-" + _onePageCount + "of " + _endIndex;
-        }
-        else if (_text != value)
+      {        
+        if (_text != value)
         {
           _text = value;
           NotifyOfPropertyChange(() => Text);
@@ -100,7 +97,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private readonly IScreen _screen;
+    private IPageController _controller;
  
   }
 }

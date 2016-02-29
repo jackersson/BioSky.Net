@@ -4,8 +4,6 @@ using BioService;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BioGRPC.DatabaseClient
@@ -96,7 +94,7 @@ namespace BioGRPC.DatabaseClient
 
 
 
-    public async Task Delete( IList<long> targeIds)
+    public async Task Delete( IList<Location> targeIds)
     {
       if (targeIds == null || targeIds.Count <=0 )
         return;
@@ -105,19 +103,16 @@ namespace BioGRPC.DatabaseClient
       _list.Locations.Clear();
 
       Dictionary<long, Location> dictionary = _database.LocationHolder.DataSet;
-      foreach (long id in targeIds)
-      {       
-        Location item = null;      
-        if (dictionary.TryGetValue(id, out item))
+      foreach (Location item in targeIds)
+      {               
+        Location newItem = new Location()
         {
-          Location newItem = new Location()
-          {
-              Id = id
-            , EntityState = EntityState.Deleted
-            , Dbresult    = ResultStatus.Failed          
-          };
-          _list.Locations.Add(newItem);
-        }
+            Id = item.Id
+          , EntityState = EntityState.Deleted
+          , Dbresult    = ResultStatus.Failed          
+        };
+        _list.Locations.Add(newItem);
+        
       }
 
       if (_list.Locations.Count <= 0)
@@ -132,6 +127,88 @@ namespace BioGRPC.DatabaseClient
         _notifier.Notify(e);
       }
     }
+
+    public Task Delete(Location targetItem)
+    {
+      throw new NotImplementedException();
+    }
+
+
+    /*
+   public async Task LocationDeletePerformer(EntityState state)
+   {
+     LocationList locationList = new LocationList();
+
+     if (SelectedTrackLocation == null)
+       return;
+
+     Location location = new Location() { Id = SelectedTrackLocation.LocationID
+                                        , EntityState = EntityState.Deleted };
+     locationList.Locations.Add(location);      
+
+     try
+     {
+      // _database.Locations.DataUpdated += UpdateData;
+      // await _bioService.DatabaseService.LocationUpdate(locationList);
+     }
+     catch (RpcException e)
+     {
+       Console.WriteLine(e.Message);
+     }
+   }
+
+   private void UpdateData(LocationList list)
+   {
+     _database.Locations.DataUpdated -= UpdateData;
+
+     if (list != null)
+     {
+       Location location = list.Locations.FirstOrDefault();
+       if (location != null)
+       {
+         if (location.EntityState == EntityState.Deleted)
+         {
+           if (list.Locations.Count > 1)
+             MessageBox.Show(list.Locations.Count + " locations successfully Deleted");
+           else
+             MessageBox.Show("Location successfully Deleted");
+         }
+       }
+     }
+   }   
+  
+
+    public void UpdateData(LocationList list)
+    {
+      _database.Locations.DataUpdated -= UpdateData;
+
+      if (list != null)
+      {
+        Location location = list.Locations.FirstOrDefault();
+        if (location != null)
+        {
+          if (location.EntityState == EntityState.Deleted)
+          {
+            location = null;
+            MessageBox.Show("Location successfully Deleted");
+          }
+          else if (location.EntityState == EntityState.Added)
+            MessageBox.Show("Location successfully Added");
+          else if (location.EntityState == EntityState.Unchanged)
+          {
+            location.LocationName = RevertLocation.LocationName;
+            location.Description = RevertLocation.Description;
+            MessageBox.Show("Location successfully Updated");
+          }
+          else
+            MessageBox.Show("Location successfully Updated");
+
+          Update(location);
+        }
+      }
+    }
+     */
+
 
     private LocationList _list;
 

@@ -12,14 +12,9 @@ using BioModule.ViewModels;
 namespace BioModule.Utils
 {
   public class PagingCollectionView : ListCollectionView, IPagingCollectionView
-  {
-    private readonly IList _innerList;
-    private readonly int _itemsPerPage;
-
-    private int _currentPage = 1;
-
-    public PagingCollectionView(IList innerList, int itemsPerPage)
-      : base(innerList)
+  {    
+    public PagingCollectionView( IList innerList, int itemsPerPage)
+                               : base(innerList)
     {
       this._innerList = innerList;
       this._itemsPerPage = itemsPerPage;      
@@ -28,6 +23,10 @@ namespace BioModule.Utils
     public void Sort(SortDescription description)
     {
       this.SortDescriptions.Add(description);
+    }
+    public int ItemsCount
+    {
+      get { return this._innerList.Count; }
     }
 
     public override int Count
@@ -66,7 +65,7 @@ namespace BioModule.Utils
       }
     }
 
-    private int EndIndex
+    public int EndIndex
     {
       get
       {
@@ -75,7 +74,7 @@ namespace BioModule.Utils
       }
     }
 
-    private int StartIndex
+    public int StartIndex
     {
       get { return (this._currentPage - 1) * this._itemsPerPage; }
     }
@@ -83,51 +82,39 @@ namespace BioModule.Utils
     public override object GetItemAt(int index)
     {
       var offset = index % (this._itemsPerPage);
+      int targetIndex = this.StartIndex + offset;
+
+      if (this._innerList.Count <= targetIndex)
+        return null;
       return base.GetItemAt(this.StartIndex + offset);
     }
 
     public void MoveToNextPage()
     {
-      if (this._currentPage < this.PageCount)
-      {
+      if (this._currentPage < this.PageCount)      
         this.CurrentPage += 1;
-      }
+      
       this.Refresh();
     }
 
     public void MoveToPreviousPage()
     {
-      if (this._currentPage > 1)
-      {
+      if (this._currentPage > 1)      
         this.CurrentPage -= 1;
-      }
+      
       this.Refresh();
     }
 
 
     public Predicate<object> Filtering
     {
-      get { return this.Filter; }
-      set
-      {
-       
-          this.Filter = value;
-        
-      }
+      get { return this.Filter;   }
+      set { this.Filter = value;  }
     }
 
-    public PagingData GetPagingData()
-    {
-      return new PagingData() { startIndex = StartIndex, endIndex = EndIndex
-                              , itemsPerPage = ItemsPerPage, count = _innerList.Count};
-    }  
-  }
+    private readonly IList _innerList;
+    private readonly int _itemsPerPage;
 
-  public class PagingData
-  {
-    public int startIndex  ;
-    public int endIndex    ;
-    public int itemsPerPage;
-    public int count       ;
-  }
+    private int _currentPage = 1;
+  } 
 }

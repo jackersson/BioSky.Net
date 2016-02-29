@@ -61,11 +61,8 @@ namespace BioData.Holders.Grouped
           }
         }
         else 
-        {
-          if(resultedVisitor.Photoid != null)
-          {
-            _photos.Remove(resultedVisitor.Photoid);
-          }
+        {         
+          _photos.Remove(resultedVisitor.Photoid);          
         }
 
         

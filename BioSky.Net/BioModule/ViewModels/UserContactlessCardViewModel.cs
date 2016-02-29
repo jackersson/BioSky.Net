@@ -13,211 +13,140 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using Grpc.Core;
+using BioContracts.Services;
+using BioContracts.Common;
 
 namespace BioModule.ViewModels
 {
-
-  public class UserContactlessCardViewModel : Screen, IObserver<AccessDeviceActivity>, IUpdatable
+  public class UserContactlessCardViewModel : Screen, IUpdatable
   {
-    public UserContactlessCardViewModel(IBioEngine bioEngine, IProcessorLocator locator, IWindowManager windowManager)
+    public UserContactlessCardViewModel(IProcessorLocator locator)
     {
       DisplayName = "Cards";
 
-      _locator       = locator      ;
-      _bioEngine     = bioEngine    ;
-      _windowManager = windowManager;
+      _locator    = locator;    
 
-      _selector   = locator.GetProcessor<ViewModelSelector>();
-      _bioService = _locator.GetProcessor<IServiceManager>();
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
-
-      AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
-      AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
-
-      AccessDeviceConnected = false;
-
-      _detectedCard = new Card();
+      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();      
 
       CardState = "Card number";
 
+      _observer  = new TrackLocationAccessDeviceObserver(locator);
+      _observer.CardDetected += OnCardDetected;
       _userCards = new AsyncObservableCollection<Card>();
 
-      _bioEngine.Database().Persons.DataChanged += RefreshData;
+
+      _database.Persons.DataChanged += RefreshData;
 
       IsEnabled = false;
+    }
+
+    private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
+    {
+      CardNumber = cardNumber;
+      CheckCard(cardNumber);
     }
 
     #region Update
 
     public void RefreshData()
     {
-      if (_user == null)
-        return;
+      if (!IsActive || _user == null)
+        return;      
 
-      IEnumerable<Card> cards = _bioEngine.Database().CardHolder.Data.Where(x => x.Personid == _user.Id);
+      IEnumerable<Card> cards = _database.CardHolder.Data.Where(x => x.Personid == _user.Id);
 
       if (cards == null)
         return;
 
       _userCards.Clear();
-
       foreach (Card card in cards)      
-        _userCards.Add(card);      
-
+        _userCards.Add(card); 
     }
 
 
     public void Update(Person user)
     {
-      if (user == null)
-        return;
-
-      if (user.Id <= 0)
-        return;
+      if (user == null || ( user != null && user.Id <= 0))
+        return;      
+          
+      _user = user;
+      RefreshData();
 
       IsEnabled = true;
 
-      _user = user;
-
-
-      RefreshData();
-
     }
-    public async void AddNewCard()
+    public async void AddCard()
     {
-      if (!CanAddNewCard)
+      if (!CanAddCard)
         return;
 
-      DetectedCard.EntityState = EntityState.Added;
-      DetectedCard.Personid = _user.Id;
-
-      PersonList personList = new PersonList();
-     
-      Person personWithPhoto = new Person() { Id = _user.Id };
-      personWithPhoto.Cards.Add(DetectedCard);
-
-      personList.Persons.Add(personWithPhoto);
-
-      CanAddNewCard = false;
+      Card card = new Card() { UniqueNumber = CardNumber
+                             , EntityState = EntityState.Added
+                             , Personid = _user.Id };
+                
+      Person person = new Person() { Id = _user.Id };
+      person.Cards.Add(card);
+      
+      CanAddCard = false;
 
       try
       {
-        await _bioService.DatabaseService.PersonUpdate(personList);
+        await _bioService.PersonDataClient.Update(person);
       }
       catch (RpcException e)
       {
-        Console.WriteLine(e.Message);
-      }
-
-    
-
-      CanAddNewCard = false;
+        _notifier.Notify(e);
+      }         
     }
     #endregion
 
     #region Database
 
-    public void TryToAddNewCard(string cardNumber)
+    public void CheckCard(string cardNumber)
     {
-      CanAddNewCard = false;
+      CanAddCard = false; 
 
       Card card = _bioEngine.Database().CardHolder.GetValue(cardNumber);
       if (card != null)
       {
         Person person = _bioEngine.Database().PersonHolder.GetValue(card.Personid);
-        if (person != null)
-        {
-          CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
-        }
-        else
-        {
-          CardState = "Card is avaliable to use";
-          CanAddNewCard = true;
-        }
-      }
-      else
-      {
-        CardState = "Card is avaliable to use";
-        CanAddNewCard = true;
-      }
-
-      DetectedCard = _detectedCard;
+        //TODO show in right way
+        if (person != null)        
+          CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;             
+      }      
       
+      CardState = "Card is avaliable to use";
+      CanAddCard = true;                  
     }
     #endregion
+    
+    #region Interface
 
-    #region BioService
-
-    public async Task CardDeletePerformer()
+    public async void OnDeleteCards()
     {
-      PersonList personList = new PersonList();
+      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
-      Person person = new Person()
-      {
-          EntityState = EntityState.Unchanged
-        , Id = _user.Id
-      };
+      if (!result)
+        return;
+
+      Person person = new Person() { Id = _user.Id };
 
       Card card = SelectedCard;
       card.EntityState = EntityState.Deleted;
 
       person.Cards.Add(card);
-      personList.Persons.Add(person);
 
       try
       {
-        _database.Persons.DataUpdated += UpdateData;
-        await _bioService.DatabaseService.PersonUpdate(personList);
+        await _bioService.PersonDataClient.Update(person);
       }
-      catch (RpcException e)
+      catch (Exception e)
       {
-        Console.WriteLine(e.Message);
-      }
+        _notifier.Notify(e);
+      }      
     }
-
-    private void UpdateData(PersonList list)
-    {
-      _database.Persons.DataUpdated -= UpdateData;
-
-      if (list != null)
-      {
-        Person person = list.Persons.FirstOrDefault();
-        if (person != null)
-        {
-          if (person.Cards.Count > 1)
-            MessageBox.Show(person.Cards.Count + " cards successfully Deleted");
-          else
-            MessageBox.Show("Card successfully Deleted");
-        }
-      }
-    }
-
-    #endregion
-
-    #region Interface
-
-    public async void OnDeleteCards()
-    {
-      var result = _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
-
-      if (result == true)
-      {
-        try
-        {
-          await CardDeletePerformer();
-        }
-        catch (Exception e)
-        {
-          Console.WriteLine(e.Message);
-        }
-      }
-    }
-    public void Apply()
-    {
-      //await CardUpdatePerformer(EntityState.Unchanged);
-    }
-       
-
+    public void Apply() {}
     #endregion
 
     #region UI
@@ -236,16 +165,16 @@ namespace BioModule.ViewModels
       }
     }
 
-    private bool _canAddNewCard;
-    public bool CanAddNewCard
+    private bool _canAddCard;
+    public bool CanAddCard
     {
-      get { return _canAddNewCard; }
+      get { return _canAddCard; }
       set
       {
-        if (_canAddNewCard != value)
+        if (_canAddCard != value)
         {
-          _canAddNewCard = value;
-          NotifyOfPropertyChange(() => CanAddNewCard);
+          _canAddCard = value;
+          NotifyOfPropertyChange(() => CanAddCard);
         }
       }
     }
@@ -266,22 +195,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private Card _detectedCard;
-    public Card DetectedCard
-    {
-      get { return _detectedCard; }
-      set
-      {
-        if (_detectedCard == value)
-        {
-          _detectedCard = value;
-          NotifyOfPropertyChange(() => DetectedCard);
-          NotifyOfPropertyChange(() => AnyCardDetected);
-        }
-      }
-    }
-
+    
     private string _cardNumber;
     public string CardNumber
     {
@@ -329,21 +243,20 @@ namespace BioModule.ViewModels
 
     private          Person               _user         ;
     private readonly IBioEngine           _bioEngine    ;
-    private readonly IProcessorLocator    _locator      ;
-    private readonly ViewModelSelector    _selector     ;
-    private readonly IServiceManager      _bioService   ;
-    private readonly IWindowManager       _windowManager;
-    private readonly IBioSkyNetRepository _database     ; 
-
-
+    private readonly IProcessorLocator    _locator      ; 
+    private readonly IDatabaseService     _bioService   ;
+    private readonly INotifier            _notifier     ;
+    private readonly IBioSkyNetRepository _database     ;
+    private readonly TrackLocationAccessDeviceObserver _observer;
 
     #endregion
 
     #region AccessDevices
-    private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    /*private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => AvaliableDevicesCount);
-    }
+    }*/
+    /*
     public void Subscribe()
     {
       if (_selectedAccessDevice == null)
@@ -371,11 +284,12 @@ namespace BioModule.ViewModels
         for (int i = 0; i < value.Data.Length; ++i)
           _detectedCard.UniqueNumber += value.Data[i];
 
-        CanAddNewCard = true;
+        CanAddCard = true;
 
         TryToAddNewCard(_detectedCard.UniqueNumber);
       }
     }
+    
     public void OnError(Exception error)
     {
       AccessDeviceConnected = false;
@@ -443,6 +357,7 @@ namespace BioModule.ViewModels
         }
       }
     }
+    */
 
     #endregion
 

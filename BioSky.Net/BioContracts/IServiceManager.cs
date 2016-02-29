@@ -11,15 +11,7 @@ namespace BioContracts
   {
     void Start(IServiceConfiguration configuration);
     void Stop();
-
-    IFaceService FaceService
-    {
-      get;
-    }
-
-    IDatabaseService DatabaseService
-    {
-      get;
-    }
+    IFaceService FaceService  { get; }
+    IDatabaseService DatabaseService { get; }
   }
 }

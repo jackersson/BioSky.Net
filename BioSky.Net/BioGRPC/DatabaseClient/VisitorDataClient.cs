@@ -96,29 +96,25 @@ namespace BioGRPC.DatabaseClient
 
 
 
-    public async Task Delete( IList<long> targeIds)
+    public async Task Delete( IList<Visitor> targetItems)
     {
-      if (targeIds == null || targeIds.Count <=0 )
+      if (targetItems == null || targetItems.Count <=0 )
         return;
 
 
       _list.Visitors.Clear();
 
       Dictionary<long, Visitor> dictionary = _database.VisitorHolder.DataSet;
-      foreach (long id in targeIds)
-      {       
-        Visitor item = null;      
-        if (dictionary.TryGetValue(id, out item))
-        {
-          Visitor newItem = new Visitor()
-          {
-              Id = id
-            , EntityState = EntityState.Deleted
-            , Dbresult    = ResultStatus.Failed
-            , Photoid = item.Photoid
-          };
-          _list.Visitors.Add(newItem);
-        }
+      foreach (Visitor item in targetItems)
+      {         
+         Visitor newItem = new Visitor()
+         {
+             Id = item.Id
+           , EntityState = EntityState.Deleted
+           , Dbresult    = ResultStatus.Failed
+           , Photoid = item.Photoid
+         };
+         _list.Visitors.Add(newItem);        
       }
 
       if (_list.Visitors.Count <= 0)
@@ -134,29 +130,34 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
+    public Task Delete(Visitor targetItem)
+    {
+      throw new NotImplementedException();
+    }
+
     //_database.Visitors.DataUpdated += UpdateData;
 
-        /*
-    private void UpdateData(VisitorList list)
-    {
-      _database.Visitors.DataUpdated -= UpdateData;
+    /*
+private void UpdateData(VisitorList list)
+{
+  _database.Visitors.DataUpdated -= UpdateData;
 
-      if (list != null)
+  if (list != null)
+  {
+    Visitor visitor = list.Visitors.FirstOrDefault();
+    if (visitor != null)
+    {
+      if (visitor.EntityState == EntityState.Deleted)
       {
-        Visitor visitor = list.Visitors.FirstOrDefault();
-        if (visitor != null)
-        {
-          if (visitor.EntityState == EntityState.Deleted)
-          {
-            if (list.Visitors.Count > 1)
-              MessageBox.Show(list.Visitors.Count + " visitors successfully Deleted");
-            else
-              MessageBox.Show("Visitor successfully Deleted");
-          }
-        }
+        if (list.Visitors.Count > 1)
+          MessageBox.Show(list.Visitors.Count + " visitors successfully Deleted");
+        else
+          MessageBox.Show("Visitor successfully Deleted");
       }
-    }   
-    */
+    }
+  }
+}   
+*/
 
     private VisitorList _list;
 

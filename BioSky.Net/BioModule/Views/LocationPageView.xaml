@@ -42,7 +42,7 @@
                  Controls:TextBoxHelper.Watermark="{lex:Loc LocationName}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                  Controls:TextBoxHelper.ClearTextButton="True"
-                 Text="{Binding CurrentLocation.LocationName}"
+                 Text="{Binding CurrentLocation.LocationName,  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  >
         </TextBox>
 
@@ -50,7 +50,7 @@
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
                  Controls:TextBoxHelper.Watermark="{lex:Loc Description}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                 Text="{Binding CurrentLocation.Description}"
+                 Text="{Binding CurrentLocation.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  >
         </TextBox>
 

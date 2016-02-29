@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BioContracts
 {
+  public delegate void LocationsChangedEventHandler();
+
   public interface ITrackLocationEngine
   {
- 
-    AsyncObservableCollection<TrackLocation> TrackLocations
-    { get; }
+    event LocationsChangedEventHandler LocationsChanged;
+
+    AsyncObservableCollection<TrackLocation> TrackLocations { get; }
   }
 }

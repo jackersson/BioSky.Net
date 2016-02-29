@@ -1,10 +1,5 @@
 ﻿using BioService;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BioContracts.Common
 {
@@ -13,36 +8,57 @@ namespace BioContracts.Common
 
   public class TrackLocationAccessDeviceObserver : IObserver<AccessDeviceActivity>
   {
-
     public event StateEventHandler AccessDeviceState;
-    public event CardEventHandler  CardDetected;
+    public event CardEventHandler  CardDetected     ;
+
+    public TrackLocationAccessDeviceObserver(IProcessorLocator locator)
+    {
+      Init(locator);      
+    }
 
     public TrackLocationAccessDeviceObserver(IProcessorLocator locator, AccessDevice accessDevice)
     {
+      Init(locator);
+      Update(accessDevice.Portname);
+    }
+
+    public TrackLocationAccessDeviceObserver(IProcessorLocator locator, string deviceName)
+    {
+      Init  (locator);
+      Update(deviceName);
+    }
+
+    public void Update(string deviceName)
+    {
+      DeviceName = deviceName;
+           
+      _accessDeviceEngine.Add(DeviceName);
+      _accessDeviceEngine.Subscribe(this, DeviceName);
+
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, DeviceName);
+    }
+
+    private void Init(IProcessorLocator locator)
+    {
       _locator      = locator;
-      _accessDevice = accessDevice;
-
+     
       _accessDeviceEngine = _locator.GetProcessor<IAccessDeviceEngine>();
-      _database           = _locator.GetProcessor<IBioSkyNetRepository>();
-
-      _accessDeviceEngine.Add(accessDevice.Portname);
-      _accessDeviceEngine.Subscribe(this, accessDevice.Portname);
-      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);
+      _database           = _locator.GetProcessor<IBioSkyNetRepository>();      
     }
 
     public void Success()
     {
-      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandAccess, _accessDevice.Portname);
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandAccess, DeviceName);
     }
 
     public void Reset()
     {
-      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReset, _accessDevice.Portname);
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReset, DeviceName);
     }
 
     public void Failed()
     {
-      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, _accessDevice.Portname);
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReady, DeviceName);
     }
 
     private void OnAccessDeviceStateChanged( bool status = true)
@@ -53,7 +69,7 @@ namespace BioContracts.Common
 
     private void OnCardDetected(string cardNumber)
     {
-      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReset, _accessDevice.Portname);
+      _accessDeviceEngine.Execute(AccessDeviceCommands.CommandReset, DeviceName);
 
       if (CardDetected != null)
         CardDetected(this, cardNumber);
@@ -86,15 +102,24 @@ namespace BioContracts.Common
 
     public void Stop()
     {
-      _accessDeviceEngine.Unsubscribe(this, _accessDevice.Portname);
-      _accessDeviceEngine.Remove(_accessDevice.Portname);    
+      _accessDeviceEngine.Unsubscribe(this, DeviceName);      
+      _accessDeviceEngine.Remove(DeviceName);    
     }
 
+   
+    private string _deviceName;
+    public string DeviceName
+    {
+      get { return _deviceName; }
+      set
+      {
+        if (_deviceName != value)
+          _deviceName = value;
+      }
+    }
 
-    private readonly AccessDevice _accessDevice;
-    private readonly IProcessorLocator _locator;
-
-    private readonly IAccessDeviceEngine  _accessDeviceEngine;     
-    private readonly IBioSkyNetRepository _database;
+    private IProcessorLocator    _locator;
+    private IAccessDeviceEngine  _accessDeviceEngine;     
+    private IBioSkyNetRepository _database;
   }
 }

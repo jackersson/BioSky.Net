@@ -56,12 +56,12 @@
         <Grid HorizontalAlignment="Center"             
               VerticalAlignment="Top" 
               Grid.Column="0" Grid.ColumnSpan="4">
-
+<!--
             <Grid HorizontalAlignment="Center"             
               VerticalAlignment="Top" 
               Grid.Column="0" Grid.ColumnSpan="4">
                 <local:ProgressRingView cal:View.Model="{Binding ProgressRingView}"></local:ProgressRingView>
-            </Grid>
+            </Grid> -->
         </Grid>
         <Grid  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="10,0,10,0" Panel.ZIndex="5">
             <Rectangle Fill="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Rectangle>
