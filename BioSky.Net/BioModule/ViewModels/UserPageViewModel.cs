@@ -37,16 +37,18 @@ namespace BioModule.ViewModels
     {
       _locator    = locator;
           
-      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
-      _notifier   = _locator.GetProcessor<INotifier>();
+      _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      _notifier      = _locator.GetProcessor<INotifier>();
+      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
+
 
       CurrentPhotoImageView = new PhotoImageViewModel(_locator);
       UserPhotoView         = new UserPhotoViewModel (CurrentPhotoImageView, _locator);
 
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
-      Items.Add(new UserInformationViewModel    ());
+      Items.Add(new UserInformationViewModel    (_locator));
       Items.Add(new UserContactlessCardViewModel(_locator));
       Items.Add(UserPhotoView);
      
@@ -116,7 +118,9 @@ namespace BioModule.ViewModels
 
     public async void Apply()
     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (!result )
         return;  
@@ -206,6 +210,7 @@ namespace BioModule.ViewModels
     private UserPageMode                      _userPageMode ;
     private IBioSkyNetRepository              _database     ;
     private readonly IDatabaseService         _bioService   ;
+    private readonly DialogsHolder            _dialogsHolder;
 
     #endregion
   }

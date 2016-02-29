@@ -20,7 +20,8 @@ using BioContracts;
 using System.Windows;
 using BioContracts.Common;
 using Grpc.Core;
-
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace BioModule.ViewModels
 {
@@ -34,11 +35,30 @@ namespace BioModule.ViewModels
 
       _serviceManager      = locator.GetProcessor<IServiceManager>();
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      _notifier            = _locator.GetProcessor<INotifier>();
+
 
       _enroller = new Enroller(locator);
     }
 
     #region Interface
+
+    public void OnMouseWheel(object sender, MouseButtonEventArgs e)
+    {
+
+      UIElement obj = (UIElement)e.Source;
+      System.Windows.Size si = obj.RenderSize;
+      System.Windows.Point p3 = obj.RenderTransformOrigin;
+      System.Windows.Media.Transform p4 = obj.RenderTransform;      
+
+      System.Windows.Point p = e.GetPosition(obj);
+      Window rootVisual = Application.Current.MainWindow;
+      System.Windows.Point relativePoint = obj.TransformToAncestor(rootVisual)
+                             .Transform(new System.Windows.Point(0, 0));
+
+      _notifier.Notify(52, true, relativePoint.X , relativePoint.Y);     
+
+    }
 
     public void EnrollFromPhoto()
     {
@@ -186,9 +206,10 @@ namespace BioModule.ViewModels
 
     private readonly Enroller                 _enroller           ;
     private readonly IProcessorLocator        _locator            ;
-    private readonly IWindowManager           _windowManager      ;
     private readonly IServiceManager          _serviceManager     ;
     private readonly ICaptureDeviceEngine     _captureDeviceEngine;
+    private readonly INotifier                _notifier           ;
+
 
     #endregion
 

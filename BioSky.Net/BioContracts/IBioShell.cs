@@ -14,7 +14,9 @@ namespace BioContracts
 
     object ToolBar { get; set; }
 
-    object MainMenu { get; set; }    
+    object MainMenu { get; set; }  
+
+    object ProgressRing { get; set; }
 
     IBioModule LoadModule(Assembly assembly);
   }

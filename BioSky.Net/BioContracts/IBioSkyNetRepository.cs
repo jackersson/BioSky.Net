@@ -32,6 +32,7 @@ namespace BioContracts
 
     ILocalStorage LocalStorage  { get; }
 
+    IBioCultureSources BioCultureSources { get; }
 
     IFullHolder<LocationList> Locations  { get; }
 

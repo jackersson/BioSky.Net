@@ -22,12 +22,14 @@ namespace BioModule.ViewModels
     {
       _locator       = locator      ;
      
-      _bioEngine  = locator.GetProcessor<IBioEngine>();
-      _selector   = locator.GetProcessor<ViewModelSelector>();
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
-      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _notifier   = _locator.GetProcessor<INotifier>();
-      
+      _bioEngine     = locator.GetProcessor<IBioEngine>();
+      _selector      = locator.GetProcessor<ViewModelSelector>();
+      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _notifier      = _locator.GetProcessor<INotifier>();
+      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
+
+
       TrackTabControlView = new TrackTabControlViewModel(_locator);
 
       _visitorsView = new VisitorsViewModel(locator);
@@ -58,7 +60,8 @@ namespace BioModule.ViewModels
 
     public async void OnDeleteLocation()
     {
-      var result = false; // _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (!result)
         return;
@@ -193,8 +196,10 @@ namespace BioModule.ViewModels
     private readonly IBioSkyNetRepository _database     ;
     private readonly IDatabaseService     _bioService   ;
     private readonly INotifier            _notifier     ;
+    private readonly DialogsHolder        _dialogsHolder;
+
 
     #endregion
 
-  }   
+  }
 }

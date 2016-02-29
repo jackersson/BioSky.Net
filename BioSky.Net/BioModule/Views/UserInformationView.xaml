@@ -94,19 +94,14 @@
                         </Style>
                     </ComboBox.Style>
                 </ComboBox>
-
-                <TextBox x:Name="CountryBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
-                         Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
-
+                
                 <ComboBox x:Name="CountryBox2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                         SelectedItem="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"
                          Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
                          ItemsSource="{Binding CountryNames}"
-                         Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
+                         />
 
                 <TextBox x:Name="CityBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc City}"

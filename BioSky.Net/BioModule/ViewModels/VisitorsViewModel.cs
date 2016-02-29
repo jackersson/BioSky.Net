@@ -39,12 +39,14 @@ namespace BioModule.ViewModels
 
       _locator       = locator;
          
-      _selector   = _locator.GetProcessor<ViewModelSelector>();
-      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
-      _notifier   = _locator.GetProcessor<INotifier>(); 
+      _selector      = _locator.GetProcessor<ViewModelSelector>();
+      _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      _notifier      = _locator.GetProcessor<INotifier>();
+      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
 
-      _selectedVisitors     = new ObservableCollection<Visitor>();
+
+      _selectedVisitors = new ObservableCollection<Visitor>();
       PageController        = new PageControllerViewModel();
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
@@ -87,9 +89,9 @@ namespace BioModule.ViewModels
 
     public async void OnDeleteVisitors()
     {
-      //TODO dialogs
-      //var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
-      bool result = false;
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+
       if (result == false)
         return;
       
@@ -348,6 +350,8 @@ namespace BioModule.ViewModels
     private readonly IDatabaseService     _bioService   ;
     private readonly IBioSkyNetRepository _database     ;
     private readonly INotifier            _notifier     ;
+    private readonly DialogsHolder        _dialogsHolder;
+
 
     private int PAGES_COUNT = 10;
     #endregion

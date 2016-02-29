@@ -38,6 +38,8 @@ namespace BioModule.ViewModels
    
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService          = _locator.GetProcessor<IServiceManager>().DatabaseService    ;
+      _dialogsHolder       = _locator.GetProcessor<DialogsHolder>();
+
 
       DisplayName = "Photo";      
 
@@ -87,7 +89,8 @@ namespace BioModule.ViewModels
     
     public async void DeletePhoto()
     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (!result || SelectedItem == null)
         return;
@@ -208,6 +211,8 @@ namespace BioModule.ViewModels
     private readonly IBioSkyNetRepository     _database           ;
     private readonly INotifier                _notifier           ;
     private BioContracts.Common.BioImageUtils _bioUtils           ;
+    private readonly DialogsHolder            _dialogsHolder      ;
+
 
     #endregion
   }

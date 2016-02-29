@@ -26,8 +26,10 @@ namespace BioModule.ViewModels
 
       _locator    = locator;    
 
-      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();      
+      _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database      = _locator.GetProcessor<IBioSkyNetRepository>(); 
+      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
+
 
       CardState = "Card number";
 
@@ -125,7 +127,8 @@ namespace BioModule.ViewModels
 
     public async void OnDeleteCards()
     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (!result)
         return;
@@ -241,13 +244,15 @@ namespace BioModule.ViewModels
 
     #region Global Variables
 
-    private          Person               _user         ;
-    private readonly IBioEngine           _bioEngine    ;
-    private readonly IProcessorLocator    _locator      ; 
-    private readonly IDatabaseService     _bioService   ;
-    private readonly INotifier            _notifier     ;
-    private readonly IBioSkyNetRepository _database     ;
-    private readonly TrackLocationAccessDeviceObserver _observer;
+    private          Person                            _user         ;
+    private readonly IBioEngine                        _bioEngine    ;
+    private readonly IProcessorLocator                 _locator      ; 
+    private readonly IDatabaseService                  _bioService   ;
+    private readonly INotifier                         _notifier     ;
+    private readonly IBioSkyNetRepository              _database     ;
+    private readonly TrackLocationAccessDeviceObserver _observer     ;
+    private readonly DialogsHolder                     _dialogsHolder;
+
 
     #endregion
 

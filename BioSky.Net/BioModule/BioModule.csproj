@@ -199,7 +199,10 @@
     <Compile Include="BioDataLoader.cs" />
     <Compile Include="BioModuleImpl.cs" />
     <Compile Include="BioModuleInstaller.cs" />
-    <Compile Include="Utils\BioCultureSources.cs" />
+    <Compile Include="Utils\DeviceItemBase.cs" />
+    <Compile Include="Utils\DialogsHolder.cs" />
+    <Compile Include="ViewModels\DevicesListViewModel.cs" />
+    <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\PageControllerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -275,8 +278,8 @@
     <Compile Include="Views\LoaderView.xaml.cs">
       <DependentUpon>LoaderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LocationAccessDevicesView.xaml.cs">
-      <DependentUpon>LocationAccessDevicesView.xaml</DependentUpon>
+    <Compile Include="Views\DevicesListView.xaml.cs">
+      <DependentUpon>DevicesListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LocationUsersNotifyView.xaml.cs">
       <DependentUpon>LocationUsersNotifyView.xaml</DependentUpon>
@@ -394,7 +397,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\LocationAccessDevicesView.xaml">
+    <Page Include="Views\DevicesListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -38,10 +38,11 @@ namespace BioModule.ViewModels
     {
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Users_");
 
-      _locator       = locator;     
-      _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
-      _notifier      = _locator.GetProcessor<INotifier>();
+      _locator        = locator;     
+      _bioService     = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database       = _locator.GetProcessor<IBioSkyNetRepository>();
+      _notifier       = _locator.GetProcessor<INotifier>();
+      _dialogsHolder  = _locator.GetProcessor<DialogsHolder>();
 
       _selectedPersons = new ObservableCollection<Person>();
       PageController   = new PageControllerViewModel();
@@ -75,8 +76,10 @@ namespace BioModule.ViewModels
     #region Interface
     public async void OnDeleteUsers()
     {
-      var result = false;// _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
-      
+      _dialogsHolder.AreYouSureDialog.Show();
+
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+
       if (result == false)
         return;
 
@@ -285,11 +288,13 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Global Variables  
-    private readonly IProcessorLocator    _locator   ;
-    private readonly ViewModelSelector    _selector  ;   
-    private readonly IDatabaseService     _bioService;
-    private readonly IBioSkyNetRepository _database  ;
-    private readonly INotifier            _notifier  ;
+    private readonly IProcessorLocator    _locator      ;
+    private readonly ViewModelSelector    _selector     ;   
+    private readonly IDatabaseService     _bioService   ;
+    private readonly IBioSkyNetRepository _database     ;
+    private readonly INotifier            _notifier     ;
+    private readonly DialogsHolder        _dialogsHolder;
+
 
     private int PAGES_COUNT = 10;
     #endregion

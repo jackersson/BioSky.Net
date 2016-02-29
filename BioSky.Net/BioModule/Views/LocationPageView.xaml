@@ -62,8 +62,8 @@
                     BorderThickness="2"
                     >
             <TabControl.Resources>
-                <DataTemplate DataType="{x:Type vm:LocationAccessDevicesViewModel}">
-                    <local:LocationAccessDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationAccessDevicesView>
+                <DataTemplate DataType="{x:Type vm:DevicesListViewModel}">
+                    <local:DevicesListView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:DevicesListView>
                 </DataTemplate>
                 <!--<DataTemplate DataType="{x:Type vm:LocationCaptureDevicesViewModel}">
                     <local:LocationCaptureDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationCaptureDevicesView>

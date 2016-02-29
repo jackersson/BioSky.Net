@@ -23,7 +23,7 @@
     </UserControl.Resources>
 
 
-    <Grid>
+    <Grid  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseWheel($obj, $EventArgs)]">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="106*"/>
             <ColumnDefinition Width="96*"/>

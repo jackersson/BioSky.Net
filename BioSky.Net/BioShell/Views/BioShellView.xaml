@@ -22,8 +22,7 @@
                       Title="{Binding DisplayName}"
                       Icon="{Binding LogoIconSource}"
                       d:DataContext="{d:DesignInstance localvm:BioShellViewModel,  IsDesignTimeCreatable=False}">
-
-
+    <Grid>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
@@ -42,6 +41,9 @@
         <ContentControl Grid.Row="1" Grid.Column="2" x:Name="FlyoutControl"  />
 
         <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="MainMenu"></ContentControl>
+    </Grid>
 
-    </Grid>    
+        <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="ProgressRing"></ContentControl>
+
+    </Grid>
 </Controls:MetroWindow>

@@ -18,9 +18,12 @@ namespace BioModule.ViewModels
   public class MainMenuViewModel : Screen
   {
     public MainMenuViewModel( IProcessorLocator locator)
-    {   
-      _viewModelSelector = locator.GetProcessor<ViewModelSelector>();
-      _windowManager     = locator.GetProcessor<IWindowManager>();
+    {
+      _locator = locator;
+
+      _viewModelSelector = _locator.GetProcessor<ViewModelSelector>();
+      _dialogsHolder     = _locator.GetProcessor<DialogsHolder>();
+
     }
 
     public void OpenTabAddNewPerson()
@@ -48,14 +51,28 @@ namespace BioModule.ViewModels
     } 
     public void ShowAboutDialog()
     {
-      string s = "ewfrnfglnsgnejgnbjetntnbkjtnet/n dsgjwnewhuhekbnkenbetknbknjdfjsbxmjnf/n wdgbscfvrjenbvfvjrenenvlwefn/n";
-     // _windowManager.ShowDialog(new AboutDialogViewModel());    
-       //_windowManager.ShowDialog(new CustomTextDialogViewModel("Test Dialog", s, DialogStatus.Info));      
-  
+      _dialogsHolder.AboutDialog.Show();
+      var result = _dialogsHolder.AboutDialog.GetDialogResult();
+
     }
     public void ShowLogInDialog()
-    {      
-      //var result = _windowManager.ShowDialog(new LoginDialogViewModel(this));      
+    {
+      _dialogsHolder.LoginDialog.Show();
+      LoginDialogResult result = _dialogsHolder.LoginDialog.GetDialogResult();
+      if(result == null)
+        return;
+
+      switch(result.status)
+      {
+        case LoginDialogStatus.Register:
+          Console.WriteLine("Register " + result.userName + " " + result.password);
+          break;
+                    
+        case LoginDialogStatus.SignIn:
+          Console.WriteLine("Register " + result.userName + " " + result.password);
+          break;
+      }
+
     }
 
     public void ShowSettingsFlayout()
@@ -67,6 +84,8 @@ namespace BioModule.ViewModels
 
 
     private ViewModelSelector          _viewModelSelector;
-    private readonly IWindowManager    _windowManager;
+    private readonly DialogsHolder     _dialogsHolder    ;
+    private readonly IProcessorLocator _locator          ;
+
   }
 }
