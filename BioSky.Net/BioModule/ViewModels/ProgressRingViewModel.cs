@@ -12,17 +12,22 @@ namespace BioModule.ViewModels
      public ProgressRingViewModel()
      {
        SetValues(Margin);
-      ProgressRingVisibility = true;
+      /*ProgressRingVisibility = true;
       ProgressRingVisibility = true;
       ProgressRingImageVisibility = true;
       ProgressRingTextVisibility = true;
       ProgressRingProgressVisibility = true;
-      ProgressRingStatus = true;   
+      ProgressRingStatus = true;
+      RingHorizontalAlignment = HorizontalAlignment.Left;
+      RingVerticalAlignment = VerticalAlignment.Center;*/
 
     }
 
      public async void ShowProgress(int progress, bool status, double pointX, double pointY)
      {
+
+      UIElement el = new UIElement();
+      
 
       Margin = new Thickness(pointX, pointY, 0, 0);
 
@@ -33,8 +38,9 @@ namespace BioModule.ViewModels
        
          await Task.Delay(3000);
          ProgressRingVisibility = false;
-       }
-       else       
+         Margin = new Thickness(0, 0, 0, 0);
+      }
+      else       
          SetValues(Margin, true, false, true, true, true, progress + "%");      
       
     }
@@ -56,9 +62,37 @@ namespace BioModule.ViewModels
        Margin                         = RingMargin;
      }
 
-     #region UI
+    #region UI
 
-     private bool _progressRingVisibility;
+    private HorizontalAlignment _ringHorizontalAlignment;
+    public HorizontalAlignment RingHorizontalAlignment
+    {
+      get { return _ringHorizontalAlignment; }
+      set
+      {
+        if (_ringHorizontalAlignment != value)
+        {
+          _ringHorizontalAlignment = value;
+          NotifyOfPropertyChange(() => RingHorizontalAlignment);
+        }
+      }
+    }
+
+    private VerticalAlignment _ringVerticalAlignmentt;
+    public VerticalAlignment RingVerticalAlignment
+    {
+      get { return _ringVerticalAlignmentt; }
+      set
+      {
+        if (_ringVerticalAlignmentt != value)
+        {
+          _ringVerticalAlignmentt = value;
+          NotifyOfPropertyChange(() => RingVerticalAlignment);
+        }
+      }
+    }
+
+    private bool _progressRingVisibility;
      public bool ProgressRingVisibility
      {
        get { return _progressRingVisibility; }

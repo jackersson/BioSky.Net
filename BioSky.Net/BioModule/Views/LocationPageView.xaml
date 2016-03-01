@@ -68,8 +68,8 @@
                 <!--<DataTemplate DataType="{x:Type vm:LocationCaptureDevicesViewModel}">
                     <local:LocationCaptureDevicesView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationCaptureDevicesView>
                 </DataTemplate>-->
-                <DataTemplate DataType="{x:Type vm:LocationUsersNotifyViewModel}">
-                    <local:LocationUsersNotifyView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationUsersNotifyView>
+                <DataTemplate DataType="{x:Type vm:LocationPermissionViewModel}">
+                    <local:LocationPermissionView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationPermissionView>
                 </DataTemplate>
             </TabControl.Resources>
             <TabControl.ItemTemplate>

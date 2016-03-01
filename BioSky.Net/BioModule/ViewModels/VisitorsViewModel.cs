@@ -1,29 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
-using BioModule.ResourcesLoader;
-using System.Windows.Media.Imaging;
-
-using BioData;
 using System.Collections.ObjectModel;
-
-using System.Windows.Input;
 using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Media;
 
 using BioModule.Utils;
 using BioContracts;
 using BioService;
-using Google.Protobuf.Collections;
 using System.Collections;
 using System.ComponentModel;
-using System.Windows.Data;
-using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
 

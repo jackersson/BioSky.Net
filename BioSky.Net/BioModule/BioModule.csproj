@@ -234,7 +234,7 @@
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\LoaderViewModel.cs" />
     <Compile Include="ViewModels\LocationAccessDevicesViewModel.cs" />
-    <Compile Include="ViewModels\LocationUsersNotifyViewModel.cs" />
+    <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
     <Compile Include="ViewModels\LoginDialogViewModel.cs" />
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -281,8 +281,8 @@
     <Compile Include="Views\DevicesListView.xaml.cs">
       <DependentUpon>DevicesListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LocationUsersNotifyView.xaml.cs">
-      <DependentUpon>LocationUsersNotifyView.xaml</DependentUpon>
+    <Compile Include="Views\LocationPermissionView.xaml.cs">
+      <DependentUpon>LocationPermissionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginDialogView.xaml.cs">
       <DependentUpon>LoginDialogView.xaml</DependentUpon>
@@ -401,7 +401,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\LocationUsersNotifyView.xaml">
+    <Page Include="Views\LocationPermissionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

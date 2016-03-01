@@ -38,14 +38,15 @@ namespace BioModule.ViewModels
       _notifier            = _locator.GetProcessor<INotifier>();
 
 
-      _enroller = new Enroller(locator);
+      PhotoInfoExpanderView = new PhotoInfoExpanderViewModel();
+      _enroller             = new Enroller(locator);
     }
 
     #region Interface
 
-    public void OnMouseWheel(object sender, MouseButtonEventArgs e)
+/*    public void OnMouseWheel(object sender, MouseButtonEventArgs e)
     {
-
+      
       UIElement obj = (UIElement)e.Source;
       System.Windows.Size si = obj.RenderSize;
       System.Windows.Point p3 = obj.RenderTransformOrigin;
@@ -58,7 +59,7 @@ namespace BioModule.ViewModels
 
       _notifier.Notify(52, true, relativePoint.X , relativePoint.Y);     
 
-    }
+    }*/
 
     public void EnrollFromPhoto()
     {
@@ -185,6 +186,20 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
+
+    private PhotoInfoExpanderViewModel _photoInfoExpanderView;
+    public PhotoInfoExpanderViewModel PhotoInfoExpanderView
+    {
+      get { return _photoInfoExpanderView; }
+      set
+      {
+        if (_photoInfoExpanderView != value)
+        {
+          _photoInfoExpanderView = value;
+          NotifyOfPropertyChange(() => PhotoInfoExpanderView);
+        }
+      }
+    }
 
     public delegate void OnFeedbackPhotoReceiveHandler(Photo feedbackPhoto);
     public event OnFeedbackPhotoReceiveHandler FeedbackPhotoReceive;

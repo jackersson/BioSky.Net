@@ -88,10 +88,24 @@
         </Controls:ToggleSwitch>
 
         <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
-                Grid.Row="1" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="{lex:Loc Cancel}"
+                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc Cancel}" Width="28" Height="28" BorderBrush="#FF3587BD" Margin="0,11,0,0"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
+        </Button>
+
+        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
+                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc NextImage}" Width="40" Height="40" BorderBrush="#7F3587BD" 
+                >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}" Opacity="0.5"/>
+        </Button>
+
+        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
+                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc PreviousIamge}" Width="40" Height="40" BorderBrush="#7F3587BD" 
+                >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}" Opacity="0.5" />
         </Button>
 
         <!--<Button cal:Message.Attach="[Event Click] = [Action UploadClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"

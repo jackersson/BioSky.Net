@@ -18,9 +18,9 @@ namespace BioModule.Views
   /// <summary>
   /// Interaction logic for LocationUsersNotifyView.xaml
   /// </summary>
-  public partial class LocationUsersNotifyView : UserControl
+  public partial class LocationPermissionView : UserControl
   {
-    public LocationUsersNotifyView()
+    public LocationPermissionView()
     {
       InitializeComponent();
     }
