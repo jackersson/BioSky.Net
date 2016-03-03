@@ -22,6 +22,10 @@ using BioContracts.Common;
 using Grpc.Core;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Drawing.Drawing2D;
+using Accord.Imaging.Filters;
+using AForge.Imaging;
 
 namespace BioModule.ViewModels
 {
@@ -40,26 +44,14 @@ namespace BioModule.ViewModels
 
       PhotoInfoExpanderView = new PhotoInfoExpanderViewModel();
       _enroller             = new Enroller(locator);
+      SetBitmapSource       = new TemporayBitmapSourceHolder();
+
+      SetBitmapSource.BasePhoto = CurrentImageSource;
+
+      PhotoInfoExpanderView.ExpanderChanged += Expander_Changed;
     }
 
     #region Interface
-
-/*    public void OnMouseWheel(object sender, MouseButtonEventArgs e)
-    {
-      
-      UIElement obj = (UIElement)e.Source;
-      System.Windows.Size si = obj.RenderSize;
-      System.Windows.Point p3 = obj.RenderTransformOrigin;
-      System.Windows.Media.Transform p4 = obj.RenderTransform;      
-
-      System.Windows.Point p = e.GetPosition(obj);
-      Window rootVisual = Application.Current.MainWindow;
-      System.Windows.Point relativePoint = obj.TransformToAncestor(rootVisual)
-                             .Transform(new System.Windows.Point(0, 0));
-
-      _notifier.Notify(52, true, relativePoint.X , relativePoint.Y);     
-
-    }*/
 
     public void EnrollFromPhoto()
     {
@@ -100,6 +92,85 @@ namespace BioModule.ViewModels
         if (_enroller.Busy)
           MessageBox.Show("Wait for finnishing previous operation");
       }
+    }
+
+    public void Expander_Changed(bool isExpanded)
+    {
+      if (isExpanded)
+        DrawingOnImage();
+      else
+        CurrentImageSource = SetBitmapSource.BasePhoto;     
+    }
+
+
+    public void DrawingOnImage()
+    {
+      Rectangle rect = new Rectangle(100, 50, 500, 500);
+      Rectangle rect2 = new Rectangle(200, 100, 500, 500);
+      Rectangle rect3 = new Rectangle(700, 50, 500, 500);
+
+      List<Rectangle> rectList = new List<Rectangle>();
+      rectList.Add(rect);
+      rectList.Add(rect2);
+      rectList.Add(rect3);
+
+      AForge.IntPoint p = new AForge.IntPoint(100,100);
+      AForge.IntPoint p2 = new AForge.IntPoint(300, 100);
+      AForge.IntPoint p3 = new AForge.IntPoint(500, 100);
+      AForge.IntPoint p4 = new AForge.IntPoint(100, 500);
+      AForge.IntPoint p5 = new AForge.IntPoint(100, 300);
+
+
+      List<AForge.IntPoint> pointList = new List<AForge.IntPoint>();
+      pointList.Add(p);
+      pointList.Add(p2);
+      pointList.Add(p3);
+      pointList.Add(p4);
+      pointList.Add(p5);
+
+      // Create a rectangles marker to draw some rectangles around the faces
+
+
+
+      //     if (CurrentImagePhoto == null)
+      //       return;
+
+      //     if(_isPhotoChanged)
+      //      {
+
+
+      RectanglesMarker marker = new RectanglesMarker(rectList, System.Drawing.Color.Fuchsia);
+        PointsMarker marker2 = new PointsMarker(pointList, System.Drawing.Color.Red, 10);
+
+        Bitmap bm = BitmapFromSource(CurrentImageSource);
+        Bitmap rectMarker = marker.Apply(bm);
+        Bitmap pointMarker = marker2.Apply(rectMarker);
+
+        SetBitmapSource.PhotoWithRectangles = BitmapConversion.BitmapToBitmapSource(pointMarker);
+
+        _isPhotoChanged = false;
+      //     }
+
+      CurrentImageSource = SetBitmapSource.PhotoWithRectangles;
+      
+    }
+
+    public Bitmap BitmapFromSource(BitmapSource bitmapsource)
+    {
+      //convert image format
+      var src = new FormatConvertedBitmap();
+      src.BeginInit();
+      src.Source = bitmapsource;
+      src.DestinationFormat = PixelFormats.Bgr24;
+      src.EndInit();
+
+      //copy to bitmap
+      Bitmap bitmap = new Bitmap(src.PixelWidth, src.PixelHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+      var data = bitmap.LockBits(new Rectangle(System.Drawing.Point.Empty, bitmap.Size), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+      src.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
+      bitmap.UnlockBits(data);
+
+      return bitmap;
     }
 
     #endregion
@@ -187,6 +258,20 @@ namespace BioModule.ViewModels
 
     #region UI
 
+    private TemporayBitmapSourceHolder _setBitmapSource;
+    public TemporayBitmapSourceHolder SetBitmapSource
+    {
+      get { return _setBitmapSource; }
+      set
+      {
+        if (_setBitmapSource != value)
+        {
+          _setBitmapSource = value;
+          NotifyOfPropertyChange(() => SetBitmapSource);
+        }
+      }
+    }
+
     private PhotoInfoExpanderViewModel _photoInfoExpanderView;
     public PhotoInfoExpanderViewModel PhotoInfoExpanderView
     {
@@ -228,5 +313,12 @@ namespace BioModule.ViewModels
 
     #endregion
 
+  }
+
+  public class TemporayBitmapSourceHolder
+  {
+    public BitmapSource BasePhoto;
+
+    public BitmapSource PhotoWithRectangles;
   }
 }

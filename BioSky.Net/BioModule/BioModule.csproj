@@ -203,6 +203,7 @@
     <Compile Include="Utils\DialogsHolder.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
+    <Compile Include="ViewModels\NotificationDialogViewModel.cs" />
     <Compile Include="ViewModels\PageControllerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -280,6 +281,9 @@
     </Compile>
     <Compile Include="Views\DevicesListView.xaml.cs">
       <DependentUpon>DevicesListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NotificationDialogView.xaml.cs">
+      <DependentUpon>NotificationDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LocationPermissionView.xaml.cs">
       <DependentUpon>LocationPermissionView.xaml</DependentUpon>
@@ -398,6 +402,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DevicesListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NotificationDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

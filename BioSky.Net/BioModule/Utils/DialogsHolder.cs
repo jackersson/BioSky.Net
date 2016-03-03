@@ -12,6 +12,18 @@ namespace BioModule.Utils
       _windowManager = _locator.GetProcessor<IWindowManager>();
     }
 
+    private NotificationDialogViewModel _notificationDialog;
+    public NotificationDialogViewModel NotificationDialog
+    {
+      get
+      {
+        if (_notificationDialog == null)
+          _notificationDialog = new NotificationDialogViewModel(_windowManager, null);
+
+        return _notificationDialog;
+      }
+    }
+
     private AboutDialogViewModel _aboutDialog;
     public AboutDialogViewModel AboutDialog
     {

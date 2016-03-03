@@ -272,7 +272,7 @@ namespace BioModule.ViewModels
         return _currentImageSource;
 
       }
-      private set
+       set
       {
         try
         {
@@ -288,7 +288,8 @@ namespace BioModule.ViewModels
         }
       }
     }
-     
+
+    protected bool _isPhotoChanged;
 
     private Photo _currentImagePhoto;
     public Photo CurrentImagePhoto
@@ -298,6 +299,7 @@ namespace BioModule.ViewModels
       {
         if (_currentImagePhoto != value)
         {
+          _isPhotoChanged = true;
           _currentImagePhoto = value;
           NotifyOfPropertyChange(() => CurrentImagePhoto);
         }

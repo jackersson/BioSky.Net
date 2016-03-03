@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
 using BioModule.Utils;
-
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Windows;
 using BioContracts;
 
 
@@ -51,9 +43,8 @@ namespace BioModule.ViewModels
     } 
     public void ShowAboutDialog()
     {
-      _dialogsHolder.AboutDialog.Show();
-      var result = _dialogsHolder.AboutDialog.GetDialogResult();
-
+       _dialogsHolder.AboutDialog.Show();
+       var result = _dialogsHolder.AboutDialog.GetDialogResult();  
     }
     public void ShowLogInDialog()
     {

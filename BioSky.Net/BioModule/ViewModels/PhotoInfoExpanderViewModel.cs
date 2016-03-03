@@ -14,16 +14,30 @@ namespace BioModule.ViewModels
   {
     public PhotoInfoExpanderViewModel()
     {
+      string width = "256";
+      string height = "512";
+
       Age        = "34567";
-      Gender     = "Male" ;
       Size       = "348"  ;
-      Faces      = "2"    ;
-      Count      = "3"    ;
-      Width      = "256"  ;
-      Height     = "512"  ;
-      Origin     = "full" ;
+      FacesCount = "2"    ;
       Confidence = "77%"  ;
+      WidthHeight = width + "*" + height;
     }
+
+    public void OnExpanded(bool isExpanded)
+    {
+      OnExpanderChanged(isExpanded);
+    }
+
+    public delegate void ExpanderChangedEventHandler(bool isExpanded);
+    public event ExpanderChangedEventHandler ExpanderChanged;
+
+    protected virtual void OnExpanderChanged(bool isExpanded)
+    {
+      if (ExpanderChanged != null)
+        ExpanderChanged(isExpanded);
+    }
+
 
     private string _confidence;
     public string Confidence
@@ -39,19 +53,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private string _origin;
-    public string Origin
-    {
-      get { return _origin; }
-      set
-      {
-        if (_origin != value)
-        {
-          _origin = value;
-          NotifyOfPropertyChange(() => Origin);
-        }
-      }
-    }
+
 
     private string _height;
     public string Height
@@ -67,44 +69,30 @@ namespace BioModule.ViewModels
       }
     }
 
-    private string _width;
-    public string Width
+    private string _widthHeight;
+    public string WidthHeight
     {
-      get { return _width; }
+      get { return _widthHeight; }
       set
       {
-        if (_width != value)
+        if (_widthHeight != value)
         {
-          _width = value;
-          NotifyOfPropertyChange(() => Width);
+          _widthHeight = value;
+          NotifyOfPropertyChange(() => WidthHeight);
         }
       }
     }
 
-    private string _count;
-    public string Count
+    private string _facesCount;
+    public string FacesCount
     {
-      get { return _count; }
+      get { return _facesCount; }
       set
       {
-        if (_count != value)
+        if (_facesCount != value)
         {
-          _count = value;
-          NotifyOfPropertyChange(() => Count);
-        }
-      }
-    }
-
-    private string _faces;
-    public string Faces
-    {
-      get { return _faces; }
-      set
-      {
-        if (_faces != value)
-        {
-          _faces = value;
-          NotifyOfPropertyChange(() => Faces);
+          _facesCount = value;
+          NotifyOfPropertyChange(() => FacesCount);
         }
       }
     }
@@ -119,20 +107,6 @@ namespace BioModule.ViewModels
         {
           _age = value;
           NotifyOfPropertyChange(() => Age);
-        }
-      }
-    }
-
-    private string _gender;
-    public string Gender
-    {
-      get { return _gender; }
-      set
-      {
-        if (_gender != value)
-        {
-          _gender = value;
-          NotifyOfPropertyChange(() => Gender);
         }
       }
     }

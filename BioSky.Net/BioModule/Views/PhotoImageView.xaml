@@ -23,7 +23,7 @@
     </UserControl.Resources>
 
 
-    <Grid  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseWheel($obj, $EventArgs)]">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="106*"/>
             <ColumnDefinition Width="96*"/>
@@ -45,9 +45,8 @@
                     <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding CurrentImageSource}">
                         <Image.LayoutTransform>
                             <ScaleTransform ScaleX="{Binding CalculatedImageScale}" ScaleY="{Binding CalculatedImageScale}">
-
                             </ScaleTransform>
-                        </Image.LayoutTransform>
+                        </Image.LayoutTransform>                        
                     </Image>
                 </ScrollViewer>
             </Grid>
@@ -88,10 +87,10 @@
         </Controls:ToggleSwitch>
 
         <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
-                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Top"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="{lex:Loc Cancel}" Width="28" Height="28" BorderBrush="#FF3587BD" Margin="0,11,0,0"
+                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc Cancel}" Width="32" Height="32"   BorderThickness="0"
                 >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
+            <Image Width="32" Height="32" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
         <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 

@@ -21,7 +21,11 @@
     </UserControl.Resources>
     <Grid x:Name="GridLayout">
         <Expander BorderBrush="#00119EDA" Background="#00119EDA"  
-                      ExpandDirection="Down" RenderTransformOrigin="0.5,0.5">
+                  ExpandDirection="Down" 
+                  cal:Message.Attach="[Event Expanded]  = [Action OnExpanded('true')];
+                                      [Event Collapsed] = [Action OnExpanded('false')]"
+                  
+                  RenderTransformOrigin="0.5,0.5">
             
             
             <Expander.ContentTemplate>
@@ -35,26 +39,21 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <StackPanel  Grid.Column="0"  VerticalAlignment="Bottom">
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Age:"    ></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Faces:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Count:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Width:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Height:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Size:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Origin:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Confidence:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Gender:"></TextBlock>
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Age:"         ></TextBlock>
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Faces Count:" ></TextBlock>
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Resolution:"></TextBlock>
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Size:"        ></TextBlock>
+                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Confidence:"  ></TextBlock>
                         </StackPanel>
                         <StackPanel x:Name="DataPanel" DataContext="{Binding ElementName=GridLayout, Path=DataContext }"  Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding Age       }" ></TextBlock>
-                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding FacesCount}"></TextBlock>
-                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding Width     }"></TextBlock>
-                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding Height    }"></TextBlock>
-                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding Size      }"></TextBlock>
-                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Text="{Binding Confidence}"></TextBlock>
-
-                        </StackPanel>
-                    </Grid>
+                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="{Binding Age        }" ></TextBlock>
+                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="{Binding FacesCount }"></TextBlock>
+                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="{Binding WidthHeight}"></TextBlock>
+                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="{Binding Size       }"></TextBlock>
+                            <TextBlock Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="{Binding Confidence }"></TextBlock>
+                                                                          
+                        </StackPanel>                                     
+                    </Grid>                                               
                 </DataTemplate>
             </Expander.ContentTemplate>
             
@@ -64,7 +63,7 @@
                     
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
@@ -74,13 +73,13 @@
                         
                         
                         <Grid >
-                            <ToggleButton x:Name="ExpanderButton" DockPanel.Dock="Bottom" Background="White"
-                                      Width="26" Height="26" BorderThickness="0"                                       
+                            <ToggleButton x:Name="ExpanderButton" Background="White" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                       BorderThickness="0" BorderBrush="#FF3587BD" Width="32" Height="32"                               
                                       IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                      Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                      Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="Photo information"
                                       Padding="1.5,0"                                     
                                           >
-                                <Image Width="24" Height="24" Name="ArrowImage" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
+                                <Image Width="32" Height="32" Name="ArrowImage" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
                                    VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
                                    Source="{Binding Source={StaticResource ResourceLoader}, Path=InformationCircleIconSource}">
                                     <Image.RenderTransform>
@@ -149,7 +148,7 @@
                                         <DoubleAnimation Storyboard.TargetName="ExpanderContent"
                                                          Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleY)"
                                                          To="1"
-                                                         Duration="0:0:0.4"/>
+                                                         Duration="0:0:0.2"/>
 
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -160,7 +159,7 @@
                                         <DoubleAnimation Storyboard.TargetName="ExpanderContent"
                                                          Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleY)"
                                                          To="0"
-                                                         Duration="0:0:0.4"/>
+                                                         Duration="0:0:0.2"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
