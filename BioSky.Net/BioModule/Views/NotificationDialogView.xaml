@@ -1,0 +1,72 @@
+﻿<metro:MetroWindow x:Class="BioModule.Views.NotificationDialogView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                   xmlns:local="clr-namespace:BioModule.Views"
+                   xmlns:vm="clr-namespace:BioModule.ViewModels"                   
+                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                   xmlns:cal="http://www.caliburnproject.org" 
+                   xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+                   xmlns:utils="clr-namespace:BioModule.Utils"                    
+                   xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"                   
+                   xmlns:lex="http://wpflocalizeextension.codeplex.com"                    
+                   lex:LocalizeDictionary.DesignCulture="uk-UA"
+                   lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+                   lex:ResxLocalizationProvider.DefaultDictionary="lang"
+                   mc:Ignorable="d" 
+                   SizeToContent="WidthAndHeight"
+                   WindowStartupLocation="CenterOwner"
+                   ShowMaxRestoreButton="False"
+                   ResizeMode="NoResize"                   
+                   d:DesignHeight="300" d:DesignWidth="300"
+                   d:DataContext="{d:DesignInstance vm:NotificationDialogViewModel, IsDesignTimeCreatable=False}"
+                   >
+
+    <metro:MetroWindow.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <utils:StringToStateConverter x:Key="converterState" />
+        <utils:ConvertStateToImage x:Key="convertStateToImage" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    </metro:MetroWindow.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="48"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.ColumnSpan="2" Margin="0,5,0,0"
+                   Text="{lex:Loc RequestResult}" 
+                   FontWeight="Bold"  HorizontalAlignment="Center"></TextBlock>
+
+        <TreeView ItemsSource="{Binding TreeItems }" Grid.Column="0" 
+                  Grid.Row="1" Grid.ColumnSpan="3" Margin="2"                    
+                  MaxHeight="200" >
+            <TreeView.Resources >
+                <HierarchicalDataTemplate DataType="{x:Type vm:TreeItem}" ItemsSource="{Binding Members}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding IsSuccess, Converter={StaticResource convertStateToImage}, UpdateSourceTrigger=PropertyChanged}" 
+                                       Stretch="Fill" Width="18" Height="18">
+                        </Image>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        
+        <Button 
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
+                 cal:Message.Attach="[Event Click]=[Action Apply]"
+                 Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="2" Grid.Column="2" >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
+        </Button>
+
+    </Grid>
+</metro:MetroWindow>

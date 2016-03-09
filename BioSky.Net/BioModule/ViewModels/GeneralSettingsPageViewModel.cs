@@ -20,34 +20,26 @@ namespace BioModule.ViewModels
 {
   public class GeneralSettingsPageViewModel : Caliburn.Micro.Screen
   {
-     public GeneralSettingsPageViewModel(IProcessorLocator locator, IWindowManager windowManager)
+     public GeneralSettingsPageViewModel(IProcessorLocator locator)
      {
        DisplayName = "GeneralSettings";
 
        _locator       = locator;
-       _windowManager = windowManager;
-       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
 
-       _languages = new ObservableCollection<string>();
+       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      _dialogsHolder  = _locator.GetProcessor<DialogsHolder>();
+
+      _languages = new ObservableCollection<string>();
        _languages.Add("en");
        _languages.Add("ru-RU");
        _languages.Add("uk-UA");
 
          
      }
-     public void LanguageChanged()
-     {
-       LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
-       LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);       
-     }
 
-     protected override void OnActivate()
-     {
-       base.OnActivate();
-       RefreshData();
-     }
+    #region Update
 
-     public void RefreshData()
+    public void RefreshData()
      {
        SelectedLanguage        = _database.LocalStorage.Language                  ;
        LocalStoragePath        = _database.LocalStorage.LocalStoragePath          ;
@@ -77,11 +69,28 @@ namespace BioModule.ViewModels
 
      }
 
-     public void Apply()
-     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+    #endregion
 
-       if(result == true)
+    #region Interface
+
+    public void LanguageChanged()
+    {
+      LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
+      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);
+    }
+
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+      RefreshData();
+    }
+
+    public void Apply()
+     {
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+
+      if (result == true)
          _database.LocalStorage.SaveGeneralSettings( LocalStoragePath
                                                    , FaceServiceIP + ":" + FaceServicePort
                                                    , DatabaseServiceIP + ":" + DatabaseServicePort
@@ -90,9 +99,10 @@ namespace BioModule.ViewModels
 
      public void Revert()
      {
-       var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
-       if (result == true)       
+      if (result == true)       
          RefreshData();       
      }
 
@@ -106,7 +116,11 @@ namespace BioModule.ViewModels
          LocalStoragePath = folderBrowserDialog.SelectedPath;       
      }
 
-     private ObservableCollection<string> _languages;
+    #endregion
+
+    #region UI
+
+    private ObservableCollection<string> _languages;
      public ObservableCollection<string> Languages
      {
        get { return _languages; }
@@ -204,9 +218,17 @@ namespace BioModule.ViewModels
        }
      }
 
-     private readonly IProcessorLocator    _locator      ;
-     private readonly IBioSkyNetRepository _database     ;
-     private readonly IWindowManager       _windowManager;
+    #endregion
+
+    #region Global Variables
+
+    private readonly IProcessorLocator    _locator      ;
+    private readonly IBioSkyNetRepository _database     ;
+    private readonly DialogsHolder        _dialogsHolder;
+
+    #endregion
+
+
 
   }
 }

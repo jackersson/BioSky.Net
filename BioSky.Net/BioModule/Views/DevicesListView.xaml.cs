@@ -18,9 +18,9 @@ namespace BioModule.Views
   /// <summary>
   /// Interaction logic for LocationAccessDevicesView.xaml
   /// </summary>
-  public partial class LocationAccessDevicesView : UserControl
+  public partial class DevicesListView : UserControl
   {
-    public LocationAccessDevicesView()
+    public DevicesListView()
     {
       InitializeComponent();
     }

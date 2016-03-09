@@ -3,31 +3,50 @@
 using Caliburn.Micro;
 using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
+using System.Windows;
 
 namespace BioModule.ViewModels
 {
-  public class ProgressRingViewModel : Screen
+  public class ProgressRingViewModel : Screen 
    {
      public ProgressRingViewModel()
      {
-       SetValues();
-     }
+       SetValues(Margin);
+      /*ProgressRingVisibility = true;
+      ProgressRingVisibility = true;
+      ProgressRingImageVisibility = true;
+      ProgressRingTextVisibility = true;
+      ProgressRingProgressVisibility = true;
+      ProgressRingStatus = true;
+      RingHorizontalAlignment = HorizontalAlignment.Left;
+      RingVerticalAlignment = VerticalAlignment.Center;*/
 
-     public async void ShowProgress(int progress, bool status)
-     {         
-       if (progress == 100)
+    }
+
+     public async void ShowProgress(int progress, bool status, double pointX, double pointY)
+     {
+
+      UIElement el = new UIElement();
+      
+
+      Margin = new Thickness(pointX, pointY, 0, 0);
+
+      if (progress == 100)
        {         
-         SetValues(true, true, false, false, false, progress + "%");
+         SetValues(Margin, true, true, false, false, false, progress + "%");
          ProgressRingIconSource = status ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
        
          await Task.Delay(3000);
          ProgressRingVisibility = false;
-       }
-       else       
-         SetValues(true, false, true, true, true, progress + "%");       
-     }
+         Margin = new Thickness(0, 0, 0, 0);
+      }
+      else       
+         SetValues(Margin, true, false, true, true, true, progress + "%");      
+      
+    }
 
-     private void SetValues( bool   RingVisibility         = false
+    private void SetValues(  Thickness RingMargin
+                           , bool   RingVisibility         = false
                            , bool   RingImageVisibility    = false
                            , bool   RingTextVisibility     = false
                            , bool   RingProgressVisibility = false
@@ -40,11 +59,40 @@ namespace BioModule.ViewModels
        ProgressRingProgressVisibility = RingProgressVisibility;
        ProgressRingStatus             = RingStatus;
        ProgressRingText               = RingText;
+       Margin                         = RingMargin;
      }
 
-     #region UI
+    #region UI
 
-     private bool _progressRingVisibility;
+    private HorizontalAlignment _ringHorizontalAlignment;
+    public HorizontalAlignment RingHorizontalAlignment
+    {
+      get { return _ringHorizontalAlignment; }
+      set
+      {
+        if (_ringHorizontalAlignment != value)
+        {
+          _ringHorizontalAlignment = value;
+          NotifyOfPropertyChange(() => RingHorizontalAlignment);
+        }
+      }
+    }
+
+    private VerticalAlignment _ringVerticalAlignmentt;
+    public VerticalAlignment RingVerticalAlignment
+    {
+      get { return _ringVerticalAlignmentt; }
+      set
+      {
+        if (_ringVerticalAlignmentt != value)
+        {
+          _ringVerticalAlignmentt = value;
+          NotifyOfPropertyChange(() => RingVerticalAlignment);
+        }
+      }
+    }
+
+    private bool _progressRingVisibility;
      public bool ProgressRingVisibility
      {
        get { return _progressRingVisibility; }
@@ -58,7 +106,21 @@ namespace BioModule.ViewModels
        }
      }
 
-     private bool _progressRingStatus;
+    private Thickness _margin;
+    public Thickness Margin
+    {
+      get { return _margin; }
+      set
+      {
+        if (_margin != value)
+        {
+          _margin = value;
+          NotifyOfPropertyChange(() => Margin);
+        }
+      }
+    }
+
+    private bool _progressRingStatus;
      public bool ProgressRingStatus
      {
        get { return _progressRingStatus; }

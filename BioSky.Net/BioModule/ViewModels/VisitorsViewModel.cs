@@ -1,29 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
-using BioModule.ResourcesLoader;
-using System.Windows.Media.Imaging;
-
-using BioData;
 using System.Collections.ObjectModel;
-
-using System.Windows.Input;
 using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Media;
 
 using BioModule.Utils;
 using BioContracts;
 using BioService;
-using Google.Protobuf.Collections;
 using System.Collections;
 using System.ComponentModel;
-using System.Windows.Data;
-using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
 
@@ -39,12 +26,14 @@ namespace BioModule.ViewModels
 
       _locator       = locator;
          
-      _selector   = _locator.GetProcessor<ViewModelSelector>();
-      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
-      _notifier   = _locator.GetProcessor<INotifier>(); 
+      _selector      = _locator.GetProcessor<ViewModelSelector>();
+      _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      _notifier      = _locator.GetProcessor<INotifier>();
+      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
 
-      _selectedVisitors     = new ObservableCollection<Visitor>();
+
+      _selectedVisitors = new ObservableCollection<Visitor>();
       PageController        = new PageControllerViewModel();
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
@@ -87,9 +76,9 @@ namespace BioModule.ViewModels
 
     public async void OnDeleteVisitors()
     {
-      //TODO dialogs
-      //var result = _windowManager.ShowDialog(new YesNoDialogViewModel());
-      bool result = false;
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+
       if (result == false)
         return;
       
@@ -348,6 +337,8 @@ namespace BioModule.ViewModels
     private readonly IDatabaseService     _bioService   ;
     private readonly IBioSkyNetRepository _database     ;
     private readonly INotifier            _notifier     ;
+    private readonly DialogsHolder        _dialogsHolder;
+
 
     private int PAGES_COUNT = 10;
     #endregion

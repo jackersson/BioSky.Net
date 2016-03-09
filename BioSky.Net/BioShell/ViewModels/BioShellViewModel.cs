@@ -67,6 +67,20 @@ namespace BioShell.ViewModels
       }
     }
 
+    private object _progressRing;
+    public object ProgressRing
+    {
+      get { return _progressRing; }
+      set
+      {
+        if (_progressRing != value)
+        {
+          _progressRing = value;
+          NotifyOfPropertyChange(() => ProgressRing);
+        }
+      }
+    }
+
     public BitmapSource LogoIconSource
     {
       get { return ResourceLoader.LogoIconSource; }

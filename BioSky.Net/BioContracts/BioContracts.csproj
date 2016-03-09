@@ -142,6 +142,7 @@
     <Compile Include="Common\TrackLocationCaptureDeviceObserver.cs" />
     <Compile Include="Holders\IPhotoHolder.cs" />
     <Compile Include="IAccessDeviceEngine.cs" />
+    <Compile Include="IBioCultureSources.cs" />
     <Compile Include="IBioEngine.cs" />
     <Compile Include="IBioShell.cs" />
     <Compile Include="IBioModule.cs" />

@@ -14,7 +14,10 @@
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              d:DataContext="{d:DesignInstance vm:ProgressRingViewModel, IsDesignTimeCreatable=False}"             
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="100">
+             Margin="{Binding Margin}"
+             d:DesignHeight="100" d:DesignWidth="100" 
+             HorizontalAlignment="{Binding RingHorizontalAlignment}" 
+             VerticalAlignment="{Binding RingVerticalAlignment}">
 
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>

@@ -1,0 +1,134 @@
+﻿<UserControl x:Class="BioModule.Views.LocationPermissionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"      
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"             
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:vm="clr-namespace:BioModule.ViewModels"   
+             xmlns:utils="clr-namespace:BioModule.Utils"             
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance vm:LocationPermissionViewModel, IsDesignTimeCreatable=False}"
+             
+             >
+
+    <UserControl.Resources>
+        <utils:StringToStateConverter x:Key="converterState" />
+        <utils:ConvertStateToImage x:Key="convertStateToImage" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+
+
+    <Grid Name="GridLayout">
+        <Canvas  ZIndex="5" x:Name="OverlayCanvas"></Canvas>
+        <ScrollViewer>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"/>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="288"/>
+                </Grid.RowDefinitions>
+
+
+                <Label  Content="{lex:Loc RegisteredUsers}" Grid.Row="0"
+                        HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+
+                <ComboBox ItemsSource="{Binding StateSources}"  Grid.Row="1"
+                          SelectedItem="{Binding SelectedState, Converter={StaticResource converterState}, UpdateSourceTrigger=PropertyChanged}" 
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0"
+                          cal:Message.Attach="[Event SelectionChanged] = [Action OnStateChange()]"   
+                          >
+                    <ComboBox.Style>
+                        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
+                            <Setter Property="ItemTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <lex:LocProxy Source="{Binding}" x:Name="GenderProxy" PrependType="True" />
+                                            <TextBlock Text="{Binding Result, ElementName=GenderProxy}" Margin="2" FontWeight="Normal" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+
+                <TextBox x:Name="SearchBox" Margin="0, 5, 0, 5"  Grid.Column="0"  Grid.Row="2"   
+                         Controls:TextBoxHelper.Watermark="{lex:Loc Search}"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.ClearTextButton="True" 
+                 
+                    cal:Message.Attach="[Event TextChanged] = [Action OnSearchTextChanged(SearchBox.Text)]"         
+                  >
+
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}"
+                               BasedOn="{StaticResource SearchMetroTextBox}">
+                            <Style.Triggers>
+                                <Trigger Property="Controls:TextBoxHelper.HasText"
+                                         Value="True">
+                                    <Setter Property="Controls:TextBoxHelper.ButtonTemplate"
+                                            Value="{DynamicResource ChromelessButtonTemplate}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+
+
+                <ListBox x:Name="PermissionList"
+                          BorderThickness="1" Grid.Row="3"  Margin="1"                      
+                          SelectedIndex="0"     
+                          Tag="{Binding DataContext, ElementName=GridLayout}"                       
+                          ItemsSource="{Binding PersonsCollectionView}"
+                          SelectedItem="{Binding SelectedPerson}"                     
+                          ScrollViewer.CanContentScroll="False" SelectionMode="Extended"                                                                    
+                          DataContext="{Binding Mode=OneWay}" 
+                          
+                         
+                          cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
+                                              [Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"                         
+                          >
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" IsHitTestVisible="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock  Text="{Binding ItemContext.Firstname}" HorizontalAlignment="Stretch"/>
+                                    <TextBlock  Text="{Binding ItemContext.Lastname}"  HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                                <Image Source="{Binding ItemActive, Converter={StaticResource convertStateToImage}, UpdateSourceTrigger=PropertyChanged}" 
+                                       Stretch="Fill" Width="18" Height="18">
+                                </Image>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <ListBox.ContextMenu >
+                        <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                            <MenuItem Header="{lex:Loc Allow}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnAllow('true')]"/>
+
+                            <MenuItem Header="{lex:Loc Deny}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnAllow('false')]"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+
+                </ListBox>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

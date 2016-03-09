@@ -39,11 +39,13 @@ namespace BioModule.ViewModels
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService    = _locator.GetProcessor<IServiceManager>();
       _notifier      = _locator.GetProcessor<INotifier>();
+      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
 
-      _locationDevicesListViewModel  = new DevicesListViewModel(_locator);
-      
+      _locationDevicesListViewModel = new DevicesListViewModel(_locator);
+      _locationDevicesListViewModel.DisplayName = "Devices";
+
       Items.Add(_locationDevicesListViewModel);     
-      Items.Add(new LocationUsersNotifyViewModel   (_locator));
+      Items.Add(new LocationPermissionViewModel   (_locator));
 
       ActiveItem = Items[0];
       OpenTab();
@@ -96,7 +98,8 @@ namespace BioModule.ViewModels
     #region Interface
     public async void Apply()
     {
-      var result = false; //_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (!result)
         return;
@@ -124,7 +127,8 @@ namespace BioModule.ViewModels
 
     public void Revert()
     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (result)
         Update(RevertLocation);
@@ -132,7 +136,8 @@ namespace BioModule.ViewModels
 
     public async void Delete()
     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (!result || CurrentLocation == null)
         return;
@@ -199,12 +204,14 @@ namespace BioModule.ViewModels
 
     #region GlobalVariables
 
-    private readonly IProcessorLocator    _locator      ;
-    private readonly FastMethodInvoker    _methodInvoker;
-    private          IBioSkyNetRepository _database     ;
+    private readonly IProcessorLocator    _locator         ;
+    private readonly FastMethodInvoker    _methodInvoker   ;
+    private          IBioSkyNetRepository _database        ;
     private          LocationPageMode     _locationPageMode;
-    private readonly IServiceManager      _bioService   ;
-    private readonly INotifier            _notifier     ;
+    private readonly IServiceManager      _bioService      ;
+    private readonly INotifier            _notifier        ;
+    private readonly DialogsHolder        _dialogsHolder   ;
+
 
     #endregion
   }

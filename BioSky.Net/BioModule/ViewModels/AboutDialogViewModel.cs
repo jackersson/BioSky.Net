@@ -32,6 +32,11 @@ namespace BioModule.ViewModels
       TryClose(true);
     }
 
+    public bool GetDialogResult()
+    {
+      return true;
+    }
+
     private IWindowManager _windowManager;
   }
 }

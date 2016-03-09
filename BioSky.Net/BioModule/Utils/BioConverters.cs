@@ -329,12 +329,35 @@ namespace BioModule.Utils
 
   #endregion
 
+  #region ConvertStateToImage
+  public class ConvertStateToImage : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        if ((bool)value)        
+          return ResourceLoader.OkIconSource;
+      }
+      return ResourceLoader.CancelIconSource;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+
+  #endregion
+
   #region StringToEnumConverter
 
   public class StringToGenderConverter : StringToEnumConverter<BioService.Person.Types.Gender>
   { }
 
   public class StringToRightsConverter : StringToEnumConverter<BioService.Person.Types.Rights>
+  { }
+
+  public class StringToStateConverter : StringToEnumConverter<BioModule.ViewModels.PermissionState>
   { }
 
   public class StringToEnumConverter<TEnum> : IValueConverter
