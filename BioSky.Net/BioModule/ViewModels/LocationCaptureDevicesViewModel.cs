@@ -48,6 +48,7 @@ namespace BioModule.ViewModels
     {
       CaptureDevicesList.Clear();
 
+      /*
       foreach (CaptureDevice item in _bioEngine.Database().CaptureDeviceHolder.Data)
       {
         bool state = (_location.Id == item.Locationid);
@@ -60,7 +61,7 @@ namespace BioModule.ViewModels
 
         CaptureDevicesList.Add(deviceItem);
       }
-
+      */
       RefreshConnectedDevices();
     }
     public bool IsDeviceUsed(string deviceName)

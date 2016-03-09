@@ -45,7 +45,7 @@ namespace BioModule.ViewModels
       _locationDevicesListViewModel.DisplayName = "Devices";
 
       Items.Add(_locationDevicesListViewModel);     
-      Items.Add(new LocationPermissionViewModel   (_locator));
+      //Items.Add(new LocationPermissionViewModel   (_locator));
 
       ActiveItem = Items[0];
       OpenTab();

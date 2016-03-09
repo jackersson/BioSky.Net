@@ -199,13 +199,17 @@
     <Compile Include="BioDataLoader.cs" />
     <Compile Include="BioModuleImpl.cs" />
     <Compile Include="BioModuleInstaller.cs" />
-    <Compile Include="Utils\BioCultureSources.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
+    <Compile Include="Utils\DeviceItemBase.cs" />
     <Compile Include="Utils\DialogsHolder.cs" />
     <Compile Include="Utils\FaceFinder.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
+    <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
+    <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
+    <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
+    <Compile Include="ViewModels\NotificationDialogViewModel.cs" />
     <Compile Include="ViewModels\PageControllerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -237,7 +241,6 @@
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\LoaderViewModel.cs" />
     <Compile Include="ViewModels\LocationAccessDevicesViewModel.cs" />
-    <Compile Include="ViewModels\LocationUsersNotifyViewModel.cs" />
     <Compile Include="ViewModels\LoginDialogViewModel.cs" />
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
@@ -257,9 +260,6 @@
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
     <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
     <Compile Include="ViewModels\UserPageViewModel.cs" />
-    <Compile Include="Views\AccessDeviceViewModel.xaml.cs">
-      <DependentUpon>AccessDeviceViewModel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\CameraDialogView.xaml.cs">
       <DependentUpon>CameraDialogView.xaml</DependentUpon>
     </Compile>
@@ -275,6 +275,9 @@
     <Compile Include="Views\CustomTextDialogView.xaml.cs">
       <DependentUpon>CustomTextDialogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DevicesListView.xaml.cs">
+      <DependentUpon>DevicesListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EnrollmentBarView.xaml.cs">
       <DependentUpon>EnrollmentBarView.xaml</DependentUpon>
     </Compile>
@@ -287,11 +290,8 @@
     <Compile Include="Views\LoaderView.xaml.cs">
       <DependentUpon>LoaderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LocationAccessDevicesView.xaml.cs">
-      <DependentUpon>LocationAccessDevicesView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LocationUsersNotifyView.xaml.cs">
-      <DependentUpon>LocationUsersNotifyView.xaml</DependentUpon>
+    <Compile Include="Views\LocationPermissionView.xaml.cs">
+      <DependentUpon>LocationPermissionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginDialogView.xaml.cs">
       <DependentUpon>LoginDialogView.xaml</DependentUpon>
@@ -304,6 +304,9 @@
     </Compile>
     <Compile Include="Views\GeneralSettingsPageView.xaml.cs">
       <DependentUpon>GeneralSettingsPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NotificationDialogView.xaml.cs">
+      <DependentUpon>NotificationDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PageControllerView.xaml.cs">
       <DependentUpon>PageControllerView.xaml</DependentUpon>
@@ -374,10 +377,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AccessDeviceViewModel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\CameraDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -398,6 +397,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DevicesListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\EnrollmentBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -414,13 +417,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\LocationAccessDevicesView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\LocationPermissionView.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\LocationUsersNotifyView.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\LoginDialogView.xaml">
       <SubType>Designer</SubType>
@@ -437,6 +436,10 @@
     <Page Include="Views\GeneralSettingsPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NotificationDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PageControllerView.xaml">
       <SubType>Designer</SubType>

@@ -21,6 +21,7 @@ using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
+  /*
   public class LocationCaptureDevicesViewModel : Screen, IUpdatable
   {
     public LocationCaptureDevicesViewModel(IProcessorLocator locator)
@@ -63,7 +64,7 @@ namespace BioModule.ViewModels
 
         CaptureDevicesList.Add(deviceItem);        
       }
-      */
+      
 
       RefreshConnectedDevices();
     }
@@ -198,7 +199,7 @@ namespace BioModule.ViewModels
     #endregion
   }
 
-
+  */
   public class LocationAccessDevicesViewModel : Screen, IUpdatable
   {
     public LocationAccessDevicesViewModel(IProcessorLocator locator)
@@ -397,6 +398,7 @@ namespace BioModule.ViewModels
     #endregion
   }
 
+  /*
   public class DevicesListViewModel : Conductor<IScreen>.Collection.AllActive, IUpdatable
   {
     public DevicesListViewModel(IProcessorLocator locator)
@@ -486,4 +488,7 @@ namespace BioModule.ViewModels
 
   public class AccessDeviceItem : DeviceItemBase<AccessDevice>{}
   public class CaptureDeviceItem : DeviceItemBase<CaptureDevice> { }
+  */
+
+  public class AccessDeviceItem : DeviceItemBase<AccessDevice> { }
 }
