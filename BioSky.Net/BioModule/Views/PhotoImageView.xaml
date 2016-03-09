@@ -93,8 +93,8 @@
 
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
         <Grid Name="SlideGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">            
-            <ContentControl>                
-                <local:PhotoInfoExpanderView cal:View.Model="{Binding PhotoInfoExpanderView}" ></local:PhotoInfoExpanderView>                
+            <ContentControl>
+                <local:PhotoInfoExpanderView cal:View.Model="{Binding PhotoDetails}" ></local:PhotoInfoExpanderView>                
             </ContentControl>            
         </Grid>
 

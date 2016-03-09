@@ -199,6 +199,7 @@
     <Compile Include="BioDataLoader.cs" />
     <Compile Include="BioModuleImpl.cs" />
     <Compile Include="BioModuleInstaller.cs" />
+    <Compile Include="Utils\BioCultureSources.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\DeviceItemBase.cs" />
     <Compile Include="Utils\DialogsHolder.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\PhotoImageViewModel.cs" />
     <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
+    <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
@@ -316,6 +318,9 @@
     </Compile>
     <Compile Include="Views\PhotoInfoExpanderView.xaml.cs">
       <DependentUpon>PhotoInfoExpanderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PhotoInformationView.xaml.cs">
+      <DependentUpon>PhotoInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProgressRingView.xaml.cs">
       <DependentUpon>ProgressRingView.xaml</DependentUpon>
@@ -450,6 +455,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PhotoInfoExpanderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PhotoInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org"             
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"             
-             xmlns:vm="clr-namespace:BioModule.ViewModels"      
+             xmlns:vm="clr-namespace:BioModule.ViewModels"  
+             xmlns:local="clr-namespace:BioModule.Views"             
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
@@ -20,6 +21,7 @@
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
     </UserControl.Resources>
     <Grid x:Name="GridLayout">
+        
         <Expander BorderBrush="#00119EDA" Background="#00119EDA"  
                   ExpandDirection="Down" 
                   cal:Message.Attach="[Event Expanded]  = [Action OnExpanded('true')];
@@ -30,41 +32,16 @@
 
             <Expander.ContentTemplate>
                 <DataTemplate>
-                    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Left"  Panel.ZIndex="-1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel  Grid.Column="0"  VerticalAlignment="Bottom">
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Age:"         ></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Confidence:"  ></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Faces Count:" ></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Resolution:"></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Size:"        ></TextBlock>
-                            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Origin:"        ></TextBlock>
-                     
-                        </StackPanel>
-                        <StackPanel x:Name="DataPanel" DataContext="{Binding ElementName=GridLayout, Path=DataContext }"  Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                            <TextBlock Text="{Binding Age        }" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD"  ></TextBlock>
-                            <TextBlock Text="{Binding Confidence }" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-                            <TextBlock Text="{Binding FacesCount }" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-                            <TextBlock Text="{Binding Resolution }" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-                            <TextBlock Text="{Binding Size       }" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-                            <TextBlock Text="{Binding Origin     }" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-                           
-
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel DataContext="{Binding ElementName=GridLayout, Path=DataContext}">
+                        <local:PhotoInformationView cal:View.Model="{Binding PhotoInformation}"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Left"></local:PhotoInformationView>
+                    </StackPanel>
                 </DataTemplate>
             </Expander.ContentTemplate>
 
 
             <Expander.Template>
                 <ControlTemplate  TargetType="{x:Type Expander}">
-
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
