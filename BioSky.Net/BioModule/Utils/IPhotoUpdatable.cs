@@ -8,14 +8,9 @@ using BioService;
 
 namespace BioModule.Utils
 {
-  public interface IImageUpdatable
-  {   
-    void UpdateImage(ref Bitmap img);
-
-    void UpdateImage(Photo photo, string path);
-
-    Photo UploadPhotoFromFile();
-
+  public interface IPhotoUpdatable
+  {
+    void UpdateFromPhoto(Photo photo, string filePrefix);
     void Clear();
   }
 }

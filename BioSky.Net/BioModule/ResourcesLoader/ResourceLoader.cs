@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.Windows.Media;
 
 namespace BioModule.ResourcesLoader
 {
@@ -26,6 +27,35 @@ namespace BioModule.ResourcesLoader
 
       return bmp;
     }
+
+    public static Bitmap BitmapSourceToBitmap(BitmapSource source)
+    {      
+      if (source == null)
+        return null;
+
+      var newSource = new FormatConvertedBitmap();
+      newSource.BeginInit();
+      newSource.Source = source;
+      newSource.DestinationFormat = PixelFormats.Bgr24;
+      newSource.EndInit();      
+
+      Bitmap bitmap = new Bitmap( newSource.PixelWidth
+                                , newSource.PixelHeight
+                                , System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+      var data = bitmap.LockBits(new Rectangle(System.Drawing.Point.Empty, bitmap.Size)
+                                , System.Drawing.Imaging.ImageLockMode.WriteOnly
+                                , System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+      try {
+        newSource.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
+      }
+      catch ( Exception e) {
+        Console.Write(e);
+      }
+
+      bitmap.UnlockBits(data);     
+
+      return bitmap;
+    }
   }
     
   public class ResourceLoader
@@ -36,8 +66,6 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _okIconSource    ;
     private static BitmapSource _cancelIconSource;
     private static BitmapSource _errorIconSource ;
-   
-
 
     private static BitmapSource _userInformationIconSource      ;
     private static BitmapSource _userFacesIconSource            ;
@@ -55,6 +83,7 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _uploadIconSource;
     private static BitmapSource _enrollFromPhotoIconSource;
     private static BitmapSource _enrollFromCaptureDeviceSource;
+    private static BitmapSource _settingsIconSource;
 
     private static BitmapSource _addUserIconSource;
     private static BitmapSource _addLocationIconSource;
@@ -71,7 +100,6 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _thumbnailIconSource;
     private static BitmapSource _infoDialogIconSource;
     private static BitmapSource _helpDialogIconSource;
-
 
     public static BitmapSource HelpDialogIconSource
     {
@@ -239,7 +267,6 @@ namespace BioModule.ResourcesLoader
         return _uploadIconSource;
       }
     }
-
     public static BitmapSource EnrollFromPhotoIconSource
     {
       get
@@ -247,6 +274,16 @@ namespace BioModule.ResourcesLoader
         if (_enrollFromPhotoIconSource == null)
           _enrollFromPhotoIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.loadphotos);
         return _enrollFromPhotoIconSource;
+      }
+    }
+
+    public static BitmapSource SettingsIconSource
+    {
+      get
+      {
+        if (_settingsIconSource == null)
+          _settingsIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.settings);
+        return _settingsIconSource;
       }
     }
 

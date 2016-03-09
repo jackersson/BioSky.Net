@@ -76,7 +76,7 @@
                                 </MultiBinding>
                             </Image.Visibility>
                         </Image>
-                        <Image Source="{Binding FileLocation, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
+                        <Image Source="{Binding PhotoUrl, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

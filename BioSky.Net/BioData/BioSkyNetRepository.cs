@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-using BioContracts;
+﻿using BioContracts;
 
 using BioService;
 using Caliburn.Micro;
-
-using System.Collections.ObjectModel;
-
-using System.IO;
-using BioData.Holders;
-
-using BioContracts.Holders;
 using BioData.Holders.Grouped;
 using BioData.Holders.Utils;
 
@@ -19,19 +9,11 @@ namespace BioData
 {
   public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
   {
-    VisitorHolder       _visitorHolder      ;
-    PersonHolder        _personHolder       ;
-    LocationHolder      _locationHolder     ;
-    CardHolder          _cardHolder         ;
-    CaptureDeviceHolder _captureDeviceHolder;
-    AccessDeviceHolder  _accessDeviceHolder ;
-    PhotoHolder         _photoHolder        ;
-
     FullLocationHolder _fullLocations;
     FullPersonHolder   _fullPersons  ;
     FullVisitorHolder  _fullVisitors ;
 
-    ILocalStorage       _localStorage       ;
+    ILocalStorage       _localStorage;
 
     IOUtils _ioUtils;
 
@@ -40,81 +22,32 @@ namespace BioData
       _localStorage = new BioLocalStorage();
       _ioUtils = new IOUtils(_localStorage);
 
-      _visitorHolder       = new VisitorHolder      ();
-      _personHolder        = new PersonHolder       ();     
-      _locationHolder      = new LocationHolder     ();
-      _cardHolder          = new CardHolder         ();
-      _captureDeviceHolder = new CaptureDeviceHolder();
-      _accessDeviceHolder  = new AccessDeviceHolder ();
-      _photoHolder         = new PhotoHolder        (_ioUtils);
-      _localStorage        = new BioLocalStorage    ();
 
-
-      _fullLocations = new FullLocationHolder(_locationHolder, _accessDeviceHolder, _captureDeviceHolder);
-      _fullPersons   = new FullPersonHolder(_personHolder, _photoHolder, _cardHolder);
-      _fullVisitors  = new FullVisitorHolder(_visitorHolder, _photoHolder);
+      _fullLocations = new FullLocationHolder();
+      _fullPersons   = new FullPersonHolder  ();
+      _fullVisitors  = new FullVisitorHolder ();
     }
 
-    public IFullHolder<LocationList> Locations
+    public IFullHolder<Location> Locations
     {
       get { return _fullLocations; }
     }
 
-    public IFullHolder<PersonList> Persons
+    public IFullPersonHolder Persons
     {
       get { return _fullPersons; }
     }
 
-    public IFullHolder<VisitorList> Visitors
+    public IFullHolder<Visitor> Visitors
     {
       get { return _fullVisitors; }
     }
-
-    public IHolder<Visitor, long> VisitorHolder
-    {
-      get { return _visitorHolder; }
-    }
-
-    public IHolder<AccessDevice, long> AccessDeviceHolder
-    {
-      get { return _accessDeviceHolder; }
-    }
-
-    public IHolder<Location, long> LocationHolder
-    {
-      get { return _locationHolder; }
-    }
-
-    public IHolder<Photo, long> PhotoHolder
-    {
-      get { return _photoHolder; }
-    }
-
-    public IHolder<Person, long> PersonHolder
-    {
-      get { return _personHolder; }
-    }
-
-    public IHolder<CaptureDevice, long> CaptureDeviceHolder
-    {
-      get { return _captureDeviceHolder; }
-    }
-
-    public IHolder<Card, string> CardHolder
-    {
-      get { return _cardHolder; }
-    }
-
+      
     public ILocalStorage LocalStorage
     {
       get { return _localStorage;  }
     }
-
-
-    public IPhotoHolder PhotoHolderByPerson 
-    {
-      get { return _photoHolder;  }
-    }
+    
    
 
   }

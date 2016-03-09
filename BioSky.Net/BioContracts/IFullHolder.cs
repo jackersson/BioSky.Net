@@ -6,15 +6,24 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public interface IFullHolder<TList>
+  public interface IFullHolder<TValue>
   {
-    void Init(TList list);
+    void Init(Google.Protobuf.Collections.RepeatedField<TValue> list);
 
-    void Update(TList updated, TList results);
+    void Update( Google.Protobuf.Collections.RepeatedField<TValue> requested
+               , Google.Protobuf.Collections.RepeatedField<TValue> results   );
+
+    AsyncObservableCollection<TValue> Data
+    { get; }
+
+    Dictionary<long, TValue> DataSet
+    { get; }
+
+    TValue GetValue(long Id);
 
 
-    event DataChangedHandler         DataChanged;
-    event DataUpdatedHandler<TList>  DataUpdated;
+    event DataChangedHandler                                                     DataChanged;
+    event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<TValue>>  DataUpdated;
  
   }
 }

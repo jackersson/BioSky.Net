@@ -30,7 +30,7 @@ namespace BioModule.ViewModels
 {
   public class UserPhotoViewModel : Screen, IUpdatable
   {
-    public UserPhotoViewModel( IImageUpdatable imageViewer
+    public UserPhotoViewModel( IPhotoUpdatable imageViewer
                              , IProcessorLocator locator )
     {
       _locator             = locator      ;    
@@ -45,10 +45,18 @@ namespace BioModule.ViewModels
       _bioUtils    = new BioImageUtils();
       
       _database.Persons.DataChanged     += RefreshData;
-      _database.PhotoHolder.DataChanged += RefreshData;      
-    }  
+      //_database.PhotoHolder.DataChanged += RefreshData;      
+    }
 
     #region Update
+
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+      RefreshData();
+    }
+
+
     public void Update(Person user)
     {
       if (user == null || (user != null && user.Id <= 0) )
@@ -65,19 +73,14 @@ namespace BioModule.ViewModels
     #region Database
     private void RefreshData()
     {
-      if (_user == null)
+      if (!IsActive || _user == null)
         return;
 
-      IList<Photo> list = _database.PhotoHolder.Data.Where(   x => x.Personid == _user.Id 
-                                                           && x.OriginType == PhotoOriginType.Loaded).ToList();
-
-      if (list == null)
-        return;
-
+     
       UserImages.Clear();
      
-      foreach (Photo personPhoto in list)      
-        UserImages.Add(personPhoto);         
+      foreach (Photo personPhoto in _user.Photos)      
+        UserImages.Add(personPhoto);              
     }
 
     #endregion  
@@ -172,6 +175,9 @@ namespace BioModule.ViewModels
         if (_selectedItem != value)
         {
           _selectedItem = value;
+
+          _imageViewer.UpdateFromPhoto(value, _database.LocalStorage.LocalStoragePath);
+
           NotifyOfPropertyChange(() => SelectedItem);
           NotifyOfPropertyChange(() => CanDeleteItem);
         }
@@ -203,7 +209,7 @@ namespace BioModule.ViewModels
 
     private readonly Enroller                 _enroller           ;
     private readonly IProcessorLocator        _locator            ;   
-    private readonly IImageUpdatable          _imageViewer        ;
+    private readonly IPhotoUpdatable          _imageViewer        ;
     private readonly IDatabaseService         _bioService         ;    
     private readonly IBioSkyNetRepository     _database           ;
     private readonly INotifier                _notifier           ;

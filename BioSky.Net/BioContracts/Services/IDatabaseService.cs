@@ -9,9 +9,9 @@ namespace BioContracts.Services
 {
   public interface IDatabaseService
   {
-    IDataClient<Visitor , CommandVisitors>  VisitorDataClient  { get; }
-    IDataClient<Person  , CommandPersons>   PersonDataClient   { get; }
-    IDataClient<Location, CommandLocations> LocationDataClient { get; }
-    IDataClient<Photo   , CommandPhoto>     PhotoDataClient    { get; }
+    IDataClient<Visitor , QueryVisitors>  VisitorDataClient  { get; }
+    IDataClient<Person  , QueryPersons>   PersonDataClient   { get; }
+    IDataClient<Location, QueryLocations> LocationDataClient { get; }
+    IDataClient<Photo   , QueryPhoto>     PhotoDataClient    { get; }
   }
 }

@@ -75,7 +75,7 @@ namespace BioModule.ViewModels
 
       user.Firstname   = "";
       user.Lastname    = "";
-      user.Thumbnailid = user.Thumbnailid <= 0 ? 0 : user.Thumbnailid;
+      //user.Thumbnailid = user.Thumbnailid <= 0 ? 0 : user.Thumbnailid;
       user.Gender      = Person.Types.Gender.Male;
       user.Rights      = Person.Types.Rights.Operator;
      
@@ -101,10 +101,11 @@ namespace BioModule.ViewModels
           _user = ResetUser(user);                   
       }
       else      
-        _user = ResetUser(new Person());      
+        _user = ResetUser(new Person());
 
-      Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
-      CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+      //Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
+      //CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+      CurrentPhotoImageView.CurrentPerson = _user;
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
@@ -116,7 +117,7 @@ namespace BioModule.ViewModels
 
     public async void Apply()
     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      var result = true;// _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
 
       if (!result )
         return;  
@@ -149,6 +150,7 @@ namespace BioModule.ViewModels
       
       try
       {
+        _user.Thumbnail = CurrentPhotoImageView.GetTestPhoto();
         await _bioService.PersonDataClient.Delete(_user);      
       }
       catch (Exception e)
@@ -162,6 +164,8 @@ namespace BioModule.ViewModels
     #region UI
     public void OpenTab()
     {
+      
+      CurrentPhotoImageView.ActivateWith(this);      
       ActiveItem.Activate();
     }
 

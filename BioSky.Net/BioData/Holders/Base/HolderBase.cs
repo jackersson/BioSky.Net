@@ -43,18 +43,15 @@ namespace BioData.Holders.Base
     public void Update(IList<TValue> list)
     {
       //Data = new AsyncObservableCollection<TValue>(list);
-      UpdateDataSet(list);
-      //OnDataChanged();
-
-     // Console.WriteLine(Data.Count + " " + DataSet.Count);
+      UpdateDataSet(list);      
     }
     
 
     protected virtual void UpdateDataSet(IList<TValue> list) {  }
 
-    public virtual void UpdateItem(TValue obj, TKey key, EntityState state, ResultStatus result)
+    public virtual void UpdateItem(TValue obj, TKey key, EntityState state, Result result)
     {
-      if (result != ResultStatus.Success)
+      if (result != Result.Success)
         return;
 
       switch (state)

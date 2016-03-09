@@ -1,13 +1,9 @@
 ﻿using BioService;
 using Google.Protobuf.Collections;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace BioContracts.Common
@@ -61,7 +57,7 @@ namespace BioContracts.Common
         return;
 
       Google.Protobuf.ByteString description = _utils.ImageToByteString(bitmap);
-      Photo photo = new Photo() { Description = description };
+      Photo photo = new Photo() { Bytestring = description };
       AddPhoto(photo);
     }
 
@@ -133,6 +129,7 @@ namespace BioContracts.Common
 
   public class Enroller : BiometricPerformerBase
   {
+    public event RecognitionEventHandler EnrollmentDone;
     public Enroller( IProcessorLocator locator ) : base(locator) { }
 
     public void Start(string deviceName, Person person)
@@ -142,7 +139,28 @@ namespace BioContracts.Common
 
       Start(deviceName);
     }
-    
+
+    public void Start(Photo photo, Person person)
+    {
+      _person = null;
+      _person = person;
+
+      Start(photo);
+    }
+
+    protected override void SubscribeOnFeedback(bool subscribe)
+    {
+      if (subscribe)
+        _bioService.FaceService.EnrollFeedbackChanged += OnFeedback;
+      else
+        _bioService.FaceService.EnrollFeedbackChanged -= OnFeedback;
+    }
+
+    private void OnEnrolled(Photo photo, Person person)
+    {
+      if (EnrollmentDone != null)
+        EnrollmentDone(photo, person);
+    }
 
     protected async override void PerformRequest()
     {   
@@ -150,6 +168,9 @@ namespace BioContracts.Common
       {
         EnrollmentData data = new EnrollmentData();
         data.Images.Add(_photos);
+        if (_person != null)
+          data.Personid = _person.Id;
+       
         await _bioService.FaceService.Enroll(data);
       }
       catch (Exception e)
@@ -158,25 +179,54 @@ namespace BioContracts.Common
       }       
     }
 
-    private Person _person;
+    private void OnFeedback(object sender, EnrollmentFeedback feedback)
+    {    
+      if (feedback == null)
+        return;
+     
+      if (feedback.Progress == 100)
+      {
+        SubscribeOnFeedback(false);
 
+        Photo photo         = GetCapturedPhoto();
+        Photo feedbackPhoto = feedback.Photo;
+
+        if (photo == null || feedbackPhoto == null || !feedback.Success )
+        {
+          OnEnrolled(null, _person);
+          return;
+        }
+
+        feedbackPhoto.Height     = photo.Height;
+        feedbackPhoto.Width      = photo.Width;
+        feedbackPhoto.Bytestring = photo.Bytestring;
+        feedbackPhoto.Datetime   = DateTime.Now.Ticks;
+
+        feedbackPhoto.OriginType = PhotoOriginType.Enrolled;
+        feedbackPhoto.SizeType   = PhotoSizeType.Croped    ;
+        
+        OnEnrolled(photo, _person);
+      }
+    }
+    
+    private Person _person;
   }
 
-  public delegate void VisitorVerifiedEventHandler(Visitor visitor);
+  public delegate void RecognitionEventHandler(Photo photo, Person person);
 
 
   public class Verifyer : BiometricPerformerBase
   {
-    public event VisitorVerifiedEventHandler VisitorVerified;
+    public event RecognitionEventHandler VerificationDone;
 
     public Verifyer( IProcessorLocator locator ) 
                    : base(locator)
     {}
 
-    public void Start( string deviceName, Visitor visitor)
+    public void Start( string deviceName, Person person)
     {
-      _visitor = null;
-      _visitor = visitor;
+      _person = null;
+      _person = person;
       
        Start(deviceName);
     }
@@ -195,7 +245,7 @@ namespace BioContracts.Common
       {
         VerificationData data = new VerificationData();
         data.Images.Add(_photos);
-        data.Personid  = _visitor.Personid;       
+        //data.Person  = _visitor.Personid;       
         await _bioService.FaceService.Verify(data);
       }     
       catch (Exception e)
@@ -204,10 +254,10 @@ namespace BioContracts.Common
       }      
     }
 
-    private void OnVisitorVerified(Visitor visitor)
+    private void OnVerified(Photo photo, Person person)
     {
-      if (VisitorVerified != null)
-        VisitorVerified(visitor);
+      if (VerificationDone != null)
+        VerificationDone(photo, person);
     }
 
     private void OnFeedback(object sender, VerificationFeedback feedback)
@@ -223,31 +273,25 @@ namespace BioContracts.Common
         Photo photo         = GetCapturedPhoto();
         Photo feedbackPhoto = enrollFeedback.Photo;
 
-        if (photo == null)
-          photo = new Photo();
+        if (photo == null || feedbackPhoto == null || !enrollFeedback.Success)
+        {
+          OnVerified(null, _person);
+          return;
+        }
 
-        if (feedbackPhoto != null)
-          photo.Fir = feedbackPhoto.Fir;
+        feedbackPhoto.Height     = photo.Height;
+        feedbackPhoto.Width      = photo.Width;
+        feedbackPhoto.Bytestring = photo.Bytestring;
+        feedbackPhoto.Datetime   = DateTime.Now.Ticks;
 
-        photo.EntityState  = EntityState.Added;
-        photo.SizeType     = PhotoSizeType.Full;
-        photo.OriginType   = PhotoOriginType.Detected;
-        photo.Personid     = _visitor.Personid;
+        feedbackPhoto.OriginType = PhotoOriginType.Verified;
+        feedbackPhoto.SizeType   = PhotoSizeType.Full;            
 
-        _visitor.Status = enrollFeedback.Success ? ResultStatus.Success : ResultStatus.Failed;
-        _visitor.Photo   = photo;
-
-        OnVisitorVerified(_visitor);       
+        OnVerified(feedbackPhoto, _person);       
       }      
-    }
-       
-
-    public VerificationData GetData()
-    {
-      return null;
-    }
-
-    private Visitor _visitor;
+    }      
+    
+    private Person _person;
   }
 
 
@@ -340,7 +384,6 @@ namespace BioContracts.Common
           buffer = br.ReadBytes((int)stream.Length);
         }
       }
-
       return buffer;
     }  
 
@@ -354,8 +397,7 @@ namespace BioContracts.Common
     {
       byte[] bytes = ImageToByte(img);
       return Google.Protobuf.ByteString.CopyFrom(bytes);
-    }
+    }     
 
-   
   }
 }

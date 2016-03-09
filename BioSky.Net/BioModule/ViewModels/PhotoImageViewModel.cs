@@ -20,177 +20,259 @@ using BioContracts;
 using System.Windows;
 using BioContracts.Common;
 using Grpc.Core;
-
+using System.Windows.Input;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Drawing.Drawing2D;
+using Accord.Imaging.Filters;
+using AForge.Imaging;
+using BioContracts.Services;
 
 namespace BioModule.ViewModels
 {
-  public class PhotoImageViewModel : ImageViewModel
+  public class PhotoImageViewModel : ImageViewModel, IPhotoUpdatable
   {
-    public PhotoImageViewModel(IProcessorLocator locator)
-      : base(locator)
-    {
-      _locator       = locator;
-
-
-      _serviceManager      = locator.GetProcessor<IServiceManager>();
-      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-
+    public PhotoImageViewModel(IProcessorLocator locator) : base()    
+    {      
+      _notifier       = locator.GetProcessor<INotifier>();
+     
+      PhotoDetails = new PhotoInfoExpanderViewModel();
       _enroller = new Enroller(locator);
+      _markerBitmapHolder = new MarkerBitmapSourceHolder();
+      
+      
+
+      EnrollmentViewModel = new EnrollmentBarViewModel(locator);
+    
+      
+      UpdateFromPhoto(GetTestPhoto());
+    }
+
+    public Photo GetTestPhoto()
+    {
+      Photo ph = new Photo();
+      ph.Width = 640;
+      ph.Height = 480;
+
+      ph.SizeType = PhotoSizeType.Croped;
+      ph.OriginType = PhotoOriginType.Enrolled;
+
+      ph.PortraitCharacteristic = new PortraitCharacteristic()
+      {
+        Age = 24
+                                                               ,
+        FacesCount = 1
+      };
+
+      BiometricLocation bl = new BiometricLocation() { Confidence = 1.0f, Xpos = 100.0f, Ypos = 100.0f };
+      ph.PortraitCharacteristic.Faces.Add(new FaceCharacteristic() { Location = bl, Width = 100 });
+
+      return ph;
+
     }
 
     #region Interface
 
-    public void EnrollFromPhoto()
+    protected override void OnActivate()
     {
-      if (!_enroller.Busy)
-      {
-        Photo photo = UploadPhotoFromFile();
-
-        if (photo == null || photo.Description.Length <= 0)
-        {
-          MessageBox.Show("Upload New photo");
-          return;
-        }
-
-        _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
-        //EnrollmentData data = new EnrollmentData();
-        //_enroller.Start(photo, data);
-      }
-      else
-        MessageBox.Show("Wait for finnishing previous operation");
+      PhotoDetails.ExpanderChanged += ShowPhotoDetails;
+      EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
+      base.OnActivate();
     }
 
-    public void EnrollFromCamera()
+    private void EnrollmentViewModel_SelectedDeviceChanged()
     {
-      var result = false; // _windowManager.ShowDialog(new CameraDialogViewModel(_locator, this));
-      
-      if(result == true)
-      {
-        if (captureDeviceConnected && !_enroller.Busy)
-        {
-          _serviceManager.FaceService.EnrollFeedbackChanged += FaceService_EnrollFeedbackChanged;
-          EnrollmentData data = new EnrollmentData();
-          //_enroller.Start(selectedCaptureDevice);
-        }
-
-        if (!captureDeviceConnected)
-          MessageBox.Show("Choose CaptureDevice first ! ");
-
-        if (_enroller.Busy)
-          MessageBox.Show("Wait for finnishing previous operation");
-      }
-    }
-
-    #endregion
-
-    #region BioService
-    public void Subscribe()
-    {
-      captureDeviceConnected = false;
-      if (selectedCaptureDevice == null)
-        return;
-
-      if (activeCaptureDevice != null)
-        _captureDeviceEngine.Unsubscribe(OnNewFrame, activeCaptureDevice);
-
-      activeCaptureDevice = selectedCaptureDevice;
-
-      if (!_captureDeviceEngine.CaptureDeviceActive(activeCaptureDevice))
-        _captureDeviceEngine.Add(activeCaptureDevice);
-
-      _captureDeviceEngine.Subscribe(OnNewFrame, activeCaptureDevice);
-    }
-
-    protected override void OnDeactivate(bool close)
-    {
-      captureDeviceConnected = false;
-
-      if (activeCaptureDevice != null)
-        _captureDeviceEngine.Unsubscribe(OnNewFrame, activeCaptureDevice);
-
-      selectedCaptureDevice = null;
-
-      base.OnDeactivate(close);
+      EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+      EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
     }
 
     private void OnNewFrame(object sender, ref Bitmap bitmap)
     {
-      if (bitmap == null)
+      base.UpdateFromImage(ref bitmap);
+    }    
+
+    protected override void OnDeactivate(bool close)
+    {
+      PhotoDetails.ExpanderChanged -= ShowPhotoDetails;
+      EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
+      EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+      base.OnDeactivate(close);
+    }
+
+    public Photo UploadPhotoFromFile()
+    {
+      string filename = base.Upload();
+      UpdatePhotoFromFile(filename);
+      return CurrentPhoto;
+    }
+
+    public void UpdatePhotoFromFile(string filename = "")
+    {
+      BitmapImage bmp = base.UpdateFromFile(filename);
+
+      if (bmp == null)
+      {
+        Clear();
+        return;
+      }
+
+      Google.Protobuf.ByteString bytes = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(filename));
+      Photo newphoto = new Photo() { Bytestring = bytes};
+      CurrentPhoto = newphoto;
+    }
+
+    public void UpdateFromPhoto(Photo photo, string prefixPath = "")
+    {
+      if (photo == null)
+      {
+        Clear();
+        return;
+      }
+      
+      string filename = prefixPath + "\\" + photo.PhotoUrl;
+      base.UpdateFromFile(filename);
+
+      CurrentPhoto = photo;
+      PhotoDetails.Update(CurrentPhoto);
+    }    
+
+    public void EnrollFromLoadedImage()
+    {
+      if (_enroller.Busy)
+      {
+        _notifier.Notify("Wait for finnishing previous operation", WarningLevel.Warning);
+        return;
+      }
+      
+      Photo photo = UploadPhotoFromFile();
+      if (photo == null || photo.Bytestring.Length <= 0)
+      {
+        _notifier.Notify("Please load correct image", WarningLevel.Warning);
+        return;
+      }
+
+      _enroller.EnrollmentDone -= OnEnrollmentDone;
+      _enroller.EnrollmentDone += OnEnrollmentDone;
+      _enroller.Start(photo, CurrentPerson);
+    }    
+
+    private void OnEnrollmentDone(Photo photo, Person person)
+    {      
+      _enroller.EnrollmentDone -= OnEnrollmentDone;
+
+      photo.Bytestring = CurrentPhoto.Bytestring;
+      CurrentPhoto = photo;   
+    }
+
+    public void EnrollFromCamera()
+    {
+      if (_enroller.Busy)
+      {
+        _notifier.Notify("Wait for finnishing previous operation", WarningLevel.Warning);
+        return;
+      }      
+    }
+
+    public void ShowPhotoDetails(bool isExpanded)
+    {
+      if (isExpanded)      
+        DrawPortraitCharacteristics();
+      else
+        CurrentImageSource = MarkerBitmapHolder.Unmarked;
+    }
+
+    public void DrawPortraitCharacteristics()
+    {
+      if (CurrentPhoto == null)
         return;
 
-      captureDeviceConnected = true;
+      MarkerBitmapHolder.Unmarked = CurrentImageSource;
 
-      UpdateImage(ref bitmap);
+      Bitmap detailedBitmap = _marker.DrawPortraitCharacteristics( CurrentPhoto.PortraitCharacteristic
+                                     , BitmapConversion.BitmapSourceToBitmap(CurrentImageSource));
+      
+      CurrentImageSource = BitmapConversion.BitmapToBitmapSource(detailedBitmap);
+      MarkerBitmapHolder.Marked = CurrentImageSource;
     }
+   
+    #endregion
 
-    private void FaceService_EnrollFeedbackChanged(object sender, EnrollmentFeedback feedback)
+    #region BioService
+
+    public override void Clear()
     {
-      if (feedback.Progress == 100)
-      {
-        _serviceManager.FaceService.EnrollFeedbackChanged -= FaceService_EnrollFeedbackChanged;
-
-        Photo NewPhoto = new Photo();
-        NewPhoto = _enroller.GetCapturedPhoto();
-        Photo feedbackPhoto = feedback.Photo;
-
-
-        if (NewPhoto != null && feedbackPhoto != null)
-        {
-          feedbackPhoto.EntityState = EntityState.Added     ;
-          feedbackPhoto.Description = NewPhoto.Description  ;
-          feedbackPhoto.SizeType    = PhotoSizeType.Full    ;
-          feedbackPhoto.OriginType  = PhotoOriginType.Loaded;
-
-          OnFeedbackPhotoReceive(feedbackPhoto);
-
-        }
-
-      }
-      //if (_imageViewer != null)
-      //  _imageViewer.ShowProgress(feedback.Progress, feedback.Success);      
-    }
-
-
-
-
-
-    public void SetCaptureDevice(string captureDevice, bool isConnected)
-    {
-      selectedCaptureDevice = captureDevice;
-      captureDeviceConnected = isConnected;
-
-      Subscribe();
-    }
-
+      CurrentPhoto = null;
+      base.Clear();     
+    }    
     #endregion
 
     #region UI
-
-    public delegate void OnFeedbackPhotoReceiveHandler(Photo feedbackPhoto);
-    public event OnFeedbackPhotoReceiveHandler FeedbackPhotoReceive;
-
-    public void OnFeedbackPhotoReceive(Photo feedbackPhoto)
+    private MarkerBitmapSourceHolder _markerBitmapHolder;
+    public MarkerBitmapSourceHolder MarkerBitmapHolder
     {
-      if (FeedbackPhotoReceive != null)
-        FeedbackPhotoReceive(feedbackPhoto);
+      get { return _markerBitmapHolder; }    
     }
 
+    private EnrollmentBarViewModel _enrollmentViewModel;
+    public EnrollmentBarViewModel EnrollmentViewModel
+    {
+      get { return _enrollmentViewModel; }
+      set
+      {
+        if (_enrollmentViewModel != value)
+        {
+          _enrollmentViewModel = value;
+          NotifyOfPropertyChange(() => EnrollmentViewModel);
+        }
+      }
+    }
+
+    private Photo _currentPhoto;
+    public Photo CurrentPhoto
+    {
+      get { return _currentPhoto; }
+      set
+      {
+        if (_currentPhoto != value)
+        {
+          _currentPhoto = value;
+          NotifyOfPropertyChange(() => CurrentPhoto);
+        }
+      }
+    }
+
+    private PhotoInfoExpanderViewModel _photoDetails;
+    public PhotoInfoExpanderViewModel PhotoDetails
+    {
+      get { return _photoDetails; }
+      set
+      {
+        if (_photoDetails != value)
+        {
+          _photoDetails = value;
+          NotifyOfPropertyChange(() => PhotoDetails);
+        }
+      }
+    }
+
+    private Person _currentPerson;
+    public Person CurrentPerson
+    {
+      get { return _currentPerson; }
+      set { _currentPerson = value; }
+    }
     #endregion
 
-    #region Global Variables
-
-
-    string activeCaptureDevice   ;
-    string selectedCaptureDevice ;
-    bool   captureDeviceConnected;
-
-    private readonly Enroller                 _enroller           ;
-    private readonly IProcessorLocator        _locator            ;
-    private readonly IWindowManager           _windowManager      ;
-    private readonly IServiceManager          _serviceManager     ;
-    private readonly ICaptureDeviceEngine     _captureDeviceEngine;
-
+    #region Global Variables    
+    private readonly Enroller  _enroller;    
+    private readonly INotifier _notifier;
+    //private MarkerUtils _marker;
     #endregion
+  }
 
+  public class MarkerBitmapSourceHolder
+  {
+    public BitmapSource Unmarked;
+    public BitmapSource Marked  ;
   }
 }

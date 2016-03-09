@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BioGRPC.DatabaseClient
 {
-  public class PersonDataClient : IDataClient<Person, CommandPersons>
+  public class PersonDataClient : IDataClient<Person, QueryPersons>
   {
     public PersonDataClient(IProcessorLocator locator
                              , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
@@ -29,7 +29,9 @@ namespace BioGRPC.DatabaseClient
       try
       {
         PersonList call = await _client.PersonUpdateAsync(list);
-        _database.Persons.Update(list, call);
+        Console.Write(call);
+        Console.WriteLine();
+        //_database.Persons.Update(list, call);
       }
       catch (RpcException e)
       {
@@ -37,12 +39,13 @@ namespace BioGRPC.DatabaseClient
       }
     }
   
-    public async Task Select(CommandPersons command)
+    public async Task Select(QueryPersons command)
     {
       try
       {
         PersonList call = await _client.PersonSelectAsync(command);
-        _database.Persons.Init(call);
+        Console.WriteLine(call);       
+        _database.Persons.Init(call.Persons);
       }
       catch (RpcException e)
       {
@@ -58,7 +61,7 @@ namespace BioGRPC.DatabaseClient
       _list.Persons.Clear();
   
       //TODO ResultStatus None 
-      item.Dbresult = ResultStatus.Failed;
+     
       item.EntityState = EntityState.Added;
       _list.Persons.Add(item);
   
@@ -80,8 +83,8 @@ namespace BioGRPC.DatabaseClient
       _list.Persons.Clear();
   
       //TODO ResultStatus None 
-      item.Dbresult = ResultStatus.Failed;
-      item.EntityState = EntityState.Modified;
+      //item.Dbresult = ResultStatus.Failed;
+      //item.EntityState = EntityState.Modified;
       _list.Persons.Add(item);
   
       try
@@ -104,14 +107,14 @@ namespace BioGRPC.DatabaseClient
   
       _list.Persons.Clear();
   
-      Dictionary<long, Person> dictionary = _database.PersonHolder.DataSet;
+ 
       foreach (Person item in targeIds)
       {       
         Person newItem = new Person()
         {
             Id = item.Id
-          , EntityState = EntityState.Deleted
-          , Dbresult = ResultStatus.Failed
+         // , EntityState = EntityState.Deleted
+          //, Dbresult = ResultStatus.Failed
         };
         _list.Persons.Add(newItem);       
       }

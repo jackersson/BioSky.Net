@@ -22,128 +22,87 @@ using BioContracts;
 
 namespace BioModule.ViewModels
 {
-  public class ImageViewModel : Screen, IImageUpdatable
+  public class ImageViewModel : Screen
   {
-    public ImageViewModel(IProcessorLocator locator)
-    {     
-      _locator       = locator      ;      
-    
-      _bioUtils     = new BioContracts.Common.BioImageUtils();
-      _bioFileUtils = new BioFileUtils();
+    public ImageViewModel()
+    {    
+      _bitmapUtils   = new BitmapUtils();
+      _bioFileUtils  = new BioFileUtils();
 
-      ZoomToFitState    = true;
-      CurrentImagePhoto = null; 
+      _faceFinder = new FaceFinder ();
+      _marker     = new MarkerUtils();
+
+      ZoomToFitState = true;    
     }
 
     #region Update
-    public void UpdateImage(Photo photo, string prefixPath = "")
-    {
-      if (photo != null)
-      {
-        string photoLocation = prefixPath + "\\" + photo.FileLocation;
-
-        var result = SetImageFromFile(photoLocation);
-        if (result != null)
-          CurrentImagePhoto = photo;
-      }
-      else
-        Clear();
-    }
-    public void UpdateImage(ref Bitmap img)
+  
+    public void UpdateFromImage(ref Bitmap img)
     {
       if (img == null)
         return;
 
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
+      Bitmap processedFrame = DrawFaces(ref img);
+
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
       newFrame.Freeze();
 
-      CurrentImageSource = newFrame;
+      CurrentImageSource = newFrame;      
 
       if (_width != _imageViewWidth || _height != _imageViewHeight)
-      {
-        _width = _imageViewWidth;
+      { 
+        _width  = _imageViewWidth;
         _height = _imageViewHeight;
         Zoom(_imageViewWidth, _imageViewHeight);
       }
     }
-    public Photo UploadPhotoFromFile()
+
+    public Bitmap DrawFaces(ref Bitmap img)
+    {      
+      return _marker.DrawRectangles(_faceFinder.GetFaces(ref img), ref img);
+    }
+
+    public string Upload()
     {
-      var dialog = _bioFileUtils.OpenFileDialog();      
+      var dialog = _bioFileUtils.OpenFileDialog();
       if (dialog.ShowDialog() == true)
       {
-        string filename = dialog.FileName;
-        if (File.Exists(filename))
-        {
-          Zoom(_imageViewWidth, _imageViewHeight);
-          UpdateImageFromPath(filename);
-          return CurrentImagePhoto;
-        }
+        string filename = dialog.FileName;             
+        UpdateFromFile(filename);
+        return filename;        
       }
       return null;
     }
-    public void UpdateImageFromPath(string path)
-    {
-      BitmapImage bmp = SetImageFromFile(path);
-      if (bmp == null)
-        CurrentImageSource = null;
 
-      Google.Protobuf.ByteString description = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(path));
-      Photo newphoto = new Photo()
-      {
-        EntityState = EntityState.Added
-        , Description = description
-        , FileLocation = ""
-        , FirLocation = ""
-        , SizeType = PhotoSizeType.Full
-        , OriginType = PhotoOriginType.Loaded
-      };
-      CurrentImagePhoto = newphoto;
-    } 
-    
-    private BitmapImage SetImageFromFile(string fileName = "")
+    public BitmapImage UpdateFromFile(string fileName = "")
     {
       if (!File.Exists(fileName))
+      {
+        Clear();
         return null;
+      }
        
-      BitmapImage bmp    = GetImageSource(fileName);
+      BitmapImage bmp    = _bitmapUtils.GetImageSource(fileName);
       CurrentImageSource = bmp;
       Zoom(_imageViewWidth, _imageViewHeight);
 
       return bmp;      
-    }
-
-    public BitmapImage GetImageSource(string fileName)
-    {
-      if (!File.Exists(fileName))
-        return null;
-
-      BitmapImage image = new BitmapImage();
-            
-      image.BeginInit();
-      image.UriSource   = new Uri(fileName);
-      image.CacheOption = BitmapCacheOption.OnLoad;
-      image.EndInit();
-
-      return image;
-    }
-
-
+    }  
     #endregion
 
     #region Interface
-    public void Clear()
-    {
-      CurrentImagePhoto = null;
+    public virtual void Clear()
+    {    
       CurrentImageSource = null;
       Zoom(_imageViewWidth, _imageViewHeight);
     }
-
-    public void CancelClick(double viewWidth, double viewHeight)
+    
+    public void OnClear(double viewWidth, double viewHeight)
     {
       Clear();
       Zoom(viewWidth, viewHeight);      
     }
-
+    
 
     public void Zoom(double viewWidth, double viewHeight)
     {
@@ -174,8 +133,8 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
- 
-    double _calculatedImageScale;
+
+    private double _calculatedImageScale;
     public double CalculatedImageScale
     {
       get { return _calculatedImageScale; }
@@ -189,7 +148,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    double _calculatedImageScaleY;
+    private double _calculatedImageScaleY;
     public double CalculatedImageScaleY
     {
       get { return _calculatedImageScaleY; }
@@ -203,7 +162,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    double _calculatedImageWidth;
+    private double _calculatedImageWidth;
     private double CalculatedImageWidth
     {
       get { return _calculatedImageWidth; }
@@ -217,7 +176,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    double _calculatedImageHeight;
+    private double _calculatedImageHeight;
     private double CalculatedImageHeight
     {
       get { return _calculatedImageHeight; }
@@ -272,7 +231,7 @@ namespace BioModule.ViewModels
         return _currentImageSource;
 
       }
-      private set
+      protected set
       {
         try
         {
@@ -287,22 +246,7 @@ namespace BioModule.ViewModels
           Console.WriteLine(ex.Message);
         }
       }
-    }
-     
-
-    private Photo _currentImagePhoto;
-    public Photo CurrentImagePhoto
-    {
-      get { return _currentImagePhoto; }
-      set
-      {
-        if (_currentImagePhoto != value)
-        {
-          _currentImagePhoto = value;
-          NotifyOfPropertyChange(() => CurrentImagePhoto);
-        }
-      }
-    }
+    }  
       
     #endregion    
 
@@ -316,12 +260,10 @@ namespace BioModule.ViewModels
     private const double ZOOM_TO_FIT_RATE = 90;
     private const double ZOOM_RATIO = 100D;
 
-    private BioContracts.Common.BioImageUtils _bioUtils     ;
-    private BioFileUtils                      _bioFileUtils ; 
-    private readonly IProcessorLocator        _locator      ;
-    private          IWindowManager           _windowManager;
-
-
+    private   BitmapUtils  _bitmapUtils  ;
+    private   BioFileUtils _bioFileUtils ; 
+    protected FaceFinder   _faceFinder   ;
+    protected MarkerUtils  _marker       ;
     #endregion
   }
 }

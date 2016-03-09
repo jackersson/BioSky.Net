@@ -94,11 +94,31 @@ namespace BioModule.Utils
     {
       PhotoIDConverter                  = new ConvertPhotoIdToImage          (database );
       FileLocationToImageConverter      = new ConvertFileLocationToImage     (database);
-      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database.PersonHolder);
-      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database.PersonHolder);
-      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database.LocationHolder);
+      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database.Persons);
+      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database.Persons);
+      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database.Locations);
     }
   }
+
+  #region InverseBooleanToVisibilitConvertor  
+  public class InverseBooleanConverter : IValueConverter
+  {
+    private bool _invert = true;
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    { 
+       var flag = (value is bool && (bool)value); 
+       return (flag ^ _invert) ? Visibility.Visible : Visibility.Collapsed; 
+    }
+
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+   { 
+     var result = value is Visibility && (Visibility)value == Visibility.Visible; 
+     return result ^ _invert; 
+   } 
+
+  }
+  #endregion
 
 
   #region ConvertLongToDateTime
@@ -134,8 +154,8 @@ namespace BioModule.Utils
     public ConvertPhotoIdToImage(IBioSkyNetRepository database)
     {
       _database = database;
-      _photoHolder = _database.PhotoHolder;
-      _personHolder = _database.PersonHolder;
+      //_photoHolder = _database.PhotoHolder;
+      _personHolder = _database.Persons;
     }
 
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -146,17 +166,19 @@ namespace BioModule.Utils
         
         if(person != null)
         {
-          Photo photo = _photoHolder.GetValue(person.Thumbnailid);
+
+          Photo photo = person.Photos.FirstOrDefault();//.GetValue(person.Thumbnailid);
 
           if (photo != null)
           {
-            string fullFilePathway = _database.LocalStorage.LocalStoragePath + photo.FileLocation;
+            string fullFilePathway = _database.LocalStorage.LocalStoragePath + photo.PhotoUrl;
             if (File.Exists(fullFilePathway))
             {
               BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));
               return img;
             }
           }
+          
         }
       }
       return ResourceLoader.UserDefaultImageIconSource;
@@ -167,7 +189,7 @@ namespace BioModule.Utils
     }
     private readonly IBioSkyNetRepository  _database    ;
     private readonly IHolder<Photo, long>  _photoHolder ;
-    private readonly IHolder<Person, long> _personHolder;
+    private readonly IFullPersonHolder _personHolder;
   }
   #endregion
 
@@ -204,7 +226,7 @@ namespace BioModule.Utils
   #region ConvertLocationIdToLocationname
   public class ConvertLocationIdToLocationname : IValueConverter
   {
-    public ConvertLocationIdToLocationname(IHolder<Location, long> locationHolder)
+    public ConvertLocationIdToLocationname(IFullHolder<Location> locationHolder)
     {
       _locationHolder = locationHolder;
     }
@@ -223,7 +245,7 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
 
-    private readonly IHolder<Location, long> _locationHolder;
+    private readonly IFullHolder<Location> _locationHolder;
   }
 
   #endregion
@@ -231,7 +253,7 @@ namespace BioModule.Utils
   #region ConvertPersonIdToFirstname
   public class ConvertPersonIdToFirstname : IValueConverter
   {
-    public ConvertPersonIdToFirstname(IHolder<Person, long> personHolder)
+    public ConvertPersonIdToFirstname(IFullPersonHolder personHolder)
     {
       _personHolder = personHolder;
     }
@@ -251,14 +273,14 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
 
-    private readonly IHolder<Person, long> _personHolder;
+    private readonly IFullPersonHolder _personHolder;
   }
   #endregion
 
   #region ConvertPersonIdToLastname
   public class ConvertPersonIdToLastname : IValueConverter
   {
-    public ConvertPersonIdToLastname(IHolder<Person, long> personHolder)
+    public ConvertPersonIdToLastname(IFullPersonHolder personHolder)
     {
       _personHolder = personHolder;
     }
@@ -278,7 +300,7 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
 
-    private readonly IHolder<Person, long> _personHolder;
+    private readonly IFullPersonHolder _personHolder;
   }
   #endregion
 

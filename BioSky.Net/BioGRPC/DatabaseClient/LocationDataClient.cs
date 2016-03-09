@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BioGRPC.DatabaseClient
 {
-  public class LocationDataClient : IDataClient<Location, CommandLocations>
+  public class LocationDataClient : IDataClient<Location, QueryLocations>
   {
     public LocationDataClient( IProcessorLocator locator
                              , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client )
@@ -26,8 +26,8 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-        LocationList call = await _client.LocationUpdateAsync(list);
-        _database.Locations.Update(list, call);       
+       // LocationList call = await _client.LocationUpdateAsync(list);
+        //_database.Locations.Update(list, call);       
       }
       catch (RpcException e)
       {
@@ -35,12 +35,12 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
-    public async Task Select(CommandLocations command)
+    public async Task Select(QueryLocations command)
     {
       try
       {
-        LocationList call = await _client.LocationSelectAsync(command);
-        _database.Locations.Init(call);        
+        //LocationList call = await _client.LocationSelectAsync(command);
+        //_database.Locations.Init(call);        
       }
       catch (RpcException e)
       {
@@ -56,8 +56,8 @@ namespace BioGRPC.DatabaseClient
       _list.Locations.Clear();
 
       //TODO ResultStatus None 
-      item.Dbresult    = ResultStatus.Failed;
-      item.EntityState = EntityState.Added  ;
+      //item.Dbresult    = ResultStatus.Failed;
+     // item.EntityState = EntityState.Added  ;
       _list.Locations.Add(item);    
 
       try
@@ -78,8 +78,8 @@ namespace BioGRPC.DatabaseClient
       _list.Locations.Clear();
 
       //TODO ResultStatus None 
-      item.Dbresult    = ResultStatus.Failed;
-      item.EntityState = EntityState.Modified;
+      //item.Dbresult    = ResultStatus.Failed;
+      //item.EntityState = EntityState.Modified;
       _list.Locations.Add(item);
 
       try
@@ -102,14 +102,14 @@ namespace BioGRPC.DatabaseClient
 
       _list.Locations.Clear();
 
-      Dictionary<long, Location> dictionary = _database.LocationHolder.DataSet;
+      //Dictionary<long, Location> dictionary = _database.LocationHolder.DataSet;
       foreach (Location item in targeIds)
       {               
         Location newItem = new Location()
         {
             Id = item.Id
-          , EntityState = EntityState.Deleted
-          , Dbresult    = ResultStatus.Failed          
+          //, EntityState = EntityState.Deleted
+          //, Dbresult    = ResultStatus.Failed          
         };
         _list.Locations.Add(newItem);
         

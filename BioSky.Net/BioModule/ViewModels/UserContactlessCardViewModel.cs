@@ -18,27 +18,44 @@ using BioContracts.Common;
 
 namespace BioModule.ViewModels
 {
-  public class UserContactlessCardViewModel : Screen, IUpdatable
+  public class UserContactlessCardViewModel : Conductor<IScreen>.Collection.OneActive, IUpdatable
   {
     public UserContactlessCardViewModel(IProcessorLocator locator)
     {
       DisplayName = "Cards";
+      CardState   = "Card number";
 
       _locator    = locator;    
 
       _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();      
-
-      CardState = "Card number";
-
-      _observer  = new TrackLocationAccessDeviceObserver(locator);
-      _observer.CardDetected += OnCardDetected;
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();        
+      
+      //TODO put in locator
+      CardEnrollment = new CardEnrollmentBarViewModel(locator);
+      
       _userCards = new AsyncObservableCollection<Card>();
+      
+      IsEnabled = true;
+    }
 
-
-      _database.Persons.DataChanged += RefreshData;
-
-      IsEnabled = false;
+    private void ActivateCardEnrollment(bool flag)
+    {
+      if (flag)
+      {
+        ActivateItem(CardEnrollment);       
+        CardEnrollment.DeviceObserver.CardDetected += OnCardDetected;
+      }
+      else
+      {        
+        CardEnrollment.DeviceObserver.CardDetected      -= OnCardDetected;
+        DeactivateItem(CardEnrollment, false);       
+      }     
+    }    
+   
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+      RefreshData();
     }
 
     private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
@@ -48,22 +65,15 @@ namespace BioModule.ViewModels
     }
 
     #region Update
-
     public void RefreshData()
     {
       if (!IsActive || _user == null)
-        return;      
-
-      IEnumerable<Card> cards = _database.CardHolder.Data.Where(x => x.Personid == _user.Id);
-
-      if (cards == null)
         return;
 
       _userCards.Clear();
-      foreach (Card card in cards)      
-        _userCards.Add(card); 
+      foreach (Card card in _user.Cards)      
+        _userCards.Add(card);      
     }
-
 
     public void Update(Person user)
     {
@@ -74,8 +84,8 @@ namespace BioModule.ViewModels
       RefreshData();
 
       IsEnabled = true;
-
     }
+
     public async void AddCard()
     {
       if (!CanAddCard)
@@ -90,12 +100,10 @@ namespace BioModule.ViewModels
       
       CanAddCard = false;
 
-      try
-      {
+      try  {
         await _bioService.PersonDataClient.Update(person);
       }
-      catch (RpcException e)
-      {
+      catch (RpcException e)  {
         _notifier.Notify(e);
       }         
     }
@@ -107,14 +115,10 @@ namespace BioModule.ViewModels
     {
       CanAddCard = false; 
 
-      Card card = _bioEngine.Database().CardHolder.GetValue(cardNumber);
-      if (card != null)
-      {
-        Person person = _bioEngine.Database().PersonHolder.GetValue(card.Personid);
-        //TODO show in right way
-        if (person != null)        
-          CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;             
-      }      
+      Person person = _bioEngine.Database().Persons.GetPersonByCardNumber(cardNumber);
+      if (person != null)             
+        CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;             
+           
       
       CardState = "Card is avaliable to use";
       CanAddCard = true;                  
@@ -122,7 +126,6 @@ namespace BioModule.ViewModels
     #endregion
     
     #region Interface
-
     public async void OnDeleteCards()
     {
       var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
@@ -137,12 +140,10 @@ namespace BioModule.ViewModels
 
       person.Cards.Add(card);
 
-      try
-      {
+      try {
         await _bioService.PersonDataClient.Update(person);
       }
-      catch (Exception e)
-      {
+      catch (Exception e) {
         _notifier.Notify(e);
       }      
     }
@@ -150,6 +151,19 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
+    private CardEnrollmentBarViewModel _cardEnrollment;
+    public CardEnrollmentBarViewModel CardEnrollment
+    {
+      get { return _cardEnrollment; }
+      set
+      {
+        if (_cardEnrollment != value)
+        {
+          _cardEnrollment = value;
+          NotifyOfPropertyChange(() => CardEnrollment);
+        }
+      }
+    }
 
     private Card selectedCard;
     public Card SelectedCard
@@ -182,10 +196,7 @@ namespace BioModule.ViewModels
     private AsyncObservableCollection<Card> _userCards;
     public AsyncObservableCollection<Card> UserCards
     {
-      get
-      {
-        return _userCards;
-      }
+      get { return _userCards; }
       set
       {
         if (_userCards != value)
@@ -237,10 +248,23 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    private bool _cardEnrollmentExpanded;
+    public bool CardEnrollmentExpanded
+    {
+      get { return _cardEnrollmentExpanded; }
+      set
+      {
+        if (_cardEnrollmentExpanded != value)
+        {
+          _cardEnrollmentExpanded = value;
+          ActivateCardEnrollment(_cardEnrollmentExpanded);
+        }
+      }
+    }
     #endregion
 
     #region Global Variables
-
     private          Person               _user         ;
     private readonly IBioEngine           _bioEngine    ;
     private readonly IProcessorLocator    _locator      ; 
@@ -248,120 +272,6 @@ namespace BioModule.ViewModels
     private readonly INotifier            _notifier     ;
     private readonly IBioSkyNetRepository _database     ;
     private readonly TrackLocationAccessDeviceObserver _observer;
-
-    #endregion
-
-    #region AccessDevices
-    /*private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-      NotifyOfPropertyChange(() => AvaliableDevicesCount);
-    }*/
-    /*
-    public void Subscribe()
-    {
-      if (_selectedAccessDevice == null)
-      {
-        AccessDeviceConnected = false;
-        return;
-      }
-
-      IAccessDeviceEngine accessDeviceEngine = _bioEngine.AccessDeviceEngine();
-
-      accessDeviceEngine.Add(_selectedAccessDevice);
-
-      if (!accessDeviceEngine.HasObserver(this, _selectedAccessDevice))
-        accessDeviceEngine.Subscribe(this, _selectedAccessDevice);
-
-      AccessDeviceConnected = accessDeviceEngine.AccessDeviceActive(_selectedAccessDevice);
-    }
-    public void OnNext(AccessDeviceActivity value)
-    {
-      AccessDeviceConnected = true;
-
-      if (value.Data != null)
-      {
-        _detectedCard.UniqueNumber = "";
-        for (int i = 0; i < value.Data.Length; ++i)
-          _detectedCard.UniqueNumber += value.Data[i];
-
-        CanAddCard = true;
-
-        TryToAddNewCard(_detectedCard.UniqueNumber);
-      }
-    }
-    
-    public void OnError(Exception error)
-    {
-      AccessDeviceConnected = false;
-    }
-
-    public void OnCompleted()
-    {
-      throw new NotImplementedException();
-    }
-    public string AvaliableDevicesCount
-    {
-      get { return String.Format("Available Devices ({0})", _accessDevicesNames.Count); }
-    }
-
-    private string _selectedAccessDevice;
-    public string SelectedAccessDevice
-    {
-      get { return _selectedAccessDevice; }
-      set
-      {
-        if (_selectedAccessDevice != value)
-        {
-          _selectedAccessDevice = value;
-          NotifyOfPropertyChange(() => SelectedAccessDevice);
-
-          Subscribe();
-        }
-      }
-    }
-    public BitmapSource AccessDeviceConnectedIcon
-    {
-      get { return AccessDeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
-    }
-
-    private AsyncObservableCollection<string> _accessDevicesNames;
-    public AsyncObservableCollection<string> AccessDevicesNames
-    {
-      get { return _accessDevicesNames; }
-      set
-      {
-        if (_accessDevicesNames != value)
-        {
-          _accessDevicesNames = value;
-
-          NotifyOfPropertyChange(() => AccessDevicesNames);
-        }
-      }
-    }
-
-    public bool AnyCardDetected
-    {
-      get { return _detectedCard != null; }
-    }
-
-    private bool _accessDeviceConnected;
-    private bool AccessDeviceConnected
-    {
-      get { return _accessDeviceConnected; }
-      set
-      {
-        if (_accessDeviceConnected != value)
-        {
-          _accessDeviceConnected = value;
-          NotifyOfPropertyChange(() => AccessDeviceConnectedIcon);
-        }
-      }
-    }
-    */
-
-    #endregion
-
-
-    // private bool _dataChanged;
+    #endregion   
   }
 }

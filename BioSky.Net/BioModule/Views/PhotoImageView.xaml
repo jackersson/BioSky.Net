@@ -13,6 +13,7 @@
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              mc:Ignorable="d" 
              x:Name="ImageViewModel"             
              d:DesignHeight="300" d:DesignWidth="300">
@@ -20,22 +21,21 @@
     <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
 
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="106*"/>
-            <ColumnDefinition Width="96*"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>          
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="32"/>
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
-        <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5">
+        <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Grid.RowSpan="2">
             <Grid>
                 <ScrollViewer x:Name="CurrentImageScrollViewer" 
                               cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
@@ -52,7 +52,30 @@
                 </ScrollViewer>
             </Grid>
         </Border>
-<!--
+
+        <Expander
+            
+            Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" 
+            ExpandDirection="Up" 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Background="#FFFFFFFF" BorderBrush="{x:Null}">
+            <Expander.Header >
+                <Grid>                   
+                    <TextBlock  VerticalAlignment="Center" Text="Enrollment Settings"></TextBlock>                   
+                </Grid>
+                </Expander.Header >
+                <Grid Name="SlideGrid2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            <ContentControl>
+                <local:EnrollmentBarView 
+                    DataContext="{Binding EnrollmentViewModel}"                   
+                    ></local:EnrollmentBarView>
+            </ContentControl>
+        </Grid> 
+
+
+        </Expander>
+        <!--
         <Grid HorizontalAlignment="Center"             
               VerticalAlignment="Top" 
               Grid.Column="0" Grid.ColumnSpan="5">
@@ -61,14 +84,23 @@
         -->
 
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
-        <Grid Name="SlideGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">
+        <!--<Grid Name="SlideGrid2" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Grid.ColumnSpan="5">
             <ContentControl>
-                <local:PhotoInfoExpanderView cal:View.Model="{Binding PhotoInfoExpanderView}" ></local:PhotoInfoExpanderView>
+                <local:EnrollmentBarView cal:View.Model="{Binding EnrollmentBarView}" ></local:EnrollmentBarView>
             </ContentControl>
-        </Grid>
+        </Grid> -->
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
 
-        <Slider x:Name="Slider" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+        <!--*****************************************PhotoInfoExpanderView**************************************************-->
+        <Grid Name="SlideGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">            
+            <ContentControl>                
+                <local:PhotoInfoExpanderView cal:View.Model="{Binding PhotoInfoExpanderView}" ></local:PhotoInfoExpanderView>                
+            </ContentControl>            
+        </Grid>
+
+        <!--*****************************************PhotoInfoExpanderView**************************************************-->
+
+        <Slider x:Name="Slider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
                     Minimum="30"
                     Maximum="150"
@@ -78,21 +110,37 @@
                     />
 
 
-        <Controls:ToggleSwitch x:Name="Switch" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+        <Controls:ToggleSwitch x:Name="Switch" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                    cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"                               
                                    IsChecked="{Binding ZoomToFitState, Mode=TwoWay}"                                
                                    OnLabel="{lex:Loc FitOn}"
                                    OffLabel="{lex:Loc FitOff}" Margin="0,6"  >
-
-
         </Controls:ToggleSwitch>
 
-        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
-                Grid.Row="1" Grid.Column="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="{lex:Loc Cancel}"
-                >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
+        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"  
+                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Style="{DynamicResource MetroCircleButtonStyle}" 
+                ToolTip="{lex:Loc Cancel}" Width="32" Height="32"   
+                BorderThickness="0" 
+                 >            
+            <Image Width="32" Height="32" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />            
         </Button>
+
+        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
+                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc NextImage}" Width="40" Height="40" BorderBrush="#7F3587BD" 
+                >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}" Opacity="0.5"/>
+        </Button>
+
+        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
+                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc PreviousIamge}" Width="40" Height="40" BorderBrush="#7F3587BD" 
+                >
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}" Opacity="0.5" />
+        </Button>
+
+
 
         <!--<Button cal:Message.Attach="[Event Click] = [Action UploadClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
                 ToolTip="{lex:Loc UploadPhoto}"
@@ -100,18 +148,7 @@
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}" />
         </Button>-->
 
-        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromCamera]" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="{lex:Loc EnrollFromCamera}"
-                >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}" />
-        </Button>
+      
 
-        <Button cal:Message.Attach="[Event Click] = [Action EnrollFromPhoto]" 
-                Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="{lex:Loc EnrollFromImageFile}"
-                >
-            <Image Width="24" Height="24" 
-                   Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}" />
-        </Button>
     </Grid>
 </UserControl>

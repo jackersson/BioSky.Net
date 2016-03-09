@@ -58,15 +58,15 @@ namespace BioEngine
       try
       {
         IDatabaseService service = _serviceManager.DatabaseService;
-        BioService.CommandPersons commandPerson = new BioService.CommandPersons();
+        BioService.QueryPersons commandPerson = new BioService.QueryPersons();
         await service.PersonDataClient.Select(commandPerson);
-
-        BioService.CommandVisitors commandVisitor = new BioService.CommandVisitors();
+        /*
+        BioService.QueryVisitors commandVisitor = new BioService.QueryVisitors();
         await service.VisitorDataClient.Select(commandVisitor);
 
-        BioService.CommandLocations commandLocation = new BioService.CommandLocations();
+        BioService.QueryLocations commandLocation = new BioService.QueryLocations();
         await service.LocationDataClient.Select(commandLocation);
-
+        */
         /* not here
         BioService.CommandPhoto commandPhoto = new BioService.CommandPhoto();
         await service.PhotoDataClient.Select(commandPhoto);

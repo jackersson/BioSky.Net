@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BioGRPC.DatabaseClient
 { 
-  public class VisitorDataClient : IDataClient<Visitor, CommandVisitors>
+  public class VisitorDataClient : IDataClient<Visitor, QueryVisitors>
   {
     public VisitorDataClient( IProcessorLocator locator
                             , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client )
@@ -28,8 +28,8 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-        VisitorList call = await _client.VisitorUpdateAsync(list);
-        _database.Visitors.Update(list, call);       
+       // VisitorList call = await _client.VisitorUpdateAsync(list);
+        //_database.Visitors.Update(list, call);       
       }
       catch (RpcException e)
       {
@@ -37,12 +37,12 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
-    public async Task Select(CommandVisitors command)
+    public async Task Select(QueryVisitors command)
     {
       try
       {
-        VisitorList call = await _client.VisitorSelectAsync(command);
-        _database.Visitors.Init(call);        
+        //VisitorList call = await _client.VisitorSelectAsync(command);
+        //_database.Visitors.Init(call);        
       }
       catch (RpcException e)
       {
@@ -58,8 +58,8 @@ namespace BioGRPC.DatabaseClient
       _list.Visitors.Clear();
 
       //TODO ResultStatus None 
-      item.Dbresult    = ResultStatus.Failed;
-      item.EntityState = EntityState.Added  ;
+      //item.Dbresult    = ResultStatus.Failed;
+      //item.EntityState = EntityState.Added  ;
       _list.Visitors.Add(item);    
 
       try
@@ -80,8 +80,8 @@ namespace BioGRPC.DatabaseClient
       _list.Visitors.Clear();
 
       //TODO ResultStatus None 
-      item.Dbresult    = ResultStatus.Failed;
-      item.EntityState = EntityState.Modified;
+      //item.Dbresult    = ResultStatus.Failed;
+      //item.EntityState = EntityState.Modified;
       _list.Visitors.Add(item);
 
       try
@@ -104,14 +104,14 @@ namespace BioGRPC.DatabaseClient
 
       _list.Visitors.Clear();
 
-      Dictionary<long, Visitor> dictionary = _database.VisitorHolder.DataSet;
+    
       foreach (Visitor item in targetItems)
       {         
          Visitor newItem = new Visitor()
          {
              Id = item.Id
-           , EntityState = EntityState.Deleted
-           , Dbresult    = ResultStatus.Failed
+           //, EntityState = EntityState.Deleted
+           //, Dbresult    = ResultStatus.Failed
            , Photoid = item.Photoid
          };
          _list.Visitors.Add(newItem);        

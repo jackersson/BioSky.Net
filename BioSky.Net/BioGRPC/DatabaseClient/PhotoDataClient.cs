@@ -8,7 +8,7 @@ using System;
 
 namespace BioGRPC.DatabaseClient
 {
-  public class PhotoDataClient : IDataClient<Photo, CommandPhoto>
+  public class PhotoDataClient : IDataClient<Photo, QueryPhoto>
   {
     public PhotoDataClient(  IProcessorLocator locator
                             , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
@@ -38,12 +38,12 @@ namespace BioGRPC.DatabaseClient
     */
 
 
-    public async Task Select(CommandPhoto command)
+    public async Task Select(QueryPhoto command)
     {
       try
       {
-        PhotoList call = await _client.PhotoSelectAsync(command);
-        _database.PhotoHolder.Update(call.Photos);
+        //PhotoList call = await _client.PhotoSelectAsync(command);
+        //_database.PhotoHolder.Update(call.Photos);
       }
       catch (RpcException e)
       {

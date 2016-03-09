@@ -53,6 +53,7 @@ namespace BioModule.ViewModels
     {
       CaptureDevicesList.Clear();
 
+      /*
       foreach (CaptureDevice item in _bioEngine.Database().CaptureDeviceHolder.Data)
       {
         bool state = (_location.Id == item.Locationid);
@@ -62,6 +63,7 @@ namespace BioModule.ViewModels
 
         CaptureDevicesList.Add(deviceItem);        
       }
+      */
 
       RefreshConnectedDevices();
     }
@@ -254,7 +256,7 @@ namespace BioModule.ViewModels
     public void RefreshData()
     {
       AccessDevicesList.Clear();
-
+      /*
       foreach (AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
       {
         bool state = (_location.Id == item.Locationid);
@@ -264,7 +266,7 @@ namespace BioModule.ViewModels
 
         AccessDevicesList.Add(deviceItem);        
       }
-
+      */
       RefreshConnectedDevices();
     }
    

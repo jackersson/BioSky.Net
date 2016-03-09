@@ -43,25 +43,35 @@ namespace BioContracts
 
     private void RefreshCaptureDevices()
     {
-      
-      CaptureDevice newCaptureDevice = _database.CaptureDeviceHolder.Data
-                                      .Where(cap => cap.Locationid == _location.Id)
-                                      .FirstOrDefault();
+      StopCaptureDevice();
+
+      if (_location.CaptureDevices == null || _location.CaptureDevices.Count == 0)
+        return;
+            
+      CaptureDevice newCaptureDevice = _location.CaptureDevices.FirstOrDefault();
 
       if (newCaptureDevice.Devicename == CaptureDeviceObserver.DeviceName)
         return;
-      
-      StopCaptureDevice();      
+           
       CaptureDeviceObserver.Update(newCaptureDevice.Devicename);
-      CaptureDeviceObserver.Subscribe(OnFrameChanged);       
+      CaptureDeviceObserver.Subscribe(OnFrameChanged);         
     }
 
-    private async void OnVisitorVerified(Visitor visitor)
+    private async void OnVisitorVerified(Photo photo, Person person)
     {
       try
       {
-        _veryfier.VisitorVerified -= OnVisitorVerified;
-        await _bioService.VisitorDataClient.Add(visitor);
+        _veryfier.VerificationDone -= OnVisitorVerified;
+
+        bool status = (photo != null && person != null && photo.Personid == person.Id);
+        _visitor.Personid = status ? person.Id : 0;
+
+        if (photo != null)        
+          _visitor.Personid = photo.Personid;       
+        
+        _visitor.Status = status ? Result.Success : Result.Failed;
+
+        await _bioService.VisitorDataClient.Add(_visitor);
       }
       catch (Exception e)
       {
@@ -91,13 +101,14 @@ namespace BioContracts
     {
       StopAccessDevice();
 
-      AccessDevice newAccessDevice = _database.AccessDeviceHolder.Data
-                                     .Where(ad => ad.Locationid == _location.Id).FirstOrDefault();
+      if (_location.CaptureDevices == null || _location.CaptureDevices.Count == 0)
+        return;
+
+      AccessDevice newAccessDevice = _location.AccessDevices.FirstOrDefault();
 
       if (newAccessDevice.Portname == AccessDeviceObserver.DeviceName)
         return;
-
-      StopCaptureDevice();
+      
       AccessDeviceObserver.Update(newAccessDevice.Portname);
       AccessDeviceObserver.AccessDeviceState += OnAccessDeviceStateChanged;
       AccessDeviceObserver.CardDetected      += OnCardDetected            ;          
@@ -130,24 +141,22 @@ namespace BioContracts
     {      
       if (_veryfier.Busy)
         return;
-      
-      Card card = _database.CardHolder.GetValue(cardNumber);
 
-      Visitor visitor  = new Visitor() { Locationid   = _location.Id
-                                       , EntityState  = EntityState.Added
-                                       , Time         = DateTime.Now.Ticks                                           
-                                       , CardNumber   = cardNumber   };
-      
-      if (card != null)
-      {        
-        Person person = _database.PersonHolder.GetValue(card.Personid);
-        if (person != null)        
-          visitor.Personid = person.Id;         
-      }
+      _visitor = null;
 
-      _veryfier.VisitorVerified -= OnVisitorVerified;
-      _veryfier.VisitorVerified += OnVisitorVerified; 
-      _veryfier.Start(CaptureDeviceObserver.DeviceName, visitor);     
+      Person person = _database.Persons.GetPersonByCardNumber(cardNumber);
+
+      _visitor = new Visitor() { Locationid   = _location.Id                                      
+                               , Time         = DateTime.Now.Ticks                                           
+                               , CardNumber   = cardNumber   };
+
+
+      if (person != null)      
+        _visitor.Personid = person.Id;            
+
+      _veryfier.VerificationDone -= OnVisitorVerified;
+      _veryfier.VerificationDone += OnVisitorVerified; 
+      _veryfier.Start(CaptureDeviceObserver.DeviceName, person);     
     }
 
     #region UI
@@ -195,6 +204,8 @@ namespace BioContracts
 
     private Verifyer _veryfier;
     private Location _location;
+
+    private Visitor _visitor  ;
     
     private readonly IDatabaseService     _bioService         ;
     private readonly IBioSkyNetRepository _database           ;

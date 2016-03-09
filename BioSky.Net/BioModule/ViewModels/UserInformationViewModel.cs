@@ -26,13 +26,21 @@ namespace BioModule.ViewModels
     {
       DisplayName = "Information";
       IsEnabled    = true;
-      //TODO in one place
-      //CountryNames = //GetCountryNames();
+      
+    }
+    //TODO in one place
+    public List<string> GenderSources
+    {
+      get { return Enum.GetNames(typeof(BioService.Person.Types.Gender)).ToList(); }
+    }
+    public List<string> RightsSources
+    {
+      get { return Enum.GetNames(typeof(BioService.Person.Types.Rights)).ToList(); }
     }
 
     #region Update
     public void Update(Person user)
-    {
+    {      
       User = user;
     }
     #endregion

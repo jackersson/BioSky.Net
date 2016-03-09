@@ -14,22 +14,21 @@
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
-             
-             >
+             d:DesignHeight="300" d:DesignWidth="300">
 
-    <UserControl.Resources>        
+    <UserControl.Resources>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
         <utils:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>       
     </UserControl.Resources>
 
-    <Grid>
+    <ScrollViewer>
+        <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="36"/>
             <RowDefinition Height="4"/>
             <RowDefinition Height="32"/>
-            <RowDefinition Height="16"/>            
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="128"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -40,10 +39,11 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <Button Width="48" Height="48" Grid.Column="3" 
+        
+            <Button Width="48" Height="48" Grid.Column="3" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
-                Grid.Row="1" Grid.RowSpan="3"
-                Visibility="{Binding CanAddNewCard, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Grid.Row="0" Grid.RowSpan="3"
+                Visibility="{Binding CanAddCard, Converter={StaticResource BooleanToVisibilityConverter}}"
                 
                 ToolTip="{lex:Loc AddCard}"
                 cal:Message.Attach="[Event Click]=[Action AddNewCard]"               
@@ -52,7 +52,7 @@
                    Height="32" Width="32" />
         </Button>
 
-        <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" 
+        <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" Grid.RowSpan="3" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 IsEnabled="{Binding IsDeleteButtonEnabled}"                
@@ -63,40 +63,60 @@
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
-                 Grid.Row="5" Margin="0, 5, 0, 0"
+                 Grid.Row="3" Margin="0, 5, 0, 5"
                  ItemsSource="{Binding UserCards}"
                  SelectedItem="{Binding SelectedCard}"                 
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl Margin="2,2,2,2" Content="{Binding UniqueNumber, Converter={StaticResource ConvertToFormatedNumber}}"></ContentControl>
+                    <ContentControl Margin="2,2,2,2" 
+                                    Content="{Binding UniqueNumber, Converter={StaticResource ConvertToFormatedNumber}}"></ContentControl>
                 </DataTemplate>
             </ListBox.ItemTemplate>
 
         </ListBox>
 
+        <Expander             
+            IsExpanded="{Binding CardEnrollmentExpanded, Mode=OneWayToSource}"
+            Grid.Column="0" Grid.ColumnSpan="6"
+            Grid.Row="5" Background="#FFFFFFFF" BorderBrush="{x:Null}" 
+           >     
+            <Expander.Header >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Access Device Settings"></TextBlock>
+                    <Image Grid.Column="0" HorizontalAlignment="Stretch" 
+                       VerticalAlignment="Stretch" 
+                       Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor
+                        , AncestorType={x:Type Expander}}, Path=IsExpanded
+                        , Converter={StaticResource InverseBooleanConverter}}"
+                       Source="{Binding CardEnrollment.DeviceConnectedIcon}" />
+               </Grid>
+    </Expander.Header>
 
-        <ComboBox ItemsSource="{Binding AccessDevicesNames}"
-                  SelectedItem="{Binding SelectedAccessDevice, Mode=TwoWay}" 
-                  Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch" 
-                  Grid.Row="0" 
-                  Grid.Column="1"/>
+            <StackPanel>
+                <local:CardEnrollmentBarView DataContext="{Binding CardEnrollment}"
+                                             HorizontalAlignment="Stretch"
+                                             VerticalAlignment="Stretch"  >
+                </local:CardEnrollmentBarView>
+            </StackPanel> 
 
-        <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" 
-               VerticalAlignment="Stretch" 
-               Source="{Binding AccessDeviceConnectedIcon}" />
-
+        </Expander>
+      
         <TextBox Text="{Binding DetectedCard.UniqueNumber}"
                  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" 
                  TextWrapping="Wrap" 
                  Controls:TextBoxHelper.Watermark="{Binding CardState}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                  Controls:TextBoxHelper.ClearTextButton="True"  
-                 VerticalAlignment="Stretch" Grid.Row="2" Grid.RowSpan="2">
-            
+                 VerticalAlignment="Stretch" Grid.Row="0" Grid.RowSpan="3">
 
         </TextBox>
+            
     </Grid>
+    </ScrollViewer>
 </UserControl>

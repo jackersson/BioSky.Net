@@ -49,7 +49,7 @@ namespace BioModule.ViewModels
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
-      _database.PhotoHolder.DataChanged   += RefreshData;
+     // _database.PhotoHolder.DataChanged   += RefreshData;
       _database.Visitors.DataChanged      += RefreshData;
     } 
         
@@ -61,9 +61,9 @@ namespace BioModule.ViewModels
         return;
 
       Visitors = null;
-      Visitors = _database.VisitorHolder.Data;
+      Visitors = _database.Visitors.Data;
 
-      if (Visitors == null)
+      if (Visitors == null || Visitors.Count <= 0)
         return;
            
       GetLastVisitor();
@@ -119,9 +119,9 @@ namespace BioModule.ViewModels
       if (visitor == null)
         return;
       
-      Person person = _database.PersonHolder.GetValue(visitor.Personid);
-      if (person == null)
-        person = new Person(){ Thumbnailid = visitor.Photoid };
+      Person person = _database.Persons.GetValue(visitor.Personid);
+      //if (person == null)
+        //person = new Person(){ Thumbnailid = visitor.Photoid };
       
      
       _selector.ShowContent( ShowableContentControl.TabControlContent
@@ -134,7 +134,7 @@ namespace BioModule.ViewModels
     public void OnDataContextChanged()
     {
       if (ImageView == null)
-        ImageView     = new ImageViewModel(_locator);      
+        ImageView     = new ImageViewModel();      
     }
 
     protected override void OnActivate()
@@ -164,15 +164,15 @@ namespace BioModule.ViewModels
         Visitor visitor = SelectedVisitors.FirstOrDefault();
         if (visitor != null)
         {
-          Photo photo = _database.PhotoHolder.GetValue(visitor.Photoid);
-          ImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
+          //Photo photo = _database.PhotoHolder.GetValue(visitor.Photoid);
+          //ImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
         }
       }
     }
 
     public void OnSearchTextChanged(string SearchText)
     {        
-      Dictionary<long, Person> dictionary = _database.PersonHolder.DataSet;
+      Dictionary<long, Person> dictionary = _database.Persons.DataSet;
       VisitorsCollectionView.Filtering = item =>
       {
         if (String.IsNullOrEmpty(SearchText))

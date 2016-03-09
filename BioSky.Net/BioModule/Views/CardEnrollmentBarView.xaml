@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="BioModule.Views.CardEnrollmentBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             Height="48"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+
+    <Grid x:Name="GridLayout">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="32"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="48"/>
+          
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>           
+        </Grid.RowDefinitions>
+
+        <ComboBox ItemsSource="{Binding DevicesNames}"
+                  SelectedItem="{Binding SelectedDevice, Mode=TwoWay}" 
+                  Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch" 
+                  Grid.Row="0"                    
+                  Grid.Column="1" Grid.ColumnSpan="2">
+        </ComboBox>
+
+        <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" 
+               VerticalAlignment="Stretch" 
+               Source="{Binding DeviceConnectedIcon}" />       
+    </Grid>
+</UserControl>

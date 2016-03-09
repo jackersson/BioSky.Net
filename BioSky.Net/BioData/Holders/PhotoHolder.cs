@@ -1,13 +1,9 @@
 ﻿using BioData.Holders.Base;
 using BioService;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using BioContracts.Holders;
-using System.IO;
 using BioData.Holders.Utils;
 
 namespace BioData.Holders
@@ -34,9 +30,9 @@ namespace BioData.Holders
       CheckPhotos();
     }
 
-    public override void UpdateItem(Photo obj, long key, EntityState state, ResultStatus result)
+    public override void UpdateItem(Photo obj, long key, EntityState state, Result result)
     {
-      if (result != ResultStatus.Success)
+      if (result != Result.Success)
         return;
       base.UpdateItem(obj, key, state, result);
       SavePhoto  (obj);
@@ -47,16 +43,18 @@ namespace BioData.Holders
 
     private void SavePhoto ( Photo obj )
     {            
-      if (obj.Description != null && obj.Description.Length > 0)
+      
+      if (obj.Bytestring != null && obj.Bytestring.Length > 0)
       {
-        byte[] bytes = obj.Description.ToByteArray();
-        _ioUtils.SaveFile(obj.FileLocation, bytes);
+        byte[] bytes = obj.Bytestring.ToByteArray();
+        _ioUtils.SaveFile(obj.PhotoUrl, bytes);
       }     
+      
     }
 
     private bool PhotoExists( Photo obj )
     {
-      if (_ioUtils.FileExists(obj.FileLocation) )
+      if (_ioUtils.FileExists(obj.PhotoUrl) )
         return true;
 
       if (!_checkedPhotos.Contains(obj.Id))

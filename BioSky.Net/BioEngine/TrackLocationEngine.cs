@@ -19,7 +19,7 @@ namespace BioEngine
     public void RefreshData()
     {
       IBioSkyNetRepository database            = _locator.GetProcessor<IBioSkyNetRepository>();
-      AsyncObservableCollection<Location> data = database.LocationHolder.Data;
+      AsyncObservableCollection<Location> data = database.Locations.Data;
       foreach (Location location in data)
       {
         TrackLocation currentLocation = null;
@@ -34,7 +34,7 @@ namespace BioEngine
       }
 
       _trackLocations.Clear();
-      Dictionary<long, Location> dict = database.LocationHolder.DataSet;
+      Dictionary<long, Location> dict = database.Locations.DataSet;
       foreach ( long locationID in _trackLocationsSet.Keys)
       {
         if (!dict.ContainsKey(locationID))

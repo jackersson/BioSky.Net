@@ -42,12 +42,12 @@ namespace BioModule.ViewModels
       _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier      = _locator.GetProcessor<INotifier>();
-
+      _selector = _locator.GetProcessor<ViewModelSelector>();
       _selectedPersons = new ObservableCollection<Person>();
       PageController   = new PageControllerViewModel();
 
       _database.Persons.DataChanged      += RefreshData;      
-      _database.PhotoHolder.DataChanged  += RefreshData;
+      //_database.PhotoHolder.DataChanged  += RefreshData;
 
       IsDeleteButtonEnabled = false;   
     }
@@ -58,9 +58,9 @@ namespace BioModule.ViewModels
         return;
 
       Users = null;
-      Users = _database.PersonHolder.Data;
+      Users = _database.Persons.Data;
 
-      if (Users == null)
+      if (Users == null || Users.Count <= 0)
         return;
 
       UsersCollectionView = null;
