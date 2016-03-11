@@ -34,17 +34,6 @@ namespace BioModule.Utils
       } 
     }
 
-    private CaptureDevicePropertiesViewModel _captureDevicePropertiesDialog;
-    public CaptureDevicePropertiesViewModel CaptureDevicePropertiesDialog
-    {
-      get
-      {
-        if (_captureDevicePropertiesDialog == null)
-          return _captureDevicePropertiesDialog = new CaptureDevicePropertiesViewModel(_windowManager);
-        return _captureDevicePropertiesDialog;
-      }
-    }
-
     private CameraDialogViewModel _cameraDialog; 
     public CameraDialogViewModel CameraDialog
     { 

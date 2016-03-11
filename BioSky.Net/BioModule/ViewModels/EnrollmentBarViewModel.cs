@@ -1,4 +1,5 @@
-﻿using BioContracts;
+﻿using AForge.Video.DirectShow;
+using BioContracts;
 using BioContracts.Common;
 using BioModule.ResourcesLoader;
 using BioModule.Utils;
@@ -26,6 +27,9 @@ namespace BioModule.ViewModels
       DevicesNames = _deviceEngine.GetCaptureDevicesNames();
 
       DeviceObserver = new TrackLocationCaptureDeviceObserver(locator);
+      Resolution     = new AsyncObservableCollection<string>();
+
+      DeviceObserver.DeviceChanged += UpdateVideoCapabilities;
 
       DeviceConnected = false;
     }
@@ -60,16 +64,6 @@ namespace BioModule.ViewModels
       base.OnActivate();
     }
 
-    public void ShowPropertyPage()
-    {
-      DeviceObserver.ShowPropertyPage();
-    }
-
-    public void ShowConfigurationPage()
-    {
-      DeviceObserver.ShowConfigurationPage(_dialogsHolder.CaptureDevicePropertiesDialog);
-    }
-
     protected override void OnDeactivate(bool close)
     {
       DevicesNames.CollectionChanged -= DevicesNames_CollectionChanged;
@@ -80,7 +74,76 @@ namespace BioModule.ViewModels
     private void DeviceObserver_AccessDeviceState(bool status)
     {
       DeviceConnected = status;
-    }   
+    }
+
+    private void UpdateVideoCapabilities()
+    {
+      if (DeviceObserver.DeviceName == null)
+        return;
+
+      VideoCapabilities[] videoCapabilities =  DeviceObserver.GetVideoCapabilities();
+
+      if (videoCapabilities == null)
+        return;
+
+      VideoCapabilities currentVideoResolution = DeviceObserver.GetVideoResolution();      
+
+      Resolution.Clear();
+      int i = 0;
+      foreach (VideoCapabilities vc in videoCapabilities)
+      {
+        string item = string.Format("{0}x{1}, {2} fps"
+                                    , vc.FrameSize.Width
+                                    , vc.FrameSize.Height
+                                    , vc.AverageFrameRate);
+
+        Resolution.Add(item);
+
+        if (vc == currentVideoResolution)
+          SelectedResolution = i;
+
+        i++;
+      }
+
+      NotifyOfPropertyChange(() => Resolution);
+    }
+
+    private void ApplyVideoDeviceCapability()
+    {
+      DeviceObserver.SetVideoCapabilities(SelectedResolution);
+    }
+
+    #region UI
+
+    private int _selectedResolution;
+    public int SelectedResolution
+    {
+      get { return _selectedResolution; }
+      set
+      {
+        if (_selectedResolution != value)
+        {
+          _selectedResolution = value;
+          NotifyOfPropertyChange(() => SelectedResolution);
+
+          ApplyVideoDeviceCapability();
+        }
+      }
+    }
+
+    private AsyncObservableCollection<string> _resolution;
+    public AsyncObservableCollection<string> Resolution
+    {
+      get { return _resolution; }
+      set
+      {
+        if (_resolution != value)
+        {
+          _resolution = value;
+          NotifyOfPropertyChange(() => Resolution);
+        }
+      }
+    }
 
     private TrackLocationCaptureDeviceObserver _deviceObserver;
     public TrackLocationCaptureDeviceObserver DeviceObserver
@@ -146,8 +209,14 @@ namespace BioModule.ViewModels
       }
     }
 
+    #endregion
+
+    #region Global Variables
+
     private readonly DialogsHolder        _dialogsHolder;
     private readonly ICaptureDeviceEngine _deviceEngine;
+
+    #endregion
 
   }
 }

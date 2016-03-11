@@ -65,7 +65,7 @@
 
             <Expander.ContentTemplate>
                 <DataTemplate>
-                    <StackPanel DataContext="{Binding ElementName=GridLayout, Path=DataContext}">
+                    <StackPanel DataContext="{Binding ElementName=GridLayout, Path=DataContext}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <local:EnrollmentBarView DataContext="{Binding EnrollmentViewModel}"></local:EnrollmentBarView>
                     </StackPanel>
                 </DataTemplate>
@@ -79,7 +79,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="64"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
@@ -119,8 +119,8 @@
                             </Button>
                         </Grid>
                         <ContentPresenter x:Name="ExpanderContent"
-                                          Visibility="Collapsed"
-                                          Grid.Row="0" Grid.ColumnSpan="2"
+                                          Visibility="Collapsed" Margin="0,0,0,4"
+                                          Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
                                           VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                           >
                         </ContentPresenter>

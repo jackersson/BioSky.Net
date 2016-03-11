@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace BioContracts
 {
   public delegate void FrameEventHandler(object sender, ref Bitmap bitmap);
+  public delegate void ListenerStartEventHandler();
+
   public interface ICaptureDeviceEngine
   {
 
@@ -32,8 +34,12 @@ namespace BioContracts
 
     VideoCapabilities[] GetCaptureDeviceVideoCapabilities(string cameraName);
 
-    void ShowCaptureDeviceConfigurationPage(string cameraName, IPropertiesShowable propertiesShowable);
+    void SetCaptureDeviceVideoCapabilities(string cameraName, int selectedResolution);
+
+    VideoCapabilities GetVideoResolution(string cameraName);
 
     AsyncObservableCollection<string> GetCaptureDevicesNames();
+
+    event ListenerStartEventHandler ListenerStart;
   }
 }
