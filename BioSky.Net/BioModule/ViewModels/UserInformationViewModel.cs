@@ -25,18 +25,8 @@ namespace BioModule.ViewModels
     public UserInformationViewModel()
     {
       DisplayName = "Information";
-      IsEnabled    = true;
-      
-    }
-    //TODO in one place
-    public List<string> GenderSources
-    {
-      get { return Enum.GetNames(typeof(BioService.Person.Types.Gender)).ToList(); }
-    }
-    public List<string> RightsSources
-    {
-      get { return Enum.GetNames(typeof(BioService.Person.Types.Rights)).ToList(); }
-    }
+      IsEnabled   = true;      
+    }  
 
     #region Update
     public void Update(Person user)
@@ -97,15 +87,7 @@ namespace BioModule.ViewModels
     private string[] _countryNames;
     public string[] CountryNames
     {
-      get { return _countryNames; }
-      set
-      {
-        if (_countryNames != value)
-        {
-          _countryNames = value;
-          NotifyOfPropertyChange(() => CountryNames);
-        }
-      }
+      get { return _countryNames; }    
     }
     #endregion      
   }

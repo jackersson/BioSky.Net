@@ -1,6 +1,7 @@
 ﻿using BioContracts;
 using BioContracts.Common;
 using BioModule.ResourcesLoader;
+using BioModule.Utils;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,8 @@ namespace BioModule.ViewModels
 
     public EnrollmentBarViewModel(IProcessorLocator locator)
     {
-      _deviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      _deviceEngine  = locator.GetProcessor<ICaptureDeviceEngine>();
+      _dialogsHolder = locator.GetProcessor<DialogsHolder>();
 
       DevicesNames = _deviceEngine.GetCaptureDevicesNames();
 
@@ -44,6 +46,11 @@ namespace BioModule.ViewModels
       get { return String.Format("Available Devices ({0})", _devicesNames.Count); }
     }
 
+    public bool CaptureDevicePropertyPageVisibility
+    {
+      get { return true; }
+    }
+
     protected override void OnActivate()
     {
       DevicesNames = _deviceEngine.GetCaptureDevicesNames();
@@ -51,6 +58,16 @@ namespace BioModule.ViewModels
       DevicesNames.CollectionChanged += DevicesNames_CollectionChanged;  
 
       base.OnActivate();
+    }
+
+    public void ShowPropertyPage()
+    {
+      DeviceObserver.ShowPropertyPage();
+    }
+
+    public void ShowConfigurationPage()
+    {
+      DeviceObserver.ShowConfigurationPage(_dialogsHolder.CaptureDevicePropertiesDialog);
     }
 
     protected override void OnDeactivate(bool close)
@@ -129,6 +146,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    private readonly DialogsHolder        _dialogsHolder;
     private readonly ICaptureDeviceEngine _deviceEngine;
 
   }

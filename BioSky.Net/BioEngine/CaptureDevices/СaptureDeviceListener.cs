@@ -1,61 +1,68 @@
-﻿using Accord.Imaging.Filters;
-using Accord.Vision.Detection;
-using Accord.Vision.Detection.Cascades;
-using Accord.Vision.Tracking;
-using AForge.Video;
+﻿using AForge.Video;
 using AForge.Video.DirectShow;
 using BioContracts;
 using BioContracts.Abstract;
 using System;
+using System.Collections.Concurrent;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
-
 
 namespace BioEngine.CaptureDevices
 {
   //Todo add camera settings
+
   public class СaptureDeviceListener : Threadable
   {
-    private IVideoSource _videoSource;
-    private readonly ICaptureDeviceConnectivity _capDevConnectivity;
-    private readonly string _cameraName;
-  
-
-    private event EventHandler      CanConnect;
-    public  event FrameEventHandler NewFrame;
-
+    private enum CaptureDeviceCommands
+    {
+        Kill = 0
+      , Stop
+      , Connect
+      , Start
+    }   
 
     public СaptureDeviceListener( string cameraName, ICaptureDeviceConnectivity capDevConnectivity)
     {
-      _cameraName = cameraName;
+      _cameraName         = cameraName;
+      _capDevConnectivity = capDevConnectivity;
 
-      _capDevConnectivity = capDevConnectivity;   
-
-      CanConnect += Connect;
+      _commands = new ConcurrentQueue<CaptureDeviceCommands>();      
+      _commands.Enqueue(CaptureDeviceCommands.Connect);    
     }
 
-    private void Connect(object sender, EventArgs e)
-    {
-      FilterInfo fi = (FilterInfo)sender;
-
+    private void Connect(FilterInfo fi)
+    {    
       if (fi == null)      
         return;
 
-      VideoCaptureDevice vs = new VideoCaptureDevice(fi.MonikerString);
-      _videoSource = vs;
+      _videoSource = new VideoCaptureDevice(fi.MonikerString);  
      
       _videoSource.PlayingFinished += _videoSource_PlayingFinished;
-      _videoSource.NewFrame += _videoSource_NewFrame;
+      _videoSource.NewFrame        += _videoSource_NewFrame;
+
+      _videoSource.VideoResolution = _videoSource.VideoCapabilities.LastOrDefault();
       _videoSource.Start();
+    }
 
+    public void ShowPropertyPage( IntPtr parentWindow)
+    {
+      if (_videoSource == null)
+        return;
 
+      _videoSource.DisplayPropertyPage(parentWindow);      
+    }
+
+    public void ShowConfigurationPage(IPropertiesShowable propertiesShowable)
+    {
+      propertiesShowable.Show(_videoSource);
     }
 
     private void _videoSource_PlayingFinished(object sender, ReasonToFinishPlaying reason)
     {
-      Start();
-    }
-    
+      if ( reason != ReasonToFinishPlaying.StoppedByUser)
+        _commands.Enqueue(CaptureDeviceCommands.Connect);
+    }    
 
     private void OnNewFrame( Bitmap bmp )
     {
@@ -66,31 +73,70 @@ namespace BioEngine.CaptureDevices
     private void _videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
     {
       OnNewFrame(eventArgs.Frame);
-    }
-
-    private void OnCanConnect( FilterInfo fi)
+    } 
+    
+    public VideoCapabilities[] GetVideoCapabilities()
     {
-      if (CanConnect != null)
-        CanConnect(fi, EventArgs.Empty);
+      return _videoSource.VideoCapabilities;
+    }   
+
+    public void SetVideoCapability()
+    {
+
     }
 
     public override void Run()
     {     
       Active = true;
-
-      ReleaseVideoDevice();
-
+      
       while (Active)
-      {       
-        FilterInfo fi = _capDevConnectivity.CaptureDeviceConnected(_cameraName);
-        if (fi != null)
+      {
+        CaptureDeviceCommands command;
+        bool result = Dequeue(out command);
+
+        if ( result )
         {
-          Active = false;         
-          OnCanConnect(fi);
+          switch (command)
+          {
+            case CaptureDeviceCommands.Kill:
+              ReleaseVideoDevice();
+              base.Stop();
+              break;
+
+            case CaptureDeviceCommands.Start:
+              ReleaseVideoDevice();
+              _videoSource.Start();
+              break;
+
+            case CaptureDeviceCommands.Stop:
+              ReleaseVideoDevice();
+              break;
+
+            case CaptureDeviceCommands.Connect:
+              {
+                FilterInfo fi = _capDevConnectivity.CaptureDeviceConnected(_cameraName);
+                if (fi != null)                
+                  Connect(fi);   
+                else
+                  _commands.Enqueue(CaptureDeviceCommands.Connect);
+                break;
+              }         
+
+          }
         }                    
         Thread.Sleep(2000);
+      }      
+    }
+
+    private bool Dequeue(out CaptureDeviceCommands command)
+    {
+      lock (_commands)
+      {
+        while (_commands.IsEmpty)       
+          Thread.Sleep(500);        
+
+        return _commands.TryDequeue(out command);
       }
-      
     }
 
     private void ReleaseVideoDevice()
@@ -99,16 +145,12 @@ namespace BioEngine.CaptureDevices
         return;
 
       try
-      {
+      {       
         _videoSource.SignalToStop();
-
-        for (int i = 0; (i < 50) && (_videoSource.IsRunning); i++)
-          Thread.Sleep(100);
+        _videoSource.WaitForStop();      
 
         if (_videoSource.IsRunning)
-          _videoSource.Stop();
-        
-        _videoSource = null;
+          _videoSource.Stop();        
       }
       catch (Exception ex)
       {
@@ -125,8 +167,22 @@ namespace BioEngine.CaptureDevices
 
     public void Kill()
     {
-      ReleaseVideoDevice();
-      base.Stop();
+      _commands.Enqueue(CaptureDeviceCommands.Kill);     
     }
+
+    public void StopPlay()
+    {
+      _commands.Enqueue(CaptureDeviceCommands.Stop);
+    }
+
+    private VideoCaptureDevice _videoSource;    
+
+    private readonly ICaptureDeviceConnectivity _capDevConnectivity;
+    private readonly string _cameraName;
+    private ConcurrentQueue<CaptureDeviceCommands> _commands;
+
+    public event FrameEventHandler NewFrame;
+
+
   }
 }

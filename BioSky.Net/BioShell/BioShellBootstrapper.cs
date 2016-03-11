@@ -47,6 +47,8 @@ namespace BioShell
     {
       try
       {
+       
+
         var loader     = _container.Resolve<BioModuleLoader>();
         var dataloader = _container.Resolve<BioDataLoader>();
 
@@ -67,12 +69,12 @@ namespace BioShell
             .Where(module => module != null)
             .ForEach(module => module.Init());
       }
-      catch (Exception ex)
-      {
+      catch (Exception ex) {
         Notifier.Notify(ex);
-      }
+      }      
 
       DisplayRootViewFor<BioShellViewModel>();
+      _container.Register(Castle.MicroKernel.Registration.Component.For<Window>().Instance(Application.Current.MainWindow));
     }
 
     protected override void Configure()
@@ -95,6 +97,8 @@ namespace BioShell
       });
 
       _container.Install(new BioShellInstaller());
+
+     
     }
 
     protected override object GetInstance(Type service, string key)

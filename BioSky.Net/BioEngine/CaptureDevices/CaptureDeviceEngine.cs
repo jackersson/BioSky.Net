@@ -1,9 +1,6 @@
 ﻿using BioContracts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using AForge.Video.DirectShow;
 
@@ -36,7 +33,7 @@ namespace BioEngine.CaptureDevices
     public void Remove(string cameraName)
     {
       СaptureDeviceListener listener;
-      if (!_captureDevices.TryGetValue(cameraName, out listener))
+      if (_captureDevices.TryGetValue(cameraName, out listener))
       {       
         listener.Kill();       
         _captureDevices.Remove(cameraName);
@@ -45,10 +42,45 @@ namespace BioEngine.CaptureDevices
 
     public bool CaptureDeviceActive(string cameraName)
     {
+      if (cameraName == null)
+        return false;
+
       СaptureDeviceListener listener;
       if (_captureDevices.TryGetValue(cameraName, out listener))
         return listener.IsActive();
       return false;
+    }
+
+    public void ShowCaptureDevicePropertyPage( string cameraName, IntPtr parentWindow)
+    {
+      if (cameraName == null)
+        return;
+
+      СaptureDeviceListener listener;
+      if (_captureDevices.TryGetValue(cameraName, out listener))      
+        listener.ShowPropertyPage(parentWindow);      
+    }
+
+    public VideoCapabilities[] GetCaptureDeviceVideoCapabilities(string cameraName)
+    {
+      if (cameraName == null)
+        return null;
+
+      СaptureDeviceListener listener;
+      if (_captureDevices.TryGetValue(cameraName, out listener))
+        return listener.GetVideoCapabilities();
+
+      return null;
+    }
+
+    public void ShowCaptureDeviceConfigurationPage(string cameraName, IPropertiesShowable propertiesShowable)
+    {
+      if (cameraName == null)
+        return;
+
+      СaptureDeviceListener listener;
+      if (_captureDevices.TryGetValue(cameraName, out listener))
+        listener.ShowConfigurationPage(propertiesShowable);
     }
 
     public AsyncObservableCollection<string> GetCaptureDevicesNames()
