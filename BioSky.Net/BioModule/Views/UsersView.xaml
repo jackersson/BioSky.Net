@@ -53,7 +53,7 @@
 
 
         <ListBox BorderThickness="1" Grid.ColumnSpan="5"
-                 Grid.Column="0" HorizontalAlignment="Stretch" 
+                 Grid.Column="0" HorizontalAlignment="Stretch" BorderBrush="#4C808080"
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
                  ItemsSource="{Binding UsersCollectionView}"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
@@ -120,7 +120,7 @@
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
         </Button>       
 
-        <TextBox x:Name="SearchBox" Margin="0, 5, 0, 5"  Grid.Column="0"  Grid.Row="0" Grid.ColumnSpan="2"  
+        <TextBox x:Name="SearchBox" Margin="2, 5, 0, 5"  Grid.Column="0"  Grid.Row="0" Grid.ColumnSpan="2"  
                          Controls:TextBoxHelper.Watermark="{lex:Loc Search}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True" 

@@ -97,7 +97,7 @@
             cal:Message.Attach="[Event Click]=[Action Apply]"
             Style="{DynamicResource MetroCircleButtonStyle}"
             Grid.Row="0"  Grid.Column="3" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
+            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StartIconSource}" />
         </Button>
 
         <Button 
@@ -108,7 +108,7 @@
                VerticalAlignment="Center" 
                cal:Message.Attach="[Event Click]=[Action Cancel]"
                Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="4" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
+            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
         </Button>
 
 

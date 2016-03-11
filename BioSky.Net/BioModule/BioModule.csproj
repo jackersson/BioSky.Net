@@ -199,12 +199,12 @@
     <Compile Include="BioDataLoader.cs" />
     <Compile Include="BioModuleImpl.cs" />
     <Compile Include="BioModuleInstaller.cs" />
-    <Compile Include="Utils\BioCultureSources.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\DeviceItemBase.cs" />
     <Compile Include="Utils\DialogsHolder.cs" />
     <Compile Include="Utils\FaceFinder.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
+    <Compile Include="ViewModels\AuthenticationPageViewModel.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
@@ -262,6 +262,9 @@
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
     <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
     <Compile Include="ViewModels\UserPageViewModel.cs" />
+    <Compile Include="Views\AuthenticationPageView.xaml.cs">
+      <DependentUpon>AuthenticationPageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CameraDialogView.xaml.cs">
       <DependentUpon>CameraDialogView.xaml</DependentUpon>
     </Compile>
@@ -379,6 +382,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\AboutDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AuthenticationPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -633,6 +640,8 @@
     <None Include="Resources\right_arrow.png" />
     <None Include="Resources\thumnail.png" />
     <None Include="Resources\settings.png" />
+    <None Include="Resources\Stop.png" />
+    <None Include="Resources\Start.png" />
     <Content Include="Resources\tracking.png" />
   </ItemGroup>
   <ItemGroup>

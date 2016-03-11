@@ -46,7 +46,7 @@ namespace BioModule.ViewModels
 
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
-      Items.Add(new UserInformationViewModel    ());
+      Items.Add(new UserInformationViewModel    (_locator));
       Items.Add(new UserContactlessCardViewModel(_locator));
       Items.Add(UserPhotoView);
      

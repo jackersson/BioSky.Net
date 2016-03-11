@@ -21,7 +21,6 @@ namespace BioContracts
     IFullPersonHolder Persons { get; }
 
     IFullHolder<Visitor> Visitors { get; }
-
-
+    IBioCultureSources BioCultureSources { get; }
   }
 }

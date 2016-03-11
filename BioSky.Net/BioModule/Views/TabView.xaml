@@ -98,6 +98,9 @@
                 <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
                     <local:TrackControlView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:TrackControlView>
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:AuthenticationPageViewModel}">
+                    <local:AuthenticationPageView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:AuthenticationPageView>
+                </DataTemplate>
             </dragablz:TabablzControl.Resources>
             <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>

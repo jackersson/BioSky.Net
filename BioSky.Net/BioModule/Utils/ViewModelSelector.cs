@@ -18,6 +18,7 @@ namespace BioModule.Utils
     , UsersPage
     , TrackPage
     , GeneralSettings
+    , AuthenticationPage
   }
 
   public enum ShowableContentControl
@@ -33,12 +34,14 @@ namespace BioModule.Utils
     
       _viewModels = new Dictionary<ViewModelsID, Type>();
 
-      _viewModels.Add(ViewModelsID.UserPage         , Type.GetType("BioModule.ViewModels.UserPageViewModel"));
-      _viewModels.Add(ViewModelsID.LocationSettings , Type.GetType("BioModule.ViewModels.LocationPageViewModel"));
-      _viewModels.Add(ViewModelsID.VisitorsPage     , Type.GetType("BioModule.ViewModels.VisitorsViewModel"));
-      _viewModels.Add(ViewModelsID.UsersPage        , Type.GetType("BioModule.ViewModels.UsersViewModel"   ));
-      _viewModels.Add(ViewModelsID.TrackPage        , Type.GetType("BioModule.ViewModels.TrackControlViewModel"));
-      _viewModels.Add(ViewModelsID.GeneralSettings  , Type.GetType("BioModule.ViewModels.GeneralSettingsPageViewModel"));
+      _viewModels.Add(ViewModelsID.UserPage          , Type.GetType("BioModule.ViewModels.UserPageViewModel"));
+      _viewModels.Add(ViewModelsID.LocationSettings  , Type.GetType("BioModule.ViewModels.LocationPageViewModel"));
+      _viewModels.Add(ViewModelsID.VisitorsPage      , Type.GetType("BioModule.ViewModels.VisitorsViewModel"));
+      _viewModels.Add(ViewModelsID.UsersPage         , Type.GetType("BioModule.ViewModels.UsersViewModel"   ));
+      _viewModels.Add(ViewModelsID.TrackPage         , Type.GetType("BioModule.ViewModels.TrackControlViewModel"));
+      _viewModels.Add(ViewModelsID.GeneralSettings   , Type.GetType("BioModule.ViewModels.GeneralSettingsPageViewModel"));
+      _viewModels.Add(ViewModelsID.AuthenticationPage, Type.GetType("BioModule.ViewModels.AuthenticationPageViewModel"));
+
 
 
 

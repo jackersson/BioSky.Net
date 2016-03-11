@@ -10,7 +10,18 @@ namespace BioModule.Utils
     { 
       _locator = locator; 
       _windowManager = _locator.GetProcessor<IWindowManager>(); 
-    } 
+    }
+
+    private AuthenticationPageViewModel _authenticationPage;
+    public AuthenticationPageViewModel AuthenticationPage
+    {
+      get
+      {
+        if (_authenticationPage == null)
+          return _authenticationPage = new AuthenticationPageViewModel(_locator);
+        return _authenticationPage;
+      }
+    }
 
     private AboutDialogViewModel _aboutDialog; 
     public AboutDialogViewModel AboutDialog

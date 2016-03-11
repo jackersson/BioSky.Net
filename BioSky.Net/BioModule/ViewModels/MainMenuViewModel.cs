@@ -33,8 +33,10 @@ namespace BioModule.ViewModels
       _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.VisitorsPage);
     }
 
-
-       
+    public void OpenTabAuthentication()
+    {
+      _dialogsHolder.AuthenticationPage.Show();
+    }
 
     public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
     {

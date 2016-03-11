@@ -94,19 +94,13 @@
                         </Style>
                     </ComboBox.Style>
                 </ComboBox>
-
-                <TextBox x:Name="CountryBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
-                         Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
-
+                
                 <ComboBox x:Name="CountryBox2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         ItemsSource="{Binding CountryNames}"
-                         Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
+                         SelectedItem="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"                          
+                         ItemsSource="{Binding CountryNames}"/>
 
                 <TextBox x:Name="CityBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc City}"
@@ -148,54 +142,32 @@
                 </ComboBox>
 
                 <!--           Criminal                   -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <CheckBox Name="CriminalCheckBox" ></CheckBox>
-                    <TextBlock Margin="5,0,0,0" Text="{lex:Loc Criminal}"></TextBlock>
-                </StackPanel>
 
-                <TextBox x:Name="Description" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                <Expander Background="#FFFFFFFF" BorderBrush="{x:Null}"  >
+                    <Expander.Header >
+                        <Grid>
+                            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{lex:Loc Criminal}"></TextBlock>
+                        </Grid>
+                    </Expander.Header>
+
+                    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <TextBox x:Name="Description2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc Description}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"
-                         
+                         Controls:TextBoxHelper.ClearTextButton="True"                         
                          Text="{Binding User.Comments, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Style>
-                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MetroTextBox}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=IsChecked, ElementName=CriminalCheckBox}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Path=IsChecked, ElementName=CriminalCheckBox}" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
+                        </TextBox>
 
-
-                <TextBox x:Name="Action" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
+                        <TextBox x:Name="Action2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc Action}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
                          Text="{Binding User.Comments, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Style>
-                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MetroTextBox}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=IsChecked, ElementName=CriminalCheckBox}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Path=IsChecked, ElementName=CriminalCheckBox}" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-
-
-
-
+                        </TextBox>
+                        
+                    </StackPanel>
+                </Expander>
+                
             </StackPanel>
         </ScrollViewer>
     </Grid>

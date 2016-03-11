@@ -1,0 +1,63 @@
+﻿<metro:MetroWindow x:Class="BioModule.Views.AuthenticationPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:data="clr-namespace:BioData;assembly=BioData"
+             xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"                  
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:cal="http://www.caliburnproject.org"    
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:catel="http://catel.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             WindowStartupLocation="CenterOwner"
+             Width="350" Height="500"
+             ResizeMode="NoResize" IsCloseButtonEnabled="False" IsWindowDraggable="False" 
+             ShowCloseButton="False" ShowInTaskbar="False" ShowSystemMenuOnRightClick="False"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance vm:AuthenticationPageViewModel, IsDesignTimeCreatable=False}"             
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <Grid Name="GridLayout" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="37"/>
+            <RowDefinition Height="37"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBox x:Name="AuthenticationBox" Margin="0,0,0,10"
+                 Width="280"  HorizontalAlignment="Center"
+                 Controls:TextBoxHelper.Watermark="{lex:Loc AuthenticationBox}" Grid.Column="1" Grid.Row="0"
+                 Controls:TextBoxHelper.UseFloatingWatermark="True" VerticalAlignment="Bottom"
+                 Controls:TextBoxHelper.ClearTextButton="True"
+                 Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <local:PhotoImageView DataContext="{Binding PhotoImage}"></local:PhotoImageView>
+        </Grid>
+
+        <Button Content="{lex:Loc Register}" Width="280"  HorizontalAlignment="Center" Margin="0,0,0,5"                 
+                VerticalAlignment="Stretch"
+                cal:Message.Attach="[Event Click]=[Action OnRegister()]"
+                Grid.Row="1" Grid.Column="1" Background="#FF6D8CB0" Foreground="White">
+        </Button>
+        
+        <Button Content="{lex:Loc SignIn}"
+                Width="280"  HorizontalAlignment="Center" Margin="0,5,0,0"
+                VerticalAlignment="Stretch"
+                cal:Message.Attach="[Event Click]=[Action OnLogin()]"
+                Grid.Row="2" Grid.Column="1" Background="#FF6D8CB0" Foreground="White">
+        </Button>
+        
+    </Grid>
+</metro:MetroWindow>

@@ -122,8 +122,11 @@ namespace BioModule.ViewModels
 
     public void OnDataContextChanged()
     {
-      if (ImageView == null)
-        ImageView     = new ImageViewModel();      
+      if (PhotoImage == null)
+      {
+        PhotoImage = new PhotoImageViewModel(_locator);
+        PhotoImage.SetVisibility(true, false, false);
+      }
     }
 
     protected override void OnActivate()
@@ -148,7 +151,7 @@ namespace BioModule.ViewModels
      
       IsDeleteButtonEnabled = SelectedVisitors.Count >= 1 ? true : false;     
       
-      if (SelectedVisitors.Count == 1 && ImageView != null)
+      if (SelectedVisitors.Count == 1 && PhotoImage != null)
       {        
         Visitor visitor = SelectedVisitors.FirstOrDefault();
         if (visitor != null)
@@ -212,16 +215,16 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ImageViewModel _imageView;
-    public ImageViewModel ImageView
+    private PhotoImageViewModel _photoImage;
+    public PhotoImageViewModel PhotoImage
     {
-      get { return _imageView; }
+      get { return _photoImage; }
       set
       {
-        if (_imageView != value)
+        if (_photoImage != value)
         {
-          _imageView = value;
-          NotifyOfPropertyChange(() => ImageView);
+          _photoImage = value;
+          NotifyOfPropertyChange(() => PhotoImage);
         }
       }
     }
