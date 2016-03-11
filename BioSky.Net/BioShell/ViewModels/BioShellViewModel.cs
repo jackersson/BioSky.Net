@@ -1,6 +1,9 @@
 ﻿using Caliburn.Micro;
 using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
+using System.Windows;
+using System;
+using System.Windows.Interop;
 
 namespace BioShell.ViewModels
 {

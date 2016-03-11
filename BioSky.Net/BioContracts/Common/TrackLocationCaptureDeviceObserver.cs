@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Timers;
+using System.Windows.Interop;
 
 namespace BioContracts.Common
 {
@@ -316,8 +317,23 @@ namespace BioContracts.Common
 
     public void Update(string deviceName)
     {
+      if (DeviceName != null && DeviceName != "")      
+        _captureDeviceEngine.Remove(DeviceName);      
+
       DeviceName = deviceName;
       _captureDeviceEngine.Add(DeviceName);
+    }
+
+    public void ShowPropertyPage()
+    {
+      System.Windows.Window window = _locator.GetProcessor<System.Windows.Window>();
+      IntPtr parentWindow = new WindowInteropHelper(window).Handle;
+      _captureDeviceEngine.ShowCaptureDevicePropertyPage(DeviceName, parentWindow);
+    }
+
+    public void ShowConfigurationPage( IPropertiesShowable propertiesShowable )
+    {     
+      _captureDeviceEngine.ShowCaptureDeviceConfigurationPage(DeviceName, propertiesShowable );
     }
 
     public void Subscribe(FrameEventHandler handler)

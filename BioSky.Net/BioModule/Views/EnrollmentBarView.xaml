@@ -82,7 +82,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             BorderThickness="1"
-            cal:Message.Attach="[Event Click]=[Action Apply]"
+            cal:Message.Attach="[Event Click]=[Action ShowPropertyPage]"
             Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="2" >
             <Image Width="18" Height="18" Source="{Binding Source={StaticResource ResourceLoader}, Path=SettingsIconSource}" />
         </Button>
@@ -106,7 +106,7 @@
                BorderThickness="1"
                HorizontalAlignment="Center"
                VerticalAlignment="Center" 
-               cal:Message.Attach="[Event Click]=[Action Cancel]"
+               cal:Message.Attach="[Event Click]=[Action ShowConfigurationPage]"
                Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="4" >
             <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
         </Button>

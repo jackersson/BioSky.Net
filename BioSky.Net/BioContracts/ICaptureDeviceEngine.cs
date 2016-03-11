@@ -28,6 +28,12 @@ namespace BioContracts
 
     void Unsubscribe(FrameEventHandler eventListener, string cameraName);
 
+    void ShowCaptureDevicePropertyPage(string cameraName, IntPtr parentWindow);
+
+    VideoCapabilities[] GetCaptureDeviceVideoCapabilities(string cameraName);
+
+    void ShowCaptureDeviceConfigurationPage(string cameraName, IPropertiesShowable propertiesShowable);
+
     AsyncObservableCollection<string> GetCaptureDevicesNames();
   }
 }

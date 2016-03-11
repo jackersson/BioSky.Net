@@ -111,6 +111,7 @@
       <HintPath>..\packages\Grpc.Core.0.12.0\lib\net45\Grpc.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -157,6 +158,7 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="INotifier.cs" />
     <Compile Include="IProcessorLocator.cs" />
+    <Compile Include="IPropertiesShowable.cs" />
     <Compile Include="IServiceManager.cs" />
     <Compile Include="IShowableContent.cs" />
     <Compile Include="ITrackLocatioEngine.cs" />
