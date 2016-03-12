@@ -3,6 +3,7 @@ using BioService;
 using Caliburn.Micro;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace BioData.Holders.Grouped
 {
@@ -91,6 +92,11 @@ namespace BioData.Holders.Grouped
     {
       if (DataUpdated != null)
         DataUpdated(list);
+    }
+
+    public void Add(Visitor requested, Visitor responded)
+    {
+      throw new NotImplementedException();
     }
 
     private AsyncObservableCollection<Visitor> _data;

@@ -111,7 +111,11 @@ namespace BioData.Holders.Grouped
 
       return location;
     }
-      
+
+    public void Add(Location requested, Location responded)
+    {
+      throw new NotImplementedException();
+    }
 
     private AsyncObservableCollection<Location> _data;
     public AsyncObservableCollection<Location> Data

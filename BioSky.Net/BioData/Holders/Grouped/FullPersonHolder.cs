@@ -10,23 +10,33 @@ namespace BioData.Holders.Grouped
   {
     public FullPersonHolder()
     {
-      DataSet      = new Dictionary<long, Person>();
+      DataSet = new Dictionary<long, Person>();
       CardsDataSet = new Dictionary<string, Person>();
-      Data         = new AsyncObservableCollection<Person>();
+      Data = new AsyncObservableCollection<Person>();
     }
 
     public void Init(Google.Protobuf.Collections.RepeatedField<Person> data)
     {
-     
+
       Data = new AsyncObservableCollection<Person>(data);
 
       foreach (Person person in data)
       {
         _dataSet.Add(person.Id, person);
-        
-      }     
 
-      OnDataChanged();      
+      }
+
+      OnDataChanged();
+    }
+
+    public void Add(Person requested, Person responded)
+    {
+      if (responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
+      {
+        requested.Id = responded.Id;
+        Data.Add(requested);
+        _dataSet.Add(requested.Id, requested);
+      }      
     }
 
     public void Update( Google.Protobuf.Collections.RepeatedField<Person> requested

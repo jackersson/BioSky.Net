@@ -137,6 +137,7 @@ namespace BioService {
 
     static readonly Marshaller<global::BioService.QueryPersons> __Marshaller_QueryPersons = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.QueryPersons.Parser.ParseFrom);
     static readonly Marshaller<global::BioService.PersonList> __Marshaller_PersonList = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.PersonList.Parser.ParseFrom);
+    static readonly Marshaller<global::BioService.Person> __Marshaller_Person = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.Person.Parser.ParseFrom);
 
     static readonly Method<global::BioService.QueryPersons, global::BioService.PersonList> __Method_PersonSelect = new Method<global::BioService.QueryPersons, global::BioService.PersonList>(
         MethodType.Unary,
@@ -145,12 +146,12 @@ namespace BioService {
         __Marshaller_QueryPersons,
         __Marshaller_PersonList);
 
-    static readonly Method<global::BioService.PersonList, global::BioService.PersonList> __Method_PersonUpdate = new Method<global::BioService.PersonList, global::BioService.PersonList>(
+    static readonly Method<global::BioService.Person, global::BioService.Person> __Method_AddPerson = new Method<global::BioService.Person, global::BioService.Person>(
         MethodType.Unary,
         __ServiceName,
-        "PersonUpdate",
-        __Marshaller_PersonList,
-        __Marshaller_PersonList);
+        "AddPerson",
+        __Marshaller_Person,
+        __Marshaller_Person);
 
     // service descriptor
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -165,17 +166,17 @@ namespace BioService {
       global::BioService.PersonList PersonSelect(global::BioService.QueryPersons request, CallOptions options);
       AsyncUnaryCall<global::BioService.PersonList> PersonSelectAsync(global::BioService.QueryPersons request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
       AsyncUnaryCall<global::BioService.PersonList> PersonSelectAsync(global::BioService.QueryPersons request, CallOptions options);
-      global::BioService.PersonList PersonUpdate(global::BioService.PersonList request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      global::BioService.PersonList PersonUpdate(global::BioService.PersonList request, CallOptions options);
-      AsyncUnaryCall<global::BioService.PersonList> PersonUpdateAsync(global::BioService.PersonList request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      AsyncUnaryCall<global::BioService.PersonList> PersonUpdateAsync(global::BioService.PersonList request, CallOptions options);
+      global::BioService.Person AddPerson(global::BioService.Person request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      global::BioService.Person AddPerson(global::BioService.Person request, CallOptions options);
+      AsyncUnaryCall<global::BioService.Person> AddPersonAsync(global::BioService.Person request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncUnaryCall<global::BioService.Person> AddPersonAsync(global::BioService.Person request, CallOptions options);
     }
 
     // server-side interface
     public interface IBiometricDatabaseSevice
     {
       Task<global::BioService.PersonList> PersonSelect(global::BioService.QueryPersons request, ServerCallContext context);
-      Task<global::BioService.PersonList> PersonUpdate(global::BioService.PersonList request, ServerCallContext context);
+      Task<global::BioService.Person> AddPerson(global::BioService.Person request, ServerCallContext context);
     }
 
     // client stub
@@ -204,24 +205,24 @@ namespace BioService {
         var call = CreateCall(__Method_PersonSelect, options);
         return Calls.AsyncUnaryCall(call, request);
       }
-      public global::BioService.PersonList PersonUpdate(global::BioService.PersonList request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public global::BioService.Person AddPerson(global::BioService.Person request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
-        var call = CreateCall(__Method_PersonUpdate, new CallOptions(headers, deadline, cancellationToken));
+        var call = CreateCall(__Method_AddPerson, new CallOptions(headers, deadline, cancellationToken));
         return Calls.BlockingUnaryCall(call, request);
       }
-      public global::BioService.PersonList PersonUpdate(global::BioService.PersonList request, CallOptions options)
+      public global::BioService.Person AddPerson(global::BioService.Person request, CallOptions options)
       {
-        var call = CreateCall(__Method_PersonUpdate, options);
+        var call = CreateCall(__Method_AddPerson, options);
         return Calls.BlockingUnaryCall(call, request);
       }
-      public AsyncUnaryCall<global::BioService.PersonList> PersonUpdateAsync(global::BioService.PersonList request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public AsyncUnaryCall<global::BioService.Person> AddPersonAsync(global::BioService.Person request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
-        var call = CreateCall(__Method_PersonUpdate, new CallOptions(headers, deadline, cancellationToken));
+        var call = CreateCall(__Method_AddPerson, new CallOptions(headers, deadline, cancellationToken));
         return Calls.AsyncUnaryCall(call, request);
       }
-      public AsyncUnaryCall<global::BioService.PersonList> PersonUpdateAsync(global::BioService.PersonList request, CallOptions options)
+      public AsyncUnaryCall<global::BioService.Person> AddPersonAsync(global::BioService.Person request, CallOptions options)
       {
-        var call = CreateCall(__Method_PersonUpdate, options);
+        var call = CreateCall(__Method_AddPerson, options);
         return Calls.AsyncUnaryCall(call, request);
       }
     }
@@ -231,7 +232,7 @@ namespace BioService {
     {
       return ServerServiceDefinition.CreateBuilder(__ServiceName)
           .AddMethod(__Method_PersonSelect, serviceImpl.PersonSelect)
-          .AddMethod(__Method_PersonUpdate, serviceImpl.PersonUpdate).Build();
+          .AddMethod(__Method_AddPerson, serviceImpl.AddPerson).Build();
     }
 
     // creates a new client

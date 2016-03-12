@@ -28,9 +28,9 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-        PersonList call = await _client.PersonUpdateAsync(list);
-        Console.Write(call);
-        Console.WriteLine();
+        //PersonList call = await _client.PersonUpdateAsync(list);
+       // Console.Write(call);
+        //Console.WriteLine();
         //_database.Persons.Update(list, call);
       }
       catch (RpcException e)
@@ -58,16 +58,11 @@ namespace BioGRPC.DatabaseClient
       if (item == null)
         return;
   
-      _list.Persons.Clear();
-  
-      //TODO ResultStatus None 
-     
-      item.EntityState = EntityState.Added;
-      _list.Persons.Add(item);
-  
       try
       {
-        await Update(_list);
+        Person newPerson = await _client.AddPersonAsync(item);
+        Console.WriteLine(item);
+        _database.Persons.Add(item, newPerson);
       }
       catch (RpcException e)
       {
@@ -89,7 +84,7 @@ namespace BioGRPC.DatabaseClient
   
       try
       {
-        await Update(_list);
+        //await AddPerson(_list);
       }
       catch (RpcException e)
       {
