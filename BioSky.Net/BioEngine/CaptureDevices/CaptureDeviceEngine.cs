@@ -27,7 +27,16 @@ namespace BioEngine.CaptureDevices
         listener = new СaptureDeviceListener(cameraName, _captureDeviceEnumerator);
         listener.Start();
         _captureDevices.Add(cameraName, listener);
+        OnListenerStart();
       }
+    }
+
+    public event ListenerStartEventHandler ListenerStart;
+
+    private void OnListenerStart()
+    {
+      if (ListenerStart != null)
+        ListenerStart();
     }
 
     public void Remove(string cameraName)
@@ -73,14 +82,31 @@ namespace BioEngine.CaptureDevices
       return null;
     }
 
-    public void ShowCaptureDeviceConfigurationPage(string cameraName, IPropertiesShowable propertiesShowable)
+    public void SetCaptureDeviceVideoCapabilities(string cameraName, int selectedResolution)
     {
       if (cameraName == null)
         return;
 
       СaptureDeviceListener listener;
       if (_captureDevices.TryGetValue(cameraName, out listener))
-        listener.ShowConfigurationPage(propertiesShowable);
+      {
+        if (listener != null)
+          listener.SetVideoCapability(selectedResolution);
+      }
+    }
+
+    public VideoCapabilities GetVideoResolution(string cameraName)
+    {
+      if (cameraName == null)
+        return null;
+
+      СaptureDeviceListener listener;
+      if (_captureDevices.TryGetValue(cameraName, out listener))
+      {
+        if (listener != null)
+          return listener.GetVideoResolution();
+      }
+      return null;
     }
 
     public AsyncObservableCollection<string> GetCaptureDevicesNames()

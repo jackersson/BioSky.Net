@@ -43,11 +43,13 @@ namespace BioModule
       IBioShell bioShell = _locator.GetProcessor<IBioShell>();
        
 
-      bioShell.TabControl    = _locator.GetProcessor<TabViewModel>();
-      bioShell.FlyoutControl = _locator.GetProcessor<FlyoutControlViewModel>();
-      bioShell.ToolBar       = _locator.GetProcessor<ToolBarViewModel>();
-      bioShell.MainMenu      = _locator.GetProcessor<MainMenuViewModel>();
-      bioShell.ProgressRing  = _locator.GetProcessor<INotifier>().LoadingViewModel;
+      bioShell.TabControl       = _locator.GetProcessor<TabViewModel>();
+      bioShell.FlyoutControl    = _locator.GetProcessor<FlyoutControlViewModel>();
+      bioShell.ToolBar          = _locator.GetProcessor<ToolBarViewModel>();
+      bioShell.MainMenu         = _locator.GetProcessor<MainMenuViewModel>();
+      bioShell.ProgressRing     = _locator.GetProcessor<INotifier>().LoadingViewModel;
+      bioShell.LoginInformation = _locator.GetProcessor<LoginInformationViewModel>();
+
 
 
     }

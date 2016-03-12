@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +16,11 @@ using System.Windows.Shapes;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for CaptureDevicePropertiesView.xaml
+  /// Interaction logic for PhotoInformationView.xaml
   /// </summary>
-  public partial class CaptureDevicePropertiesView : MetroWindow
+  public partial class PhotoInformationView : UserControl
   {
-    public CaptureDevicePropertiesView()
+    public PhotoInformationView()
     {
       InitializeComponent();
     }

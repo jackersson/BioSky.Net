@@ -18,6 +18,8 @@ namespace BioContracts
 
     object ProgressRing { get; set; }
 
+    object LoginInformation { get; set; }
+
     IBioModule LoadModule(Assembly assembly);
   }
 }

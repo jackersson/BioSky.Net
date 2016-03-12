@@ -1,4 +1,5 @@
-﻿using BioService;
+﻿using AForge.Video.DirectShow;
+using BioService;
 using Google.Protobuf.Collections;
 using System;
 using System.Drawing;
@@ -301,6 +302,7 @@ namespace BioContracts.Common
     public TrackLocationCaptureDeviceObserver(IProcessorLocator locator)
     {
       Init(locator);
+      _captureDeviceEngine.ListenerStart += OnDeviceChanged;
     }
 
     public TrackLocationCaptureDeviceObserver(IProcessorLocator locator, string deviceName)
@@ -321,7 +323,7 @@ namespace BioContracts.Common
         _captureDeviceEngine.Remove(DeviceName);      
 
       DeviceName = deviceName;
-      _captureDeviceEngine.Add(DeviceName);
+      _captureDeviceEngine.Add(DeviceName);     
     }
 
     public void ShowPropertyPage()
@@ -329,11 +331,6 @@ namespace BioContracts.Common
       System.Windows.Window window = _locator.GetProcessor<System.Windows.Window>();
       IntPtr parentWindow = new WindowInteropHelper(window).Handle;
       _captureDeviceEngine.ShowCaptureDevicePropertyPage(DeviceName, parentWindow);
-    }
-
-    public void ShowConfigurationPage( IPropertiesShowable propertiesShowable )
-    {     
-      _captureDeviceEngine.ShowCaptureDeviceConfigurationPage(DeviceName, propertiesShowable );
     }
 
     public void Subscribe(FrameEventHandler handler)
@@ -349,6 +346,20 @@ namespace BioContracts.Common
     public void Stop()
     {        
       _captureDeviceEngine.Remove(DeviceName);
+    }
+
+    public VideoCapabilities[] GetVideoCapabilities()
+    {
+      return _captureDeviceEngine.GetCaptureDeviceVideoCapabilities(DeviceName);
+    }
+    public void SetVideoCapabilities(int selectedResolution)
+    {
+      _captureDeviceEngine.SetCaptureDeviceVideoCapabilities(DeviceName, selectedResolution);
+    }
+
+    public VideoCapabilities GetVideoResolution()
+    {
+      return _captureDeviceEngine.GetVideoResolution(DeviceName);
     }
 
     private void Init(IProcessorLocator locator)
@@ -367,7 +378,16 @@ namespace BioContracts.Common
           _deviceName = value;
       }
     }
-       
+
+    public event DeviceChangedEventHandler DeviceChanged;
+    public delegate void DeviceChangedEventHandler();
+
+    private void OnDeviceChanged()
+    {
+      if (DeviceChanged != null)
+        DeviceChanged();
+    }
+
     private IProcessorLocator _locator      ;
 
     private ICaptureDeviceEngine _captureDeviceEngine;

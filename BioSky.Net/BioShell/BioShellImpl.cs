@@ -65,6 +65,14 @@ namespace BioShell
         _shellViewModel.ProgressRing = value;
       }
     }
+    public object LoginInformation
+    {
+      get { return _shellViewModel.LoginInformation; }
+      set
+      {
+        _shellViewModel.LoginInformation = value;
+      }
+    }
 
     public IBioModule LoadModule(Assembly assembly)
     {

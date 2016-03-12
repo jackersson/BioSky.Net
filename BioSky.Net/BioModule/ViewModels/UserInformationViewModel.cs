@@ -17,26 +17,31 @@ using System.Reflection;
 using System.Globalization;
 using BioService;
 using BioModule.Utils;
+using BioContracts;
 
 namespace BioModule.ViewModels
-{ 
+{
   public class UserInformationViewModel : Screen, IUpdatable
-  {    
-    public UserInformationViewModel()
+  {
+    public UserInformationViewModel(IProcessorLocator locator)
     {
+      _locator = locator;
+      _database = _locator.GetProcessor<IBioSkyNetRepository>();
+
       DisplayName = "Information";
-      IsEnabled   = true;      
-    }  
+      IsEnabled = true;
+
+    }
 
     #region Update
     public void Update(Person user)
-    {      
+    {
       User = user;
     }
     #endregion
 
     #region Interface
-    public void Apply(){}   
+    public void Apply() { }
 
     #endregion
 
@@ -49,7 +54,7 @@ namespace BioModule.ViewModels
       {
         if (_user != value)
         {
-          _user = value;       
+          _user = value;
           NotifyOfPropertyChange(() => User);
         }
       }
@@ -63,7 +68,7 @@ namespace BioModule.ViewModels
         DateTime dt = DateTime.ParseExact(text, dateFormat, CultureInfo.InvariantCulture);
         User.Dateofbirth = dt.Ticks;
       }
-      catch ( Exception ex)
+      catch (Exception ex)
       {
         Console.WriteLine(ex.Message);
       }
@@ -83,12 +88,22 @@ namespace BioModule.ViewModels
       }
     }
 
-    //TODO maybe not need all
-    private string[] _countryNames;
+
     public string[] CountryNames
     {
-      get { return _countryNames; }    
+      get { return _database.BioCultureSources.CountriesNames; }
     }
-    #endregion      
+    public List<string> RightsSources
+    {
+      get { return _database.BioCultureSources.RightsSources; }
+    }
+    public List<string> GenderSources
+    {
+      get { return _database.BioCultureSources.GenderSources; }
+    }
+    #endregion
+
+    private readonly IProcessorLocator _locator;
+    private readonly IBioSkyNetRepository _database;
   }
 }

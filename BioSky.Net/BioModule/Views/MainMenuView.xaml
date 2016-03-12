@@ -33,7 +33,7 @@
                           cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">
                 </MenuItem>
                 <MenuItem Header="{lex:Loc LogOut}"
-                          cal:Message.Attach="[Event Click] = [Action OnLogOut]"
+                          cal:Message.Attach="[Event Click] = [Action OpenTabAuthentication]"
                           >
                 </MenuItem>
                 <Separator></Separator>

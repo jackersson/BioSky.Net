@@ -10,7 +10,18 @@ namespace BioModule.Utils
     { 
       _locator = locator; 
       _windowManager = _locator.GetProcessor<IWindowManager>(); 
-    } 
+    }
+
+    private AuthenticationPageViewModel _authenticationPage;
+    public AuthenticationPageViewModel AuthenticationPage
+    {
+      get
+      {
+        if (_authenticationPage == null)
+          return _authenticationPage = new AuthenticationPageViewModel(_locator);
+        return _authenticationPage;
+      }
+    }
 
     private AboutDialogViewModel _aboutDialog; 
     public AboutDialogViewModel AboutDialog
@@ -21,17 +32,6 @@ namespace BioModule.Utils
           return _aboutDialog = new AboutDialogViewModel(_windowManager); 
         return _aboutDialog; 
       } 
-    }
-
-    private CaptureDevicePropertiesViewModel _captureDevicePropertiesDialog;
-    public CaptureDevicePropertiesViewModel CaptureDevicePropertiesDialog
-    {
-      get
-      {
-        if (_captureDevicePropertiesDialog == null)
-          return _captureDevicePropertiesDialog = new CaptureDevicePropertiesViewModel(_windowManager);
-        return _captureDevicePropertiesDialog;
-      }
     }
 
     private CameraDialogViewModel _cameraDialog; 

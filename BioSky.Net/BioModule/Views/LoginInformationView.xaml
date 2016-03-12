@@ -12,7 +12,7 @@
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="200"
+             d:DesignHeight="100" d:DesignWidth="300"
              >
 
     <UserControl.Resources>
@@ -21,14 +21,40 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="73"/>
-            <ColumnDefinition Width="77"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Height="48" Text="{lex:Loc SignIn}" TextDecorations="Underline" TextAlignment="Center">            
+
+
+        <TextBlock Name="SignBlock" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                   cal:Message.Attach="[Event MouseDown] = [Action OpenTabAuthentication]" 
+                   Text="{lex:Loc SignIn}"                          
+                   TextAlignment="Center">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <Trigger  Property="IsMouseOver" Value="True">
+                            <Setter Property="TextDecorations" Value="Underline" />
+                            <Setter Property="Cursor" Value="Hand" />
+
+                        </Trigger>
+                        <Trigger  Property="IsMouseOver" Value="False">
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
         </TextBlock>
-        <Image Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="48" Height="48" Source="{Binding Source={StaticResource ResourceLoader}, Path=UserDefaultImageIconSource}"></Image>
+
+        <Border BorderThickness="1" Grid.Column="1" VerticalAlignment="Stretch" 
+                   HorizontalAlignment="Stretch">
+            <Image Grid.Column="1" VerticalAlignment="Stretch" 
+                   HorizontalAlignment="Stretch" Margin="1"
+                   
+                   Source="{Binding Source={StaticResource ResourceLoader}, Path=UserDefaultImageIconSource}"></Image>
+        </Border>
     </Grid>
 </UserControl>

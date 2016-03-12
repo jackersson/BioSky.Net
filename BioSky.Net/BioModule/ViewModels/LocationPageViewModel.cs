@@ -1,23 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Windows.Media.Imaging;
-using BioModule.ResourcesLoader;
-using Caliburn.Micro;
-using System.Windows;
-using System.Windows.Controls;
-using System.Collections.ObjectModel;
-
-using System.Windows.Input;
-using System.Windows.Media;
-using BioData;
+﻿using Caliburn.Micro;
 using BioService;
 using BioModule.Utils;
 using BioContracts;
-using System.IO;
 using Google.Protobuf.Collections;
 using Grpc.Core;
 
@@ -45,7 +29,7 @@ namespace BioModule.ViewModels
       _locationDevicesListViewModel.DisplayName = "Devices";
 
       Items.Add(_locationDevicesListViewModel);     
-      //Items.Add(new LocationPermissionViewModel   (_locator));
+      Items.Add(new LocationPermissionViewModel   (_locator));
 
       ActiveItem = Items[0];
       OpenTab();

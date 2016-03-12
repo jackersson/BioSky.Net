@@ -41,6 +41,9 @@
         <ContentControl Grid.Row="1" Grid.Column="2" x:Name="FlyoutControl"  />
 
         <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="MainMenu"></ContentControl>
+        
+        <ContentControl Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" x:Name="LoginInformation"></ContentControl>
+        
     </Grid>
 
         <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="ProgressRing"></ContentControl>

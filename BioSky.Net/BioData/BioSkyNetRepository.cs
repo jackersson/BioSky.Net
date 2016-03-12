@@ -14,6 +14,8 @@ namespace BioData
     FullVisitorHolder  _fullVisitors ;
 
     ILocalStorage       _localStorage;
+    IBioCultureSources  _bioCultureSources;
+
 
     IOUtils _ioUtils;
 
@@ -23,9 +25,10 @@ namespace BioData
       _ioUtils = new IOUtils(_localStorage);
 
 
-      _fullLocations = new FullLocationHolder();
-      _fullPersons   = new FullPersonHolder  ();
-      _fullVisitors  = new FullVisitorHolder ();
+      _fullLocations     = new FullLocationHolder();
+      _fullPersons       = new FullPersonHolder  ();
+      _fullVisitors      = new FullVisitorHolder ();
+      _bioCultureSources = new BioCultureSources ();
     }
 
     public IFullHolder<Location> Locations
@@ -47,8 +50,9 @@ namespace BioData
     {
       get { return _localStorage;  }
     }
-    
-   
-
+    public IBioCultureSources BioCultureSources
+    {
+      get { return _bioCultureSources; }
+    }
   }
 }

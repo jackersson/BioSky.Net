@@ -84,6 +84,20 @@ namespace BioShell.ViewModels
       }
     }
 
+    private object _loginInformation;
+    public object LoginInformation
+    {
+      get { return _loginInformation; }
+      set
+      {
+        if (_loginInformation != value)
+        {
+          _loginInformation = value;
+          NotifyOfPropertyChange(() => LoginInformation);
+        }
+      }
+    }
+
     public BitmapSource LogoIconSource
     {
       get { return ResourceLoader.LogoIconSource; }

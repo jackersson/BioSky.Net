@@ -158,7 +158,6 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="INotifier.cs" />
     <Compile Include="IProcessorLocator.cs" />
-    <Compile Include="IPropertiesShowable.cs" />
     <Compile Include="IServiceManager.cs" />
     <Compile Include="IShowableContent.cs" />
     <Compile Include="ITrackLocatioEngine.cs" />

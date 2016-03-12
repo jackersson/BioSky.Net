@@ -5,10 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"             
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
-             Height="32"
+             Height="64"
              d:DesignHeight="300" d:DesignWidth="230">
 
     <UserControl.Resources>
@@ -24,91 +28,90 @@
             <ColumnDefinition Width="32"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"/>          
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
-        <!--
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="32"/>
-                <ColumnDefinition Width="32"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="32"/>
-            </Grid.RowDefinitions>
-
-
-
-            <ToggleButton x:Name="ExpanderButton" HorizontalAlignment="Stretch" 
-                                      VerticalAlignment="Stretch"
-                                      Background="Transparent"
-                                  BorderThickness="0"   
-                                  Grid.Column="2" Grid.Row="1"
-                                  IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                  Style="{DynamicResource MetroCircleToggleButtonStyle}" >
-                <Image Width="24" Height="24" Name="ArrowImage"
-                                Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}">
-
-                </Image>
-            </ToggleButton>
-
-            <Button cal:Message.Attach="[Event Click] = [Action EnrollFromPhoto]" 
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Grid.Row="1" Grid.Column="1" 
-                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                Style="{DynamicResource MetroCircleButtonStyle}">
-                <Image Width="24" Height="24" 
-                            Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}" />
-            </Button>
-        </Grid>
-
--->
-
-
-
 
         <ComboBox ItemsSource="{Binding DevicesNames}"
                   SelectedItem="{Binding SelectedDevice, Mode=TwoWay}" 
                   Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" 
-                  Grid.Row="0"                    
+                  Grid.Row="1"                    
                   Grid.Column="0" Grid.ColumnSpan="2">
         </ComboBox>
-       
-        <Button  
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            BorderThickness="1"
-            cal:Message.Attach="[Event Click]=[Action ShowPropertyPage]"
-            Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="2" >
-            <Image Width="18" Height="18" Source="{Binding Source={StaticResource ResourceLoader}, Path=SettingsIconSource}" />
+
+        <Expander        
+            Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3"
+            ExpandDirection="Up" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
+            Background="#FFFFFFFF" BorderBrush="{x:Null}">
+            <Expander.ContentTemplate>
+                <DataTemplate>
+                    <StackPanel DataContext="{Binding ElementName=GridLayout, Path=DataContext}">
+                        <ComboBox SelectedIndex="{Binding SelectedResolution}"
+                                  ItemsSource="{Binding Resolution}" 
+                                  Controls:TextBoxHelper.Watermark="Available camera resolution"
+                                  Controls:TextBoxHelper.UseFloatingWatermark="True"                                  
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        </ComboBox>
+                    </StackPanel>
+                </DataTemplate>
+            </Expander.ContentTemplate>
+
+            <Expander.Template>
+                <ControlTemplate  TargetType="{x:Type Expander}">
+                    <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="32"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                        </Grid.RowDefinitions>
+                        
+                        <ToggleButton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="32" Height="32"
+                                      BorderThickness="1" Grid.Row="1" Grid.Column="2" 
+                                      IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"                                          
+                                      Style="{DynamicResource MetroCircleToggleButtonStyle}">
+                            <Image Width="18" Height="18" Source="{Binding Source={StaticResource ResourceLoader}, Path=SettingsIconSource}" />
+                        </ToggleButton>
+
+                        <ContentPresenter x:Name="ExpanderContent"
+                                          Visibility="Collapsed"
+                                          Grid.Row="2" Grid.ColumnSpan="10" Margin="0,0,0,2"
+                                          VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                                          >
+                        </ContentPresenter>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="ExpanderContent" 
+                                    Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Expander.Template>
+        </Expander>
+
+        <Button Width="32" Height="32" BorderThickness="1" 
+                HorizontalAlignment="Center" VerticalAlignment="Center" 
+                cal:Message.Attach="[Event Click]=[Action Apply]"
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                Grid.Row="1"  Grid.Column="3" >
+            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StartIconSource}" />
         </Button>
 
-
-        <Button 
-            Width="32"
-            Height="32"
-              BorderThickness="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center" 
-            cal:Message.Attach="[Event Click]=[Action Apply]"
-            Style="{DynamicResource MetroCircleButtonStyle}"
-            Grid.Row="0"  Grid.Column="3" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
-        </Button>
-
-        <Button 
-               Width="32"
-               Height="32"
-               BorderThickness="1"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center" 
-               cal:Message.Attach="[Event Click]=[Action ShowConfigurationPage]"
-               Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="0" Grid.Column="4" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
+        <Button Width="32" Height="32" BorderThickness="1"
+                HorizontalAlignment="Center" VerticalAlignment="Center" 
+                cal:Message.Attach="[Event Click]=[Action ShowConfigurationPage]"
+                Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="4" >
+            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
         </Button>
 
 

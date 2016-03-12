@@ -147,7 +147,6 @@
       <HintPath>..\packages\Ix-Async.1.2.3\lib\net45\System.Interactive.Async.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Catel.MVVM.4.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -205,7 +204,7 @@
     <Compile Include="Utils\DialogsHolder.cs" />
     <Compile Include="Utils\FaceFinder.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
-    <Compile Include="ViewModels\CaptureDevicePropertiesViewModel.cs" />
+    <Compile Include="ViewModels\AuthenticationPageViewModel.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
@@ -249,6 +248,7 @@
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\PhotoImageViewModel.cs" />
     <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
+    <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
@@ -262,14 +262,14 @@
     <Compile Include="ViewModels\TrackControlViewModel.cs" />
     <Compile Include="ViewModels\UserContactlessCardViewModel.cs" />
     <Compile Include="ViewModels\UserPageViewModel.cs" />
+    <Compile Include="Views\AuthenticationPageView.xaml.cs">
+      <DependentUpon>AuthenticationPageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CameraDialogView.xaml.cs">
       <DependentUpon>CameraDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CaptureDeviceItemView.xaml.cs">
       <DependentUpon>CaptureDeviceItemView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\CaptureDevicePropertiesView.xaml.cs">
-      <DependentUpon>CaptureDevicePropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CardEnrollmentBarView.xaml.cs">
       <DependentUpon>CardEnrollmentBarView.xaml</DependentUpon>
@@ -321,6 +321,9 @@
     </Compile>
     <Compile Include="Views\PhotoInfoExpanderView.xaml.cs">
       <DependentUpon>PhotoInfoExpanderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PhotoInformationView.xaml.cs">
+      <DependentUpon>PhotoInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProgressRingView.xaml.cs">
       <DependentUpon>ProgressRingView.xaml</DependentUpon>
@@ -382,15 +385,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\AuthenticationPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CameraDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CaptureDeviceItemView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\CaptureDevicePropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -459,6 +462,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PhotoInfoExpanderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PhotoInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -633,6 +640,8 @@
     <None Include="Resources\right_arrow.png" />
     <None Include="Resources\thumnail.png" />
     <None Include="Resources\settings.png" />
+    <None Include="Resources\Stop.png" />
+    <None Include="Resources\Start.png" />
     <Content Include="Resources\tracking.png" />
   </ItemGroup>
   <ItemGroup>

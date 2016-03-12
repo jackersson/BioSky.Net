@@ -58,7 +58,7 @@
 
 
             <ListBox Grid.Column="0" HorizontalAlignment="Stretch" 
-                 Grid.ColumnSpan="5" BorderThickness="1"
+                 Grid.ColumnSpan="5" BorderThickness="1" BorderBrush="#4C808080"
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
                  ItemsSource="{Binding VisitorsCollectionView}" 
@@ -148,7 +148,7 @@
                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
             </Button>
 
-            <TextBox  Margin="4, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   
+            <TextBox  Margin="2, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   
                       Grid.ColumnSpan="2" x:Name="SearchBox"
                       Controls:TextBoxHelper.Watermark="{lex:Loc Search}"
                       Controls:TextBoxHelper.UseFloatingWatermark="True"
@@ -172,7 +172,7 @@
         </Grid>
         <Grid Margin="0,5,0,0"  cal:Message.Attach="[Event Loaded] = [Action OnDataContextChanged()]">
             <ContentControl                                      
-                        cal:View.Model="{Binding ImageView}" cal:View.Context="Video" >
+                        cal:View.Model="{Binding PhotoImage}" >
             </ContentControl>
         </Grid>
     </Grid>

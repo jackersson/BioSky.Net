@@ -1,32 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Caliburn.Micro;
-using System.Windows.Media.Imaging;
+﻿using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
-
-using Microsoft.Win32;
 using System.IO;
 using System.Drawing;
-using MahApps.Metro.Controls;
-using BioData;
 using BioService;
-using System.Windows.Threading;
 using BioModule.Utils;
 using BioContracts;
-using System.Windows;
 using BioContracts.Common;
-using Grpc.Core;
-using System.Windows.Input;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Drawing.Drawing2D;
-using Accord.Imaging.Filters;
-using AForge.Imaging;
-using BioContracts.Services;
 
 namespace BioModule.ViewModels
 {
@@ -36,15 +15,12 @@ namespace BioModule.ViewModels
     {      
       _notifier       = locator.GetProcessor<INotifier>();
      
-      PhotoDetails = new PhotoInfoExpanderViewModel();
-      _enroller = new Enroller(locator);
+      PhotoDetails        = new PhotoInfoExpanderViewModel();
+      _enroller           = new Enroller(locator);
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
-      
-      
-
       EnrollmentViewModel = new EnrollmentBarViewModel(locator);
-    
-      
+
+      SetVisibility();
       UpdateFromPhoto(GetTestPhoto());
     }
 
@@ -77,6 +53,10 @@ namespace BioModule.ViewModels
     {
       PhotoDetails.ExpanderChanged += ShowPhotoDetails;
       EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
+            
+      if(EnrollmentViewModel.DeviceObserver.DeviceName != null)
+        EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
+
       base.OnActivate();
     }
 
@@ -194,6 +174,16 @@ namespace BioModule.ViewModels
       CurrentImageSource = BitmapConversion.BitmapToBitmapSource(detailedBitmap);
       MarkerBitmapHolder.Marked = CurrentImageSource;
     }
+
+    public void SetVisibility(bool arrows = true         , bool cancelButton = true
+                             , bool enrollExpander = true, bool controllPanel = true, bool enrollFromPhoto = true)
+    {
+      ArrowsVisibility          = arrows         ;
+      CancelButtonVisibility    = cancelButton   ;
+      EnrollExpanderVisibility  = enrollExpander ;
+      ControllPanelVisibility   = controllPanel  ;
+      EnrollFromPhotoVisibility = enrollFromPhoto;
+    }
    
     #endregion
 
@@ -223,6 +213,76 @@ namespace BioModule.ViewModels
         {
           _enrollmentViewModel = value;
           NotifyOfPropertyChange(() => EnrollmentViewModel);
+        }
+      }
+    }
+
+    private bool _enrollFromPhotoVisibility;
+    public bool EnrollFromPhotoVisibility
+    {
+      get { return _enrollFromPhotoVisibility; }
+      set
+      {
+        if (_enrollFromPhotoVisibility != value)
+        {
+          _enrollFromPhotoVisibility = value;
+          NotifyOfPropertyChange(() => EnrollFromPhotoVisibility);
+        }
+      }
+    }
+
+    private bool _arrowsVisibility;
+    public bool ArrowsVisibility
+    {
+      get { return _arrowsVisibility; }
+      set
+      {
+        if (_arrowsVisibility != value)
+        {
+          _arrowsVisibility = value;
+          NotifyOfPropertyChange(() => ArrowsVisibility);
+        }
+      }
+    }
+
+    private bool _cancelButtonVisibility;
+    public bool CancelButtonVisibility
+    {
+      get { return _cancelButtonVisibility; }
+      set
+      {
+        if (_cancelButtonVisibility != value)
+        {
+          _cancelButtonVisibility = value;
+          NotifyOfPropertyChange(() => CancelButtonVisibility);
+        }
+      }
+    }
+
+    private bool _enrollExpanderVisibility;
+    public bool EnrollExpanderVisibility
+    {
+      get { return _enrollExpanderVisibility; }
+      set
+      {
+        if (_enrollExpanderVisibility != value)
+        {
+          _enrollExpanderVisibility = value;
+          NotifyOfPropertyChange(() => EnrollExpanderVisibility);
+        }
+      }
+    }
+
+    private bool _controllPanelVisibility;
+    public bool ControllPanelVisibility
+    {
+      get { return _controllPanelVisibility; }
+      set
+      {
+        if (_controllPanelVisibility != value)
+        {
+          _controllPanelVisibility = value;
+          NotifyOfPropertyChange(() => ControllPanelVisibility);
         }
       }
     }

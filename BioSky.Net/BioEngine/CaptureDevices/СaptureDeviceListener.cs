@@ -53,11 +53,6 @@ namespace BioEngine.CaptureDevices
       _videoSource.DisplayPropertyPage(parentWindow);      
     }
 
-    public void ShowConfigurationPage(IPropertiesShowable propertiesShowable)
-    {
-      propertiesShowable.Show(_videoSource);
-    }
-
     private void _videoSource_PlayingFinished(object sender, ReasonToFinishPlaying reason)
     {
       if ( reason != ReasonToFinishPlaying.StoppedByUser)
@@ -77,12 +72,31 @@ namespace BioEngine.CaptureDevices
     
     public VideoCapabilities[] GetVideoCapabilities()
     {
-      return _videoSource.VideoCapabilities;
-    }   
+      if(_videoSource != null)
+        return _videoSource.VideoCapabilities;
+      return null;
+    }
 
-    public void SetVideoCapability()
+    public void SetVideoCapability(int selectedResolution)
     {
+      if (_videoSource.VideoCapabilities.Length <= selectedResolution || selectedResolution < 0)
+        return;
 
+      VideoCapabilities selected = _videoSource.VideoCapabilities[selectedResolution];
+
+      if (selected != _videoSource.VideoResolution)
+      {
+        StopPlay();
+        _videoSource.VideoResolution = _videoSource.VideoCapabilities[selectedResolution];
+        StartPlay();
+      }
+    }
+
+    public VideoCapabilities GetVideoResolution()
+    {
+      if (_videoSource != null)
+        return _videoSource.VideoResolution;
+      return null;
     }
 
     public override void Run()
@@ -103,8 +117,7 @@ namespace BioEngine.CaptureDevices
               base.Stop();
               break;
 
-            case CaptureDeviceCommands.Start:
-              ReleaseVideoDevice();
+            case CaptureDeviceCommands.Start:             
               _videoSource.Start();
               break;
 
@@ -173,6 +186,10 @@ namespace BioEngine.CaptureDevices
     public void StopPlay()
     {
       _commands.Enqueue(CaptureDeviceCommands.Stop);
+    }
+    public void StartPlay()
+    {
+      _commands.Enqueue(CaptureDeviceCommands.Start);
     }
 
     private VideoCaptureDevice _videoSource;    
