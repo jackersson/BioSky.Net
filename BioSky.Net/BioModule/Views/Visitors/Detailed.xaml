@@ -31,7 +31,7 @@
             
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         </ResourceDictionary>
     </UserControl.Resources>
 

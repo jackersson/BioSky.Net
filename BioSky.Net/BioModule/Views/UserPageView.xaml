@@ -6,6 +6,7 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:permission="clr-namespace:BioEngine;assembly=BioEngine"             
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture=""
@@ -17,8 +18,9 @@
              >
 
     <UserControl.Resources>
-        <ResourceDictionary>            
-                <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <ResourceDictionary>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
                 <ResourceDictionary>
@@ -88,10 +90,10 @@
         <Button  Grid.Row="5" Grid.Column="2" 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 ToolTip="{lex:Loc Save}"
+                 ToolTip="{lex:Loc Save}" 
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}"/>
         </Button>
 
         <Button ToolTip="{lex:Loc RevertChanges}" 

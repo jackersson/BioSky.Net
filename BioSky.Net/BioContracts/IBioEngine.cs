@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BioService;
 
 
 namespace BioContracts
 {
+  public enum Activity : long
+  {
+     None
+   , UserAdd = 1 << 0
+   , UserUpdate = 1 << 1
+   , UserRemove = 1 << 2
+  }
+
   public interface IBioEngine
   {
     void Stop();
@@ -18,5 +22,10 @@ namespace BioContracts
     ICaptureDeviceEngine CaptureDeviceEngine();
 
     ITrackLocationEngine TrackLocationEngine();
+   
+    bool IsActivityAllowed(Activity permissionRule);
+    
+    Person AuthenticatedPerson { get; set; }
+    
   }
 }

@@ -19,8 +19,9 @@
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              WindowStartupLocation="CenterOwner"
              Width="350" Height="500"
-             ResizeMode="NoResize" IsCloseButtonEnabled="False" IsWindowDraggable="False" 
-             ShowCloseButton="False" ShowInTaskbar="False" ShowSystemMenuOnRightClick="False"
+             ResizeMode="NoResize" IsCloseButtonEnabled="True" IsWindowDraggable="False" 
+             ShowCloseButton="{Binding ShowCloseButton}"
+             ShowInTaskbar="False" ShowSystemMenuOnRightClick="False"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:AuthenticationPageViewModel, IsDesignTimeCreatable=False}"             
              d:DesignHeight="300" d:DesignWidth="300">
@@ -40,7 +41,7 @@
                  Controls:TextBoxHelper.Watermark="{lex:Loc AuthenticationBox}" Grid.Column="1" Grid.Row="0"
                  Controls:TextBoxHelper.UseFloatingWatermark="True" VerticalAlignment="Bottom"
                  Controls:TextBoxHelper.ClearTextButton="True"
-                 Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{Binding LoginData, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Grid Grid.Row="0" Grid.Column="1">
             <local:PhotoImageView DataContext="{Binding PhotoImage}"></local:PhotoImageView>

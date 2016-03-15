@@ -32,7 +32,7 @@
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />          
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <CollectionViewSource Source="{Binding Visitors}" x:Key="SortedVisitors">
                 <CollectionViewSource.SortDescriptions>
                     <scm:SortDescription PropertyName="Time" Direction="Descending"/>

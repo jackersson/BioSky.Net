@@ -70,17 +70,6 @@ namespace BioModule.Utils
       } 
     } 
 
-    private LoginDialogViewModel _loginDialog; 
-    public LoginDialogViewModel LoginDialog
-    { 
-      get 
-      { 
-        if (_loginDialog == null) 
-          return _loginDialog = new LoginDialogViewModel(_windowManager); 
-        return _loginDialog; 
-      } 
-    } 
-
 
     private readonly IWindowManager _windowManager; 
     private readonly IProcessorLocator _locator; 

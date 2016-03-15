@@ -7,6 +7,9 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"   
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader" 
+             xmlns:utils="clr-namespace:BioModule.Utils"  
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"             
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"              
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -15,34 +18,57 @@
              d:DataContext="{d:DesignInstance vm:ToolBarViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+
+        <Style x:Key="ImageEnabled" TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.25"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
     
     <Grid>
         <ToolBarTray Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left"  VerticalAlignment="Top">
             <ToolBar>
                 <Separator></Separator>
-                <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" Width="32" Height="32"  />
-                </Button>
+                
+                <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]"
+                        IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                        , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                        , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}"
+                        >
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource ImageEnabled}">
+                    </Image>
+                </Button> 
                 <Separator></Separator>
 
                 <Button ToolTip="{lex:Loc AddNewLocation}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}"
+                           Width="32" Height="32" Style="{StaticResource ImageEnabled}">
+
+                    </Image>
                 </Button>                
                 <Separator></Separator>
                 <Button ToolTip="{lex:Loc Visitors}" cal:Message.Attach="[Event Click]=[Action OpenTabVisitors]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=JournalListIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=JournalListIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource ImageEnabled}"  />
                 </Button>
                 <Separator></Separator>
 
                 <Button ToolTip="{lex:Loc Users}" cal:Message.Attach="[Event Click]=[Action OpenTabUsers]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UsersListIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UsersListIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource ImageEnabled}" />
                 </Button>
                 <Separator></Separator>
 
                 <Button ToolTip="{lex:Loc Tracking}" cal:Message.Attach="[Event Click]=[Action OpenTabTrack]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=TrackingIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=TrackingIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource ImageEnabled}" />
                 </Button>
             </ToolBar>
         </ToolBarTray>
