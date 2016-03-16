@@ -30,7 +30,6 @@ namespace BioModule.ViewModels
 
       DisplayName = "Information";
       IsEnabled = true;
-
     }
 
     #region Update
@@ -56,7 +55,29 @@ namespace BioModule.ViewModels
         {
           _user = value;
           NotifyOfPropertyChange(() => User);
+          NotifyOfPropertyChange(() => FirstName);
+          NotifyOfPropertyChange(() => LastName);
         }
+      }
+    }
+
+    public string FirstName
+    {
+      get { return _user.Firstname; }
+      set
+      {       
+        _user.Firstname = value;
+        NotifyOfPropertyChange(() => FirstName);        
+      }
+    }
+
+    public string LastName
+    {
+      get { return _user.Lastname; }
+      set
+      {
+        _user.Lastname = value;
+        NotifyOfPropertyChange(() => LastName);
       }
     }
 

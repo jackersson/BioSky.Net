@@ -83,8 +83,9 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="1" Margin="1" Grid.Column="2" HorizontalAlignment="Right">
+                        <Grid Grid.Row="1" Margin="1" Grid.ColumnSpan="2" HorizontalAlignment="Right">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="40"/>
                                 <ColumnDefinition Width="40"/>
                             </Grid.ColumnDefinitions>
@@ -93,7 +94,7 @@
                             </Grid.RowDefinitions>
 
                             <ToggleButton x:Name="ExpanderButton" Background="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                       BorderThickness="1" BorderBrush="#7F3587BD"   Grid.Column="1"                           
+                                       BorderThickness="1" BorderBrush="#7F3587BD"   Grid.Column="2"                           
                                       IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                       Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="Enrollment Settings"
                                       Padding="1.5,0"                                     
@@ -112,10 +113,21 @@
                                         Visibility="{Binding EnrollFromPhotoVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"                                        
                                         DataContext="{Binding ElementName=GridLayout, Path=DataContext}"
                                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                                        BorderThickness="1" Grid.Column="0" BorderBrush="#7F3587BD"
+                                        BorderThickness="1" Grid.Column="1" BorderBrush="#7F3587BD"
                                         ToolTip="{lex:Loc EnrollFromPhoto}" >
                                 <Image Width="16" Height="16" Opacity="0.5"
                                            Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromPhotoIconSource}"  />
+                            </Button>
+
+                            <Button cal:Message.Attach="[Event Click] = [Action Add]"                                     
+                                    Style="{DynamicResource MetroCircleButtonStyle}" 
+                                    Visibility="{Binding CanAddPhoto, Converter={StaticResource BooleanToVisibilityConverter}}"                                        
+                                    DataContext="{Binding ElementName=GridLayout, Path=DataContext}"
+                                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                    BorderThickness="1" Grid.Column="0" BorderBrush="#7F3587BD"
+                                     >
+                                <Image Width="32" Height="32"
+                                           Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}"  />
                             </Button>
                         </Grid>
                         <ContentPresenter x:Name="ExpanderContent"
@@ -185,7 +197,7 @@
 
 
 
-        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"  
+        <Button cal:Message.Attach="[Event Click] = [Action OnClear(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"  
                 Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 ToolTip="{lex:Loc Cancel}" Width="32" Height="32"   
@@ -196,18 +208,25 @@
             <Image Width="32" Height="32" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
         </Button>
 
-        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
-                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center"  Style="{DynamicResource MetroCircleButtonStyle}"
-                ToolTip="{lex:Loc NextImage}" Width="40" Height="40" BorderBrush="#7F3587BD" 
-                Visibility="{Binding ArrowsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+        <Button cal:Message.Attach="[Event Click] = [Action Next()]" 
+                Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" 
+                VerticalAlignment="Center"  
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                ToolTip="{lex:Loc NextImage}" 
+                Width="40" Height="40"
+                BorderBrush="#7F3587BD" 
+                Visibility="{Binding CanMoveNext, Converter={StaticResource BooleanToVisibilityConverter}}"
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}" Opacity="0.5"/>
         </Button>
 
-        <Button cal:Message.Attach="[Event Click] = [Action CancelClick(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]" 
-                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"  Style="{DynamicResource MetroCircleButtonStyle}"
+        <Button cal:Message.Attach="[Event Click] = [Action Previous()]"                 
+                Grid.Row="0" Grid.Column="0"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center"  
+                Style="{DynamicResource MetroCircleButtonStyle}"
                 ToolTip="{lex:Loc PreviousIamge}" Width="40" Height="40" BorderBrush="#7F3587BD" 
-                Visibility="{Binding ArrowsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"                
+                Visibility="{Binding CanMovePrevious, Converter={StaticResource BooleanToVisibilityConverter}}"                
                 >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}" Opacity="0.5" />
         </Button>

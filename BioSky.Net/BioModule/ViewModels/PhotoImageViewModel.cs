@@ -6,10 +6,11 @@ using BioService;
 using BioModule.Utils;
 using BioContracts;
 using BioContracts.Common;
+using System;
 
 namespace BioModule.ViewModels
 {
-  public class PhotoImageViewModel : ImageViewModel, IPhotoUpdatable
+  public class PhotoImageViewModel : ImageViewModel, IUserPhotoUpdatable
   {
     public PhotoImageViewModel(IProcessorLocator locator) : base()    
     {      
@@ -21,9 +22,19 @@ namespace BioModule.ViewModels
       EnrollmentViewModel = new EnrollmentBarViewModel(locator);
 
       SetVisibility();
-      UpdateFromPhoto(GetTestPhoto());
+      //UpdateFromPhoto(GetTestPhoto());
     }
 
+
+    public override void OnClear(double viewWidth, double viewHeight)
+    {
+      if (CanUsePhotoController)
+        UserPhotoController.Remove(CurrentPhoto);
+
+      base.OnClear(viewWidth, viewHeight);
+    }
+
+    /*
     public Photo GetTestPhoto()
     {
       Photo ph = new Photo();
@@ -46,7 +57,7 @@ namespace BioModule.ViewModels
       return ph;
 
     }
-
+    */
     #region Interface
 
     protected override void OnActivate()
@@ -98,7 +109,12 @@ namespace BioModule.ViewModels
 
       Google.Protobuf.ByteString bytes = Google.Protobuf.ByteString.CopyFrom(File.ReadAllBytes(filename));
       Photo newphoto = new Photo() { Bytestring = bytes};
+
       CurrentPhoto = newphoto;
+
+      CurrentPhoto.Width    = (long)bmp.Width   ;
+      CurrentPhoto.Height   = (long)bmp.Height  ;
+      CurrentPhoto.SizeType = PhotoSizeType.Full;
     }
 
     public void UpdateFromPhoto(Photo photo, string prefixPath = "")
@@ -133,7 +149,7 @@ namespace BioModule.ViewModels
 
       _enroller.EnrollmentDone -= OnEnrollmentDone;
       _enroller.EnrollmentDone += OnEnrollmentDone;
-      _enroller.Start(photo, CurrentPerson);
+      _enroller.Start(photo, UserPhotoController.User);
     }    
 
     private void OnEnrollmentDone(Photo photo, Person person)
@@ -178,7 +194,7 @@ namespace BioModule.ViewModels
     public void SetVisibility(bool arrows = true         , bool cancelButton = true
                              , bool enrollExpander = true, bool controllPanel = true, bool enrollFromPhoto = true)
     {
-      ArrowsVisibility          = arrows         ;
+      //ArrowsVisibility          = arrows         ;
       CancelButtonVisibility    = cancelButton   ;
       EnrollExpanderVisibility  = enrollExpander ;
       ControllPanelVisibility   = controllPanel  ;
@@ -193,10 +209,80 @@ namespace BioModule.ViewModels
     {
       CurrentPhoto = null;
       base.Clear();     
-    }    
+    }
+
+    public void UpdatePhotoController(Utils.IUserPhotoController controller)
+    {
+      UserPhotoController = controller;
+    }
     #endregion
 
     #region UI
+
+    public void Next()
+    {
+      if ( UserPhotoController != null )
+        UserPhotoController.Next();
+    }
+
+    public void Previous()
+    {
+      if (UserPhotoController != null)
+        UserPhotoController.Previous();
+    }
+
+    public void Add()
+    {
+      
+      if (UserPhotoController != null)
+        UserPhotoController.Add(CurrentPhoto);
+    }
+
+    public void Remove()
+    {
+      if (UserPhotoController != null)
+        UserPhotoController.Remove(CurrentPhoto);
+    }
+
+    public bool CanAddPhoto
+    {
+      get { return CanUsePhotoController
+                && CurrentPhoto != null
+                && CurrentPhoto.Bytestring.Length > 0
+                /*&& CurrentPhoto.PortraitCharacteristic != null
+                && CurrentPhoto.PortraitCharacteristic.FirBytestring.Length > 0*/; }
+    }
+
+    public bool CanMoveNext
+    {
+      get { return CanUsePhotoController && UserPhotoController.CanNext; }
+    }
+
+    public bool CanMovePrevious
+    {
+      get { return CanUsePhotoController && UserPhotoController.CanPrevious; }
+    }
+
+    public bool CanUsePhotoController
+    {
+      get { return _userPhotoController != null; }
+    }
+
+    private IUserPhotoController _userPhotoController;
+    public IUserPhotoController UserPhotoController
+    {
+      get { return _userPhotoController; }
+      set
+      {
+        if (_userPhotoController != value)
+        {
+          _userPhotoController = value;
+          NotifyOfPropertyChange(() => UserPhotoController  );
+          NotifyOfPropertyChange(() => CanUsePhotoController);
+        }
+      }
+    }
+
     private MarkerBitmapSourceHolder _markerBitmapHolder;
     public MarkerBitmapSourceHolder MarkerBitmapHolder
     {
@@ -227,20 +313,6 @@ namespace BioModule.ViewModels
         {
           _enrollFromPhotoVisibility = value;
           NotifyOfPropertyChange(() => EnrollFromPhotoVisibility);
-        }
-      }
-    }
-
-    private bool _arrowsVisibility;
-    public bool ArrowsVisibility
-    {
-      get { return _arrowsVisibility; }
-      set
-      {
-        if (_arrowsVisibility != value)
-        {
-          _arrowsVisibility = value;
-          NotifyOfPropertyChange(() => ArrowsVisibility);
         }
       }
     }
@@ -297,6 +369,8 @@ namespace BioModule.ViewModels
         {
           _currentPhoto = value;
           NotifyOfPropertyChange(() => CurrentPhoto);
+          NotifyOfPropertyChange(() => CanAddPhoto );
+          
         }
       }
     }
@@ -315,18 +389,11 @@ namespace BioModule.ViewModels
       }
     }
 
-    private Person _currentPerson;
-    public Person CurrentPerson
-    {
-      get { return _currentPerson; }
-      set { _currentPerson = value; }
-    }
     #endregion
 
     #region Global Variables    
     private readonly Enroller  _enroller;    
-    private readonly INotifier _notifier;
-    //private MarkerUtils _marker;
+    private readonly INotifier _notifier;    
     #endregion
   }
 

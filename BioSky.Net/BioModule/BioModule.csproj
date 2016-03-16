@@ -203,6 +203,7 @@
     <Compile Include="Utils\DeviceItemBase.cs" />
     <Compile Include="Utils\DialogsHolder.cs" />
     <Compile Include="Utils\FaceFinder.cs" />
+    <Compile Include="Utils\IUserPhotoController.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
     <Compile Include="ViewModels\AuthenticationPageViewModel.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
@@ -230,7 +231,7 @@
     <Compile Include="Utils\BioConverters.cs" />
     <Compile Include="Utils\BioFileUtils.cs" />
     <Compile Include="Utils\FastMethodInvoker.cs" />
-    <Compile Include="Utils\IPhotoUpdatable.cs" />
+    <Compile Include="Utils\IUserPhotoUpdatable.cs" />
     <Compile Include="Utils\IPagingCollectionView.cs" />
     <Compile Include="Utils\IUpdatable.cs" />
     <Compile Include="Utils\PagingCollectionView.cs" />

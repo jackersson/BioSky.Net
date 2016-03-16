@@ -3,6 +3,8 @@ using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Google.Protobuf.Collections;
 
 namespace BioData.Holders.Grouped
 {
@@ -10,12 +12,12 @@ namespace BioData.Holders.Grouped
   {
     public FullPersonHolder()
     {
-      DataSet = new Dictionary<long, Person>();
+      DataSet      = new Dictionary<long, Person>();
       CardsDataSet = new Dictionary<string, Person>();
-      Data = new AsyncObservableCollection<Person>();
+      Data         = new AsyncObservableCollection<Person>();
     }
 
-    public void Init(Google.Protobuf.Collections.RepeatedField<Person> data)
+    public void Init(RepeatedField<Person> data)
     {
 
       Data = new AsyncObservableCollection<Person>(data);
@@ -23,7 +25,6 @@ namespace BioData.Holders.Grouped
       foreach (Person person in data)
       {
         _dataSet.Add(person.Id, person);
-
       }
 
       OnDataChanged();
@@ -39,46 +40,42 @@ namespace BioData.Holders.Grouped
       }      
     }
 
-    public void Update( Google.Protobuf.Collections.RepeatedField<Person> requested
-                      , Google.Protobuf.Collections.RepeatedField<Person> results )
+    public void Update( Person requested
+                      , Person responded )
     {
-     
-      bool success = false;
-      foreach (Person person in results)
-      {    
-        /*   
-        foreach (Card card in person.Cards)        
-          _cards.UpdateItem(card, card.UniqueNumber, card.EntityState, card.Dbresult);
-
-        Photo thumbnail = person.Thumbnail;
-        if (thumbnail != null)
-          _photos.UpdateItem(thumbnail, thumbnail.Id, thumbnail.EntityState, thumbnail.Dbresult);
-
-        foreach (Photo photo in person.Photos)
-          _photos.UpdateItem(photo, photo.Id, photo.EntityState, photo.Dbresult);
-
-        success = person.Dbresult == Result.Success;
-
-        _persons.UpdateItem(person, person.Id, person.EntityState, person.Dbresult);   
-        */     
-      }
-
-      if (success)
-        OnDataUpdated(results);
-
-      try
+      if (responded.Dbresult == Result.Success)
       {
-        OnDataChanged();
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine(ex.Message);
-      }
+        Person oldItem = GetValue(requested.Id);
 
-      //_photos.CheckPhotos();
-    
+        if (oldItem != null)         
+          CopyFrom(responded, oldItem);              
+      }     
     }
 
+    private void CopyFrom(Person from, Person to)
+    {
+      if (from.Firstname != "")
+        to.Firstname = from.Firstname;
+
+      if (from.Lastname != "")
+        to.Lastname = from.Lastname;
+
+      Console.WriteLine(_dataSet);
+    }
+
+    public void Remove( Person requested
+                      , Person responded)
+    {
+      if (responded.Dbresult == Result.Success)
+      {
+        _dataSet.Remove(requested.Id);
+        var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
+        if (item != null)        
+          Data.Remove(item);
+        
+      }
+    }
+    
     private void OnDataChanged()
     {
       if (DataChanged != null)
@@ -144,8 +141,53 @@ namespace BioData.Holders.Grouped
       return person;
     }
 
+    public void RemoveCards(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
+    {
+      foreach (long index in responsed)
+      {
+        RepeatedField<Card> ownerCards = _dataSet[owner.Id].Cards;
+        IEnumerable<Card> cards = ownerCards.Where(x => responsed.Contains(x.Id));
+        foreach (Card card in cards)        
+          ownerCards.Remove(card);      
+      }
+      OnDataChanged();    
+    }
+
+    public void AddCard(Person owner, Card requested, Card responsed)
+    {
+      if ( responsed.Dbresult == Result.Success )
+      {
+        requested.Id = responsed.Id;
+        _dataSet[owner.Id].Cards.Add(requested);
+
+        OnDataChanged();
+      }      
+    }
+
+    public void AddPhoto(Person owner, Photo requested, Photo responsed)
+    {
+      if (responsed.Dbresult == Result.Success)
+      {
+        requested.Id = responsed.Id;
+        _dataSet[owner.Id].Photos.Add(requested);
+        OnDataChanged();
+      }  
+    }
+
+    public void RemovePhotos(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
+    {
+      foreach (long index in responsed)
+      {
+        RepeatedField<Photo> ownerPhotos = _dataSet[owner.Id].Photos;
+        IEnumerable<Photo> cards = ownerPhotos.Where(x => responsed.Contains(x.Id));
+        foreach (Photo photo in cards)
+          ownerPhotos.Remove(photo);
+      }
+      OnDataChanged();
+    }
+
     public event DataChangedHandler             DataChanged;
-    public event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<Person>> DataUpdated;
+    public event DataUpdatedHandler<RepeatedField<Person>> DataUpdated;
 
 
     

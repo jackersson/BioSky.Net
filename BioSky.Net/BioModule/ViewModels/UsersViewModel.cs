@@ -82,7 +82,7 @@ namespace BioModule.ViewModels
 
       try
       {
-        await _bioService.PersonDataClient.Delete(SelectedPersons);
+        await _bioService.PersonDataClient.Remove(SelectedPersons);
       }
       catch (Exception e)
       {

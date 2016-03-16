@@ -4,8 +4,6 @@ using BioService;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BioGRPC.DatabaseClient
@@ -22,22 +20,7 @@ namespace BioGRPC.DatabaseClient
       _notifier = _locator.GetProcessor<INotifier>();
   
       _list = new PersonList();
-    }
-  
-    private async Task Update(PersonList list)
-    {
-      try
-      {
-        //PersonList call = await _client.PersonUpdateAsync(list);
-       // Console.Write(call);
-        //Console.WriteLine();
-        //_database.Persons.Update(list, call);
-      }
-      catch (RpcException e)
-      {
-        _notifier.Notify(e);
-      }
-    }
+    }   
   
     public async Task Select(QueryPersons command)
     {
@@ -69,32 +52,27 @@ namespace BioGRPC.DatabaseClient
         _notifier.Notify(e);
       }
     }
-  
+
+    
+
     public async Task Update(Person item)
     {
       if (item == null)
-        return;
-  
-      _list.Persons.Clear();
-  
-      //TODO ResultStatus None 
-      //item.Dbresult = ResultStatus.Failed;
-      //item.EntityState = EntityState.Modified;
-      _list.Persons.Add(item);
-  
+        return;  
+     
       try
       {
-        //await AddPerson(_list);
+        Person udatedPerson = await _client.UpdatePersonAsync(item);
+        Console.WriteLine(item);
+        _database.Persons.Update(item, udatedPerson);
       }
       catch (RpcException e)
       {
         _notifier.Notify(e);
       }
-    }
+    } 
   
-  
-  
-    public async Task Delete(IList<Person> targeIds)
+    public async Task Remove(IList<Person> targeIds)
     {
       if (targeIds == null || targeIds.Count <= 0)
         return;
@@ -119,7 +97,7 @@ namespace BioGRPC.DatabaseClient
   
       try
       {
-        await Update(_list);
+        //await Update(_list);
       }
       catch (RpcException e)
       {
@@ -127,121 +105,23 @@ namespace BioGRPC.DatabaseClient
       }
     }    
 
-    public Task Delete(Person targetItem)
+    public async Task Remove(Person item)
     {
-      throw new NotImplementedException();
-    }
-
-    /*
-    public async Task UsersDeletePerformer(EntityState state)
-    {
-      PersonList personList = new PersonList();
-
-      foreach (long id in SelectedItemIds)
-      {
-        Person person = new Person() { Id = id, EntityState = EntityState.Deleted };
-        personList.Persons.Add(person);
-      }
+      if (item == null)
+        return;
 
       try
       {
-        _database.Persons.DataUpdated += UpdateData;
-        await _bioService.DatabaseService.PersonUpdate(personList);
+        Person deletedPerson = await _client.RemovePersonAsync(item);
+        Console.WriteLine(deletedPerson);
+        _database.Persons.Remove(item, deletedPerson);
       }
       catch (RpcException e)
       {
-        Console.WriteLine(e.Message);
+        _notifier.Notify(e);
       }
     }
 
-    private void UpdateData(PersonList list)
-    {
-      _database.Persons.DataUpdated -= UpdateData;
-
-      if (list != null)
-      {
-        Person person = list.Persons.FirstOrDefault();
-        if (person != null)
-        {
-          if (person.EntityState == EntityState.Deleted)
-          {
-            if (list.Persons.Count > 1)
-              MessageBox.Show(list.Persons.Count + " users successfully Deleted");
-            else
-              MessageBox.Show("User successfully Deleted");
-          }
-        }
-      }
-    }
-    */
-
-    /*
-  private void UpdateData(PersonList list)
-  {
-    _database.Persons.DataUpdated -= UpdateData;
-
-    if (list != null)
-    {
-      Person person = list.Persons.FirstOrDefault();
-      if (person != null)
-      {
-        if (person.Cards.Count > 1)
-          MessageBox.Show(person.Cards.Count + " cards successfully Deleted");
-        else
-          MessageBox.Show("Card successfully Deleted");
-      }
-    }
-  }
-  
-
-    private void UpdateData(PersonList list)
-    {
-      _database.Persons.DataUpdated -= UpdateData;
-
-      if (list != null)
-      {
-        Person person = list.Persons.FirstOrDefault();
-        if (person != null)
-        {
-          if (person.EntityState == EntityState.Deleted)
-          {
-            person = null;
-            MessageBox.Show("User successfully Deleted");
-          }
-          else if (person.EntityState == EntityState.Added)
-          {
-            MessageBox.Show("User successfully Added");
-          }
-          else
-          {
-            MessageBox.Show("User successfully Updated");
-          }
-
-          Update(person);
-        }
-      }
-    }
-
-       public void UserUpdatePerformer()
-    {     
-      Photo photo = CurrentPhotoImageView.CurrentImagePhoto;
-      if (photo == null)
-        return;
-      
-      photo.OriginType = PhotoOriginType.Loaded;
-
-      Photo thumbnail = _database.PhotoHolder.GetValue(_user.Thumbnailid);
-      if (thumbnail != null)
-      {
-        if (thumbnail.GetHashCode() != photo.GetHashCode())
-          _user.Thumbnail = photo;
-      }
-      else
-        _user.Thumbnail = photo;  
-           
-    }
-
-    */
     private PersonList _list;
   
     private readonly IProcessorLocator _locator;

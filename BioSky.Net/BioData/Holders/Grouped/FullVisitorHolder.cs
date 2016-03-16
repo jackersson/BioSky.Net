@@ -99,6 +99,16 @@ namespace BioData.Holders.Grouped
       throw new NotImplementedException();
     }
 
+    public void Update(Visitor requested, Visitor responded)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Remove(Visitor requested, Visitor responded)
+    {
+      throw new NotImplementedException();
+    }
+
     private AsyncObservableCollection<Visitor> _data;
     public AsyncObservableCollection<Visitor> Data
     {

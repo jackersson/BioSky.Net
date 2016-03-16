@@ -36,7 +36,8 @@ namespace BioModule.ViewModels
     public UserPageViewModel(IProcessorLocator locator) : base()
     {
       _locator    = locator;
-          
+
+      _dialogs    = _locator.GetProcessor<DialogsHolder>();
       _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier   = _locator.GetProcessor<INotifier>();
@@ -46,7 +47,10 @@ namespace BioModule.ViewModels
 
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
-      Items.Add(new UserInformationViewModel    (_locator));
+      UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator);
+      uinfoModel.PropertyChanged += UserDataChanged;
+
+      Items.Add(uinfoModel);
       Items.Add(new UserContactlessCardViewModel(_locator));
       Items.Add(UserPhotoView);
      
@@ -56,6 +60,23 @@ namespace BioModule.ViewModels
       _methodInvoker = new FastMethodInvoker();     
 
       DisplayName = "AddNewUser";
+
+      _database.Persons.DataChanged += Persons_DataChanged;
+    }
+
+    private void Persons_DataChanged()
+    {
+      if (_userPageMode == UserPageMode.ExistingUser)
+      {        
+        Person user = _database.Persons.GetValue(_user.Id);
+        Update(user);
+      }      
+    }
+
+    private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+      NotifyOfPropertyChange(() => CanApply );
+      NotifyOfPropertyChange(() => CanRevert);
     }
 
     #region Update
@@ -65,7 +86,7 @@ namespace BioModule.ViewModels
       if (user == null)
         return false;
 
-      return (user.Firstname != "" && user.Firstname != "");
+      return (user.Firstname != "" && user.Lastname != "");
     }
 
     private Person ResetUser(Person user)
@@ -80,7 +101,7 @@ namespace BioModule.ViewModels
       user.Rights      = Person.Types.Rights.Operator;
      
       _userPageMode = UserPageMode.NewUser;
-      _revertUser   = null;
+      //_user         = null;
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
 
       return user;  
@@ -103,23 +124,26 @@ namespace BioModule.ViewModels
       else      
         _user = ResetUser(new Person());
 
+      NotifyOfPropertyChange(() => CanDelete);
+
       //Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
       //CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
-      CurrentPhotoImageView.CurrentPerson = _user;
+      //CurrentPhotoImageView.CurrentPerson = _user;
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
     }
-    
-    #endregion
-    
-    #region Interface
 
+    #endregion
+
+    #region Interface
+        
+    
     public async void Apply()
     {
-      var result = true;// _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
-
-      if (!result )
+      bool? result = _dialogs.AreYouSureDialog.Show();
+   
+      if ( !result.HasValue || (!result.Value ))
         return;  
       
       try
@@ -137,21 +161,21 @@ namespace BioModule.ViewModels
 
     public void Revert()
     {
-      if ( _revertUser != null)     
+      if (_user != null)     
         Update(_revertUser);
     }
 
     public async void Remove()
     {
-      var result = false;// _windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
+      bool? result = _dialogs.AreYouSureDialog.Show();
 
-      if (!result)
+      if (!result.HasValue || (!result.Value))
         return;
-      
+
       try
-      {
-        _user.Thumbnail = CurrentPhotoImageView.GetTestPhoto();
-        await _bioService.PersonDataClient.Delete(_user);      
+      {       
+        Person personToDelete = new Person() { Id = _user.Id };
+        await _bioService.PersonDataClient.Remove(_user);      
       }
       catch (Exception e)
       {
@@ -162,9 +186,26 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
-    public void OpenTab()
+
+    public bool CanApply
     {
-      
+      get {
+        return IsActive && ContainRequiredFields(_user) && (_userPageMode == UserPageMode.NewUser || CanRevert);
+      }
+    }
+
+    public bool CanRevert
+    {
+      get { return IsActive && _userPageMode == UserPageMode.ExistingUser && !_user.Equals(_revertUser); }
+    }
+
+    public bool CanDelete
+    {
+      get { return IsActive &&  _user.Id > 0; }
+    }
+
+    public void OpenTab()
+    {      
       CurrentPhotoImageView.ActivateWith(this);      
       ActiveItem.Activate();
     }
@@ -203,6 +244,7 @@ namespace BioModule.ViewModels
 
     private Person                            _revertUser   ;
     private Person                            _user         ;
+    private readonly DialogsHolder            _dialogs      ;
     private BioContracts.Common.BioImageUtils _bioUtils     ;
     private readonly FastMethodInvoker        _methodInvoker;
     private readonly IProcessorLocator        _locator      ;

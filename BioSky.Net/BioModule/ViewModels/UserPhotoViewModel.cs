@@ -28,14 +28,17 @@ using System.Collections;
 
 namespace BioModule.ViewModels
 {
-  public class UserPhotoViewModel : Screen, IUpdatable
+
+  public class UserPhotoViewModel : Screen, IUpdatable, IUserPhotoController
   {
-    public UserPhotoViewModel( IPhotoUpdatable imageViewer
-                             , IProcessorLocator locator )
+    public UserPhotoViewModel( IUserPhotoUpdatable   imageViewer, 
+                               IProcessorLocator locator     )
     {
       _locator             = locator      ;    
-      _imageViewer         = imageViewer  ;   
-   
+      _imageViewer         = imageViewer  ;
+      _imageViewer.UpdatePhotoController(this);
+      //_imageViewer.U
+
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService          = _locator.GetProcessor<IServiceManager>().DatabaseService    ;
       _dialogsHolder       = _locator.GetProcessor<DialogsHolder>();
@@ -47,7 +50,9 @@ namespace BioModule.ViewModels
       _bioUtils    = new BioImageUtils();
       
       _database.Persons.DataChanged     += RefreshData;
-      //_database.PhotoHolder.DataChanged += RefreshData;      
+      //_database.PhotoHolder.DataChanged += RefreshData;  
+
+      IsEnabled = true;
     }
 
     #region Update
@@ -77,7 +82,6 @@ namespace BioModule.ViewModels
     {
       if (!IsActive || _user == null)
         return;
-
      
       UserImages.Clear();
      
@@ -88,26 +92,7 @@ namespace BioModule.ViewModels
     #endregion  
 
     #region Interface
-    public void Apply(){}  
-    
-    public async void DeletePhoto()
-    {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
-
-      if (!result || SelectedItem == null)
-        return;
-
-      try
-      {        
-        await _bioService.PhotoDataClient.Delete(SelectedItem);
-      }
-      catch (Exception e)
-      {
-        _notifier.Notify(e);
-      } 
-      
-    } 
+    public void Apply(){}     
 
     public void OnMouseRightButtonDown(Photo photo)
     {
@@ -122,9 +107,74 @@ namespace BioModule.ViewModels
       //await ThumbnailUpdatePerformer();
     }
 
+    public async void Add(Photo photo)
+    {     
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+
+      photo.Personid = User.Id;
+      photo.Datetime = DateTime.Now.Ticks;
+
+      if (!result || photo == null)
+        return;
+
+      //(this.Views[0] as IInputElement).Hi
+
+      try {
+        await _bioService.PhotosDataClient.Add(User, photo);
+      }
+      catch (Exception e) {
+        _notifier.Notify(e);
+      }
+    }
+
+    public async void Remove(Photo photo)
+    {
+      _dialogsHolder.AreYouSureDialog.Show();
+      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+
+      if (!result || photo == null)
+        return;
+
+      try {
+        await _bioService.PhotosDataClient.Remove(User, photo);
+      }
+      catch (Exception e) {
+        _notifier.Notify(e);
+      }
+    }
+           
+    public void Next()
+    {
+      Console.WriteLine("OnNext");
+      return;
+
+
+      if (!CanNext || CurrentPhotoIndex + 1 > UserImages.Count )
+        return;
+
+      SelectedItem = UserImages[CurrentPhotoIndex + 1];
+
+      
+    }
+
+    public void Previous()
+    {
+      Console.WriteLine("OnPrevious");
+      return;
+
+      if (!CanPrevious || CurrentPhotoIndex - 1 >= 0)
+        return;
+
+      SelectedItem = UserImages[CurrentPhotoIndex - 1];
+    }
+
     #endregion
 
-    #region UI    
+    #region UI   
+    
+    public bool CanNext     { get { return CurrentPhotoIndex < UserImages.Count - 1; } }
+    public bool CanPrevious { get { return CurrentPhotoIndex > 0; } }
 
     private bool _canSetThumbnail;
     public bool CanSetThumbnail
@@ -166,8 +216,7 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => UserImages);
         }
       }
-    }
-        
+    }        
 
     private Photo _selectedItem;
     public Photo SelectedItem
@@ -181,8 +230,26 @@ namespace BioModule.ViewModels
 
           _imageViewer.UpdateFromPhoto(value, _database.LocalStorage.LocalStoragePath);
 
-          NotifyOfPropertyChange(() => SelectedItem);
+          CurrentPhotoIndex = UserImages.IndexOf(_imageViewer.CurrentPhoto);          
+
+          NotifyOfPropertyChange(() => SelectedItem );
           NotifyOfPropertyChange(() => CanDeleteItem);
+          NotifyOfPropertyChange(() => CanNext      );
+          NotifyOfPropertyChange(() => CanPrevious  );
+        }
+      }
+    }
+
+    private int _currentPhotoIndex;
+    private int CurrentPhotoIndex
+    {
+      get { return _currentPhotoIndex; }
+      set
+      {
+        if ( _currentPhotoIndex != value )
+        {
+          _currentPhotoIndex = value;
+          NotifyOfPropertyChange(() => CurrentPhotoIndex);
         }
       }
     }
@@ -212,7 +279,7 @@ namespace BioModule.ViewModels
 
     private readonly Enroller                 _enroller           ;
     private readonly IProcessorLocator        _locator            ;   
-    private readonly IPhotoUpdatable          _imageViewer        ;
+    private readonly IUserPhotoUpdatable          _imageViewer        ;
     private readonly IDatabaseService         _bioService         ;    
     private readonly IBioSkyNetRepository     _database           ;
     private readonly INotifier                _notifier           ;

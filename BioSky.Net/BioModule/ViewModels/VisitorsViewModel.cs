@@ -84,7 +84,7 @@ namespace BioModule.ViewModels
       
       try
       {
-        await _bioService.VisitorDataClient.Delete(SelectedVisitors);          
+        await _bioService.VisitorDataClient.Remove(SelectedVisitors);          
       }
       catch (Exception e)
       {

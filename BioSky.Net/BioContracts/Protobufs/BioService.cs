@@ -21,103 +21,115 @@ namespace BioService {
     static BioService() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChFiaW9fc2VydmljZS5wcm90bxIKQmlvU2VydmljZSI6CghDcmltaW5hbBIK", 
-            "CgJpZBgBIAEoAxITCgtkZXNjcmlwdGlvbhgCIAEoCRINCgVhbGVydBgDIAEo", 
-            "CSLHBAoGUGVyc29uEgoKAmlkGAEgASgDEhEKCWZpcnN0bmFtZRgCIAEoCRIQ", 
-            "CghsYXN0bmFtZRgDIAEoCRITCgtkYXRlb2ZiaXJ0aBgEIAEoAxIpCgZnZW5k", 
-            "ZXIYBSABKA4yGS5CaW9TZXJ2aWNlLlBlcnNvbi5HZW5kZXISDwoHY291bnRy", 
-            "eRgGIAEoCRIMCgRjaXR5GAcgASgJEg8KB3Bob3RvaWQYCCABKAMSEAoIY29t", 
-            "bWVudHMYCSABKAkSKQoGcmlnaHRzGAogASgOMhkuQmlvU2VydmljZS5QZXJz", 
-            "b24uUmlnaHRzEg0KBWVtYWlsGAsgASgJEiQKCGRicmVzdWx0GAwgASgOMhIu", 
-            "QmlvU2VydmljZS5SZXN1bHQSJAoJdGh1bWJuYWlsGA0gASgLMhEuQmlvU2Vy", 
-            "dmljZS5QaG90bxIhCgZwaG90b3MYDiADKAsyES5CaW9TZXJ2aWNlLlBob3Rv", 
-            "Eh8KBWNhcmRzGA8gAygLMhAuQmlvU2VydmljZS5DYXJkEi0KDGVudGl0eV9z", 
-            "dGF0ZRgQIAEoDjIXLkJpb1NlcnZpY2UuRW50aXR5U3RhdGUSJgoIY3JpbWlu", 
-            "YWwYESABKAsyFC5CaW9TZXJ2aWNlLkNyaW1pbmFsIigKBkdlbmRlchIICgRO", 
-            "b25lEAASCAoETWFsZRABEgoKBkZlbWFsZRACIj8KBlJpZ2h0cxIKCgZDdXN0", 
-            "b20QABIMCghPcGVyYXRvchABEgsKB01hbmFnZXIQAhIOCgpTdXBlcnZpc29y", 
-            "EAMiugEKDEFjY2Vzc0RldmljZRIKCgJpZBgBIAEoAxISCgpsb2NhdGlvbmlk", 
-            "GAIgASgDEhAKCHBvcnRuYW1lGAMgASgJEjcKBHR5cGUYBCABKA4yKS5CaW9T", 
-            "ZXJ2aWNlLkFjY2Vzc0RldmljZS5BY2Nlc3NEZXZpY2VUeXBlIj8KEEFjY2Vz", 
-            "c0RldmljZVR5cGUSDgoKRGV2aWNlTm9uZRAAEgwKCERldmljZUluEAESDQoJ", 
-            "RGV2aWNlT3V0EAIiQwoNQ2FwdHVyZURldmljZRIKCgJpZBgBIAEoAxISCgps", 
-            "b2NhdGlvbmlkGAIgASgDEhIKCmRldmljZW5hbWUYAyABKAkikAEKBENhcmQS", 
-            "CgoCaWQYASABKAMSEAoIcGVyc29uaWQYAiABKAMSFQoNdW5pcXVlX251bWJl", 
-            "chgDIAEoCRItCgxlbnRpdHlfc3RhdGUYBCABKA4yFy5CaW9TZXJ2aWNlLkVu", 
-            "dGl0eVN0YXRlEiQKCGRicmVzdWx0GAUgASgOMhIuQmlvU2VydmljZS5SZXN1", 
-            "bHQigwMKCExvY2F0aW9uEgoKAmlkGAEgASgDEhUKDWxvY2F0aW9uX25hbWUY", 
-            "AiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSLQoMZW50aXR5X3N0YXRlGAQg", 
-            "ASgOMhcuQmlvU2VydmljZS5FbnRpdHlTdGF0ZRIkCghkYnJlc3VsdBgFIAEo", 
-            "DjISLkJpb1NlcnZpY2UuUmVzdWx0EjQKC2FjY2Vzc190eXBlGAYgASgOMh8u", 
-            "QmlvU2VydmljZS5Mb2NhdGlvbi5BY2Nlc3NUeXBlEjEKDmNhcHR1cmVEZXZp", 
-            "Y2VzGAcgAygLMhkuQmlvU2VydmljZS5DYXB0dXJlRGV2aWNlEi8KDWFjY2Vz", 
-            "c0RldmljZXMYCCADKAsyGC5CaW9TZXJ2aWNlLkFjY2Vzc0RldmljZRIjCgdw", 
-            "ZXJzb25zGAkgAygLMhIuQmlvU2VydmljZS5QZXJzb24iKwoKQWNjZXNzVHlw", 
-            "ZRIICgROb25lEAASBwoDQWxsEAESCgoGQ3VzdG9tEAIiQwoRQmlvbWV0cmlj", 
-            "TG9jYXRpb24SDAoEeHBvcxgBIAEoAhIMCgR5cG9zGAIgASgCEhIKCmNvbmZp", 
-            "ZGVuY2UYAyABKAIidwoSRXllc0NoYXJhY3RlcmlzdGljEi8KCGxlZnRfZXll", 
-            "GAEgASgLMh0uQmlvU2VydmljZS5CaW9tZXRyaWNMb2NhdGlvbhIwCglyaWdo", 
-            "dF9leWUYAiABKAsyHS5CaW9TZXJ2aWNlLkJpb21ldHJpY0xvY2F0aW9uIoIB", 
-            "ChJGYWNlQ2hhcmFjdGVyaXN0aWMSDQoFd2lkdGgYASABKAMSLwoIbG9jYXRp", 
-            "b24YAiABKAsyHS5CaW9TZXJ2aWNlLkJpb21ldHJpY0xvY2F0aW9uEiwKBGV5", 
-            "ZXMYAyABKAsyHi5CaW9TZXJ2aWNlLkV5ZXNDaGFyYWN0ZXJpc3RpYyKSAQoW", 
-            "UG9ydHJhaXRDaGFyYWN0ZXJpc3RpYxILCgNhZ2UYASABKA8SEwoLZmFjZXNf", 
-            "Y291bnQYAiABKA8SDwoHZmlyX3VybBgDIAEoCRIWCg5maXJfYnl0ZXN0cmlu", 
-            "ZxgEIAEoDBItCgVmYWNlcxgFIAMoCzIeLkJpb1NlcnZpY2UuRmFjZUNoYXJh", 
-            "Y3RlcmlzdGljIvcCCgVQaG90bxIKCgJpZBgBIAEoAxIQCghwZXJzb25pZBgC", 
-            "IAEoAxIsCglzaXplX3R5cGUYAyABKA4yGS5CaW9TZXJ2aWNlLlBob3RvU2l6", 
-            "ZVR5cGUSEAoIZGF0ZXRpbWUYBCABKAMSEQoJcGhvdG9fdXJsGAUgASgJEhIK", 
-            "CmJ5dGVzdHJpbmcYBiABKAwSMAoLb3JpZ2luX3R5cGUYByABKA4yGy5CaW9T", 
-            "ZXJ2aWNlLlBob3RvT3JpZ2luVHlwZRINCgV3aWR0aBgIIAEoAxIOCgZoZWln", 
-            "aHQYCSABKAMSQwoXcG9ydHJhaXRfY2hhcmFjdGVyaXN0aWMYCiABKAsyIi5C", 
-            "aW9TZXJ2aWNlLlBvcnRyYWl0Q2hhcmFjdGVyaXN0aWMSLQoMZW50aXR5X3N0", 
-            "YXRlGAsgASgOMhcuQmlvU2VydmljZS5FbnRpdHlTdGF0ZRIkCghkYnJlc3Vs", 
-            "dBgMIAEoDjISLkJpb1NlcnZpY2UuUmVzdWx0IuEBCgdWaXNpdG9yEgoKAmlk", 
-            "GAEgASgDEhAKCHBlcnNvbmlkGAIgASgDEg8KB3Bob3RvaWQYAyABKAMSEgoK", 
-            "bG9jYXRpb25pZBgEIAEoAxIMCgR0aW1lGAUgASgDEhMKC2NhcmRfbnVtYmVy", 
-            "GAYgASgJEiIKBnN0YXR1cxgHIAEoDjISLkJpb1NlcnZpY2UuUmVzdWx0EiQK", 
-            "CWZ1bGxwaG90bxgIIAEoCzIRLkJpb1NlcnZpY2UuUGhvdG8SJgoLY3JvcGVk", 
-            "cGhvdG8YCSABKAsyES5CaW9TZXJ2aWNlLlBob3RvIjQKC1Zpc2l0b3JMaXN0", 
-            "EiUKCHZpc2l0b3JzGAEgAygLMhMuQmlvU2VydmljZS5WaXNpdG9yIjcKDExv", 
-            "Y2F0aW9uTGlzdBInCglsb2NhdGlvbnMYASADKAsyFC5CaW9TZXJ2aWNlLkxv", 
-            "Y2F0aW9uIjEKClBlcnNvbkxpc3QSIwoHcGVyc29ucxgBIAMoCzISLkJpb1Nl", 
-            "cnZpY2UuUGVyc29uIi4KCVBob3RvTGlzdBIhCgZwaG90b3MYASADKAsyES5C", 
-            "aW9TZXJ2aWNlLlBob3RvIiwKCFJlc3BvbnNlEiAKBGdvb2QYASABKA4yEi5C", 
-            "aW9TZXJ2aWNlLlJlc3VsdCJfChJJZGVudGlmaWNhdGlvbkRhdGESIQoGaW1h", 
-            "Z2VzGAEgAygLMhEuQmlvU2VydmljZS5QaG90bxImCgpwb3B1bGF0aW9uGAIg", 
-            "AygLMhIuQmlvU2VydmljZS5QZXJzb24iWQoQVmVyaWZpY2F0aW9uRGF0YRIh", 
-            "CgZpbWFnZXMYASADKAsyES5CaW9TZXJ2aWNlLlBob3RvEiIKBnBlcnNvbhgC", 
-            "IAEoCzISLkJpb1NlcnZpY2UuUGVyc29uIkUKDkVucm9sbG1lbnREYXRhEiEK", 
-            "BmltYWdlcxgBIAMoCzIRLkJpb1NlcnZpY2UuUGhvdG8SEAoIcGVyc29uaWQY", 
-            "AiABKAMibAoSRW5yb2xsbWVudEZlZWRiYWNrEhAKCHByb2dyZXNzGAEgASgP", 
-            "EhEKCWV5ZXNmb3VuZBgCIAEoCBIPCgdzdWNjZXNzGAMgASgIEiAKBXBob3Rv", 
-            "GAQgASgLMhEuQmlvU2VydmljZS5QaG90byJiChRWZXJpZmljYXRpb25GZWVk", 
-            "YmFjaxI7ChNlbnJvbGxtZW50X2ZlZWRiYWNrGAEgASgLMh4uQmlvU2Vydmlj", 
-            "ZS5FbnJvbGxtZW50RmVlZGJhY2sSDQoFbWF0Y2gYAiABKAIimAEKClF1ZXJ5", 
-            "UGhvdG8SCwoDZmlyGAEgASgIEhMKC2Rlc2NyaXB0aW9uGAIgASgIEikKDXRh", 
-            "cmdldF9wZXJzb24YAyADKAsyEi5CaW9TZXJ2aWNlLlBlcnNvbhIUCgxyZXN1", 
-            "bHRfY291bnQYBCABKAMSJwoMdGFyZ2V0X3Bob3RvGAUgAygLMhEuQmlvU2Vy", 
-            "dmljZS5QaG90byIdCgxRdWVyeVBlcnNvbnMSDQoFY291bnQYASABKAMiHQoO", 
-            "UXVlcnlMb2NhdGlvbnMSCwoDYWxsGAEgASgIIhwKDVF1ZXJ5VmlzaXRvcnMS", 
-            "CwoDYWxsGAEgASgIIiYKE1NvY2tldENvbmZpZ3VyYXRpb24SDwoHYWRkcmVz", 
-            "cxgBIAEoCSpCCgtFbnRpdHlTdGF0ZRINCglVbmNoYW5nZWQQABIJCgVBZGRl", 
-            "ZBABEgwKCE1vZGlmaWVkEAISCwoHRGVsZXRlZBADKiEKBlJlc3VsdBILCgdT", 
-            "dWNjZXNzEAASCgoGRmFpbGVkEAEqJQoNUGhvdG9TaXplVHlwZRIICgRGdWxs", 
-            "EAASCgoGQ3JvcGVkEAEqPAoPUGhvdG9PcmlnaW5UeXBlEgwKCEVucm9sbGVk", 
-            "EAASDAoIVmVyaWZpZWQQARINCglUaHVtYm5haWwQAjL9AQoVQmlvbWV0cmlj", 
-            "RmFjaWFsU2V2aWNlEkQKCUFkZFNvY2tldBIfLkJpb1NlcnZpY2UuU29ja2V0", 
-            "Q29uZmlndXJhdGlvbhoULkJpb1NlcnZpY2UuUmVzcG9uc2UiABJMCgpFbnJv", 
-            "bGxGYWNlEhouQmlvU2VydmljZS5FbnJvbGxtZW50RGF0YRoeLkJpb1NlcnZp", 
-            "Y2UuRW5yb2xsbWVudEZlZWRiYWNrIgAwARJQCgpWZXJpZnlGYWNlEhwuQmlv", 
-            "U2VydmljZS5WZXJpZmljYXRpb25EYXRhGiAuQmlvU2VydmljZS5WZXJpZmlj", 
-            "YXRpb25GZWVkYmFjayIAMAEylAEKF0Jpb21ldHJpY0RhdGFiYXNlU2V2aWNl", 
-            "EkIKDFBlcnNvblNlbGVjdBIYLkJpb1NlcnZpY2UuUXVlcnlQZXJzb25zGhYu", 
-            "QmlvU2VydmljZS5QZXJzb25MaXN0IgASNQoJQWRkUGVyc29uEhIuQmlvU2Vy", 
-            "dmljZS5QZXJzb24aEi5CaW9TZXJ2aWNlLlBlcnNvbiIAQg8KB2V4LmdycGOi", 
-            "AgNSVEdiBnByb3RvMw=="));
+            "ChFiaW9fc2VydmljZS5wcm90bxIKQmlvU2VydmljZSIdCgpSYXdJbmRleGVz", 
+            "Eg8KB2luZGV4ZXMYASADKAMiOgoIQ3JpbWluYWwSCgoCaWQYASABKAMSEwoL", 
+            "ZGVzY3JpcHRpb24YAiABKAkSDQoFYWxlcnQYAyABKAkixwQKBlBlcnNvbhIK", 
+            "CgJpZBgBIAEoAxIRCglmaXJzdG5hbWUYAiABKAkSEAoIbGFzdG5hbWUYAyAB", 
+            "KAkSEwoLZGF0ZW9mYmlydGgYBCABKAMSKQoGZ2VuZGVyGAUgASgOMhkuQmlv", 
+            "U2VydmljZS5QZXJzb24uR2VuZGVyEg8KB2NvdW50cnkYBiABKAkSDAoEY2l0", 
+            "eRgHIAEoCRIPCgdwaG90b2lkGAggASgDEhAKCGNvbW1lbnRzGAkgASgJEikK", 
+            "BnJpZ2h0cxgKIAEoDjIZLkJpb1NlcnZpY2UuUGVyc29uLlJpZ2h0cxINCgVl", 
+            "bWFpbBgLIAEoCRIkCghkYnJlc3VsdBgMIAEoDjISLkJpb1NlcnZpY2UuUmVz", 
+            "dWx0EiQKCXRodW1ibmFpbBgNIAEoCzIRLkJpb1NlcnZpY2UuUGhvdG8SIQoG", 
+            "cGhvdG9zGA4gAygLMhEuQmlvU2VydmljZS5QaG90bxIfCgVjYXJkcxgPIAMo", 
+            "CzIQLkJpb1NlcnZpY2UuQ2FyZBItCgxlbnRpdHlfc3RhdGUYECABKA4yFy5C", 
+            "aW9TZXJ2aWNlLkVudGl0eVN0YXRlEiYKCGNyaW1pbmFsGBEgASgLMhQuQmlv", 
+            "U2VydmljZS5DcmltaW5hbCIoCgZHZW5kZXISCAoETm9uZRAAEggKBE1hbGUQ", 
+            "ARIKCgZGZW1hbGUQAiI/CgZSaWdodHMSCgoGQ3VzdG9tEAASDAoIT3BlcmF0", 
+            "b3IQARILCgdNYW5hZ2VyEAISDgoKU3VwZXJ2aXNvchADIroBCgxBY2Nlc3NE", 
+            "ZXZpY2USCgoCaWQYASABKAMSEgoKbG9jYXRpb25pZBgCIAEoAxIQCghwb3J0", 
+            "bmFtZRgDIAEoCRI3CgR0eXBlGAQgASgOMikuQmlvU2VydmljZS5BY2Nlc3NE", 
+            "ZXZpY2UuQWNjZXNzRGV2aWNlVHlwZSI/ChBBY2Nlc3NEZXZpY2VUeXBlEg4K", 
+            "CkRldmljZU5vbmUQABIMCghEZXZpY2VJbhABEg0KCURldmljZU91dBACIkMK", 
+            "DUNhcHR1cmVEZXZpY2USCgoCaWQYASABKAMSEgoKbG9jYXRpb25pZBgCIAEo", 
+            "AxISCgpkZXZpY2VuYW1lGAMgASgJIpABCgRDYXJkEgoKAmlkGAEgASgDEhAK", 
+            "CHBlcnNvbmlkGAIgASgDEhUKDXVuaXF1ZV9udW1iZXIYAyABKAkSLQoMZW50", 
+            "aXR5X3N0YXRlGAQgASgOMhcuQmlvU2VydmljZS5FbnRpdHlTdGF0ZRIkCghk", 
+            "YnJlc3VsdBgFIAEoDjISLkJpb1NlcnZpY2UuUmVzdWx0IoMDCghMb2NhdGlv", 
+            "bhIKCgJpZBgBIAEoAxIVCg1sb2NhdGlvbl9uYW1lGAIgASgJEhMKC2Rlc2Ny", 
+            "aXB0aW9uGAMgASgJEi0KDGVudGl0eV9zdGF0ZRgEIAEoDjIXLkJpb1NlcnZp", 
+            "Y2UuRW50aXR5U3RhdGUSJAoIZGJyZXN1bHQYBSABKA4yEi5CaW9TZXJ2aWNl", 
+            "LlJlc3VsdBI0CgthY2Nlc3NfdHlwZRgGIAEoDjIfLkJpb1NlcnZpY2UuTG9j", 
+            "YXRpb24uQWNjZXNzVHlwZRIxCg5jYXB0dXJlRGV2aWNlcxgHIAMoCzIZLkJp", 
+            "b1NlcnZpY2UuQ2FwdHVyZURldmljZRIvCg1hY2Nlc3NEZXZpY2VzGAggAygL", 
+            "MhguQmlvU2VydmljZS5BY2Nlc3NEZXZpY2USIwoHcGVyc29ucxgJIAMoCzIS", 
+            "LkJpb1NlcnZpY2UuUGVyc29uIisKCkFjY2Vzc1R5cGUSCAoETm9uZRAAEgcK", 
+            "A0FsbBABEgoKBkN1c3RvbRACIkMKEUJpb21ldHJpY0xvY2F0aW9uEgwKBHhw", 
+            "b3MYASABKAISDAoEeXBvcxgCIAEoAhISCgpjb25maWRlbmNlGAMgASgCIncK", 
+            "EkV5ZXNDaGFyYWN0ZXJpc3RpYxIvCghsZWZ0X2V5ZRgBIAEoCzIdLkJpb1Nl", 
+            "cnZpY2UuQmlvbWV0cmljTG9jYXRpb24SMAoJcmlnaHRfZXllGAIgASgLMh0u", 
+            "QmlvU2VydmljZS5CaW9tZXRyaWNMb2NhdGlvbiKCAQoSRmFjZUNoYXJhY3Rl", 
+            "cmlzdGljEg0KBXdpZHRoGAEgASgDEi8KCGxvY2F0aW9uGAIgASgLMh0uQmlv", 
+            "U2VydmljZS5CaW9tZXRyaWNMb2NhdGlvbhIsCgRleWVzGAMgASgLMh4uQmlv", 
+            "U2VydmljZS5FeWVzQ2hhcmFjdGVyaXN0aWMikgEKFlBvcnRyYWl0Q2hhcmFj", 
+            "dGVyaXN0aWMSCwoDYWdlGAEgASgPEhMKC2ZhY2VzX2NvdW50GAIgASgPEg8K", 
+            "B2Zpcl91cmwYAyABKAkSFgoOZmlyX2J5dGVzdHJpbmcYBCABKAwSLQoFZmFj", 
+            "ZXMYBSADKAsyHi5CaW9TZXJ2aWNlLkZhY2VDaGFyYWN0ZXJpc3RpYyL3AgoF", 
+            "UGhvdG8SCgoCaWQYASABKAMSEAoIcGVyc29uaWQYAiABKAMSLAoJc2l6ZV90", 
+            "eXBlGAMgASgOMhkuQmlvU2VydmljZS5QaG90b1NpemVUeXBlEhAKCGRhdGV0", 
+            "aW1lGAQgASgDEhEKCXBob3RvX3VybBgFIAEoCRISCgpieXRlc3RyaW5nGAYg", 
+            "ASgMEjAKC29yaWdpbl90eXBlGAcgASgOMhsuQmlvU2VydmljZS5QaG90b09y", 
+            "aWdpblR5cGUSDQoFd2lkdGgYCCABKAMSDgoGaGVpZ2h0GAkgASgDEkMKF3Bv", 
+            "cnRyYWl0X2NoYXJhY3RlcmlzdGljGAogASgLMiIuQmlvU2VydmljZS5Qb3J0", 
+            "cmFpdENoYXJhY3RlcmlzdGljEi0KDGVudGl0eV9zdGF0ZRgLIAEoDjIXLkJp", 
+            "b1NlcnZpY2UuRW50aXR5U3RhdGUSJAoIZGJyZXN1bHQYDCABKA4yEi5CaW9T", 
+            "ZXJ2aWNlLlJlc3VsdCLhAQoHVmlzaXRvchIKCgJpZBgBIAEoAxIQCghwZXJz", 
+            "b25pZBgCIAEoAxIPCgdwaG90b2lkGAMgASgDEhIKCmxvY2F0aW9uaWQYBCAB", 
+            "KAMSDAoEdGltZRgFIAEoAxITCgtjYXJkX251bWJlchgGIAEoCRIiCgZzdGF0", 
+            "dXMYByABKA4yEi5CaW9TZXJ2aWNlLlJlc3VsdBIkCglmdWxscGhvdG8YCCAB", 
+            "KAsyES5CaW9TZXJ2aWNlLlBob3RvEiYKC2Nyb3BlZHBob3RvGAkgASgLMhEu", 
+            "QmlvU2VydmljZS5QaG90byI0CgtWaXNpdG9yTGlzdBIlCgh2aXNpdG9ycxgB", 
+            "IAMoCzITLkJpb1NlcnZpY2UuVmlzaXRvciI3CgxMb2NhdGlvbkxpc3QSJwoJ", 
+            "bG9jYXRpb25zGAEgAygLMhQuQmlvU2VydmljZS5Mb2NhdGlvbiIxCgpQZXJz", 
+            "b25MaXN0EiMKB3BlcnNvbnMYASADKAsyEi5CaW9TZXJ2aWNlLlBlcnNvbiIu", 
+            "CglQaG90b0xpc3QSIQoGcGhvdG9zGAEgAygLMhEuQmlvU2VydmljZS5QaG90", 
+            "byIsCghSZXNwb25zZRIgCgRnb29kGAEgASgOMhIuQmlvU2VydmljZS5SZXN1", 
+            "bHQiXwoSSWRlbnRpZmljYXRpb25EYXRhEiEKBmltYWdlcxgBIAMoCzIRLkJp", 
+            "b1NlcnZpY2UuUGhvdG8SJgoKcG9wdWxhdGlvbhgCIAMoCzISLkJpb1NlcnZp", 
+            "Y2UuUGVyc29uIlkKEFZlcmlmaWNhdGlvbkRhdGESIQoGaW1hZ2VzGAEgAygL", 
+            "MhEuQmlvU2VydmljZS5QaG90bxIiCgZwZXJzb24YAiABKAsyEi5CaW9TZXJ2", 
+            "aWNlLlBlcnNvbiJFCg5FbnJvbGxtZW50RGF0YRIhCgZpbWFnZXMYASADKAsy", 
+            "ES5CaW9TZXJ2aWNlLlBob3RvEhAKCHBlcnNvbmlkGAIgASgDImwKEkVucm9s", 
+            "bG1lbnRGZWVkYmFjaxIQCghwcm9ncmVzcxgBIAEoDxIRCglleWVzZm91bmQY", 
+            "AiABKAgSDwoHc3VjY2VzcxgDIAEoCBIgCgVwaG90bxgEIAEoCzIRLkJpb1Nl", 
+            "cnZpY2UuUGhvdG8iYgoUVmVyaWZpY2F0aW9uRmVlZGJhY2sSOwoTZW5yb2xs", 
+            "bWVudF9mZWVkYmFjaxgBIAEoCzIeLkJpb1NlcnZpY2UuRW5yb2xsbWVudEZl", 
+            "ZWRiYWNrEg0KBW1hdGNoGAIgASgCIpgBCgpRdWVyeVBob3RvEgsKA2ZpchgB", 
+            "IAEoCBITCgtkZXNjcmlwdGlvbhgCIAEoCBIpCg10YXJnZXRfcGVyc29uGAMg", 
+            "AygLMhIuQmlvU2VydmljZS5QZXJzb24SFAoMcmVzdWx0X2NvdW50GAQgASgD", 
+            "EicKDHRhcmdldF9waG90bxgFIAMoCzIRLkJpb1NlcnZpY2UuUGhvdG8iHQoM", 
+            "UXVlcnlQZXJzb25zEg0KBWNvdW50GAEgASgDIh0KDlF1ZXJ5TG9jYXRpb25z", 
+            "EgsKA2FsbBgBIAEoCCIcCg1RdWVyeVZpc2l0b3JzEgsKA2FsbBgBIAEoCCIm", 
+            "ChNTb2NrZXRDb25maWd1cmF0aW9uEg8KB2FkZHJlc3MYASABKAkqQgoLRW50", 
+            "aXR5U3RhdGUSDQoJVW5jaGFuZ2VkEAASCQoFQWRkZWQQARIMCghNb2RpZmll", 
+            "ZBACEgsKB0RlbGV0ZWQQAyohCgZSZXN1bHQSCwoHU3VjY2VzcxAAEgoKBkZh", 
+            "aWxlZBABKiUKDVBob3RvU2l6ZVR5cGUSCAoERnVsbBAAEgoKBkNyb3BlZBAB", 
+            "KjwKD1Bob3RvT3JpZ2luVHlwZRIMCghFbnJvbGxlZBAAEgwKCFZlcmlmaWVk", 
+            "EAESDQoJVGh1bWJuYWlsEAIy/QEKFUJpb21ldHJpY0ZhY2lhbFNldmljZRJE", 
+            "CglBZGRTb2NrZXQSHy5CaW9TZXJ2aWNlLlNvY2tldENvbmZpZ3VyYXRpb24a", 
+            "FC5CaW9TZXJ2aWNlLlJlc3BvbnNlIgASTAoKRW5yb2xsRmFjZRIaLkJpb1Nl", 
+            "cnZpY2UuRW5yb2xsbWVudERhdGEaHi5CaW9TZXJ2aWNlLkVucm9sbG1lbnRG", 
+            "ZWVkYmFjayIAMAESUAoKVmVyaWZ5RmFjZRIcLkJpb1NlcnZpY2UuVmVyaWZp", 
+            "Y2F0aW9uRGF0YRogLkJpb1NlcnZpY2UuVmVyaWZpY2F0aW9uRmVlZGJhY2si", 
+            "ADABMukEChdCaW9tZXRyaWNEYXRhYmFzZVNldmljZRJCCgxQZXJzb25TZWxl", 
+            "Y3QSGC5CaW9TZXJ2aWNlLlF1ZXJ5UGVyc29ucxoWLkJpb1NlcnZpY2UuUGVy", 
+            "c29uTGlzdCIAEjUKCUFkZFBlcnNvbhISLkJpb1NlcnZpY2UuUGVyc29uGhIu", 
+            "QmlvU2VydmljZS5QZXJzb24iABI4CgxVcGRhdGVQZXJzb24SEi5CaW9TZXJ2", 
+            "aWNlLlBlcnNvbhoSLkJpb1NlcnZpY2UuUGVyc29uIgASOAoMUmVtb3ZlUGVy", 
+            "c29uEhIuQmlvU2VydmljZS5QZXJzb24aEi5CaW9TZXJ2aWNlLlBlcnNvbiIA", 
+            "Ei8KB0FkZENhcmQSEC5CaW9TZXJ2aWNlLkNhcmQaEC5CaW9TZXJ2aWNlLkNh", 
+            "cmQiABI/CgtSZW1vdmVDYXJkcxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoW", 
+            "LkJpb1NlcnZpY2UuUmF3SW5kZXhlcyIAEj8KDFNlbGVjdFBob3RvcxIWLkJp", 
+            "b1NlcnZpY2UuUXVlcnlQaG90bxoVLkJpb1NlcnZpY2UuUGhvdG9MaXN0IgAS", 
+            "MgoIQWRkUGhvdG8SES5CaW9TZXJ2aWNlLlBob3RvGhEuQmlvU2VydmljZS5Q", 
+            "aG90byIAEjYKDFNldFRodW1ibmFpbBIRLkJpb1NlcnZpY2UuUGhvdG8aES5C", 
+            "aW9TZXJ2aWNlLlBob3RvIgASQAoMUmVtb3ZlUGhvdG9zEhYuQmlvU2Vydmlj", 
+            "ZS5SYXdJbmRleGVzGhYuQmlvU2VydmljZS5SYXdJbmRleGVzIgBCDwoHZXgu", 
+            "Z3JwY6ICA1JUR2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(new[] {typeof(global::BioService.EntityState), typeof(global::BioService.Result), typeof(global::BioService.PhotoSizeType), typeof(global::BioService.PhotoOriginType), }, new pbr::GeneratedCodeInfo[] {
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.RawIndexes), new[]{ "Indexes" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.Criminal), new[]{ "Id", "Description", "Alert" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.Person), new[]{ "Id", "Firstname", "Lastname", "Dateofbirth", "Gender", "Country", "City", "Photoid", "Comments", "Rights", "Email", "Dbresult", "Thumbnail", "Photos", "Cards", "EntityState", "Criminal" }, null, new[]{ typeof(global::BioService.Person.Types.Gender), typeof(global::BioService.Person.Types.Rights) }, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.AccessDevice), new[]{ "Id", "Locationid", "Portname", "Type" }, null, new[]{ typeof(global::BioService.AccessDevice.Types.AccessDeviceType) }, null),
@@ -178,12 +190,107 @@ namespace BioService {
 
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class RawIndexes : pb::IMessage<RawIndexes> {
+    private static readonly pb::MessageParser<RawIndexes> _parser = new pb::MessageParser<RawIndexes>(() => new RawIndexes());
+    public static pb::MessageParser<RawIndexes> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::BioService.BioService.Descriptor.MessageTypes[0]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public RawIndexes() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public RawIndexes(RawIndexes other) : this() {
+      indexes_ = other.indexes_.Clone();
+    }
+
+    public RawIndexes Clone() {
+      return new RawIndexes(this);
+    }
+
+    public const int IndexesFieldNumber = 1;
+    private static readonly pb::FieldCodec<long> _repeated_indexes_codec
+        = pb::FieldCodec.ForInt64(10);
+    private readonly pbc::RepeatedField<long> indexes_ = new pbc::RepeatedField<long>();
+    public pbc::RepeatedField<long> Indexes {
+      get { return indexes_; }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as RawIndexes);
+    }
+
+    public bool Equals(RawIndexes other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!indexes_.Equals(other.indexes_)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= indexes_.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      indexes_.WriteTo(output, _repeated_indexes_codec);
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      size += indexes_.CalculateSize(_repeated_indexes_codec);
+      return size;
+    }
+
+    public void MergeFrom(RawIndexes other) {
+      if (other == null) {
+        return;
+      }
+      indexes_.Add(other.indexes_);
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10:
+          case 8: {
+            indexes_.AddEntriesFrom(input, _repeated_indexes_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Criminal : pb::IMessage<Criminal> {
     private static readonly pb::MessageParser<Criminal> _parser = new pb::MessageParser<Criminal>(() => new Criminal());
     public static pb::MessageParser<Criminal> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[0]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[1]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -337,7 +444,7 @@ namespace BioService {
     public static pb::MessageParser<Person> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[1]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[2]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -870,7 +977,7 @@ namespace BioService {
     public static pb::MessageParser<AccessDevice> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[2]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[3]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1062,7 +1169,7 @@ namespace BioService {
     public static pb::MessageParser<CaptureDevice> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[3]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[4]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1216,7 +1323,7 @@ namespace BioService {
     public static pb::MessageParser<Card> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[4]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1422,7 +1529,7 @@ namespace BioService {
     public static pb::MessageParser<Location> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[5]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[6]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1720,7 +1827,7 @@ namespace BioService {
     public static pb::MessageParser<BiometricLocation> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[6]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[7]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1874,7 +1981,7 @@ namespace BioService {
     public static pb::MessageParser<EyesCharacteristic> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[7]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[8]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2014,7 +2121,7 @@ namespace BioService {
     public static pb::MessageParser<FaceCharacteristic> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[8]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[9]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2180,7 +2287,7 @@ namespace BioService {
     public static pb::MessageParser<PortraitCharacteristic> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[9]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[10]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2378,7 +2485,7 @@ namespace BioService {
     public static pb::MessageParser<Photo> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[10]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[11]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -2772,7 +2879,7 @@ namespace BioService {
     public static pb::MessageParser<Visitor> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[11]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[12]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3094,7 +3201,7 @@ namespace BioService {
     public static pb::MessageParser<VisitorList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[12]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[13]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3188,7 +3295,7 @@ namespace BioService {
     public static pb::MessageParser<LocationList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[13]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[14]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3282,7 +3389,7 @@ namespace BioService {
     public static pb::MessageParser<PersonList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[14]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[15]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3376,7 +3483,7 @@ namespace BioService {
     public static pb::MessageParser<PhotoList> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[15]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[16]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3470,7 +3577,7 @@ namespace BioService {
     public static pb::MessageParser<Response> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[16]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[17]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3572,7 +3679,7 @@ namespace BioService {
     public static pb::MessageParser<IdentificationData> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[17]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[18]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3684,7 +3791,7 @@ namespace BioService {
     public static pb::MessageParser<VerificationData> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[18]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[19]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3810,7 +3917,7 @@ namespace BioService {
     public static pb::MessageParser<EnrollmentData> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[19]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[20]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -3930,7 +4037,7 @@ namespace BioService {
     public static pb::MessageParser<EnrollmentFeedback> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[20]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[21]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4116,7 +4223,7 @@ namespace BioService {
     public static pb::MessageParser<VerificationFeedback> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[21]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[22]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4250,7 +4357,7 @@ namespace BioService {
     public static pb::MessageParser<QueryPhoto> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[22]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[23]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4440,7 +4547,7 @@ namespace BioService {
     public static pb::MessageParser<QueryPersons> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[23]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[24]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4542,7 +4649,7 @@ namespace BioService {
     public static pb::MessageParser<QueryLocations> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[24]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[25]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4644,7 +4751,7 @@ namespace BioService {
     public static pb::MessageParser<QueryVisitors> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[25]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[26]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -4746,7 +4853,7 @@ namespace BioService {
     public static pb::MessageParser<SocketConfiguration> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::BioService.BioService.Descriptor.MessageTypes[26]; }
+      get { return global::BioService.BioService.Descriptor.MessageTypes[27]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {

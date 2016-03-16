@@ -128,7 +128,7 @@ namespace BioModule.ViewModels
 
       try
       {       
-        await _bioService.DatabaseService.LocationDataClient.Delete(CurrentLocation);       
+        //await _bioService.DatabaseService.LocationDataClient.Delete(CurrentLocation);       
       }
       catch (RpcException e)
       {

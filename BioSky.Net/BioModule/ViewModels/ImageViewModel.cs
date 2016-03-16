@@ -97,7 +97,7 @@ namespace BioModule.ViewModels
       Zoom(_imageViewWidth, _imageViewHeight);
     }
     
-    public void OnClear(double viewWidth, double viewHeight)
+    public virtual void OnClear(double viewWidth, double viewHeight)
     {
       Clear();
       Zoom(viewWidth, viewHeight);      

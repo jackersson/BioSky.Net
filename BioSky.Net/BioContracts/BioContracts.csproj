@@ -169,6 +169,7 @@
     <Compile Include="Services\IDatabaseService.cs" />
     <Compile Include="Services\IDataClient.cs" />
     <Compile Include="Services\IFaceService.cs" />
+    <Compile Include="Services\IOwnerDataClient.cs" />
     <Compile Include="Services\IServiceConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>

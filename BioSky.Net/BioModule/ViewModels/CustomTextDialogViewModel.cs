@@ -42,9 +42,9 @@ namespace BioModule.ViewModels
       FontSize    = fontSize;
     }
 
-    public void Show()
+    public bool? Show()
     {
-      _windowManager.ShowDialog(this);
+      return _windowManager.ShowDialog(this);
     }
 
     public void Apply()

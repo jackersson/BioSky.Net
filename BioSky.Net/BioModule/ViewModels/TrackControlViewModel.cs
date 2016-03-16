@@ -68,7 +68,7 @@ namespace BioModule.ViewModels
      
       try
       {
-        await _bioService.LocationDataClient.Delete(SelectedTrackLocation.CurrentLocation);
+        //await _bioService.LocationDataClient.Delete(SelectedTrackLocation.CurrentLocation);
       }
       catch (Exception e)
       {

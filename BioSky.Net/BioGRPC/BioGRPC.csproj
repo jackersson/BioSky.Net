@@ -138,6 +138,7 @@
     <Compile Include="BioFaceService.cs" />
     <Compile Include="BioGrpcInstaller.cs" />
     <Compile Include="BioServiceManager.cs" />
+    <Compile Include="DatabaseClient\CardDataClient.cs" />
     <Compile Include="DatabaseClient\LocationDataClient.cs" />
     <Compile Include="DatabaseClient\PersonDataClient.cs" />
     <Compile Include="DatabaseClient\PhotoDataClient.cs" />

@@ -14,7 +14,8 @@ namespace BioContracts.Services
 
     Task Update(TValue dataItem);
 
-    Task Delete(IList<TValue> targetItems);
-    Task Delete(TValue targetItem);
+    Task Remove(IList<TValue> targetItems);
+
+    Task Remove(TValue targetItem);
   }
 }

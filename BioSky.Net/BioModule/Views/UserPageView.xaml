@@ -8,6 +8,7 @@
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:bioEngine ="clr-namespace:BioEngine;assembly=BioEngine"
              lex:LocalizeDictionary.DesignCulture=""
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -18,7 +19,8 @@
 
     <UserControl.Resources>
         <ResourceDictionary>            
-                <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
                 <ResourceDictionary>
@@ -27,7 +29,7 @@
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            
+           
         </ResourceDictionary>        
     </UserControl.Resources>
 
@@ -84,11 +86,12 @@
             
         </TabControl>
 
-
+       
         <Button  Grid.Row="5" Grid.Column="2" 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 ToolTip="{lex:Loc Save}"
+                 ToolTip="{lex:Loc Save}"           
+                 Visibility="{Binding CanApply, Converter={StaticResource BooleanToVisibilityConverter} }"
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
@@ -96,6 +99,7 @@
 
         <Button ToolTip="{lex:Loc RevertChanges}" 
                 Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch"
+                Visibility="{Binding CanRevert, Converter={StaticResource BooleanToVisibilityConverter} }"
                 VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click] = [Action Revert]"
                 >
@@ -104,6 +108,7 @@
 
         <Button ToolTip="{lex:Loc DeleteUser}" Grid.Row="5" Grid.Column="4" 
                 cal:Message.Attach="[Event Click]=[Action Remove]"
+                Visibility="{Binding CanDelete, Converter={StaticResource BooleanToVisibilityConverter} }"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" />
         </Button>

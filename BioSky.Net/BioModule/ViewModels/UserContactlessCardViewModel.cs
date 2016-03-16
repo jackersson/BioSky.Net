@@ -28,7 +28,8 @@ namespace BioModule.ViewModels
       _locator    = locator;    
 
       _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();        
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
+      _dialogs    = _locator.GetProcessor<DialogsHolder>();
       
       //TODO put in locator
       CardEnrollment = new CardEnrollmentBarViewModel(locator);
@@ -36,6 +37,8 @@ namespace BioModule.ViewModels
       _userCards = new AsyncObservableCollection<Card>();
       
       IsEnabled = true;
+
+      CanAddCard = true;
     }
 
     private void ActivateCardEnrollment(bool flag)
@@ -91,17 +94,18 @@ namespace BioModule.ViewModels
       if (!CanAddCard)
         return;
 
+      var result = _dialogs.AreYouSureDialog.Show();
+
+      if (!result.Value)
+        return;
+
       Card card = new Card() { UniqueNumber = CardNumber
-                             , EntityState = EntityState.Added
-                             , Personid = _user.Id };
-                
-      Person person = new Person() { Id = _user.Id };
-      person.Cards.Add(card);
+                             , Personid = _user.Id };    
       
-      CanAddCard = false;
+      //!!!CanAddCard = false;
 
       try  {
-        await _bioService.PersonDataClient.Update(person);
+        await _bioService.CardsDataClient.Add(_user, card);
       }
       catch (RpcException e)  {
         _notifier.Notify(e);
@@ -113,7 +117,7 @@ namespace BioModule.ViewModels
 
     public void CheckCard(string cardNumber)
     {
-      CanAddCard = false; 
+      //!!!CanAddCard = false; 
 
       Person person = _bioEngine.Database().Persons.GetPersonByCardNumber(cardNumber);
       if (person != null)             
@@ -128,20 +132,18 @@ namespace BioModule.ViewModels
     #region Interface
     public async void OnDeleteCards()
     {
-      var result = false;//_windowManager.ShowDialog(DialogsHolder.AreYouSureDialog);
-
-      if (!result)
+      if (!CanDeleteCard)
         return;
 
-      Person person = new Person() { Id = _user.Id };
+      var result = _dialogs.AreYouSureDialog.Show();
 
-      Card card = SelectedCard;
-      card.EntityState = EntityState.Deleted;
+      if (!result.Value)
+        return;
 
-      person.Cards.Add(card);
+      Card card = new Card() { Id = SelectedCard.Id };     
 
       try {
-        await _bioService.PersonDataClient.Update(person);
+        await _bioService.CardsDataClient.Remove(_user, card);
       }
       catch (Exception e) {
         _notifier.Notify(e);
@@ -151,6 +153,13 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
+
+    public bool CanDeleteCard
+    {
+      get { return SelectedCard != null; }
+    }
+
+
     private CardEnrollmentBarViewModel _cardEnrollment;
     public CardEnrollmentBarViewModel CardEnrollment
     {
@@ -175,6 +184,7 @@ namespace BioModule.ViewModels
         {
           selectedCard = value;
           NotifyOfPropertyChange(() => SelectedCard);
+          NotifyOfPropertyChange(() => CanDeleteCard);
         }
       }
     }
@@ -265,6 +275,7 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Global Variables
+    private readonly DialogsHolder        _dialogs      ;
     private          Person               _user         ;
     private readonly IBioEngine           _bioEngine    ;
     private readonly IProcessorLocator    _locator      ; 

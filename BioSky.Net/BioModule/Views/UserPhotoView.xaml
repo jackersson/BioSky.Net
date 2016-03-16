@@ -49,7 +49,9 @@
                    Height="32" Width="32" />
         </Button>
 
-        <ListBox BorderThickness="1" HorizontalAlignment="Stretch" x:Name="ListBoxView"
+        <ListBox BorderThickness="1" 
+                 BorderBrush="#66808080"
+                 HorizontalAlignment="Stretch" x:Name="ListBoxView"
                  VerticalAlignment="Stretch" Grid.ColumnSpan="5"
                  Grid.Row="5" Margin="0, 5, 0, 0"                
                  SelectedItem="{Binding SelectedItem}"

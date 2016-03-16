@@ -11,9 +11,12 @@ namespace BioContracts
     void Init(Google.Protobuf.Collections.RepeatedField<TValue> list);
 
     void Add(TValue requested, TValue responded);
+    void Remove(TValue requested, TValue responded);
+    void Update( TValue requested
+               , TValue responded );
 
-    void Update( Google.Protobuf.Collections.RepeatedField<TValue> requested
-               , Google.Protobuf.Collections.RepeatedField<TValue> results   );
+    //void Update( Google.Protobuf.Collections.RepeatedField<TValue> requested
+          //     , Google.Protobuf.Collections.RepeatedField<TValue> results   );
 
     AsyncObservableCollection<TValue> Data
     { get; }

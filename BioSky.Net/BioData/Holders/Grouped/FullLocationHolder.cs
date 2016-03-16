@@ -117,6 +117,16 @@ namespace BioData.Holders.Grouped
       throw new NotImplementedException();
     }
 
+    public void Update(Location requested, Location responded)
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Remove(Location requested, Location responded)
+    {
+      throw new NotImplementedException();
+    }
+
     private AsyncObservableCollection<Location> _data;
     public AsyncObservableCollection<Location> Data
     {

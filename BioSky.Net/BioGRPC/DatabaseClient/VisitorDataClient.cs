@@ -96,7 +96,7 @@ namespace BioGRPC.DatabaseClient
 
 
 
-    public async Task Delete( IList<Visitor> targetItems)
+    public async Task Remove( IList<Visitor> targetItems)
     {
       if (targetItems == null || targetItems.Count <=0 )
         return;
@@ -130,7 +130,7 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
-    public Task Delete(Visitor targetItem)
+    public Task Remove(Visitor targetItem)
     {
       throw new NotImplementedException();
     }
