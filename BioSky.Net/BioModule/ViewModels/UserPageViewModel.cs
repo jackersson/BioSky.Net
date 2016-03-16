@@ -23,6 +23,7 @@ using WPFLocalizeExtension.Extensions;
 using WPFLocalizeExtension.Providers;
 using XAMLMarkupExtensions.Base;
 using BioContracts.Services;
+using System.ComponentModel;
 
 namespace BioModule.ViewModels
 {
@@ -45,10 +46,11 @@ namespace BioModule.ViewModels
       CurrentPhotoImageView = new PhotoImageViewModel(_locator);
       UserPhotoView         = new UserPhotoViewModel (CurrentPhotoImageView, _locator);
 
+      
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
-      UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator);
-      uinfoModel.PropertyChanged += UserDataChanged;
+      UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator);    
+      uinfoModel.ValidationStateChanged += UinfoModel_ValidationStateChanged;
 
       Items.Add(uinfoModel);
       Items.Add(new UserContactlessCardViewModel(_locator));
@@ -64,6 +66,12 @@ namespace BioModule.ViewModels
       _database.Persons.DataChanged += Persons_DataChanged;
     }
 
+    private void UinfoModel_ValidationStateChanged(bool state)
+    {
+      IsValid = state;      
+      NotifyOfPropertyChange(() => CanRevert);
+    }
+
     private void Persons_DataChanged()
     {
       if (_userPageMode == UserPageMode.ExistingUser)
@@ -71,16 +79,9 @@ namespace BioModule.ViewModels
         Person user = _database.Persons.GetValue(_user.Id);
         Update(user);
       }      
-    }
-
-    private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-      NotifyOfPropertyChange(() => CanApply );
-      NotifyOfPropertyChange(() => CanRevert);
-    }
+    }   
 
     #region Update
-
     private bool ContainRequiredFields(Person user)
     {
       if (user == null)
@@ -188,7 +189,8 @@ namespace BioModule.ViewModels
     public bool CanApply
     {
       get {
-        return IsActive && ContainRequiredFields(_user) && (_userPageMode == UserPageMode.NewUser || CanRevert);
+       
+        return IsActive && IsValid && (_userPageMode == UserPageMode.NewUser || CanRevert);
       }
     }
 
@@ -200,6 +202,21 @@ namespace BioModule.ViewModels
     public bool CanDelete
     {
       get { return IsActive &&  _user.Id > 0; }
+    }
+
+    private bool _isValid;
+    public bool IsValid
+    {
+      get { return _isValid; }
+      set
+      {
+        if ( _isValid != value)
+        {
+          _isValid = value;
+          NotifyOfPropertyChange(() => IsValid  );
+          NotifyOfPropertyChange(() => CanApply);
+        }
+      }
     }
 
     public void OpenTab()

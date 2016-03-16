@@ -205,6 +205,9 @@
     <Compile Include="Utils\FaceFinder.cs" />
     <Compile Include="Utils\IUserPhotoController.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
+    <Compile Include="Validation\Error.cs" />
+    <Compile Include="Validation\IValidator.cs" />
+    <Compile Include="Validation\Validator.cs" />
     <Compile Include="ViewModels\AuthenticationPageViewModel.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />

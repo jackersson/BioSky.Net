@@ -18,15 +18,23 @@ using System.Globalization;
 using BioService;
 using BioModule.Utils;
 using BioContracts;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using BioModule.Validation;
 
 namespace BioModule.ViewModels
-{
-  public class UserInformationViewModel : Screen, IUpdatable
+{ 
+
+  public delegate void ValidationStateEventHandler(bool state);
+  public class UserInformationViewModel : Screen, IUpdatable, IDataErrorInfo
   {
+    public event ValidationStateEventHandler ValidationStateChanged;
     public UserInformationViewModel(IProcessorLocator locator)
     {
       _locator = locator;
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
+
+      _validator = new BioValidator();
 
       DisplayName = "Information";
       IsEnabled = true;
@@ -61,25 +69,62 @@ namespace BioModule.ViewModels
       }
     }
 
+    [Required(ErrorMessage = "You must enter a First Name.")]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The First Name must only contain letters (a-z, A-Z).")]  
     public string FirstName
-    {
-      get { return _user.Firstname; }
+    {    
+      get { return (_user != null) ? _user.Firstname : string.Empty; }
       set
-      {       
+      {      
         _user.Firstname = value;
         NotifyOfPropertyChange(() => FirstName);        
       }
     }
 
+    [Required(ErrorMessage = "You must enter a Last Name.")]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The Last Name must only contain letters (a-z, A-Z).")]
     public string LastName
     {
-      get { return _user.Lastname; }
+      get { return (_user != null) ? _user.Lastname : string.Empty; }
       set
       {
         _user.Lastname = value;
         NotifyOfPropertyChange(() => LastName);
       }
     }
+
+    #region Validation    
+    public string this[string columnName]
+    {
+      get {        
+        string temp = string.Join(Environment.NewLine, _validator.Validate(this, columnName).Select(x => x.Message));
+         
+        Error = string.IsNullOrEmpty(temp) ? string.Join(Environment.NewLine, _validator.Validate(this).Select(x => x.Message))
+                                            : temp;        
+        return temp;
+      }
+    }
+
+    public string _error;
+    public string Error
+    {
+      get { return _error; }
+      set {
+        if (_error != value)
+        {
+          _error = value;
+          OnValidationStateChanged(string.IsNullOrEmpty(Error));
+        }        
+      }
+    }
+
+    private void OnValidationStateChanged(bool state)
+    {
+      if (ValidationStateChanged != null)
+        ValidationStateChanged(state);
+    }
+        
+    #endregion
 
     public void OnDateofBirthChanged(string text)
     {
@@ -123,8 +168,8 @@ namespace BioModule.ViewModels
       get { return _database.BioCultureSources.GenderSources; }
     }
     #endregion
-
-    private readonly IProcessorLocator _locator;
+    private readonly IValidator           _validator;
+    private readonly IProcessorLocator    _locator;
     private readonly IBioSkyNetRepository _database;
   }
 }
