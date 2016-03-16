@@ -56,6 +56,9 @@ namespace BioModule.ViewModels
         _dialogsHolder.AuthenticationPage.Show();
       else
       {
+        if(_viewModelSelector == null)
+          _viewModelSelector = _locator.GetProcessor<ViewModelSelector>();
+
         _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent
                               , ViewModelsID.UserPage
                               , new object[] { _user });
