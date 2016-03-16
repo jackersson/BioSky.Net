@@ -33,8 +33,8 @@ namespace BioData
       DatabaseServiceStoragePath = databaseServicePath;
       Language = language;
 
-      if (mediaPath == null)      
-        LocalStoragePath = "F:\\GRPCs\\ClientFolder\\";
+      //if (mediaPath == null)      
+        LocalStoragePath = "F:\\Biometric Software\\Client\\";
 
       if (faceServicePath == null)
         FaceServiceStoragePath = "192.168.1.178:50052";

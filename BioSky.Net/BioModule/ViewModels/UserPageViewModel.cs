@@ -125,10 +125,8 @@ namespace BioModule.ViewModels
         _user = ResetUser(new Person());
 
       NotifyOfPropertyChange(() => CanDelete);
-
-      //Photo photo = _database.PhotoHolder.GetValue(_user.Thumbnailid);
-      //CurrentPhotoImageView.UpdateImage(photo, _database.LocalStorage.LocalStoragePath);
-      //CurrentPhotoImageView.CurrentPerson = _user;
+      
+      CurrentPhotoImageView.UpdateFromPhoto(_user.Thumbnail, _database.LocalStorage.LocalStoragePath);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });

@@ -63,7 +63,6 @@ namespace BioModule.ViewModels
       RefreshData();
     }
 
-
     public void Update(Person user)
     {
       if (user == null || (user != null && user.Id <= 0) )
@@ -117,9 +116,7 @@ namespace BioModule.ViewModels
 
       if (!result || photo == null)
         return;
-
-      //(this.Views[0] as IInputElement).Hi
-
+           
       try {
         await _bioService.PhotosDataClient.Add(User, photo);
       }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf.Collections;
+using BioData.Holders.Utils;
 
 namespace BioData.Holders.Grouped
 {
@@ -159,7 +160,7 @@ namespace BioData.Holders.Grouped
       {
         requested.Id = responsed.Id;
         _dataSet[owner.Id].Cards.Add(requested);
-
+        
         OnDataChanged();
       }      
     }
@@ -170,6 +171,9 @@ namespace BioData.Holders.Grouped
       {
         requested.Id = responsed.Id;
         _dataSet[owner.Id].Photos.Add(requested);
+
+        _ioUtils.SaveFile(requested.PhotoUrl, requested.Bytestring.ToArray());
+
         OnDataChanged();
       }  
     }
@@ -189,7 +193,7 @@ namespace BioData.Holders.Grouped
     public event DataChangedHandler             DataChanged;
     public event DataUpdatedHandler<RepeatedField<Person>> DataUpdated;
 
-
+    public readonly IOUtils _ioUtils;
     
   }
 }
