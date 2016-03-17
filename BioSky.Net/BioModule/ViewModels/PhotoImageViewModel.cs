@@ -15,7 +15,8 @@ namespace BioModule.ViewModels
     public PhotoImageViewModel(IProcessorLocator locator) : base()    
     {      
       _notifier       = locator.GetProcessor<INotifier>();
-     
+      _database       = locator.GetProcessor<IBioSkyNetRepository>();
+
       PhotoDetails        = new PhotoInfoExpanderViewModel();
       _enroller           = new Enroller(locator);
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
@@ -59,6 +60,20 @@ namespace BioModule.ViewModels
     }
     */
     #region Interface
+
+    private string _message;
+    public string Message
+    {
+      get { return _message; }
+      set
+      {
+        if (_message != value)
+        {
+          _message = value;
+          NotifyOfPropertyChange(() => Message);
+        }
+      }
+    }
 
     protected override void OnActivate()
     {
@@ -117,7 +132,7 @@ namespace BioModule.ViewModels
       CurrentPhoto.SizeType = PhotoSizeType.Full;
     }
 
-    public void UpdateFromPhoto(Photo photo, string prefixPath = "")
+    public void UpdateFromPhoto(Photo photo)
     {
       if (photo == null)
       {
@@ -125,7 +140,7 @@ namespace BioModule.ViewModels
         return;
       }
       
-      string filename = prefixPath + "\\" + photo.PhotoUrl;
+      string filename = _database.LocalStorage.LocalStoragePath + "\\" + photo.PhotoUrl;
       base.UpdateFromFile(filename);
 
       CurrentPhoto = photo;
@@ -247,11 +262,14 @@ namespace BioModule.ViewModels
     public bool CanAddPhoto
     {
       get { return CanUsePhotoController
-                && CurrentPhoto != null
-                && CurrentPhoto.Bytestring.Length > 0
+                && IsValid
+                && UserPhotoController.User != null
+                && UserPhotoController.User.Id > 0
                 /*&& CurrentPhoto.PortraitCharacteristic != null
                 && CurrentPhoto.PortraitCharacteristic.FirBytestring.Length > 0*/; }
     }
+
+    public bool IsValid { get { return CurrentPhoto != null && CurrentPhoto.Bytestring.Length > 0; } }
 
     public bool CanMoveNext
     {
@@ -368,6 +386,11 @@ namespace BioModule.ViewModels
         if (_currentPhoto != value)
         {
           _currentPhoto = value;
+          Message = "";
+
+          if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
+            Message = "Can't upload photo";
+
           NotifyOfPropertyChange(() => CurrentPhoto);
           NotifyOfPropertyChange(() => CanAddPhoto );
           
@@ -393,7 +416,8 @@ namespace BioModule.ViewModels
 
     #region Global Variables    
     private readonly Enroller  _enroller;    
-    private readonly INotifier _notifier;    
+    private readonly INotifier _notifier;
+    private readonly IBioSkyNetRepository _database; 
     #endregion
   }
 

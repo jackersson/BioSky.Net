@@ -95,7 +95,7 @@ namespace BioModule.ViewModels
 
     public void OnMouseDoubleClick(Visitor visitor)
     {          
-       ShowPerson(visitor);    
+      ShowPerson(visitor);    
     }
 
     public void OnAddVisitorAsUser()

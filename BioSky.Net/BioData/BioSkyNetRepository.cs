@@ -26,7 +26,7 @@ namespace BioData
 
 
       _fullLocations     = new FullLocationHolder();
-      _fullPersons       = new FullPersonHolder  ();
+      _fullPersons       = new FullPersonHolder  (_ioUtils);
       _fullVisitors      = new FullVisitorHolder ();
       _bioCultureSources = new BioCultureSources ();
     }

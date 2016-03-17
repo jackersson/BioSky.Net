@@ -167,7 +167,7 @@ namespace BioModule.Utils
         if(person != null)
         {
 
-          Photo photo = person.Photos.FirstOrDefault();//.GetValue(person.Thumbnailid);
+          Photo photo = person.Photos.Where(x => x.Id == person.Photoid).FirstOrDefault();
 
           if (photo != null)
           {

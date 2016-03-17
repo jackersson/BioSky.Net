@@ -12,7 +12,9 @@ namespace BioContracts.Services
     IDataClient<Visitor , QueryVisitors>  VisitorDataClient  { get; }
     IDataClient<Person  , QueryPersons>   PersonDataClient   { get; }
     IDataClient<Location, QueryLocations> LocationDataClient { get; }
-    //IDataClient<Photo   , QueryPhoto>     PhotoDataClient    { get; }
+   
+    IThumbnailDataClient ThumbnailDataClient { get; }
+
     IOwnerDataClient<Person, Card>        CardsDataClient    { get; }
     IOwnerDataClient<Person, Photo>       PhotosDataClient { get; }
   }

@@ -69,7 +69,7 @@ namespace BioModule.Utils
     {
       get
       {
-        var end = this._currentPage * this._itemsPerPage - 1;
+        var end = this._currentPage * this._itemsPerPage;
         return (end > this._innerList.Count) ? this._innerList.Count : end;
       }
     }

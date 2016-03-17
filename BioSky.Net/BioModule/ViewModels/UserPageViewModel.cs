@@ -49,7 +49,9 @@ namespace BioModule.ViewModels
       
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
-      UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator);    
+      UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator);
+
+      uinfoModel.PropertyChanged        += UserDataChanged;
       uinfoModel.ValidationStateChanged += UinfoModel_ValidationStateChanged;
 
       Items.Add(uinfoModel);
@@ -66,7 +68,14 @@ namespace BioModule.ViewModels
       _database.Persons.DataChanged += Persons_DataChanged;
     }
 
-    private void UinfoModel_ValidationStateChanged(bool state)
+    private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {  
+      NotifyOfPropertyChange(() => CanApply );  
+      NotifyOfPropertyChange(() => CanRevert);  
+    }
+
+
+  private void UinfoModel_ValidationStateChanged(bool state)
     {
       IsValid = state;      
       NotifyOfPropertyChange(() => CanRevert);
@@ -79,6 +88,11 @@ namespace BioModule.ViewModels
         Person user = _database.Persons.GetValue(_user.Id);
         Update(user);
       }      
+      else
+      {
+        Person user = _database.Persons.GetValue(_user);
+        Update(user);
+      }
     }   
 
     #region Update
@@ -127,7 +141,7 @@ namespace BioModule.ViewModels
 
       NotifyOfPropertyChange(() => CanDelete);
       
-      CurrentPhotoImageView.UpdateFromPhoto(_user.Thumbnail, _database.LocalStorage.LocalStoragePath);
+      CurrentPhotoImageView.UpdateFromPhoto(_user.Thumbnail);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
@@ -140,17 +154,32 @@ namespace BioModule.ViewModels
     
     public async void Apply()
     {
+
+      if (!CurrentPhotoImageView.IsValid)
+      {
+        _dialogs.CustomTextDialog.Update("Warning", "Upload personal photo from File or Camera, please!", DialogStatus.Error);
+        _dialogs.CustomTextDialog.Show();
+        return;
+      }
+      
       bool? result = _dialogs.AreYouSureDialog.Show();
    
       if ( !result.HasValue || (!result.Value ))
         return;  
-      
+            
       try
       {
         if (_userPageMode == UserPageMode.ExistingUser)
           await _bioService.PersonDataClient.Update(_user);
         else
-          await _bioService.PersonDataClient.Add(_user);      
+        {
+          Photo thumbnail = CurrentPhotoImageView.CurrentPhoto;          
+          _user.Thumbnail = thumbnail;
+          _user.Thumbnail.Personid = _user.Id;
+          _user.Thumbnail.Datetime = DateTime.Now.Ticks;         
+          
+          await _bioService.PersonDataClient.Add(_user);
+        }    
       }
       catch (Exception e)
       {
@@ -188,9 +217,8 @@ namespace BioModule.ViewModels
 
     public bool CanApply
     {
-      get {
-       
-        return IsActive && IsValid && (_userPageMode == UserPageMode.NewUser || CanRevert);
+      get {       
+        return IsActive && IsValid  && ( _userPageMode == UserPageMode.NewUser || CanRevert)  ;
       }
     }
 

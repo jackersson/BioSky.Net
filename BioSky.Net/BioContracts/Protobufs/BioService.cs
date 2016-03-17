@@ -94,38 +94,51 @@ namespace BioService {
             "AiABKAgSDwoHc3VjY2VzcxgDIAEoCBIgCgVwaG90bxgEIAEoCzIRLkJpb1Nl", 
             "cnZpY2UuUGhvdG8iYgoUVmVyaWZpY2F0aW9uRmVlZGJhY2sSOwoTZW5yb2xs", 
             "bWVudF9mZWVkYmFjaxgBIAEoCzIeLkJpb1NlcnZpY2UuRW5yb2xsbWVudEZl", 
-            "ZWRiYWNrEg0KBW1hdGNoGAIgASgCIpgBCgpRdWVyeVBob3RvEgsKA2ZpchgB", 
-            "IAEoCBITCgtkZXNjcmlwdGlvbhgCIAEoCBIpCg10YXJnZXRfcGVyc29uGAMg", 
-            "AygLMhIuQmlvU2VydmljZS5QZXJzb24SFAoMcmVzdWx0X2NvdW50GAQgASgD", 
-            "EicKDHRhcmdldF9waG90bxgFIAMoCzIRLkJpb1NlcnZpY2UuUGhvdG8iHQoM", 
-            "UXVlcnlQZXJzb25zEg0KBWNvdW50GAEgASgDIh0KDlF1ZXJ5TG9jYXRpb25z", 
-            "EgsKA2FsbBgBIAEoCCIcCg1RdWVyeVZpc2l0b3JzEgsKA2FsbBgBIAEoCCIm", 
-            "ChNTb2NrZXRDb25maWd1cmF0aW9uEg8KB2FkZHJlc3MYASABKAkqQgoLRW50", 
-            "aXR5U3RhdGUSDQoJVW5jaGFuZ2VkEAASCQoFQWRkZWQQARIMCghNb2RpZmll", 
-            "ZBACEgsKB0RlbGV0ZWQQAyohCgZSZXN1bHQSCwoHU3VjY2VzcxAAEgoKBkZh", 
-            "aWxlZBABKiUKDVBob3RvU2l6ZVR5cGUSCAoERnVsbBAAEgoKBkNyb3BlZBAB", 
-            "KjwKD1Bob3RvT3JpZ2luVHlwZRIMCghFbnJvbGxlZBAAEgwKCFZlcmlmaWVk", 
-            "EAESDQoJVGh1bWJuYWlsEAIy/QEKFUJpb21ldHJpY0ZhY2lhbFNldmljZRJE", 
-            "CglBZGRTb2NrZXQSHy5CaW9TZXJ2aWNlLlNvY2tldENvbmZpZ3VyYXRpb24a", 
-            "FC5CaW9TZXJ2aWNlLlJlc3BvbnNlIgASTAoKRW5yb2xsRmFjZRIaLkJpb1Nl", 
-            "cnZpY2UuRW5yb2xsbWVudERhdGEaHi5CaW9TZXJ2aWNlLkVucm9sbG1lbnRG", 
-            "ZWVkYmFjayIAMAESUAoKVmVyaWZ5RmFjZRIcLkJpb1NlcnZpY2UuVmVyaWZp", 
-            "Y2F0aW9uRGF0YRogLkJpb1NlcnZpY2UuVmVyaWZpY2F0aW9uRmVlZGJhY2si", 
-            "ADABMukEChdCaW9tZXRyaWNEYXRhYmFzZVNldmljZRJCCgxQZXJzb25TZWxl", 
-            "Y3QSGC5CaW9TZXJ2aWNlLlF1ZXJ5UGVyc29ucxoWLkJpb1NlcnZpY2UuUGVy", 
-            "c29uTGlzdCIAEjUKCUFkZFBlcnNvbhISLkJpb1NlcnZpY2UuUGVyc29uGhIu", 
-            "QmlvU2VydmljZS5QZXJzb24iABI4CgxVcGRhdGVQZXJzb24SEi5CaW9TZXJ2", 
-            "aWNlLlBlcnNvbhoSLkJpb1NlcnZpY2UuUGVyc29uIgASOAoMUmVtb3ZlUGVy", 
-            "c29uEhIuQmlvU2VydmljZS5QZXJzb24aEi5CaW9TZXJ2aWNlLlBlcnNvbiIA", 
-            "Ei8KB0FkZENhcmQSEC5CaW9TZXJ2aWNlLkNhcmQaEC5CaW9TZXJ2aWNlLkNh", 
-            "cmQiABI/CgtSZW1vdmVDYXJkcxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoW", 
-            "LkJpb1NlcnZpY2UuUmF3SW5kZXhlcyIAEj8KDFNlbGVjdFBob3RvcxIWLkJp", 
-            "b1NlcnZpY2UuUXVlcnlQaG90bxoVLkJpb1NlcnZpY2UuUGhvdG9MaXN0IgAS", 
-            "MgoIQWRkUGhvdG8SES5CaW9TZXJ2aWNlLlBob3RvGhEuQmlvU2VydmljZS5Q", 
-            "aG90byIAEjYKDFNldFRodW1ibmFpbBIRLkJpb1NlcnZpY2UuUGhvdG8aES5C", 
-            "aW9TZXJ2aWNlLlBob3RvIgASQAoMUmVtb3ZlUGhvdG9zEhYuQmlvU2Vydmlj", 
-            "ZS5SYXdJbmRleGVzGhYuQmlvU2VydmljZS5SYXdJbmRleGVzIgBCDwoHZXgu", 
-            "Z3JwY6ICA1JUR2IGcHJvdG8z"));
+            "ZWRiYWNrEg0KBW1hdGNoGAIgASgCIpcBCgpRdWVyeVBob3RvEg4KBmZpZWxk", 
+            "cxgBIAEoAxIPCgdwZXJzb25zGAIgAygDEg4KBnBob3RvcxgDIAMoAxIWCg5p", 
+            "dGVtc19wZXJfcGFnZRgEIAEoAyJAChFUYXJnZXRQaG90b0ZpZWxkcxIHCgNB", 
+            "bGwQABIJCgVPdGhlchABEg4KCkJ5dGVzdHJpbmcQAhIHCgNGaXIQBCIdCgxR", 
+            "dWVyeVBlcnNvbnMSDQoFY291bnQYASABKAMiHwoOUXVlcnlMb2NhdGlvbnMS", 
+            "DQoFY291bnQYASABKAMiigEKDVF1ZXJ5VmlzaXRvcnMSEQoJY291bnRyaWVz", 
+            "GAIgAygJEhEKCWxvY2F0aW9ucxgDIAMoAxIPCgdwZXJzb25zGAQgAygDEhUK", 
+            "DWRhdGV0aW1lX2Zyb20YBSABKAMSEwoLZGF0ZXRpbWVfdG8YBiABKAMSFgoO", 
+            "aXRlbXNfcGVyX3BhZ2UYByABKAMiJgoTU29ja2V0Q29uZmlndXJhdGlvbhIP", 
+            "CgdhZGRyZXNzGAEgASgJKkIKC0VudGl0eVN0YXRlEg0KCVVuY2hhbmdlZBAA", 
+            "EgkKBUFkZGVkEAESDAoITW9kaWZpZWQQAhILCgdEZWxldGVkEAMqIQoGUmVz", 
+            "dWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQASolCg1QaG90b1NpemVUeXBl", 
+            "EggKBEZ1bGwQABIKCgZDcm9wZWQQASo8Cg9QaG90b09yaWdpblR5cGUSDAoI", 
+            "RW5yb2xsZWQQABIMCghWZXJpZmllZBABEg0KCVRodW1ibmFpbBACMv0BChVC", 
+            "aW9tZXRyaWNGYWNpYWxTZXZpY2USRAoJQWRkU29ja2V0Eh8uQmlvU2Vydmlj", 
+            "ZS5Tb2NrZXRDb25maWd1cmF0aW9uGhQuQmlvU2VydmljZS5SZXNwb25zZSIA", 
+            "EkwKCkVucm9sbEZhY2USGi5CaW9TZXJ2aWNlLkVucm9sbG1lbnREYXRhGh4u", 
+            "QmlvU2VydmljZS5FbnJvbGxtZW50RmVlZGJhY2siADABElAKClZlcmlmeUZh", 
+            "Y2USHC5CaW9TZXJ2aWNlLlZlcmlmaWNhdGlvbkRhdGEaIC5CaW9TZXJ2aWNl", 
+            "LlZlcmlmaWNhdGlvbkZlZWRiYWNrIgAwATLLCAoXQmlvbWV0cmljRGF0YWJh", 
+            "c2VTZXZpY2USQgoMUGVyc29uU2VsZWN0EhguQmlvU2VydmljZS5RdWVyeVBl", 
+            "cnNvbnMaFi5CaW9TZXJ2aWNlLlBlcnNvbkxpc3QiABI1CglBZGRQZXJzb24S", 
+            "Ei5CaW9TZXJ2aWNlLlBlcnNvbhoSLkJpb1NlcnZpY2UuUGVyc29uIgASOAoM", 
+            "VXBkYXRlUGVyc29uEhIuQmlvU2VydmljZS5QZXJzb24aEi5CaW9TZXJ2aWNl", 
+            "LlBlcnNvbiIAEjgKDFJlbW92ZVBlcnNvbhISLkJpb1NlcnZpY2UuUGVyc29u", 
+            "GhIuQmlvU2VydmljZS5QZXJzb24iABI5CgxTZXRUaHVtYm5haWwSES5CaW9T", 
+            "ZXJ2aWNlLlBob3RvGhQuQmlvU2VydmljZS5SZXNwb25zZSIAEi8KB0FkZENh", 
+            "cmQSEC5CaW9TZXJ2aWNlLkNhcmQaEC5CaW9TZXJ2aWNlLkNhcmQiABI/CgtS", 
+            "ZW1vdmVDYXJkcxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoWLkJpb1NlcnZp", 
+            "Y2UuUmF3SW5kZXhlcyIAEj8KDFNlbGVjdFBob3RvcxIWLkJpb1NlcnZpY2Uu", 
+            "UXVlcnlQaG90bxoVLkJpb1NlcnZpY2UuUGhvdG9MaXN0IgASMgoIQWRkUGhv", 
+            "dG8SES5CaW9TZXJ2aWNlLlBob3RvGhEuQmlvU2VydmljZS5QaG90byIAEkAK", 
+            "DFJlbW92ZVBob3RvcxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoWLkJpb1Nl", 
+            "cnZpY2UuUmF3SW5kZXhlcyIAEkYKDlNlbGVjdFZpc2l0b3JzEhkuQmlvU2Vy", 
+            "dmljZS5RdWVyeVZpc2l0b3JzGhcuQmlvU2VydmljZS5WaXNpdG9yTGlzdCIA", 
+            "EkQKFUF0dGFjaFZpc2l0b3JUb1BlcnNvbhITLkJpb1NlcnZpY2UuVmlzaXRv", 
+            "choULkJpb1NlcnZpY2UuUmVzcG9uc2UiABJCCg5SZW1vdmVWaXNpdG9ycxIW", 
+            "LkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoWLkJpb1NlcnZpY2UuUmF3SW5kZXhl", 
+            "cyIAEkkKD1NlbGVjdExvY2F0aW9ucxIaLkJpb1NlcnZpY2UuUXVlcnlMb2Nh", 
+            "dGlvbnMaGC5CaW9TZXJ2aWNlLkxvY2F0aW9uTGlzdCIAEjsKC0FkZExvY2F0", 
+            "aW9uEhQuQmlvU2VydmljZS5Mb2NhdGlvbhoULkJpb1NlcnZpY2UuTG9jYXRp", 
+            "b24iABI+Cg5VcGRhdGVMb2NhdGlvbhIULkJpb1NlcnZpY2UuTG9jYXRpb24a", 
+            "FC5CaW9TZXJ2aWNlLkxvY2F0aW9uIgASQwoPUmVtb3ZlTG9jYXRpb25zEhYu", 
+            "QmlvU2VydmljZS5SYXdJbmRleGVzGhYuQmlvU2VydmljZS5SYXdJbmRleGVz", 
+            "IgBCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(new[] {typeof(global::BioService.EntityState), typeof(global::BioService.Result), typeof(global::BioService.PhotoSizeType), typeof(global::BioService.PhotoOriginType), }, new pbr::GeneratedCodeInfo[] {
@@ -152,10 +165,10 @@ namespace BioService {
             new pbr::GeneratedCodeInfo(typeof(global::BioService.EnrollmentData), new[]{ "Images", "Personid" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.EnrollmentFeedback), new[]{ "Progress", "Eyesfound", "Success", "Photo" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.VerificationFeedback), new[]{ "EnrollmentFeedback", "Match" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.QueryPhoto), new[]{ "Fir", "Description", "TargetPerson", "ResultCount", "TargetPhoto" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.QueryPhoto), new[]{ "Fields", "Persons", "Photos", "ItemsPerPage" }, null, new[]{ typeof(global::BioService.QueryPhoto.Types.TargetPhotoFields) }, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.QueryPersons), new[]{ "Count" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.QueryLocations), new[]{ "All" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.QueryVisitors), new[]{ "All" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.QueryLocations), new[]{ "Count" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.QueryVisitors), new[]{ "Countries", "Locations", "Persons", "DatetimeFrom", "DatetimeTo", "ItemsPerPage" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.SocketConfiguration), new[]{ "Address" }, null, null, null)
           }));
     }
@@ -4371,58 +4384,48 @@ namespace BioService {
     partial void OnConstruction();
 
     public QueryPhoto(QueryPhoto other) : this() {
-      fir_ = other.fir_;
-      description_ = other.description_;
-      targetPerson_ = other.targetPerson_.Clone();
-      resultCount_ = other.resultCount_;
-      targetPhoto_ = other.targetPhoto_.Clone();
+      fields_ = other.fields_;
+      persons_ = other.persons_.Clone();
+      photos_ = other.photos_.Clone();
+      itemsPerPage_ = other.itemsPerPage_;
     }
 
     public QueryPhoto Clone() {
       return new QueryPhoto(this);
     }
 
-    public const int FirFieldNumber = 1;
-    private bool fir_;
-    public bool Fir {
-      get { return fir_; }
+    public const int FieldsFieldNumber = 1;
+    private long fields_;
+    public long Fields {
+      get { return fields_; }
       set {
-        fir_ = value;
+        fields_ = value;
       }
     }
 
-    public const int DescriptionFieldNumber = 2;
-    private bool description_;
-    public bool Description {
-      get { return description_; }
+    public const int PersonsFieldNumber = 2;
+    private static readonly pb::FieldCodec<long> _repeated_persons_codec
+        = pb::FieldCodec.ForInt64(18);
+    private readonly pbc::RepeatedField<long> persons_ = new pbc::RepeatedField<long>();
+    public pbc::RepeatedField<long> Persons {
+      get { return persons_; }
+    }
+
+    public const int PhotosFieldNumber = 3;
+    private static readonly pb::FieldCodec<long> _repeated_photos_codec
+        = pb::FieldCodec.ForInt64(26);
+    private readonly pbc::RepeatedField<long> photos_ = new pbc::RepeatedField<long>();
+    public pbc::RepeatedField<long> Photos {
+      get { return photos_; }
+    }
+
+    public const int ItemsPerPageFieldNumber = 4;
+    private long itemsPerPage_;
+    public long ItemsPerPage {
+      get { return itemsPerPage_; }
       set {
-        description_ = value;
+        itemsPerPage_ = value;
       }
-    }
-
-    public const int TargetPersonFieldNumber = 3;
-    private static readonly pb::FieldCodec<global::BioService.Person> _repeated_targetPerson_codec
-        = pb::FieldCodec.ForMessage(26, global::BioService.Person.Parser);
-    private readonly pbc::RepeatedField<global::BioService.Person> targetPerson_ = new pbc::RepeatedField<global::BioService.Person>();
-    public pbc::RepeatedField<global::BioService.Person> TargetPerson {
-      get { return targetPerson_; }
-    }
-
-    public const int ResultCountFieldNumber = 4;
-    private long resultCount_;
-    public long ResultCount {
-      get { return resultCount_; }
-      set {
-        resultCount_ = value;
-      }
-    }
-
-    public const int TargetPhotoFieldNumber = 5;
-    private static readonly pb::FieldCodec<global::BioService.Photo> _repeated_targetPhoto_codec
-        = pb::FieldCodec.ForMessage(42, global::BioService.Photo.Parser);
-    private readonly pbc::RepeatedField<global::BioService.Photo> targetPhoto_ = new pbc::RepeatedField<global::BioService.Photo>();
-    public pbc::RepeatedField<global::BioService.Photo> TargetPhoto {
-      get { return targetPhoto_; }
     }
 
     public override bool Equals(object other) {
@@ -4436,21 +4439,19 @@ namespace BioService {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Fir != other.Fir) return false;
-      if (Description != other.Description) return false;
-      if(!targetPerson_.Equals(other.targetPerson_)) return false;
-      if (ResultCount != other.ResultCount) return false;
-      if(!targetPhoto_.Equals(other.targetPhoto_)) return false;
+      if (Fields != other.Fields) return false;
+      if(!persons_.Equals(other.persons_)) return false;
+      if(!photos_.Equals(other.photos_)) return false;
+      if (ItemsPerPage != other.ItemsPerPage) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (Fir != false) hash ^= Fir.GetHashCode();
-      if (Description != false) hash ^= Description.GetHashCode();
-      hash ^= targetPerson_.GetHashCode();
-      if (ResultCount != 0L) hash ^= ResultCount.GetHashCode();
-      hash ^= targetPhoto_.GetHashCode();
+      if (Fields != 0L) hash ^= Fields.GetHashCode();
+      hash ^= persons_.GetHashCode();
+      hash ^= photos_.GetHashCode();
+      if (ItemsPerPage != 0L) hash ^= ItemsPerPage.GetHashCode();
       return hash;
     }
 
@@ -4459,35 +4460,28 @@ namespace BioService {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Fir != false) {
+      if (Fields != 0L) {
         output.WriteRawTag(8);
-        output.WriteBool(Fir);
+        output.WriteInt64(Fields);
       }
-      if (Description != false) {
-        output.WriteRawTag(16);
-        output.WriteBool(Description);
-      }
-      targetPerson_.WriteTo(output, _repeated_targetPerson_codec);
-      if (ResultCount != 0L) {
+      persons_.WriteTo(output, _repeated_persons_codec);
+      photos_.WriteTo(output, _repeated_photos_codec);
+      if (ItemsPerPage != 0L) {
         output.WriteRawTag(32);
-        output.WriteInt64(ResultCount);
+        output.WriteInt64(ItemsPerPage);
       }
-      targetPhoto_.WriteTo(output, _repeated_targetPhoto_codec);
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (Fir != false) {
-        size += 1 + 1;
+      if (Fields != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Fields);
       }
-      if (Description != false) {
-        size += 1 + 1;
+      size += persons_.CalculateSize(_repeated_persons_codec);
+      size += photos_.CalculateSize(_repeated_photos_codec);
+      if (ItemsPerPage != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemsPerPage);
       }
-      size += targetPerson_.CalculateSize(_repeated_targetPerson_codec);
-      if (ResultCount != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ResultCount);
-      }
-      size += targetPhoto_.CalculateSize(_repeated_targetPhoto_codec);
       return size;
     }
 
@@ -4495,17 +4489,14 @@ namespace BioService {
       if (other == null) {
         return;
       }
-      if (other.Fir != false) {
-        Fir = other.Fir;
+      if (other.Fields != 0L) {
+        Fields = other.Fields;
       }
-      if (other.Description != false) {
-        Description = other.Description;
+      persons_.Add(other.persons_);
+      photos_.Add(other.photos_);
+      if (other.ItemsPerPage != 0L) {
+        ItemsPerPage = other.ItemsPerPage;
       }
-      targetPerson_.Add(other.targetPerson_);
-      if (other.ResultCount != 0L) {
-        ResultCount = other.ResultCount;
-      }
-      targetPhoto_.Add(other.targetPhoto_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -4516,28 +4507,39 @@ namespace BioService {
             input.SkipLastField();
             break;
           case 8: {
-            Fir = input.ReadBool();
+            Fields = input.ReadInt64();
             break;
           }
+          case 18:
           case 16: {
-            Description = input.ReadBool();
+            persons_.AddEntriesFrom(input, _repeated_persons_codec);
             break;
           }
-          case 26: {
-            targetPerson_.AddEntriesFrom(input, _repeated_targetPerson_codec);
+          case 26:
+          case 24: {
+            photos_.AddEntriesFrom(input, _repeated_photos_codec);
             break;
           }
           case 32: {
-            ResultCount = input.ReadInt64();
-            break;
-          }
-          case 42: {
-            targetPhoto_.AddEntriesFrom(input, _repeated_targetPhoto_codec);
+            ItemsPerPage = input.ReadInt64();
             break;
           }
         }
       }
     }
+
+    #region Nested types
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+    public static partial class Types {
+      public enum TargetPhotoFields {
+        All = 0,
+        Other = 1,
+        Bytestring = 2,
+        Fir = 4,
+      }
+
+    }
+    #endregion
 
   }
 
@@ -4663,19 +4665,19 @@ namespace BioService {
     partial void OnConstruction();
 
     public QueryLocations(QueryLocations other) : this() {
-      all_ = other.all_;
+      count_ = other.count_;
     }
 
     public QueryLocations Clone() {
       return new QueryLocations(this);
     }
 
-    public const int AllFieldNumber = 1;
-    private bool all_;
-    public bool All {
-      get { return all_; }
+    public const int CountFieldNumber = 1;
+    private long count_;
+    public long Count {
+      get { return count_; }
       set {
-        all_ = value;
+        count_ = value;
       }
     }
 
@@ -4690,13 +4692,13 @@ namespace BioService {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (All != other.All) return false;
+      if (Count != other.Count) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (All != false) hash ^= All.GetHashCode();
+      if (Count != 0L) hash ^= Count.GetHashCode();
       return hash;
     }
 
@@ -4705,16 +4707,16 @@ namespace BioService {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (All != false) {
+      if (Count != 0L) {
         output.WriteRawTag(8);
-        output.WriteBool(All);
+        output.WriteInt64(Count);
       }
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (All != false) {
-        size += 1 + 1;
+      if (Count != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Count);
       }
       return size;
     }
@@ -4723,8 +4725,8 @@ namespace BioService {
       if (other == null) {
         return;
       }
-      if (other.All != false) {
-        All = other.All;
+      if (other.Count != 0L) {
+        Count = other.Count;
       }
     }
 
@@ -4736,7 +4738,7 @@ namespace BioService {
             input.SkipLastField();
             break;
           case 8: {
-            All = input.ReadBool();
+            Count = input.ReadInt64();
             break;
           }
         }
@@ -4765,19 +4767,66 @@ namespace BioService {
     partial void OnConstruction();
 
     public QueryVisitors(QueryVisitors other) : this() {
-      all_ = other.all_;
+      countries_ = other.countries_.Clone();
+      locations_ = other.locations_.Clone();
+      persons_ = other.persons_.Clone();
+      datetimeFrom_ = other.datetimeFrom_;
+      datetimeTo_ = other.datetimeTo_;
+      itemsPerPage_ = other.itemsPerPage_;
     }
 
     public QueryVisitors Clone() {
       return new QueryVisitors(this);
     }
 
-    public const int AllFieldNumber = 1;
-    private bool all_;
-    public bool All {
-      get { return all_; }
+    public const int CountriesFieldNumber = 2;
+    private static readonly pb::FieldCodec<string> _repeated_countries_codec
+        = pb::FieldCodec.ForString(18);
+    private readonly pbc::RepeatedField<string> countries_ = new pbc::RepeatedField<string>();
+    public pbc::RepeatedField<string> Countries {
+      get { return countries_; }
+    }
+
+    public const int LocationsFieldNumber = 3;
+    private static readonly pb::FieldCodec<long> _repeated_locations_codec
+        = pb::FieldCodec.ForInt64(26);
+    private readonly pbc::RepeatedField<long> locations_ = new pbc::RepeatedField<long>();
+    public pbc::RepeatedField<long> Locations {
+      get { return locations_; }
+    }
+
+    public const int PersonsFieldNumber = 4;
+    private static readonly pb::FieldCodec<long> _repeated_persons_codec
+        = pb::FieldCodec.ForInt64(34);
+    private readonly pbc::RepeatedField<long> persons_ = new pbc::RepeatedField<long>();
+    public pbc::RepeatedField<long> Persons {
+      get { return persons_; }
+    }
+
+    public const int DatetimeFromFieldNumber = 5;
+    private long datetimeFrom_;
+    public long DatetimeFrom {
+      get { return datetimeFrom_; }
       set {
-        all_ = value;
+        datetimeFrom_ = value;
+      }
+    }
+
+    public const int DatetimeToFieldNumber = 6;
+    private long datetimeTo_;
+    public long DatetimeTo {
+      get { return datetimeTo_; }
+      set {
+        datetimeTo_ = value;
+      }
+    }
+
+    public const int ItemsPerPageFieldNumber = 7;
+    private long itemsPerPage_;
+    public long ItemsPerPage {
+      get { return itemsPerPage_; }
+      set {
+        itemsPerPage_ = value;
       }
     }
 
@@ -4792,13 +4841,23 @@ namespace BioService {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (All != other.All) return false;
+      if(!countries_.Equals(other.countries_)) return false;
+      if(!locations_.Equals(other.locations_)) return false;
+      if(!persons_.Equals(other.persons_)) return false;
+      if (DatetimeFrom != other.DatetimeFrom) return false;
+      if (DatetimeTo != other.DatetimeTo) return false;
+      if (ItemsPerPage != other.ItemsPerPage) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (All != false) hash ^= All.GetHashCode();
+      hash ^= countries_.GetHashCode();
+      hash ^= locations_.GetHashCode();
+      hash ^= persons_.GetHashCode();
+      if (DatetimeFrom != 0L) hash ^= DatetimeFrom.GetHashCode();
+      if (DatetimeTo != 0L) hash ^= DatetimeTo.GetHashCode();
+      if (ItemsPerPage != 0L) hash ^= ItemsPerPage.GetHashCode();
       return hash;
     }
 
@@ -4807,16 +4866,36 @@ namespace BioService {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (All != false) {
-        output.WriteRawTag(8);
-        output.WriteBool(All);
+      countries_.WriteTo(output, _repeated_countries_codec);
+      locations_.WriteTo(output, _repeated_locations_codec);
+      persons_.WriteTo(output, _repeated_persons_codec);
+      if (DatetimeFrom != 0L) {
+        output.WriteRawTag(40);
+        output.WriteInt64(DatetimeFrom);
+      }
+      if (DatetimeTo != 0L) {
+        output.WriteRawTag(48);
+        output.WriteInt64(DatetimeTo);
+      }
+      if (ItemsPerPage != 0L) {
+        output.WriteRawTag(56);
+        output.WriteInt64(ItemsPerPage);
       }
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (All != false) {
-        size += 1 + 1;
+      size += countries_.CalculateSize(_repeated_countries_codec);
+      size += locations_.CalculateSize(_repeated_locations_codec);
+      size += persons_.CalculateSize(_repeated_persons_codec);
+      if (DatetimeFrom != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(DatetimeFrom);
+      }
+      if (DatetimeTo != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(DatetimeTo);
+      }
+      if (ItemsPerPage != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(ItemsPerPage);
       }
       return size;
     }
@@ -4825,8 +4904,17 @@ namespace BioService {
       if (other == null) {
         return;
       }
-      if (other.All != false) {
-        All = other.All;
+      countries_.Add(other.countries_);
+      locations_.Add(other.locations_);
+      persons_.Add(other.persons_);
+      if (other.DatetimeFrom != 0L) {
+        DatetimeFrom = other.DatetimeFrom;
+      }
+      if (other.DatetimeTo != 0L) {
+        DatetimeTo = other.DatetimeTo;
+      }
+      if (other.ItemsPerPage != 0L) {
+        ItemsPerPage = other.ItemsPerPage;
       }
     }
 
@@ -4837,8 +4925,30 @@ namespace BioService {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            All = input.ReadBool();
+          case 18: {
+            countries_.AddEntriesFrom(input, _repeated_countries_codec);
+            break;
+          }
+          case 26:
+          case 24: {
+            locations_.AddEntriesFrom(input, _repeated_locations_codec);
+            break;
+          }
+          case 34:
+          case 32: {
+            persons_.AddEntriesFrom(input, _repeated_persons_codec);
+            break;
+          }
+          case 40: {
+            DatetimeFrom = input.ReadInt64();
+            break;
+          }
+          case 48: {
+            DatetimeTo = input.ReadInt64();
+            break;
+          }
+          case 56: {
+            ItemsPerPage = input.ReadInt64();
             break;
           }
         }
