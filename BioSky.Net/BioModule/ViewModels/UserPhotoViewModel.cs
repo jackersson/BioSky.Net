@@ -24,7 +24,7 @@ namespace BioModule.ViewModels
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService          = _locator.GetProcessor<IServiceManager>().DatabaseService    ;
       _dialogsHolder       = _locator.GetProcessor<DialogsHolder>();
-
+      _notifier            = _locator.GetProcessor<INotifier>();
 
       DisplayName = "Photo";      
 
@@ -87,11 +87,19 @@ namespace BioModule.ViewModels
       SelectedItem = photo;
     }
 
-    public void OnSetThumbnail()
+    public async void OnSetThumbnail()
     {
-      //_imageViewer.UpdateImage(SelectedItem, _database.LocalStorage.LocalStoragePath);
-      //_user.Thumbnailid = SelectedItem.Id;
-      //await ThumbnailUpdatePerformer();
+      try  {
+        Photo requested = null;
+        if (_imageViewer.CurrentPhoto.Id > 0)
+        {
+          requested = new Photo() { Id = _imageViewer.CurrentPhoto.Id };
+          await _bioService.ThumbnailDataClient.SetThumbnail(User, requested);
+        }
+      }
+      catch (Exception e) {
+        _notifier.Notify(e);
+      }      
     }
 
     public async void Add(Photo photo)
@@ -99,12 +107,12 @@ namespace BioModule.ViewModels
       _dialogsHolder.AreYouSureDialog.Show();
       var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
+      if (!result || photo == null)
+        return;
+      
       photo.Personid = User.Id;
       photo.Datetime = DateTime.Now.Ticks;
 
-      if (!result || photo == null)
-        return;
-           
       try {
         await _bioService.PhotosDataClient.Add(User, photo);
       }
@@ -227,7 +235,7 @@ namespace BioModule.ViewModels
         {
           _selectedItem = value;
 
-          _imageViewer.UpdateFromPhoto(value, _database.LocalStorage.LocalStoragePath);
+          _imageViewer.UpdateFromPhoto(value);
 
           CurrentPhotoIndex = UserImages.IndexOf(_imageViewer.CurrentPhoto);          
 

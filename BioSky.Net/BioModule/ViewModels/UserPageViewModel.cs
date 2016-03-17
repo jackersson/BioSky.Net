@@ -23,6 +23,7 @@ using WPFLocalizeExtension.Extensions;
 using WPFLocalizeExtension.Providers;
 using XAMLMarkupExtensions.Base;
 using BioContracts.Services;
+using System.ComponentModel;
 
 namespace BioModule.ViewModels
 {
@@ -45,10 +46,13 @@ namespace BioModule.ViewModels
       CurrentPhotoImageView = new PhotoImageViewModel(_locator);
       UserPhotoView         = new UserPhotoViewModel (CurrentPhotoImageView, _locator);
 
+      
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
       UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator);
-      uinfoModel.PropertyChanged += UserDataChanged;
+
+      uinfoModel.PropertyChanged        += UserDataChanged;
+      uinfoModel.ValidationStateChanged += UinfoModel_ValidationStateChanged;
 
       Items.Add(uinfoModel);
       Items.Add(new UserContactlessCardViewModel(_locator));
@@ -64,6 +68,19 @@ namespace BioModule.ViewModels
       _database.Persons.DataChanged += Persons_DataChanged;
     }
 
+    private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {  
+      NotifyOfPropertyChange(() => CanApply );  
+      NotifyOfPropertyChange(() => CanRevert);  
+    }
+
+
+  private void UinfoModel_ValidationStateChanged(bool state)
+    {
+      IsValid = state;      
+      NotifyOfPropertyChange(() => CanRevert);
+    }
+
     private void Persons_DataChanged()
     {
       if (_userPageMode == UserPageMode.ExistingUser)
@@ -71,16 +88,14 @@ namespace BioModule.ViewModels
         Person user = _database.Persons.GetValue(_user.Id);
         Update(user);
       }      
-    }
-
-    private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-      NotifyOfPropertyChange(() => CanApply );
-      NotifyOfPropertyChange(() => CanRevert);
-    }
+      else
+      {
+        Person user = _database.Persons.GetValue(_user);
+        Update(user);
+      }
+    }   
 
     #region Update
-
     private bool ContainRequiredFields(Person user)
     {
       if (user == null)
@@ -126,7 +141,7 @@ namespace BioModule.ViewModels
 
       NotifyOfPropertyChange(() => CanDelete);
       
-      CurrentPhotoImageView.UpdateFromPhoto(_user.Thumbnail, _database.LocalStorage.LocalStoragePath);
+      CurrentPhotoImageView.UpdateFromPhoto(_user.Thumbnail);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
@@ -139,17 +154,32 @@ namespace BioModule.ViewModels
     
     public async void Apply()
     {
+
+      if (!CurrentPhotoImageView.IsValid)
+      {
+        _dialogs.CustomTextDialog.Update("Warning", "Upload personal photo from File or Camera, please!", DialogStatus.Error);
+        _dialogs.CustomTextDialog.Show();
+        return;
+      }
+      
       bool? result = _dialogs.AreYouSureDialog.Show();
    
       if ( !result.HasValue || (!result.Value ))
         return;  
-      
+            
       try
       {
         if (_userPageMode == UserPageMode.ExistingUser)
           await _bioService.PersonDataClient.Update(_user);
         else
-          await _bioService.PersonDataClient.Add(_user);      
+        {
+          Photo thumbnail = CurrentPhotoImageView.CurrentPhoto;          
+          _user.Thumbnail = thumbnail;
+          _user.Thumbnail.Personid = _user.Id;
+          _user.Thumbnail.Datetime = DateTime.Now.Ticks;         
+          
+          await _bioService.PersonDataClient.Add(_user);
+        }    
       }
       catch (Exception e)
       {
@@ -187,8 +217,8 @@ namespace BioModule.ViewModels
 
     public bool CanApply
     {
-      get {
-        return IsActive && ContainRequiredFields(_user) && (_userPageMode == UserPageMode.NewUser || CanRevert);
+      get {       
+        return IsActive && IsValid  && ( _userPageMode == UserPageMode.NewUser || CanRevert)  ;
       }
     }
 
@@ -200,6 +230,21 @@ namespace BioModule.ViewModels
     public bool CanDelete
     {
       get { return IsActive &&  _user.Id > 0; }
+    }
+
+    private bool _isValid;
+    public bool IsValid
+    {
+      get { return _isValid; }
+      set
+      {
+        if ( _isValid != value)
+        {
+          _isValid = value;
+          NotifyOfPropertyChange(() => IsValid  );
+          NotifyOfPropertyChange(() => CanApply);
+        }
+      }
     }
 
     public void OpenTab()

@@ -27,10 +27,19 @@ namespace BioModule.ViewModels
 
       _controller = controller;
 
-      Text = FormatPageText(controller.StartIndex, controller.EndIndex, controller.ItemsCount);
+      UpdateMove();
+    }
 
-      IsRightArrowEnabled = (controller.EndIndex < controller.ItemsCount);
-      IsLeftArrowEnabled  = (controller.StartIndex > 1);     
+    private void UpdateMove()
+    {
+      if (_controller == null)
+        return;
+
+      Text = FormatPageText( _controller.StartIndex + 1
+                           , _controller.EndIndex, _controller.ItemsCount);
+
+      IsRightArrowEnabled = (_controller.EndIndex < _controller.ItemsCount);
+      IsLeftArrowEnabled = (_controller.StartIndex > 1);
     }
 
     private string FormatPageText( int startIndex, int endIndex, int itemsCount )
@@ -44,6 +53,7 @@ namespace BioModule.ViewModels
         return;
 
       _controller.MoveToNextPage();
+      UpdateMove();
     }
 
     public void OnLeftClick()
@@ -52,6 +62,7 @@ namespace BioModule.ViewModels
         return;
 
       _controller.MoveToPreviousPage();
+      UpdateMove();
     }
 
 

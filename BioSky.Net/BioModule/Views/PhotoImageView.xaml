@@ -53,6 +53,14 @@
             </Grid>
         </Border>
 
+        <TextBlock Grid.ColumnSpan="2"
+                   Grid.RowSpan="4"
+                   Margin="7"
+                   Text="{Binding Message}"
+                   HorizontalAlignment="Center"
+                   Foreground="#FF222222" FontSize="12">            
+        </TextBlock>
+
         <!--*****************************************EnrollmentExpanderView**************************************************-->
         <Expander            
             Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" 
@@ -182,7 +190,7 @@
             <Slider x:Name="Slider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                 cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
                     Minimum="30"
-                    Maximum="150"
+                    Maximum="200"
                     Value="{Binding ZoomRate, Mode=TwoWay}"
                     LargeChange="20"
                     SmallChange="10" Margin="0,15"                   

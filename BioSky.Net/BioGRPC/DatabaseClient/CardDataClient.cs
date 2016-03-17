@@ -91,6 +91,10 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
+    public Task Update(Person owner, Card item)
+    {
+      throw new NotImplementedException();
+    }
 
     private RawIndexes _rawIndexes;
 

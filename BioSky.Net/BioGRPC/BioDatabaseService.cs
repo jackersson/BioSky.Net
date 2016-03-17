@@ -17,19 +17,24 @@ namespace BioGRPC
       _cardsDataClient     = new CardDataClient    (locator, client);
     }
 
-    private IOwnerDataClient<Person, Photo> _photosDataClient;
+    private PhotoDataClient _photosDataClient;
     public IOwnerDataClient<Person, Photo> PhotosDataClient
     {
       get { return _photosDataClient; }
     }
+ 
+    public IThumbnailDataClient ThumbnailDataClient
+    {
+      get { return _personDataClient; }
+    }
 
-    private IOwnerDataClient<Person, Card> _cardsDataClient;
+    private CardDataClient _cardsDataClient;
     public IOwnerDataClient<Person, Card> CardsDataClient
     {
       get { return _cardsDataClient; }
     }
 
-    private IDataClient<Visitor, QueryVisitors> _visitorDataClient;
+    private VisitorDataClient _visitorDataClient;
     public IDataClient<Visitor, QueryVisitors> VisitorDataClient
     {
       get { return _visitorDataClient; }     
@@ -42,13 +47,13 @@ namespace BioGRPC
       get { return _photoDataClient; }
     */
 
-    private IDataClient<Person, QueryPersons> _personDataClient;
+    private PersonDataClient _personDataClient;
     public IDataClient<Person, QueryPersons> PersonDataClient
     {
       get { return _personDataClient; }
     }
 
-    private IDataClient<Location, QueryLocations> _locationDataClient;
+    private LocationDataClient _locationDataClient;
     public IDataClient<Location, QueryLocations> LocationDataClient
     {
       get { return _locationDataClient; }

@@ -51,12 +51,8 @@ namespace BioGRPC.DatabaseClient
         _notifier.Notify(e);
       }
     }
-
-    public Task Update(Photo item)
-    {
-      return null;
-    }
-
+    
+    
     public async Task Remove(Person owner, IList<Photo> targeIds)
     {
       if (targeIds == null || targeIds.Count <= 0 || owner == null)

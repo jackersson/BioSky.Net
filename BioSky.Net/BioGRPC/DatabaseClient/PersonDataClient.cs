@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace BioGRPC.DatabaseClient
 {
-  public class PersonDataClient : IDataClient<Person, QueryPersons>
+
+  public class PersonDataClient : IDataClient<Person, QueryPersons>, IThumbnailDataClient
   {
     public PersonDataClient(IProcessorLocator locator
                              , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
@@ -35,7 +36,25 @@ namespace BioGRPC.DatabaseClient
         _notifier.Notify(e);
       }
     }
-  
+
+    public async Task SetThumbnail(Person owner, Photo requested)
+    {
+      if (requested == null || owner == null)
+        return;
+
+      try
+      {
+        requested.Personid = owner.Id;
+        Response responded = await _client.SetThumbnailAsync(requested);
+        Console.WriteLine(responded);
+        _database.Persons.SetThumbnail(owner, requested, responded);
+      }
+      catch (RpcException e)
+      {
+        _notifier.Notify(e);
+      }
+    }
+
     public async Task Add(Person item)
     {
       if (item == null)
@@ -44,7 +63,7 @@ namespace BioGRPC.DatabaseClient
       try
       {
         Person newPerson = await _client.AddPersonAsync(item);
-        Console.WriteLine(item);
+        Console.WriteLine(newPerson);
         _database.Persons.Add(item, newPerson);
       }
       catch (RpcException e)

@@ -11,23 +11,25 @@ namespace BioData.Holders.Grouped
 {
   public class FullPersonHolder : PropertyChangedBase, IFullPersonHolder
   {
-    public FullPersonHolder()
+    public FullPersonHolder(IOUtils ioutils)
     {
-      DataSet      = new Dictionary<long, Person>();
-      CardsDataSet = new Dictionary<string, Person>();
-      Data         = new AsyncObservableCollection<Person>();
+      DataSet         = new Dictionary<long, Person>();
+      CardsDataSet    = new Dictionary<string, Person>();
+      Data            = new AsyncObservableCollection<Person>();
+
+      _ioUtils = ioutils;
     }
 
     public void Init(RepeatedField<Person> data)
     {
-
       Data = new AsyncObservableCollection<Person>(data);
 
       foreach (Person person in data)
       {
         _dataSet.Add(person.Id, person);
+        CheckPersonPhotosIfFileExisted(person);
       }
-
+      Console.WriteLine(PhotosIndexesWithoutExistingFile.Count);
       OnDataChanged();
     }
 
@@ -38,6 +40,17 @@ namespace BioData.Holders.Grouped
         requested.Id = responded.Id;
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);
+
+        if (responded.Thumbnail != null)
+        {
+          requested.Thumbnail.Id       = responded.Thumbnail.Id;        
+          responded.Thumbnail.Dbresult = Result.Success       ;
+
+          AddPhoto(requested, requested.Thumbnail, responded.Thumbnail, false);
+          SetThumbnail(requested, requested.Thumbnail, new Response() { Good = Result.Success }, false);
+        }
+
+        OnDataChanged();
       }      
     }
 
@@ -124,8 +137,7 @@ namespace BioData.Holders.Grouped
           _cardsDataSet = value;
       }
     }
-
-
+    
     public Person GetPersonByCardNumber(string cardNumber)
     {
       Person person = null;
@@ -140,6 +152,15 @@ namespace BioData.Holders.Grouped
       DataSet.TryGetValue(Id, out person);
 
       return person;
+    }
+
+    public Person GetValue(Person person)
+    {
+      if (person == null)
+        return null;
+
+      Person response = Data.Where(x => x.Firstname == person.Firstname && x.Lastname == person.Lastname).FirstOrDefault();    
+      return response;
     }
 
     public void RemoveCards(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
@@ -165,17 +186,48 @@ namespace BioData.Holders.Grouped
       }      
     }
 
-    public void AddPhoto(Person owner, Photo requested, Photo responsed)
+    public void AddPhoto(Person owner, Photo requested, Photo responsed, bool refresh = true)
     {
       if (responsed.Dbresult == Result.Success)
       {
-        requested.Id = responsed.Id;
+        requested.Id       = responsed.Id;
+        requested.PhotoUrl = responsed.PhotoUrl;
+        requested.Personid = owner.Id;
+
         _dataSet[owner.Id].Photos.Add(requested);
 
         _ioUtils.SaveFile(requested.PhotoUrl, requested.Bytestring.ToArray());
 
-        OnDataChanged();
+        requested.Bytestring = Google.Protobuf.ByteString.Empty;
+
+        if (refresh)
+          OnDataChanged();
       }  
+    }
+
+    public void SetThumbnail(Person owner, Photo requested, Response responsed, bool refresh = true)
+    {
+      if (responsed.Good == Result.Success)
+      {        
+        Photo newThumbnail = _dataSet[owner.Id].Photos.Where(x => x.Id == requested.Id).FirstOrDefault();
+        if (newThumbnail != null)
+        {
+          _dataSet[owner.Id].Photoid   = requested.Id;
+          _dataSet[owner.Id].Thumbnail = newThumbnail;
+        }
+              
+        if (refresh)
+          OnDataChanged();
+      }
+    }
+
+    private void CheckPersonPhotosIfFileExisted( Person person )
+    {
+      foreach ( Photo photo in person.Photos )
+      {
+        if (!_ioUtils.FileExists(photo.PhotoUrl))
+          PhotosIndexesWithoutExistingFile.Add(photo.Id);
+      }
     }
 
     public void RemovePhotos(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
@@ -188,6 +240,21 @@ namespace BioData.Holders.Grouped
           ownerPhotos.Remove(photo);
       }
       OnDataChanged();
+    }
+    
+    private HashSet<long> _photosIndexesWithoutExistingFile;
+    public HashSet<long> PhotosIndexesWithoutExistingFile
+    {
+      get {
+        if (_photosIndexesWithoutExistingFile == null)
+          _photosIndexesWithoutExistingFile = new HashSet<long>();
+        return _photosIndexesWithoutExistingFile;
+      }
+      private set
+      {
+        if (_photosIndexesWithoutExistingFile != value)
+          _photosIndexesWithoutExistingFile = value;
+      }
     }
 
     public event DataChangedHandler             DataChanged;

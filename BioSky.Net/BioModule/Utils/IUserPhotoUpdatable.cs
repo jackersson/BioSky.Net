@@ -11,7 +11,7 @@ namespace BioModule.Utils
   public interface IUserPhotoUpdatable
   {
     void UpdatePhotoController(IUserPhotoController controller);
-    void UpdateFromPhoto(Photo photo, string filePrefix);
+    void UpdateFromPhoto(Photo photo);
     void Clear();
 
     Photo CurrentPhoto { get; }

@@ -160,6 +160,7 @@
     <Compile Include="IProcessorLocator.cs" />
     <Compile Include="IServiceManager.cs" />
     <Compile Include="IShowableContent.cs" />
+    <Compile Include="IThumbnailDataClient.cs" />
     <Compile Include="ITrackLocatioEngine.cs" />
     <Compile Include="Common\ProcessorLocator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

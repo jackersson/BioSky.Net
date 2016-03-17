@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using System.Windows;
 
 using Caliburn.Micro;
@@ -101,34 +100,20 @@ namespace BioModule.ViewModels
     {
       Clear();
       Zoom(viewWidth, viewHeight);      
-    }
-    
+    }    
 
     public void Zoom(double viewWidth, double viewHeight)
     {
-      _imageViewWidth = viewWidth;
+      _imageViewWidth  = viewWidth;
       _imageViewHeight = viewHeight;
+      
+      double imageWidth  = CurrentImageSource.Width  == 0 ? viewWidth  : CurrentImageSource.Width;
+      double imageHeight = CurrentImageSource.Height == 0 ? viewHeight : CurrentImageSource.Height;
 
-      double zoomRateToFitInView = ZoomRate / ZOOM_RATIO;
+      double maxWidthScale  = viewWidth  / imageWidth ;      
+      double maxHeightScale = viewHeight / imageHeight;
 
-      double imageWidth = CurrentImageSource.Width;
-      double imageHeight = CurrentImageSource.Height;
-
-      double minImageSide = Math.Min(imageWidth, imageHeight);
-      double maxImageSide = (minImageSide == imageWidth) ? imageHeight : imageWidth;
-
-      double proportionRate = minImageSide / maxImageSide;
-
-      double calculatedZoomFactor = zoomRateToFitInView * proportionRate;
-
-      CalculatedImageWidth = calculatedZoomFactor * viewWidth;
-      CalculatedImageHeight = calculatedZoomFactor * viewHeight;
-
-      CalculatedImageScale = CalculatedImageWidth / imageWidth;
-      CalculatedImageScaleY = CalculatedImageHeight / imageHeight;
-
-      if (CalculatedImageScale > CalculatedImageScaleY)
-        CalculatedImageScale = CalculatedImageScaleY;     
+      CalculatedImageScale = Math.Min(maxHeightScale, maxWidthScale) * ZoomRate / 100;     
     }
     #endregion
 
@@ -146,49 +131,8 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => CalculatedImageScale);
         }
       }
-    }
-
-    private double _calculatedImageScaleY;
-    public double CalculatedImageScaleY
-    {
-      get { return _calculatedImageScaleY; }
-      set
-      {
-        if (_calculatedImageScaleY != value)
-        {
-          _calculatedImageScaleY = value;
-          NotifyOfPropertyChange(() => CalculatedImageScaleY);
-        }
-      }
-    }
-
-    private double _calculatedImageWidth;
-    private double CalculatedImageWidth
-    {
-      get { return _calculatedImageWidth; }
-      set
-      {
-        if (_calculatedImageWidth != value)
-        {
-          _calculatedImageWidth = value;
-          NotifyOfPropertyChange(() => CalculatedImageWidth);
-        }
-      }
-    }
-
-    private double _calculatedImageHeight;
-    private double CalculatedImageHeight
-    {
-      get { return _calculatedImageHeight; }
-      set
-      {
-        if (_calculatedImageHeight != value)
-        {
-          _calculatedImageHeight = value;
-          NotifyOfPropertyChange(() => CalculatedImageHeight);
-        }
-      }
-    }
+    }    
+    
 
     private double _zoomRate;
     public double ZoomRate
@@ -229,7 +173,6 @@ namespace BioModule.ViewModels
         if (_currentImageSource == null)
           _currentImageSource = ResourceLoader.UserDefaultImageIconSource;
         return _currentImageSource;
-
       }
       protected set
       {
@@ -257,8 +200,7 @@ namespace BioModule.ViewModels
     private double _width           = 0;
     private double _height          = 0;
 
-    private const double ZOOM_TO_FIT_RATE = 90;
-    private const double ZOOM_RATIO = 100D;
+    private const double ZOOM_TO_FIT_RATE = 99;   
 
     private   BitmapUtils  _bitmapUtils  ;
     private   BioFileUtils _bioFileUtils ; 

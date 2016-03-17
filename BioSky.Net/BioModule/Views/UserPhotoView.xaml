@@ -75,25 +75,55 @@
                  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}" Orientation="Horizontal">
-                        <StackPanel.ContextMenu>
+                    <Grid Margin="6" Width="100" Height="120" Tag="{Binding DataContext, ElementName=GridLayout}" >
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="16"/>
+                        </Grid.RowDefinitions>
+                        
+                        <Grid.ContextMenu>
                             <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                                 <MenuItem Header="{lex:Loc SetThumbnail}"  
                               IsEnabled="{Binding CanSetThumbnail, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action OnSetThumbnail()]"/>
                             </ContextMenu>
-                        </StackPanel.ContextMenu>
-                        <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=ThumbnailIconSource}"
-                               Width="16" Height="16" >
-                            <Image.Visibility>
+                        </Grid.ContextMenu>
+
+                        <Image Grid.ColumnSpan="2" Grid.RowSpan="2"
+                               Source="{Binding PhotoUrl, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}"
+                               Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                        <Grid   Grid.Column="1"
+                                 Grid.Row="1">
+
+                            <Ellipse Fill="#FF387C09" 
+                              
+                                 Width="10" Height="10" 
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center"
+                                 />
+                            <Ellipse Fill="{x:Null}" 
+                               
+                                 Width="16" Height="16" 
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" Stretch="Uniform" Stroke="#FF9D9D9D"
+                                 />
+                            <Grid.Visibility>
                                 <MultiBinding Converter="{StaticResource MultiThumbnailConverter}">
                                     <Binding Path="Id"/>
-                                    <Binding ElementName="GridLayout" Path="DataContext.User.Thumbnailid"></Binding>
+                                    <Binding ElementName="GridLayout" Path="DataContext.User.Photoid"></Binding>
                                 </MultiBinding>
-                            </Image.Visibility>
-                        </Image>
-                        <Image Source="{Binding PhotoUrl, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}" Stretch="Fill" Width="100" Height="120"/>
-                    </StackPanel>
+                            </Grid.Visibility>
+                        </Grid>
+                        
+
+                     
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemsPanel>
