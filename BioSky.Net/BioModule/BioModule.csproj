@@ -247,6 +247,7 @@
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
+    <Compile Include="ViewModels\PeriodTimePickerViewModel.cs" />
     <Compile Include="ViewModels\PhotoImageViewModel.cs" />
     <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
     <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
@@ -316,6 +317,9 @@
     </Compile>
     <Compile Include="Views\PageControllerView.xaml.cs">
       <DependentUpon>PageControllerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PeriodTimePickerView.xaml.cs">
+      <DependentUpon>PeriodTimePickerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PhotoImageView.xaml.cs">
       <DependentUpon>PhotoImageView.xaml</DependentUpon>
@@ -455,6 +459,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PageControllerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PeriodTimePickerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

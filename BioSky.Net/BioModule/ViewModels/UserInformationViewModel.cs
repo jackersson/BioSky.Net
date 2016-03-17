@@ -60,12 +60,21 @@ namespace BioModule.ViewModels
         }
       }
     }
-
+    [System.ComponentModel.DataAnnotations.Required]
     public string FirstName
     {
-      get { return _user.Firstname; }
+      get { return _user.Firstname;}
       set
-      {       
+      {
+        if (String.IsNullOrEmpty(value))
+        {
+          throw new ArgumentException("Name can not be empty.");
+        }
+        if (value.Length > 4)
+        {
+          throw new ArgumentException("name can not be longer than 4 charectors");
+        }
+
         _user.Firstname = value;
         NotifyOfPropertyChange(() => FirstName);        
       }

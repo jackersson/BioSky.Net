@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:cal="http://www.caliburnproject.org"   
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
              xmlns:utils="clr-namespace:BioModule.Utils"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -27,11 +27,24 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
-            
+
+            <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />            
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <Style x:Key="MyMenuItemStyleWithCheckMark" TargetType="MenuItem" BasedOn="{StaticResource MetroMenuItem}" >
+                <Setter Property="MenuItem.Icon">
+                <Setter.Value>
+                            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                   Width="16" Height="16" 
+                                   Visibility="{Binding RelativeSource=
+                                   {RelativeSource Mode=FindAncestor, AncestorType=MenuItem}
+                                   , Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter} }"/>
+                </Setter.Value>
+                </Setter>
+            </Style>
+
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -46,6 +59,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="48" />
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -55,9 +69,48 @@
                 <ColumnDefinition Width="48"/>
             </Grid.ColumnDefinitions>
 
-
-
-            <ListBox Grid.Column="0" HorizontalAlignment="Stretch" 
+            <!--******************************************** Search Menu ***************************************-->
+            <Menu Grid.ColumnSpan="5" Grid.Row="1">
+                <MenuItem Header="Countries">
+                    <MenuItem Header="City">
+                        <MenuItem.Template>
+                            <ControlTemplate>
+                                <ComboBox x:Name="CountryBox" Margin="1"
+                                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                                          Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
+                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
+                                          Controls:TextBoxHelper.ClearTextButton="True"
+                                          SelectedItem="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"                          
+                                          ItemsSource="{Binding CountryNames}"/>
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+                    <MenuItem Header="City"/>
+                </MenuItem>
+                <MenuItem Header="Location">
+                    <MenuItem Header="All" IsCheckable="True" IsChecked="{Binding IsMenuItemChecked}"/>
+                </MenuItem>
+                <MenuItem Header="{Binding TimeFilterText}" >
+                    <MenuItem Header="All time" IsCheckable="True"  Style="{StaticResource MyMenuItemStyleWithCheckMark}"
+                              IsChecked="{Binding IsAllTimeChecked}"/>
+                    <MenuItem Header="_Last hour"   IsChecked="{Binding IsLastHourChecked}"  IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
+                    <MenuItem Header="Last 24hours" IsChecked="{Binding Is24HoursChecked}"   IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
+                    <MenuItem Header="Last week"    IsChecked="{Binding IsWeekChecked}"      IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
+                    <MenuItem Header="Last month"   IsChecked="{Binding IsMonthChecked}"     IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
+                    <MenuItem Header="Last year"    IsChecked="{Binding IsYearChecked}"      IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
+                    <Separator></Separator>
+                    <MenuItem Header="Period..."
+                              cal:Message.Attach="[Event Click] = [Action ShowPeriodTimePicker()]"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Biometric">
+                    <MenuItem Header="Photo" IsCheckable="True" IsChecked="True" StaysOpenOnClick="True" />
+                </MenuItem>
+                <MenuItem Header="Reset settings" IsCheckable="True">
+                </MenuItem>                       
+            </Menu>
+            <!--******************************************** Search Menu ***************************************-->
+            
+                <ListBox Grid.Column="0" HorizontalAlignment="Stretch" 
                  Grid.ColumnSpan="5" BorderThickness="1" BorderBrush="#4C808080"
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
@@ -68,70 +121,71 @@
                                      [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)];
                                      [Event MouseDoubleClick]     = [Action OnMouseDoubleClick($mouseSelectedItem)]"
                  >
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
-                            <StackPanel.ContextMenu>
-                                <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
-                                    <MenuItem Header="Open in New Tab"  
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="6" Tag="{Binding DataContext, ElementName=GridLayout}">
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                        <MenuItem Header="Open in New Tab"  
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowUserPage]"
                               />
-                                    <MenuItem Header="Remove" 
+                                        <MenuItem Header="Remove" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action RemoveVisitor]"
                               />
-                                    <MenuItem Header="Add Visitor as User" 
+                                        <MenuItem Header="Add Visitor as User" 
                               IsEnabled="{Binding MenuOpenStatus, Mode=TwoWay}"                              
                               cal:Message.Attach="[Event Click] = [Action OnAddVisitorAsUser]"
                               />
-                                </ContextMenu>
-                            </StackPanel.ContextMenu>
-                            <Image Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
+                                <Image Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
                                        Stretch="Fill" Width="128" Height="128"/>
-                            <StackPanel Width="128" Orientation="Horizontal" >
-                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}"
+                                <StackPanel Width="128" Orientation="Horizontal" >
+                                    <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}"
                                    HorizontalAlignment="Left" Foreground="#FF5E82A8" FontWeight="Bold"></TextBlock>
-                                <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" 
+                                    <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" 
                                    HorizontalAlignment="Right" Foreground="#FF5E82A8" FontWeight="Bold" Margin="5,0,0,0"></TextBlock>
-                            </StackPanel>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="104" />
-                                    <ColumnDefinition Width="24"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Width="104" Text="{Binding Locationid, Converter={x:Static utils:ConverterInitializer.LocationIdToLocationnameConverter}}" TextWrapping="Wrap" 
-                                   HorizontalAlignment="Left" Foreground="Gray"></TextBlock>
-                                    <TextBlock Text="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}" HorizontalAlignment="Left" 
-                                   Foreground="Gray" FontSize="11" FontWeight="SemiBold"></TextBlock>
                                 </StackPanel>
-                                <Image Grid.Column="1" Width="24" Height="24" VerticalAlignment="Bottom">
-                                    <Image.Style>
-                                        <Style TargetType="Image">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Status}" Value="Success">
-                                                    <Setter Property="Source" Value="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Status}" Value="Failed">
-                                                    <Setter Property="Source" Value="{Binding Source={StaticResource ResourceLoader}, Path=ErrorIconSource}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Image.Style>
-                                </Image>
-                            </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="104" />
+                                        <ColumnDefinition Width="24"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Width="104" Text="{Binding Locationid, Converter={x:Static utils:ConverterInitializer.LocationIdToLocationnameConverter}}" TextWrapping="Wrap" 
+                                   HorizontalAlignment="Left" Foreground="Gray"></TextBlock>
+                                        <TextBlock Text="{Binding Time, Converter={StaticResource ConvertLongToDateTime}}" HorizontalAlignment="Left" 
+                                   Foreground="Gray" FontSize="11" FontWeight="SemiBold"></TextBlock>
+                                    </StackPanel>
+                                    <Image Grid.Column="1" Width="24" Height="24" VerticalAlignment="Bottom">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Success">
+                                                        <Setter Property="Source" Value="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Failed">
+                                                        <Setter Property="Source" Value="{Binding Source={StaticResource ResourceLoader}, Path=ErrorIconSource}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                </Grid>
 
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
             
+
             <local:PageControllerView
                 Grid.Column="2" Grid.ColumnSpan="2" Margin="1,1,1,1"
                 DataContext="{Binding PageController}">                

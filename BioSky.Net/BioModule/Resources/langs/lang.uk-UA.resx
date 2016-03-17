@@ -366,4 +366,10 @@
   <data name="string_supervisor" xml:space="preserve">
     <value>Керівник</value>
   </data>
+  <data name="NoAvailablePhotos" xml:space="preserve">
+    <value>Немає фотографій</value>
+  </data>
+  <data name="YourPhotos" xml:space="preserve">
+    <value>Ваші фотографії</value>
+  </data>
 </root>

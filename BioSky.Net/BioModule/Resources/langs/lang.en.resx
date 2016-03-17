@@ -375,4 +375,10 @@
   <data name="string_supervisor" xml:space="preserve">
     <value>Superviser</value>
   </data>
+  <data name="NoAvailablePhotos" xml:space="preserve">
+    <value>NoAvailablePhotos</value>
+  </data>
+  <data name="YourPhotos" xml:space="preserve">
+    <value>YourPhotos</value>
+  </data>
 </root>

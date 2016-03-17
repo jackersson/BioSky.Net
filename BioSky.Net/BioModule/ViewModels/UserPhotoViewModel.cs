@@ -1,30 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Caliburn.Micro;
-
-using BioData;
 using BioContracts;
-
-using System.Windows.Media.Imaging;
-using BioModule.ResourcesLoader;
-using System.IO;
-using AForge.Video.DirectShow;
-using System.Collections.ObjectModel;
-using System.Reflection;
-using System.Drawing;
 using BioModule.Utils;
 
 using BioService;
 using BioContracts.Services;
-using Microsoft.Win32;
 using BioContracts.Common;
-using System.Windows;
-using Grpc.Core;
-using Google.Protobuf.Collections;
-using System.Collections;
+using WPFLocalizeExtension.Extensions;
 
 namespace BioModule.ViewModels
 {
@@ -51,6 +33,7 @@ namespace BioModule.ViewModels
       
       _database.Persons.DataChanged     += RefreshData;
       //_database.PhotoHolder.DataChanged += RefreshData;  
+      PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:NoAvailablePhotos");
 
       IsEnabled = true;
     }
@@ -85,7 +68,12 @@ namespace BioModule.ViewModels
       UserImages.Clear();
      
       foreach (Photo personPhoto in _user.Photos)      
-        UserImages.Add(personPhoto);              
+        UserImages.Add(personPhoto);
+      
+      if(UserImages.Count > 0)      
+        PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:YourPhotos");      
+      else
+        PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:NoAvailablePhotos");
     }
 
     #endregion  
@@ -183,6 +171,20 @@ namespace BioModule.ViewModels
         {
           _canSetThumbnail = value;
           NotifyOfPropertyChange(() => CanSetThumbnail);
+        }
+      }
+    }
+
+    private string _photoAvailableText;
+    public string PhotoAvailableText
+    {
+      get { return _photoAvailableText; }
+      set
+      {
+        if (_photoAvailableText != value)
+        {
+          _photoAvailableText = value;
+          NotifyOfPropertyChange(() => PhotoAvailableText);
         }
       }
     }

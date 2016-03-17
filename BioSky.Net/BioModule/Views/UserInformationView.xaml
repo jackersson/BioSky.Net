@@ -28,9 +28,20 @@
             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
             <ResourceDictionary>
                     <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
-                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
-                </Style>
-            </ResourceDictionary>
+                        <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+                    </Style>
+                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource MetroTextBox}">
+                        
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Trigger.Setters>
+                                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self},Path=(Validation.Errors)[0].ErrorContent}"/>
+                                    <Setter Property="BorderBrush" Value="Red"/>
+                                </Trigger.Setters>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
         </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources> 
@@ -50,13 +61,13 @@
         <ScrollViewer  Grid.Column="0" Grid.Row="0"  CanContentScroll="True" 
                                   VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="4">
             <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-
+ 
                 <TextBox x:Name="FirstNameBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                
-                         Controls:TextBoxHelper.Watermark="{lex:Loc FirstName}"
+                         Controls:TextBoxHelper.Watermark="{lex:Loc FirstName}" 
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Controls:TextBoxHelper.ClearTextButton="True"                         
                          
-                         Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged }" >                  
+                         Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" >                  
                 </TextBox>                  
                          
 
