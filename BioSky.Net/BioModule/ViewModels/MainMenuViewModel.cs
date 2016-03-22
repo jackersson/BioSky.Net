@@ -50,22 +50,6 @@ namespace BioModule.ViewModels
     }
     public void ShowLogInDialog()
     {
-      _dialogsHolder.LoginDialog.Show();
-      LoginDialogResult result = _dialogsHolder.LoginDialog.GetDialogResult();
-      if(result == null)
-        return;
-
-      switch(result.status)
-      {
-        case LoginDialogStatus.Register:
-          Console.WriteLine("Register " + result.userName + " " + result.password);
-          break;
-                    
-        case LoginDialogStatus.SignIn:
-          Console.WriteLine("Register " + result.userName + " " + result.password);
-          break;
-      }
-
     }
 
     public void ShowSettingsFlayout()

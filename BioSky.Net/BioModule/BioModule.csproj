@@ -219,6 +219,7 @@
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
+    <Compile Include="ViewModels\LoginPopupViewModel.cs" />
     <Compile Include="ViewModels\NotificationDialogViewModel.cs" />
     <Compile Include="ViewModels\PageControllerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -251,7 +252,6 @@
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\LoaderViewModel.cs" />
     <Compile Include="ViewModels\LocationAccessDevicesViewModel.cs" />
-    <Compile Include="ViewModels\LoginDialogViewModel.cs" />
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
@@ -312,11 +312,11 @@
     <Compile Include="Views\LocationPermissionView.xaml.cs">
       <DependentUpon>LocationPermissionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LoginDialogView.xaml.cs">
-      <DependentUpon>LoginDialogView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\LoginInformationView.xaml.cs">
       <DependentUpon>LoginInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginPopupView.xaml.cs">
+      <DependentUpon>LoginPopupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -457,13 +457,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\LoginDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\LoginInformationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginPopupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainMenuView.xaml">
       <SubType>Designer</SubType>

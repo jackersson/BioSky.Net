@@ -19,7 +19,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>

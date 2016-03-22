@@ -19,8 +19,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
             </ResourceDictionary.MergedDictionaries>
-           
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </UserControl.Resources>

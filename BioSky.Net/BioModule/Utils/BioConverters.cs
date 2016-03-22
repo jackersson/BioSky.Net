@@ -15,7 +15,7 @@ using System.Windows.Documents;
 using System.Windows;
 using BioContracts;
 using BioService;
-using System.Windows.Media;
+
 
 namespace BioModule.Utils
 {
@@ -88,17 +88,40 @@ namespace BioModule.Utils
         }
       }
     }
+
+    private static ConvertPermissionToVisibility _permissionToVisibilityConverter;
+    public static ConvertPermissionToVisibility PermissionToVisibilityConverter
+    {
+      get { return _permissionToVisibilityConverter; }
+      set
+      {
+        if (_permissionToVisibilityConverter != value)
+        {
+          _permissionToVisibilityConverter = value;
+        }
+      }
+    }
     #endregion
 
-    
-    public ConverterInitializer( IBioSkyNetRepository database )
+
+    public ConverterInitializer(IProcessorLocator locator)
     {
-      PhotoIDConverter                  = new ConvertPhotoIdToImage          (database );
-      FileLocationToImageConverter      = new ConvertFileLocationToImage     (database);
-      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (database.Persons);
-      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (database.Persons);
-      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(database.Locations);
+      _locator   = locator;
+      _database  = _locator.GetProcessor<IBioSkyNetRepository>();
+      _bioEngine = _locator.GetProcessor<IBioEngine>();
+      
+
+      PhotoIDConverter                  = new ConvertPhotoIdToImage          (_database)          ;
+      FileLocationToImageConverter      = new ConvertFileLocationToImage     (_database)          ;
+      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (_database.Persons)  ;
+      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (_database.Persons)  ;
+      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(_database.Locations);
+      PermissionToVisibilityConverter   = new ConvertPermissionToVisibility  (_bioEngine)         ;
     }
+
+    private IProcessorLocator    _locator  ;
+    private IBioSkyNetRepository _database ;
+    private IBioEngine           _bioEngine;
   }
 
   #region InverseBooleanToVisibilitConvertor  
@@ -121,46 +144,34 @@ namespace BioModule.Utils
   }
   #endregion
 
-  public class GrayScaleConverter : IMultiValueConverter
+  #region ConvertPermissionToVisibility
+  public class ConvertPermissionToVisibility : IValueConverter
   {
-    public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+    public ConvertPermissionToVisibility(IBioEngine bioEngine)
     {
-      var image = values[0] as BitmapSource;
-
-      string s = values[1].ToString();
-
-      bool isLogged = System.Convert.ToBoolean(s);
-
-      if (!isLogged)
-      {
-        try
-        {
-          if (image != null)
-          {
-            var grayBitmapSource = new FormatConvertedBitmap();
-            grayBitmapSource.BeginInit();
-            grayBitmapSource.Source = image;
-            grayBitmapSource.DestinationFormat = PixelFormats.Gray32Float;
-            grayBitmapSource.EndInit();
-            return grayBitmapSource;
-          }
-          return null;
-
-        }
-        catch (Exception ex)
-        {
-          throw ex;
-        }
-      }
-      return image;
+      _bioEngine = bioEngine;
     }
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        Activity activity = (Activity)parameter;
+        bool flag = _bioEngine.IsActivityAllowed(activity);
 
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        return flag; //!flag ? Visibility.Collapsed : Visibility.Visible;
+
+      }
+      return null;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       throw new NotImplementedException();
     }
-  }
 
+    private IBioEngine _bioEngine;
+
+  }
+  #endregion
 
   #region ConvertLongToDateTime
   public class ConvertLongToDateTime : IValueConverter
@@ -208,7 +219,7 @@ namespace BioModule.Utils
         if(person != null)
         {
 
-          Photo photo = person.Photos.Where(x => x.Id == person.Photoid).FirstOrDefault();
+          Photo photo = person.Photos.FirstOrDefault();//.GetValue(person.Thumbnailid);
 
           if (photo != null)
           {

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using MahApps.Metro.Controls;
+using System;
 
 namespace BioShell.Views
 {
@@ -12,6 +13,8 @@ namespace BioShell.Views
     {
       InitializeComponent();
       Application.Current.MainWindow = this;  
-    }   
+    }
+
+    
   }
 }

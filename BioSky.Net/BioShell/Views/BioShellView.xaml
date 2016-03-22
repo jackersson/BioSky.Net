@@ -11,7 +11,8 @@
                       xmlns:z="clr-namespace:BioModule;assembly=BioModule" 
                       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"                     
                       xmlns:cal="http://www.caliburnproject.org"
-                      xmlns:tas="clr-namespace:BioContracts;assembly=BioContracts"                     
+                      xmlns:tas="clr-namespace:BioContracts;assembly=BioContracts"     
+                     
                       mc:Ignorable="d"
                       BorderThickness="1"
                       WindowStartupLocation="CenterScreen"

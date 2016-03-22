@@ -18,6 +18,7 @@ using Castle.Facilities.TypedFactory;
 using System.IO;
 using System.Reflection;
 
+
 namespace BioModule
 {
   public class BioModuleInstaller : IWindsorInstaller
@@ -51,7 +52,6 @@ namespace BioModule
 
 
 
-
         //container.Register(Component.For<IWindsorContainer>().Instance(container));
         container.Register(Component.For<TabViewModel>());
         container.Register(Component.For<FlyoutControlViewModel>());
@@ -61,22 +61,19 @@ namespace BioModule
 
         container.Register(Component.For<MainMenuViewModel>().LifeStyle.Singleton);
         container.Register(Component.For<ToolBarViewModel>().LifeStyle.Singleton);
-        container.Register(Component.For<LoginInformationViewModel>().LifeStyle.Singleton);
 
-       
-        
+        container.Register(Component.For<ILoginInformation>().ImplementedBy<LoginInformationViewModel>());
+
 
         container.Resolve<IProcessorLocator>().Init(container);
 
-       // IBioStarter starter = container.Resolve<IBioStarter>();
+        // IBioStarter starter = container.Resolve<IBioStarter>();
         //starter.Run();
 
         //var test =  container.Resolve<IBioEngine>();
         //IBioStarter starter = container.Resolve<IBioStarter>();
         //container.Register(Component.For<IWindsorContainer>().Instance(container));
-       // container.Register(Component.For<IProcessorLocator>().ImplementedBy<ProcessorLocator>());
-
-
+        // container.Register(Component.For<IProcessorLocator>().ImplementedBy<ProcessorLocator>());
 
         container.Register(Component.For<IBioModule>().ImplementedBy<BioModuleImpl>());
       }
