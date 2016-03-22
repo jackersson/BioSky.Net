@@ -384,4 +384,7 @@
   <data name="SignOut" xml:space="preserve">
     <value>Выйти</value>
   </data>
+  <data name="HomePage" xml:space="preserve">
+    <value>Домашняя страница</value>
+  </data>
 </root>

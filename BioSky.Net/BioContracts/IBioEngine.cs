@@ -6,9 +6,15 @@ namespace BioContracts
   public enum Activity : long
   {
      None
-   , UserAdd = 1 << 0
-   , UserUpdate = 1 << 1
-   , UserRemove = 1 << 2
+   , UserAdd        = 1 << 0
+   , UserUpdate     = 1 << 1
+   , UserRemove     = 1 << 2
+
+   , LocationAdd    = 1 << 3
+   , LocationUpdate = 1 << 4
+   , LocationRemove = 1 << 5
+
+
   }
 
   public interface IBioEngine

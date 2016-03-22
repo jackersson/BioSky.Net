@@ -32,7 +32,7 @@
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage"     />
             <utils:ConvertLongToDateTime   x:Key="ConvertLongToDateTime"       />
             <BooleanToVisibilityConverter  x:Key="BooleanToVisibilityConverter"/>
-            <resloader:ResourceLoader      x:Key="ResourceLoader"              />
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
 
             <Style x:Key="MyMarkStyle" TargetType="Image">
                 <Setter Property="Visibility" Value="{Binding RelativeSource=

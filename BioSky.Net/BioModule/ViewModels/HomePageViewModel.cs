@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPFLocalizeExtension.Extensions;
 
 namespace BioModule.ViewModels
 {
@@ -12,7 +13,7 @@ namespace BioModule.ViewModels
   {
     public HomePageViewModel(ViewModelSelector viewModelSelector)
     {
-      DisplayName = "HomePage";
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:HomePage");
       _viewModelSelector = viewModelSelector;
     }
 

@@ -393,4 +393,7 @@
   <data name="SignOut" xml:space="preserve">
     <value>SignOut</value>
   </data>
+  <data name="HomePage" xml:space="preserve">
+    <value>HomePage</value>
+  </data>
 </root>

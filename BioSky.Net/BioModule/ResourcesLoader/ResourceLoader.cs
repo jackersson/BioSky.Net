@@ -60,6 +60,27 @@ namespace BioModule.ResourcesLoader
     
   public class ResourceLoader
   {
+    private static object syncObject = new object();
+
+    private static volatile ResourceLoader _instance;
+    public static ResourceLoader Instance
+    {
+      get
+      {
+        if (_instance == null)
+        {
+          lock (syncObject)
+          {
+            if (_instance == null)
+              _instance = new ResourceLoader();
+          }
+        }
+        return _instance;
+      }
+    }
+
+    private ResourceLoader() { }
+
     private static BitmapSource _addIconSource   ;
     private static BitmapSource _removeIconSource;
     private static BitmapSource _deleteIconSource;

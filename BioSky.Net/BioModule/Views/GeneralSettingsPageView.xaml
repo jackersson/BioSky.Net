@@ -22,7 +22,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Menu.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
 
             <Style x:Key="MyStandardButton" TargetType="Button">
                 <Setter Property="Background" Value="{StaticResource BackgroundNormal}" />

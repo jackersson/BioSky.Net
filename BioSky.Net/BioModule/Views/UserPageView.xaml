@@ -19,8 +19,8 @@
              >
 
     <UserControl.Resources>
-        <ResourceDictionary>            
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <ResourceDictionary>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>

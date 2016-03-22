@@ -34,7 +34,7 @@
                 </Style.Triggers>
             </Style>
 
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <Style x:Key="MyStandardButton" TargetType="Button">
                 <Setter Property="Background" Value="{StaticResource BackgroundNormal}" />
                 <Setter Property="BorderBrush" Value="{StaticResource BorderBrushNormal}" />

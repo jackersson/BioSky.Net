@@ -19,11 +19,7 @@ namespace BioModule.ViewModels
       _dialogsHolder     = _locator.GetProcessor<DialogsHolder>();
       _windowManager     = _locator.GetProcessor<IWindowManager>();
 
-      // TODO Check Error
-      //_viewModelSelector = _locator.GetProcessor<ViewModelSelector>();
-
-
-      LoginPopup = new LoginPopupViewModel();
+      LoginPopup = new LoginPopupViewModel(_locator);
     }
     
     protected override void OnDeactivate(bool close)

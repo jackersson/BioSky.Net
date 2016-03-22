@@ -17,11 +17,10 @@
        PopupAnimation="Scroll" AllowsTransparency="True"
        d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Border BorderBrush="LightBlue" BorderThickness="2" Background="White">
+        <Border BorderBrush="#FF3F3F46" BorderThickness="2" Background="#FF1E1E1E" >
             <TextBlock Name="SignBlock" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                       Foreground="#FF5E82A8" FontWeight="SemiBold" 
-                        
-                       Text="{lex:Loc SignOut}"                          
+                       Foreground="#FF5E82A8" FontWeight="SemiBold"                       
+                       Text="{lex:Loc SignOut}" cal:Message.Attach="[Event MouseDown] = [Action OnSignOut]"                          
                        TextAlignment="Center">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">

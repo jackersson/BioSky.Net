@@ -43,7 +43,7 @@
             <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Primary700}"/>
             <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Primary700Foreground}"/>
 
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         </ResourceDictionary>
         
     </metro:MetroWindow.Resources>

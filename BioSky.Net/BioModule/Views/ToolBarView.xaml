@@ -5,8 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:BioModule.ViewModels"      
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"   
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"              
+             xmlns:utils="clr-namespace:BioModule.Utils" 
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader" 
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"           
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -15,7 +19,22 @@
              d:DataContext="{d:DesignInstance vm:ToolBarViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+
+        <Style x:Key="GreyScaleImage" TargetType="Image">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     
     <Grid>
@@ -23,30 +42,51 @@
             <ToolBar>
                 <Separator></Separator>
                 <Button ToolTip="{lex:Loc HomePage}" cal:Message.Attach="[Event Click]=[Action OpenTabHomePage]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=HomeIconSource}" Width="32" Height="32"  />
-                </Button>
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=HomeIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
+                </Button>        
+                
+                
+                
+                
                 <Separator></Separator>
-                <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" Width="32" Height="32"  />
+                <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]"
+                        IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                                   , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                                   , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource GreyScaleImage}"/>
                 </Button>
+                
+                
+                
+                
+                
                 <Separator></Separator>
 
-                <Button ToolTip="{lex:Loc AddNewLocation}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}" Width="32" Height="32"  />
+                <Button ToolTip="{lex:Loc AddNewLocation}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]"
+                        IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                                   , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                                   , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource GreyScaleImage}" />
                 </Button>                
                 <Separator></Separator>
                 <Button ToolTip="{lex:Loc Visitors}" cal:Message.Attach="[Event Click]=[Action OpenTabVisitors]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=JournalListIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=JournalListIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource GreyScaleImage}" />
                 </Button>
                 <Separator></Separator>
 
                 <Button ToolTip="{lex:Loc Users}" cal:Message.Attach="[Event Click]=[Action OpenTabUsers]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UsersListIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UsersListIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource GreyScaleImage}" />
                 </Button>
                 <Separator></Separator>
 
                 <Button ToolTip="{lex:Loc Tracking}" cal:Message.Attach="[Event Click]=[Action OpenTabTrack]">
-                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=TrackingIconSource}" Width="32" Height="32"  />
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=TrackingIconSource}" 
+                           Width="32" Height="32" Style="{StaticResource GreyScaleImage}" />
                 </Button>
             </ToolBar>
         </ToolBarTray>

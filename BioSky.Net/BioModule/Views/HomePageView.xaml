@@ -24,7 +24,7 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
 
             <sys:Double x:Key="MyWidth">195</sys:Double>
 
