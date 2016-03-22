@@ -10,9 +10,16 @@
                 </ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />             
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />     
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />                
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/baselight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Color x:Key="MyWhiteColor">#FFF1F1F1</Color>
+            <SolidColorBrush x:Key="TextBrush" Color="{StaticResource MyWhiteColor}"  />
+            <SolidColorBrush x:Key="LabelTextBrush" Color="{StaticResource MyWhiteColor}" />
+            <SolidColorBrush x:Key="TextBoxMouseOverInnerBorderBrush" Color="{StaticResource MyWhiteColor}" />
+            <SolidColorBrush x:Key="TextBoxFocusBorderBrush" Color="{StaticResource MyWhiteColor}"/>
+            <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{StaticResource MyWhiteColor}"  />
+            <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="{StaticResource MyWhiteColor}"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

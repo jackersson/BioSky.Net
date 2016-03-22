@@ -74,7 +74,8 @@
                             <MenuItem Header="{lex:Loc Remove}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
                                           cal:Message.Attach="[Event Click] = [Action OnRemove()]"/>
                         </ContextMenu>
-                    </ListBox.ContextMenu>
+                    </ListBox.ContextMenu>                    
+                    
 
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
@@ -90,7 +91,7 @@
 
                 <ListBox x:Name="CaptureDevices"
                           BorderThickness="1" Grid.Row="1" Grid.Column="2" Margin="1"                      
-                           SelectedIndex="0"                           
+                          SelectedIndex="0"                           
                           ItemsSource="{Binding CaptureDevicesList}"
                           SelectedItem="{Binding SelectedCaptureDevice}"                     
                           ScrollViewer.CanContentScroll="False" SelectionMode="Single"                                                                    

@@ -17,7 +17,7 @@
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Background="#FF1E1E1E" BorderBrush="#FF3F3F46"
              d:DesignHeight="400" d:DesignWidth="400"              
              >  
 
@@ -32,19 +32,6 @@
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
-            <Style x:Key="MyMenuItemStyleWithCheckMark" TargetType="MenuItem" BasedOn="{StaticResource MetroMenuItem}" >
-                <Setter Property="MenuItem.Icon">
-                <Setter.Value>
-                            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
-                                   Width="16" Height="16" 
-                                   Visibility="{Binding RelativeSource=
-                                   {RelativeSource Mode=FindAncestor, AncestorType=MenuItem}
-                                   , Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter} }"/>
-                </Setter.Value>
-                </Setter>
-            </Style>
-
-
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -58,56 +45,19 @@
         <Grid x:Name="GridLayout" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48" />
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="9*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="45"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="48"/>
             </Grid.ColumnDefinitions>
 
             <!--******************************************** Search Menu ***************************************-->
-            <Menu Grid.ColumnSpan="5" Grid.Row="1">
-                <MenuItem Header="Countries">
-                    <MenuItem Header="City">
-                        <MenuItem.Template>
-                            <ControlTemplate>
-                                <ComboBox x:Name="CountryBox" Margin="1"
-                                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
-                                          Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
-                                          Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                          Controls:TextBoxHelper.ClearTextButton="True"
-                                          SelectedItem="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"                          
-                                          ItemsSource="{Binding CountryNames}"/>
-                            </ControlTemplate>
-                        </MenuItem.Template>
-                    </MenuItem>
-                    <MenuItem Header="City"/>
-                </MenuItem>
-                <MenuItem Header="Location">
-                    <MenuItem Header="All" IsCheckable="True" IsChecked="{Binding IsMenuItemChecked}"/>
-                </MenuItem>
-                <MenuItem Header="{Binding TimeFilterText}" >
-                    <MenuItem Header="All time" IsCheckable="True"  Style="{StaticResource MyMenuItemStyleWithCheckMark}"
-                              IsChecked="{Binding IsAllTimeChecked}"/>
-                    <MenuItem Header="_Last hour"   IsChecked="{Binding IsLastHourChecked}"  IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
-                    <MenuItem Header="Last 24hours" IsChecked="{Binding Is24HoursChecked}"   IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
-                    <MenuItem Header="Last week"    IsChecked="{Binding IsWeekChecked}"      IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
-                    <MenuItem Header="Last month"   IsChecked="{Binding IsMonthChecked}"     IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
-                    <MenuItem Header="Last year"    IsChecked="{Binding IsYearChecked}"      IsCheckable="True" Style="{StaticResource MyMenuItemStyleWithCheckMark}"/>
-                    <Separator></Separator>
-                    <MenuItem Header="Period..."
-                              cal:Message.Attach="[Event Click] = [Action ShowPeriodTimePicker()]"></MenuItem>
-                </MenuItem>
-                <MenuItem Header="Biometric">
-                    <MenuItem Header="Photo" IsCheckable="True" IsChecked="True" StaysOpenOnClick="True" />
-                </MenuItem>
-                <MenuItem Header="Reset settings" IsCheckable="True">
-                </MenuItem>                       
-            </Menu>
+            <local:VisitorsFilterMenuView Grid.Row="1" Grid.ColumnSpan="5"  DataContext="{Binding VisitorsFilterMenu}"></local:VisitorsFilterMenuView>
             <!--******************************************** Search Menu ***************************************-->
             
                 <ListBox Grid.Column="0" HorizontalAlignment="Stretch" 
@@ -195,10 +145,11 @@
             
             <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0"
                     HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
-                    IsEnabled="{Binding IsDeleteButtonEnabled}"                    
+                    IsEnabled="True"                  
                     ToolTip="{lex:Loc Delete}"
-                    cal:Message.Attach="[Event Click] = [Action OnDeleteVisitors]"
+                    cal:Message.Attach="[Event Click] = [Action Select]"
                 >
+                <!-- IsEnabled="{Binding IsDeleteButtonEnabled}" cal:Message.Attach="[Event Click] = [Action OnDeleteVisitors]"  -->
                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
             </Button>
 

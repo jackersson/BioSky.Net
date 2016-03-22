@@ -44,12 +44,13 @@ namespace BioAccessDevice
 
     public void Remove(string portName)
     {
+      
       AccessDeviceListener listener;
       if (_accessDevices.TryGetValue(portName, out listener))
       {
         listener.Stop();
         _accessDevices.Remove(portName);
-      }     
+      }    
     }
 
     
@@ -90,6 +91,7 @@ namespace BioAccessDevice
 
     public void Unsubscribe(System.IObserver<AccessDeviceActivity> observer, string portName)
     {
+      
       AccessDeviceListener listener;
       if (_accessDevices.TryGetValue(portName, out listener))
       {

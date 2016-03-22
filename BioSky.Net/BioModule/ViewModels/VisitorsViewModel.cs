@@ -13,6 +13,7 @@ using System.Collections;
 using System.ComponentModel;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
+using Grpc.Core;
 
 namespace BioModule.ViewModels
 {
@@ -33,19 +34,33 @@ namespace BioModule.ViewModels
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
 
 
-      _selectedVisitors = new ObservableCollection<Visitor>();
-      PageController        = new PageControllerViewModel();
+      _selectedVisitors  = new ObservableCollection<Visitor>();
+      PageController     = new PageControllerViewModel();
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
      // _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.Visitors.DataChanged      += RefreshData;
-
-      IsMenuItemChecked = true;
-      TimeFilterText = "Time";      
+      _database.Visitors.DataChanged      += RefreshData;      
     } 
         
     #region Database
+
+
+    public async void Select()
+    {
+      QueryVisitors query = GetQuery();      
+      try
+      {
+        //await _bioService.VisitorDataClient.Select(query);
+      }
+      catch (RpcException ex) {
+        Console.WriteLine(ex.Message);
+      }
+    }
+    public QueryVisitors GetQuery()
+    {
+      return VisitorsFilterMenu.GetQuery();
+    }
 
     private void RefreshData()
     {
@@ -129,6 +144,9 @@ namespace BioModule.ViewModels
         PhotoImage = new PhotoImageViewModel(_locator);
         PhotoImage.SetVisibility(true, false, false);
       }
+
+      if(VisitorsFilterMenu == null)
+        VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator, PAGES_COUNT);
     }
 
     protected override void OnActivate()
@@ -167,6 +185,10 @@ namespace BioModule.ViewModels
     public void OnSearchTextChanged(string SearchText)
     {        
       Dictionary<long, Person> dictionary = _database.Persons.DataSet;
+
+      if (VisitorsCollectionView == null)
+        return;
+
       VisitorsCollectionView.Filtering = item =>
       {
         if (String.IsNullOrEmpty(SearchText))
@@ -176,7 +198,7 @@ namespace BioModule.ViewModels
         if (vitem != null)
         {
           Person person = null;
-          if (dictionary.TryGetValue(vitem.Personid, out person) )
+          if (dictionary.TryGetValue(vitem.Personid, out person))
           {
             if (person.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
                 person.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)            
@@ -202,222 +224,10 @@ namespace BioModule.ViewModels
 
     //*********************************************Filters*************************************************
 
-    public void ShowPeriodTimePicker()
-    {
-      _dialogsHolder.PeriodTimePicker.Show();
-      PeriodTimePickerResult result = _dialogsHolder.PeriodTimePicker.GetResult();
-      if (result != null)
-      {
-        TimeFilterText = result.FromDateString + "-" + result.ToDateString;
-
-        long[] timeFilter = { result.FromDateLong, result.ToDateLong };
-        periodTime = timeFilter;
-        SetTimeFilterState(TimeEnum.Period);
-      }
-    }
-
-    private long[] periodTime        = { 0 , 0};
-    private long[] currentTimeFilter = { 0 , 0};
-
-
-    public long[] GetTimeFilterInterval(TimeEnum state)
-    {
-      long fromTime = 0;
-      long toTime   = 0;
-
-      DateTime nullDate = DateTime.Now;
-      DateTime now      = DateTime.Now;
-      DateTime dateTo   = now;
-      DateTime dateFrom = now;
-
-      switch (state)
-      {
-        case TimeEnum.AllTime:
-          dateTo   = nullDate;
-          dateFrom = nullDate;
-          break;
-
-        case TimeEnum.LastHour:
-          dateFrom = now.AddHours(-1);
-          break;
-
-        case TimeEnum.Last24Houts:
-          dateFrom = now.AddHours(-24);         
-          break;
-
-        case TimeEnum.LastMonth:
-          dateFrom = now.AddMonths(-1);
-          break;
-
-        case TimeEnum.LastWeek:
-          dateFrom = now.AddDays(-7);
-          break;
-
-        case TimeEnum.LastYear:
-          dateFrom = now.AddYears(-7);
-          break;
-      }
-
-      fromTime = dateFrom.Ticks;
-      toTime   = dateTo.Ticks  ;
-
-      long [] timeFilter = { fromTime, toTime };
-
-      return timeFilter;
-    }
-    public void SetTimeFilterState(TimeEnum state)
-    {
-      TimeFilterState = state;
-      if (state != TimeEnum.Period)
-        currentTimeFilter = GetTimeFilterInterval(TimeFilterState);
-      else
-        currentTimeFilter = periodTime;
-    }
+   
     #endregion
 
-    #region UI
-
-    public string[] CountryNames
-    {
-      get { return _database.BioCultureSources.CountriesNames; }
-    }
-
-
-
-    private TimeEnum _timeFilterState;
-    public TimeEnum TimeFilterState
-    {
-      get { return _timeFilterState; }
-      set
-      {
-        if (_timeFilterState != value)
-        {
-          _timeFilterState = value;
-          if(_timeFilterState != TimeEnum.Period)
-            TimeFilterText = _timeFilterState.ToString();
-          if (_timeFilterState != TimeEnum.None)
-            TimeFilterText = "Time";
-        }
-      }
-    }
-
-    private string _timeFilterText;
-    public string TimeFilterText
-    {
-      get { return _timeFilterText; }
-      set
-      {
-        if (_timeFilterText != value)
-        {
-          _timeFilterText = value;
-          NotifyOfPropertyChange(() => TimeFilterText);
-        }
-      }
-    }
-
-    private bool _isYearChecked;
-    public bool IsYearChecked
-    {
-      get { return _isYearChecked; }
-      set
-      {
-        if (_isYearChecked != value)
-        {
-          _isYearChecked = value;
-          SetTimeFilterState(TimeEnum.LastYear);
-          NotifyOfPropertyChange(() => IsYearChecked);
-        }
-      }
-    }
-
-    private bool _isMonthChecked;
-    public bool IsMonthChecked
-    {
-      get { return _isMonthChecked; }
-      set
-      {
-        if (_isMonthChecked != value)
-        {
-          _isMonthChecked = value;
-          SetTimeFilterState(TimeEnum.LastMonth);
-          NotifyOfPropertyChange(() => IsMonthChecked);
-        }
-      }
-    }
-
-    private bool _isWeekChecked;
-    public bool IsWeekChecked
-    {
-      get { return _isWeekChecked; }
-      set
-      {
-        if (_isWeekChecked != value)
-        {
-          _isWeekChecked = value;
-          SetTimeFilterState(TimeEnum.LastWeek);
-          NotifyOfPropertyChange(() => IsWeekChecked);
-        }
-      }
-    }
-
-    private bool _is24HoursChecked;
-    public bool Is24HoursChecked
-    {
-      get { return _is24HoursChecked; }
-      set
-      {
-        if (_is24HoursChecked != value)
-        {
-          _is24HoursChecked = value;
-          SetTimeFilterState(TimeEnum.Last24Houts);
-          NotifyOfPropertyChange(() => Is24HoursChecked);
-        }
-      }
-    }
-
-    private bool _isLastHourChecked;
-    public bool IsLastHourChecked
-    {
-      get { return _isLastHourChecked; }
-      set
-      {
-        if (_isLastHourChecked != value)
-        {
-          _isLastHourChecked = value;
-          SetTimeFilterState(TimeEnum.LastHour);
-          NotifyOfPropertyChange(() => IsLastHourChecked);
-        }
-      }
-    }
-
-    private bool _isAllTimeChecked;
-    public bool IsAllTimeChecked
-    {
-      get { return _isAllTimeChecked; }
-      set
-      {
-        if (_isAllTimeChecked != value)
-        {
-          _isAllTimeChecked = value;
-          SetTimeFilterState(TimeEnum.AllTime);
-          NotifyOfPropertyChange(() => IsAllTimeChecked);
-        }
-      }
-    }
-
-    private bool _isMenuItemChecked;
-    public bool IsMenuItemChecked
-    {
-      get { return _isMenuItemChecked; }
-      set
-      {
-        if (_isMenuItemChecked != value)
-        {
-          _isMenuItemChecked = value;
-          NotifyOfPropertyChange(() => IsMenuItemChecked);
-        }
-      }
-    }
+    #region UI   
 
     private bool _isDeleteButtonEnabled;
     public bool IsDeleteButtonEnabled
@@ -443,6 +253,20 @@ namespace BioModule.ViewModels
         {
           _photoImage = value;
           NotifyOfPropertyChange(() => PhotoImage);
+        }
+      }
+    }
+
+    private VisitorsFilterMenuViewModel _visitorsFilterMenu;
+    public VisitorsFilterMenuViewModel VisitorsFilterMenu
+    {
+      get { return _visitorsFilterMenu; }
+      set
+      {
+        if (_visitorsFilterMenu != value)
+        {
+          _visitorsFilterMenu = value;
+          NotifyOfPropertyChange(() => VisitorsFilterMenu);
         }
       }
     }
@@ -564,16 +388,4 @@ namespace BioModule.ViewModels
     private int PAGES_COUNT = 10;
     #endregion
   } 
-
-  public enum TimeEnum
-  {
-     None
-   , AllTime
-   , LastHour
-   , Last24Houts
-   , LastWeek
-   , LastMonth
-   , LastYear
-   , Period
-  }
 }

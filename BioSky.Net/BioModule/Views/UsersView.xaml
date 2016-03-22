@@ -20,7 +20,7 @@
              mc:Ignorable="d" 
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             x:Name="UsersModel"
+             x:Name="UsersModel" Background="#FF1E1E1E"
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:UsersViewModel, IsDesignTimeCreatable=False}"
              >

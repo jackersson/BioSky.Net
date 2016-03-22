@@ -112,7 +112,7 @@
 
             <Button 
                  HorizontalAlignment="Stretch" Margin="0,5,0,0"
-                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
+                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}" 
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Grid.Row="6" Grid.Column="3" Content="Apply">
             </Button>

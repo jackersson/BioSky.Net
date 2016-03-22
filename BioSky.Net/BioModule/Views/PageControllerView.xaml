@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"             
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:lex="http://wpflocalizeextension.codeplex.com" 
@@ -15,7 +16,60 @@
              d:DesignHeight="50" d:DesignWidth="300">
 
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <Style x:Key="MyStandardButton" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource BackgroundNormal}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrushNormal}" />
+                <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="True">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHighlighted}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundSelected}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSelected}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+        
+        
     </UserControl.Resources>
 
     <Grid>
@@ -31,24 +85,32 @@
         <TextBlock Text="{Binding Text}" 
                    Grid.Column="0" Margin="0,0,10,0"
                    VerticalAlignment="Center" 
-                   HorizontalAlignment="Right" FontWeight="Bold"></TextBlock>
+                   HorizontalAlignment="Right" ></TextBlock>
 
-        <Button  Background="White"
+        <Button  Background="#FF1E1E1E" 
                  HorizontalAlignment="Stretch"
                  IsEnabled="{Binding IsLeftArrowEnabled}"
                  VerticalAlignment="Stretch" ToolTip="{lex:Loc Return}"
-                 cal:Message.Attach="[Event Click]=[Action OnLeftClick]"
-                 Grid.Row="6" Grid.Column="1" Width="32" Height="32" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}" />
+                 cal:Message.Attach="[Event Click]=[Action OnLeftClick]" 
+                 Style="{StaticResource MyStandardButton}"
+                 Grid.Row="6" Grid.Column="1" Width="32" Height="32">
+
+            <Image Width="16" Height="16" Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
-        <Button  Background="White"
+        <Button  Name="RightButton"
                  HorizontalAlignment="Stretch"
                  IsEnabled="{Binding IsRightArrowEnabled}"
                  VerticalAlignment="Stretch" ToolTip="{lex:Loc Forward}"
-                 cal:Message.Attach="[Event Click]=[Action OnRightClick]"
-                 Grid.Row="6" Grid.Column="2" Width="32" Height="32" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}" />
+                 cal:Message.Attach="[Event Click]=[Action OnRightClick]"                  
+                 Grid.Row="6" Grid.Column="2" Width="32" Height="32" Style="{StaticResource MyStandardButton}">
+           
+            <Image Name="RightImage" Width="16" Height="16" 
+                   Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}" Style="{StaticResource GreyScaleImage}">
+            </Image>
+                   
+
+
         </Button>
 
     </Grid>    

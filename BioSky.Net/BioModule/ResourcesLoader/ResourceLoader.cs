@@ -102,9 +102,29 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _helpDialogIconSource;
     private static BitmapSource _stopIconSource;
     private static BitmapSource _startIconSource;
+    private static BitmapSource _plusIconSource;
+    private static BitmapSource _homeIconSource;
 
 
 
+    public static BitmapSource HomeIconSource
+    {
+      get
+      {
+        if (_homeIconSource == null)
+          _homeIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.home);
+        return _homeIconSource;
+      }
+    }
+    public static BitmapSource PlusIconSource
+    {
+      get
+      {
+        if (_plusIconSource == null)
+          _plusIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.plus);
+        return _plusIconSource;
+      }
+    }
     public static BitmapSource StartIconSource
     {
       get

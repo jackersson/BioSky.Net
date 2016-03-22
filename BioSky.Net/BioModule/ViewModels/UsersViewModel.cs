@@ -136,6 +136,9 @@ namespace BioModule.ViewModels
     }
     public void OnSearchTextChanged(string SearchText)
     {     
+      if(UsersCollectionView == null)      
+        return;
+      
       UsersCollectionView.Filtering = item =>
       {
         Person vitem = item as Person;

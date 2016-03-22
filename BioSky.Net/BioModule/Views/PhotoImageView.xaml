@@ -101,7 +101,7 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
-                            <ToggleButton x:Name="ExpanderButton" Background="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                            <ToggleButton x:Name="ExpanderButton" Background="{x:Null}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                        BorderThickness="1" BorderBrush="#7F3587BD"   Grid.Column="2"                           
                                       IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                       Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="Enrollment Settings"

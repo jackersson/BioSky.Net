@@ -38,7 +38,7 @@ namespace BioModule
       ConverterInitializer initializer = new ConverterInitializer(_locator.GetProcessor<IBioSkyNetRepository>());     
       
       ViewModelSelector selector = _locator.GetProcessor<ViewModelSelector>();
-      selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);
+      selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.HomePage);
       
       IBioShell bioShell = _locator.GetProcessor<IBioShell>();
        

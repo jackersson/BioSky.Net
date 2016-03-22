@@ -80,7 +80,7 @@
         <Expander             
             IsExpanded="{Binding CardEnrollmentExpanded, Mode=OneWayToSource}"
             Grid.Column="0" Grid.ColumnSpan="6"
-            Grid.Row="5" Background="#FFFFFFFF" BorderBrush="{x:Null}" 
+            Grid.Row="5" Background="#FF1E1E1E" BorderBrush="{x:Null}" 
            >     
             <Expander.Header >
                 <Grid>

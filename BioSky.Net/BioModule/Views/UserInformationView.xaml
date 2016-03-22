@@ -26,12 +26,12 @@
         <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
         <ResourceDictionary.MergedDictionaries>
             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
-            <ResourceDictionary>
+                <ResourceDictionary>
                     <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
-                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
-                </Style>
-            </ResourceDictionary>
-        </ResourceDictionary.MergedDictionaries>
+                        <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -75,14 +75,14 @@
 
                 <DatePicker x:Name="DateOfBirthBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"                                                     
                          Controls:TextBoxHelper.Watermark="{lex:Loc DateOfBirth}"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         
-                         cal:Message.Attach="[Event SelectedDateChanged]=[Action OnDateofBirthChanged(DateOfBirthBox.Text)]"
-                         Text="{Binding User.Dateofbirth, Converter={StaticResource ConvertLongToDateTime}, UpdateSourceTrigger=PropertyChanged}"/>
-                
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"                         
+                         cal:Message.Attach="[Event SelectedDateChanged]=[Action OnDateofBirthChanged(DateOfBirthBox.Text)]"                        
+                         Text="{ Binding Dateofbirth  
+                               , UpdateSourceTrigger=PropertyChanged
+                               , Converter={StaticResource ConvertLongToDateTime}}"/>       
                 
                 <ComboBox ItemsSource="{Binding GenderSources}"                          
-                          SelectedItem="{Binding User.Gender, Converter={StaticResource converterGender}, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding Gender, Converter={StaticResource converterGender}, UpdateSourceTrigger=PropertyChanged}"
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                           Controls:TextBoxHelper.Watermark="{lex:Loc Gender}"
                           Controls:TextBoxHelper.UseFloatingWatermark="True">
@@ -106,29 +106,36 @@
                          Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         SelectedItem="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"                          
+                         SelectedItem="{Binding Country, UpdateSourceTrigger=PropertyChanged}"                          
                          ItemsSource="{Binding CountryNames}"/>
 
                 <TextBox x:Name="CityBox"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc City}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.City, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{ Binding City
+                               , Mode=TwoWay
+                               , NotifyOnValidationError=True
+                               , ValidatesOnDataErrors=True  
+                               , UpdateSourceTrigger=PropertyChanged}"/>
 
                 <TextBox x:Name="EmailBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc Email}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Email, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Email, Mode=TwoWay
+                              , UpdateSourceTrigger=PropertyChanged
+                              , NotifyOnValidationError=True
+                              , ValidatesOnDataErrors=True   }"/>
 
                 <TextBox x:Name="CommentsBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                          Controls:TextBoxHelper.Watermark="{lex:Loc Comments}"
                          Controls:TextBoxHelper.UseFloatingWatermark="True"
                          Controls:TextBoxHelper.ClearTextButton="True"
-                         Text="{Binding User.Comments, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Comments, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <ComboBox ItemsSource="{Binding RightsSources}" 
-                          SelectedItem="{Binding User.Rights, Converter={StaticResource converterRights}, UpdateSourceTrigger=PropertyChanged}" 
+                          SelectedItem="{Binding Rights, Converter={StaticResource converterRights}, UpdateSourceTrigger=PropertyChanged}" 
                           VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,10"
                           Controls:TextBoxHelper.Watermark="{lex:Loc Rights}"
                           Controls:TextBoxHelper.UseFloatingWatermark="True">
@@ -150,10 +157,10 @@
 
                 <!--           Criminal                   -->
 
-                <Expander Background="#FFFFFFFF" BorderBrush="{x:Null}"  >
+                <Expander Background="#FF1E1E1E" BorderBrush="{x:Null}" Foreground="#FFF1F1F1" >
                     <Expander.Header >
                         <Grid>
-                            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{lex:Loc Criminal}"></TextBlock>
+                            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{lex:Loc Criminal}" Foreground="#FFF1F1F1"></TextBlock>
                         </Grid>
                     </Expander.Header>
 

@@ -22,6 +22,10 @@
         <ToolBarTray Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left"  VerticalAlignment="Top">
             <ToolBar>
                 <Separator></Separator>
+                <Button ToolTip="{lex:Loc HomePage}" cal:Message.Attach="[Event Click]=[Action OpenTabHomePage]">
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=HomeIconSource}" Width="32" Height="32"  />
+                </Button>
+                <Separator></Separator>
                 <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" Width="32" Height="32"  />
                 </Button>

@@ -1,0 +1,242 @@
+﻿<UserControl x:Class="BioModule.Views.HomePageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:vm="clr-namespace:BioModule.ViewModels"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
+             xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             d:DataContext="{d:DesignInstance vm:VisitorsFilterMenuViewModel, IsDesignTimeCreatable=False}"
+             Background="#FF1E1E1E"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+
+            <sys:Double x:Key="MyWidth">195</sys:Double>
+
+            <Style x:Key="MyTextBlock" TargetType="TextBlock">
+                <Style.Triggers>
+                    <Trigger  Property="IsMouseOver" Value="True">
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="Foreground" Value="#FF88C3DD" />
+                    </Trigger>
+                    <Trigger  Property="IsMouseOver" Value="False">
+                        <Setter Property="Cursor" Value="Arrow" />
+                        <Setter Property="Foreground" Value="#FF1D79F3" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+        </ResourceDictionary>       
+    </UserControl.Resources>
+
+    <Grid Name="GridLayout">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Background>
+            <ImageBrush ImageSource="{Binding Source={StaticResource ResourceLoader}, Path=LoaderIconSource}"></ImageBrush>
+        </Grid.Background>
+
+
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="195"/>
+                <ColumnDefinition Width="195"/>
+                <ColumnDefinition Width="195"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Start" Foreground="White" FontSize="12" Margin="5,10,0,5"/>
+
+            <Button cal:Message.Attach="[Event Click] = [Action OnAddNewUser]" BorderThickness="0" 
+                        VerticalAlignment="Center" HorizontalAlignment="Stretch" 
+                        Grid.Row="1" Margin="5,0,0,5"
+                        >
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                               Height="25" Width="25" Grid.Column="0"></Image>
+                    <Grid IsHitTestVisible="False" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Add Person" FontSize="15" Style="{StaticResource MyTextBlock}"
+                                       Foreground="White"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Creates new person" FontSize="10" Style="{StaticResource MyTextBlock}"
+                                       Grid.Row="1" Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Button>
+
+            <Button cal:Message.Attach="[Event Click] = [Action OnAddNewLocation]" BorderThickness="0"
+                        Grid.Row="2" Margin="5,0,0,5" 
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                        >
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                               Height="25" Width="25" Grid.Column="0"></Image>
+                    <Grid IsHitTestVisible="False" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Add Location" FontSize="15" Style="{StaticResource MyTextBlock}"
+                       cal:Message.Attach="[Event MouseDown] = [Action OnAddNewLocation]" Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Creates new location" FontSize="10" Style="{StaticResource MyTextBlock}"
+                       cal:Message.Attach="[Event MouseDown] = [Action OnAddNewLocation]" Grid.Row="1" Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Button>
+
+
+            <TextBlock Text="Continue" Grid.Row="0" Grid.Column="1" Foreground="White" FontSize="12" Margin="5,10,0,5"/>
+
+            <Button cal:Message.Attach="[Event Click] = [Action OnTracking]" BorderThickness="0"
+                        Grid.Row="1" Grid.Column="1" Margin="5,0,0,5" 
+                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                        >
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="{StaticResource MyWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                   Height="25" Width="25"></Image>
+                    <Grid IsHitTestVisible="False" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Tracking" FontSize="15" Style="{StaticResource MyTextBlock}"
+                                       Foreground="White"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Allows to track location changes" FontSize="10" Style="{StaticResource MyTextBlock}"
+                                       Grid.Row="1" Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Button>
+
+            <Button cal:Message.Attach="[Event Click] = [Action OnUsers]" BorderThickness="0"
+                        Grid.Row="2" Grid.Column="1" Margin="5,0,0,5" 
+                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                        >
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="{StaticResource MyWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                   Height="25" Width="25"></Image>
+                    <Grid IsHitTestVisible="False" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Persons" FontSize="15" Style="{StaticResource MyTextBlock}"
+                                       Foreground="White"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Observes existing persons" FontSize="10" Style="{StaticResource MyTextBlock}"
+                                       Grid.Row="1" Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Button>
+
+            <Button cal:Message.Attach="[Event Click] = [Action OnVisitors]" BorderThickness="0"
+                        Grid.Row="3" Grid.Column="1" Margin="5,0,0,5" 
+                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                        >
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="{StaticResource MyWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                   Height="25" Width="25"></Image>
+                    <Grid IsHitTestVisible="False" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Visitors" FontSize="15" Style="{StaticResource MyTextBlock}"
+                                       Foreground="White"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Observes location's visitors" FontSize="10" Style="{StaticResource MyTextBlock}"
+                                       Grid.Row="1" Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Button>
+
+            <TextBlock Text="Configuration" Grid.Row="0" Grid.Column="2" Foreground="White" FontSize="12" Margin="5,10,0,5"/>
+
+            <Button cal:Message.Attach="[Event Click] = [Action OnSettings]" BorderThickness="0"
+                        Grid.Row="1" Grid.Column="2" Margin="5,0,0,5" 
+                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                        >
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="26"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                   Height="25" Width="25"></Image>
+                    <Grid IsHitTestVisible="False" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Settings " FontSize="15" Style="{StaticResource MyTextBlock}"
+                                       Foreground="White"
+                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Allows to change user settings" FontSize="10" Style="{StaticResource MyTextBlock}"
+                                       Grid.Row="1" Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                    </Grid>
+                </Grid>
+            </Button>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

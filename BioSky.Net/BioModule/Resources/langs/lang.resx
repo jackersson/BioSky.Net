@@ -381,4 +381,16 @@
   <data name="YourPhotos" xml:space="preserve">
     <value>YourPhotos</value>
   </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Criminal" xml:space="preserve">
+    <value>Criminal</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>SignOut</value>
+  </data>
 </root>

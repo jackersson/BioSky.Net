@@ -54,8 +54,8 @@
 
 
                         <Grid >
-                            <ToggleButton x:Name="ExpanderButton" Background="White" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                       BorderThickness="0" BorderBrush="#FF3587BD" Width="32" Height="32"                               
+                            <ToggleButton x:Name="ExpanderButton" Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                       BorderThickness="1" BorderBrush="#7F3587BD"  Width="32" Height="32"                               
                                       IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                       Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="Photo information"
                                       Padding="1.5,0"                                     

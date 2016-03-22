@@ -22,8 +22,8 @@ namespace BioModule.ViewModels
     {
       _locator       = locator      ;
      
-      _bioEngine     = locator.GetProcessor<IBioEngine>();
-      _selector      = locator.GetProcessor<ViewModelSelector>();
+      _bioEngine     = _locator.GetProcessor<IBioEngine>();
+      _selector      = _locator.GetProcessor<ViewModelSelector>();
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
       _notifier      = _locator.GetProcessor<INotifier>();
@@ -37,6 +37,7 @@ namespace BioModule.ViewModels
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
       _bioEngine.TrackLocationEngine().LocationsChanged += OnLocationsChanged;
+      CheckOnLocations();
     }
 
     #region Update
@@ -52,6 +53,17 @@ namespace BioModule.ViewModels
         TrackTabControlView.Update(TrackControlItems[0]);
 
       TrackTabControlView.Update(SelectedTrackLocation);
+      CheckOnLocations();
+    }
+
+    public void CheckOnLocations()
+    {
+      NormalLocationGrid = true;
+      if(TrackControlItems == null || TrackControlItems.Count < 1)
+      {
+        ZeroLocationGrid   = true;
+        NormalLocationGrid = false;
+      }
     }
 
     #endregion
@@ -75,6 +87,13 @@ namespace BioModule.ViewModels
         _notifier.Notify(e);
       }
       
+    }
+
+    public void OnAddNewLocation()
+    {
+      _selector.ShowContent( ShowableContentControl.FlyoutControlContent
+                           , ViewModelsID.LocationSettings
+                           , new object[] { null });
     }
 
     protected override void OnActivate()
@@ -182,6 +201,34 @@ namespace BioModule.ViewModels
         {
           _canOpenSettings = value;
           NotifyOfPropertyChange(() => CanOpenSettings);
+        }
+      }
+    }
+
+    private bool _zeroLocationGrid;
+    public bool ZeroLocationGrid
+    {
+      get { return _zeroLocationGrid; }
+      set
+      {
+        if (_zeroLocationGrid != value)
+        {
+          _zeroLocationGrid = value;
+          NotifyOfPropertyChange(() => ZeroLocationGrid);
+        }
+      }
+    }
+
+    private bool _normalLocationGrid;
+    public bool NormalLocationGrid
+    {
+      get { return _normalLocationGrid; }
+      set
+      {
+        if (_normalLocationGrid != value)
+        {
+          _normalLocationGrid = value;
+          NotifyOfPropertyChange(() => NormalLocationGrid);
         }
       }
     }

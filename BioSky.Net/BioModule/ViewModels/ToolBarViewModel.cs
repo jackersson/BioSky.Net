@@ -10,6 +10,11 @@ namespace BioModule.ViewModels
       _viewModelSelector = viewModelSelector;
     }
 
+    public void OpenTabHomePage()
+    {
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.HomePage);
+    }
+
     public void OpenTabAddNewPerson()
     {
       _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent
@@ -22,6 +27,8 @@ namespace BioModule.ViewModels
       _viewModelSelector.ShowContent( ShowableContentControl.FlyoutControlContent
                                     , ViewModelsID.LocationSettings
                                     , new object[] { null });
+
+      //_viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.HomePage);
     }
 
     public void OpenTabVisitors()

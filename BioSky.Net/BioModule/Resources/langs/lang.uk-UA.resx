@@ -358,7 +358,7 @@
     <value>Менеджер</value>
   </data>
   <data name="string_none" xml:space="preserve">
-    <value>Ніякий</value>
+    <value>Немає</value>
   </data>
   <data name="string_operator" xml:space="preserve">
     <value>Оператор</value>
@@ -371,5 +371,17 @@
   </data>
   <data name="YourPhotos" xml:space="preserve">
     <value>Ваші фотографії</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Пристрої</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Дія</value>
+  </data>
+  <data name="Criminal" xml:space="preserve">
+    <value>Злочинець</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Вийти</value>
   </data>
 </root>

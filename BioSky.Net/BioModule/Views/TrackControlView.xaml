@@ -17,7 +17,7 @@
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
-             Name="Test"
+             Name="Test" Background="#FF1E1E1E"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance vm:TrackControlViewModel, IsDesignTimeCreatable=False}">
 
@@ -27,76 +27,42 @@
            
             <resloader:ResourceLoader x:Key="ResourceLoader"/>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
-   
-   
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
-            <RowDefinition Height="24"/>
-            <RowDefinition Height="36"/>
-            <RowDefinition Height="50*"/>
+        <Grid Visibility="{Binding NormalLocationGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="36"/>
+                <RowDefinition Height="50*"/>
 
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="7*"/>
-            <ColumnDefinition Width="56"/>
-            <ColumnDefinition Width="78"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="56"/>
+                <ColumnDefinition Width="78"/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
 
-        </Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>
 
-
-        <Button  Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button" 
-                 Grid.Column="3" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" 
-                 Width="48" Height="48" ToolTip="{lex:Loc AddNewLocation}"
-                 cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"
-                 >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
-        </Button>
-
-        <Button Style="{DynamicResource MetroCircleButtonStyle}"
-                Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                Grid.Column="4">
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RemoveIconSource}" Width="32" Height="32"  />
-        </Button>
-
-        <Button Style="{DynamicResource MetroCircleButtonStyle}" 
-                Grid.Column="5" Grid.Row="0" HorizontalAlignment="Stretch" 
-                IsEnabled="{Binding IsDeleteButtonEnabled}"
-                ToolTip="{lex:Loc Delete}"
-                cal:Message.Attach="[Event Click] = [Action OnDeleteLocation]"
-                VerticalAlignment="Stretch">
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
-        </Button>
-        
-       
-        
-        <CheckBox VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0" 
-                  IsChecked="{Binding IsAllChecked}"
-                  Margin="10,0,0,0"/>
-
-        <TextBlock Text="{lex:Loc All}" VerticalAlignment="Center" HorizontalAlignment="Right"  Grid.Column="1" Grid.Row="0"
-                   Margin="0,0,10,0"
-                   >            
-        </TextBlock>
-        
-        <TextBlock Grid.Column="2"  Grid.Row="1" 
+            <TextBlock Grid.Column="2"  Grid.Row="1" 
                    Grid.ColumnSpan="2" Text="{lex:Loc Locations}"
                    VerticalAlignment="Bottom"></TextBlock>
 
-        <WrapPanel Grid.ColumnSpan="2"  >
+            <WrapPanel Grid.ColumnSpan="2"  >
 
-        </WrapPanel>
+            </WrapPanel>
 
-        <DataGrid BorderThickness="0.8" ItemsSource="{Binding TrackControlItems}" 
+            <DataGrid BorderThickness="0.8" ItemsSource="{Binding TrackControlItems}" 
                  SelectedItem="{Binding SelectedTrackLocation}"
                  SelectionMode="Single" HeadersVisibility="None" AutoGenerateColumns="False" 
                  CanUserAddRows="False" CanUserDeleteRows="False"
@@ -108,37 +74,49 @@
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                      [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)]"                                     
                  >
-            
-            <DataGrid.Resources>
-                <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
-                    <ContentControl cal:View.Context="Shorted" cal:View.Model="{Binding}">
-                    </ContentControl>
-                </DataTemplate>
-            </DataGrid.Resources>
-            
-            <DataGrid.Columns>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+
+                <DataGrid.Resources>
+                    <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
+                        <ContentControl cal:View.Context="Shorted" cal:View.Model="{Binding}">
+                        </ContentControl>
+                    </DataTemplate>
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
                                 <ContentControl Width="200"  Content="{Binding ScreenViewModel}" Margin="2, 2, 5, 2" 
                                                  HorizontalAlignment="Left"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-            
-            <DataGrid.ContextMenu >
-                <ContextMenu IsEnabled="True" >
-                    <MenuItem Header="{lex:Loc OpenSettings}"  
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+
+                <DataGrid.ContextMenu >
+                    <ContextMenu IsEnabled="True" >
+                        <MenuItem Header="{lex:Loc OpenSettings}"  
                               IsEnabled="{Binding CanOpenSettings, Mode=TwoWay}"
                               cal:Message.Attach="[Event Click] = [Action ShowLocationFlyout()]"
                               />
-                </ContextMenu>
-            </DataGrid.ContextMenu>
-            
-        </DataGrid>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
 
-        <local:TrackTabControlView  DataContext="{Binding TrackTabControlView}" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
-        </local:TrackTabControlView>
+            </DataGrid>
+
+            <local:TrackTabControlView  DataContext="{Binding TrackTabControlView}" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            </local:TrackTabControlView>
+        </Grid>
+
+        <Grid Visibility="{Binding ZeroLocationGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button cal:Message.Attach="[Event Click] = [Action OnAddNewLocation]">
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=PlusIconSource}"
+                   Height="100" Width="100"></Image>
+                </Button>
+                <TextBlock Text="Add new Location" FontSize="25" Foreground="#FFF1F1F1"
+                           VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

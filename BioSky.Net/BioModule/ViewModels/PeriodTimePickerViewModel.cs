@@ -53,10 +53,10 @@ namespace BioModule.ViewModels
         Result = new PeriodTimePickerResult();
 
       Result.FromDateLong = fullDateFrom.Ticks;
-      Result.ToDateLong = fullDateTo.Ticks  ;
-
-      Result.FromDateString = fullDateFrom.ToString();
-      Result.ToDateString   = fullDateTo.ToString();     
+      Result.ToDateLong   = fullDateTo.Ticks  ;
+            
+      Result.FromDateString = fullDateFrom.ToShortDateString() + " " + fullDateFrom.ToShortTimeString();
+      Result.ToDateString   = fullDateTo.ToShortDateString() + " " + fullDateTo.ToShortTimeString();     
 
       TryClose(true);      
     }
