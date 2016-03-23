@@ -31,7 +31,7 @@ namespace BioData
       _bioCultureSources = new BioCultureSources ();
     }
 
-    public IFullHolder<Location> Locations
+    public IFullLocationHolder Locations
     {
       get { return _fullLocations; }
     }

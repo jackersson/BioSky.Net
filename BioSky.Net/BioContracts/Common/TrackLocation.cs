@@ -42,19 +42,16 @@ namespace BioContracts
     }
 
     private void RefreshCaptureDevices()
-    {
-      StopCaptureDevice();
-
-      if (_location.CaptureDevices == null || _location.CaptureDevices.Count == 0)
+    {      
+      CaptureDevice newCaptureDevice = _location.CaptureDevice;
+      if (newCaptureDevice == null )
         return;
-            
-      CaptureDevice newCaptureDevice = _location.CaptureDevices.FirstOrDefault();
-
+     
       if (newCaptureDevice.Devicename == CaptureDeviceObserver.DeviceName)
         return;
            
-      CaptureDeviceObserver.Update(newCaptureDevice.Devicename);
-      CaptureDeviceObserver.Subscribe(OnFrameChanged);         
+     // CaptureDeviceObserver.Update(newCaptureDevice.Devicename);
+    //  CaptureDeviceObserver.Subscribe(OnFrameChanged);         
     }
 
     private async void OnVisitorVerified(Photo photo, Person person)
@@ -99,19 +96,18 @@ namespace BioContracts
 
     private void RefreshAccessDevices()
     {
-      StopAccessDevice();
+      //StopAccessDevice();
 
-      if (_location.CaptureDevices == null || _location.CaptureDevices.Count == 0)
+      AccessDevice newAccessDevice = _location.AccessDevice;
+      if (newAccessDevice == null)
         return;
-
-      AccessDevice newAccessDevice = _location.AccessDevices.FirstOrDefault();
-
+      
       if (newAccessDevice.Portname == AccessDeviceObserver.DeviceName)
         return;
       
-      AccessDeviceObserver.Update(newAccessDevice.Portname);
-      AccessDeviceObserver.AccessDeviceState += OnAccessDeviceStateChanged;
-      AccessDeviceObserver.CardDetected      += OnCardDetected            ;          
+     // AccessDeviceObserver.Update(newAccessDevice.Portname);
+      //AccessDeviceObserver.AccessDeviceState += OnAccessDeviceStateChanged;
+     // AccessDeviceObserver.CardDetected      += OnCardDetected            ;          
     }
 
     private void OnAccessDeviceStateChanged(bool status )

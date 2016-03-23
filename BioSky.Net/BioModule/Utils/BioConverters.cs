@@ -15,6 +15,8 @@ using System.Windows.Documents;
 using System.Windows;
 using BioContracts;
 using BioService;
+using System.Collections;
+using static BioService.Location.Types;
 
 namespace BioModule.Utils
 {
@@ -357,7 +359,7 @@ namespace BioModule.Utils
   public class StringToRightsConverter : StringToEnumConverter<BioService.Person.Types.Rights>
   { }
 
-  public class StringToStateConverter : StringToEnumConverter<BioModule.ViewModels.PermissionState>
+  public class StringToStateConverter : StringToEnumConverter<AccessType>
   { }
 
   public class StringToEnumConverter<TEnum> : IValueConverter
@@ -472,5 +474,60 @@ namespace BioModule.Utils
   }
   #endregion
 
-#endregion
+  #region MultiUserAccessToLocationConverter
+  public class MultiUserAccessToLocationConverter : IMultiValueConverter
+  {
+    public object Convert(object[] values, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      if (values != null)
+      {
+        long id = (long)values[0];
+        ISet<long> set = (ISet<long>)values[1];     
+        return ( set != null && set.Contains(id) ) ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
+      }       
+
+       return ResourceLoader.OkIconSource;
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+  #endregion
+
+  #region MultiAccessDeviceToLocationConverter
+  public class MultiAccessDeviceToLocationConverter : IMultiValueConverter
+  {
+    public object Convert(object[] values, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      if (values != null)
+      {
+        string collectionItem = values[0] != null ? values[0].ToString() : string.Empty;
+        string actualItem     = values[1] != null ? values[1].ToString() : string.Empty;
+        string desiredItem    = values[2] != null ? values[2].ToString() : string.Empty;
+
+        if (actualItem != string.Empty && collectionItem == actualItem && desiredItem == actualItem)
+          return ResourceLoader.OkIconSource;
+        else if (actualItem != string.Empty && desiredItem != string.Empty && desiredItem != actualItem && desiredItem == collectionItem)
+          return ResourceLoader.OkIconSource;
+        else if ( actualItem == string.Empty && desiredItem != string.Empty && desiredItem == collectionItem)
+          return ResourceLoader.OkIconSource;
+      }
+
+      return ResourceLoader.CancelIconSource;
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+  #endregion
+
+  #endregion
 }

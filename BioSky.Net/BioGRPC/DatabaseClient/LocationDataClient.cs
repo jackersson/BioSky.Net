@@ -22,25 +22,28 @@ namespace BioGRPC.DatabaseClient
       _list = new LocationList();
     }
 
-    private async Task Update(LocationList list)
+    public async Task Update(Location item)
     {
-      try
-      {
-       // LocationList call = await _client.LocationUpdateAsync(list);
-        //_database.Locations.Update(list, call);       
+      if (item == null)
+        return;
+
+      try {
+        Location call = await _client.UpdateLocationAsync(item);
+        Console.WriteLine(call);
+        _database.Locations.Update(item, call);
       }
-      catch (RpcException e)
-      {
+      catch (RpcException e) {
         _notifier.Notify(e);
       }
+      
     }
 
     public async Task Select(QueryLocations command)
     {
       try
       {
-        //LocationList call = await _client.LocationSelectAsync(command);
-        //_database.Locations.Init(call);        
+        LocationList call = await _client.SelectLocationsAsync (command);
+        _database.Locations.Init(call.Locations);        
       }
       catch (RpcException e)
       {
@@ -52,17 +55,11 @@ namespace BioGRPC.DatabaseClient
     {
       if (item == null)
         return;
-
-      _list.Locations.Clear();
-
-      //TODO ResultStatus None 
-      //item.Dbresult    = ResultStatus.Failed;
-     // item.EntityState = EntityState.Added  ;
-      _list.Locations.Add(item);    
-
-      try
-      {
-        await Update(_list);
+  
+      try {
+        Location newLocation = await _client.AddLocationAsync(item);
+        Console.WriteLine(newLocation);
+        _database.Locations.Add(item, newLocation);
       }
       catch (RpcException e)
       {
@@ -70,31 +67,7 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
-    public async Task Update(Location item)
-    {
-      if (item == null)
-        return;
-
-      _list.Locations.Clear();
-
-      //TODO ResultStatus None 
-      //item.Dbresult    = ResultStatus.Failed;
-      //item.EntityState = EntityState.Modified;
-      _list.Locations.Add(item);
-
-      try
-      {
-        await Update(_list);
-      }
-      catch (RpcException e)
-      {
-        _notifier.Notify(e);
-      }
-    }
-
-
-
-    public async Task Remove( IList<Location> targeIds)
+     public async Task Remove( IList<Location> targeIds)
     {
       if (targeIds == null || targeIds.Count <=0 )
         return;
@@ -120,7 +93,7 @@ namespace BioGRPC.DatabaseClient
 
       try
       {
-        await Update(_list);
+       // await Update(_list);
       }
       catch (RpcException e)
       {

@@ -22,6 +22,7 @@
     <UserControl.Resources>
         <utils:StringToStateConverter x:Key="converterState" />
         <utils:ConvertStateToImage x:Key="convertStateToImage" />
+        <utils:MultiUserAccessToLocationConverter x:Key="MultiUserAccessToLocationConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
     </UserControl.Resources>
@@ -37,8 +38,8 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32"/>
                     <RowDefinition Height="40"/>
+                    <RowDefinition Height="48"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="288"/>
                 </Grid.RowDefinitions>
 
 
@@ -46,10 +47,9 @@
                         HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
 
-                <ComboBox ItemsSource="{Binding StateSources}"  Grid.Row="1"
+                <ComboBox ItemsSource="{Binding PermissionStateSources}"  Grid.Row="1"
                           SelectedItem="{Binding SelectedState, Converter={StaticResource converterState}, UpdateSourceTrigger=PropertyChanged}" 
-                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0"
-                          cal:Message.Attach="[Event SelectionChanged] = [Action OnStateChange()]"   
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0"                       
                           >
                     <ComboBox.Style>
                         <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MetroComboBox}">
@@ -90,29 +90,42 @@
                 </TextBox>
 
 
-                <ListBox x:Name="PermissionList"
+                <ListBox 
                           BorderThickness="1" Grid.Row="3"  Margin="1"                      
                           SelectedIndex="0"     
                           Tag="{Binding DataContext, ElementName=GridLayout}"                       
-                          ItemsSource="{Binding PersonsCollectionView}"
-                          SelectedItem="{Binding SelectedPerson}"                     
+                          ItemsSource="{Binding UsersCollectionView}"                                 
                           ScrollViewer.CanContentScroll="False" SelectionMode="Extended"                                                                    
-                          DataContext="{Binding Mode=OneWay}" 
-                          
-                         
+                          DataContext="{Binding Mode=OneWay}"                
+                          SelectedItem="{Binding SelectedPerson}"
                           cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                               [Event SelectionChanged] = [Action OnSelectionChanged($eventArgs)]"                         
                           >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" IsHitTestVisible="False">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock  Text="{Binding ItemContext.Firstname}" HorizontalAlignment="Stretch"/>
-                                    <TextBlock  Text="{Binding ItemContext.Lastname}"  HorizontalAlignment="Stretch"/>
-                                </StackPanel>
-                                <Image Source="{Binding ItemActive, Converter={StaticResource convertStateToImage}, UpdateSourceTrigger=PropertyChanged}" 
+                            <StackPanel
+                                 cal:Message.Attach="[Event MouseRightButtonDown] = [Action DataContext.OnMouseRightButtonDown($mouseSelectedItem)]"
+                                Orientation="Horizontal" HorizontalAlignment="Stretch" IsHitTestVisible="False">
+                                <Image  
                                        Stretch="Fill" Width="18" Height="18">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource MultiUserAccessToLocationConverter}">
+                                            <Binding Path="Id"/>
+                                            <Binding ElementName="GridLayout" Path="DataContext.AccessedPersons"></Binding>
+                                        </MultiBinding>
+                                    </Image.Source>
                                 </Image>
+
+                                <Grid >                                    
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Firstname}" HorizontalAlignment="Stretch"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding Lastname}"  HorizontalAlignment="Stretch"/>
+                                </Grid>                                                  
+                                    
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -14,173 +14,195 @@ using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
+using static BioService.Location.Types;
+using Google.Protobuf.Collections;
 
 namespace BioModule.ViewModels
 {
-  public enum PermissionState
-  {
-        All
-      , None
-      , Custom
-  }
+
   public class LocationPermissionViewModel : Screen, IUpdatable
   {
-    List<Person>  _persons      = new List<Person>() ;
-    HashSet<long> activePersons = new HashSet<long>();
-
     public LocationPermissionViewModel(IProcessorLocator locator)
     {
       DisplayName = "UsersNotification";
 
       _locator = locator;
-      _bioService = _locator.GetProcessor<IServiceManager>();
-      _bioEngine  = _locator.GetProcessor<IBioEngine>();
+      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      SelectedPersons = new ObservableCollection<PermissionItem>();
-      PersonsList     = new AsyncObservableCollection<PermissionItem>();
+      SelectedPersons = new ObservableCollection<Person>();
+      PageController  = new PageControllerViewModel();
 
-      for(int i = 1; i < 20; i++)
-      {
-        Person p = new Person() {Id = i, Firstname = "Sasha" + i, Lastname = "Iskra" + i };
-        _persons.Add(p);
-      }
-
-      Person p2 = new Person() { Id = 100, Firstname = "Taras", Lastname = "Lishenko" };
-      _persons.Add(p2);
+      AccessedPersons = new HashSet<long>();
 
 
+      _database.Persons.DataChanged += RefreshData;
     }
 
     #region Update
-
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+      RefreshData();
+    }
 
     public void RefreshData()
     {
-      PersonsList.Clear();
+      if (!IsActive)
+        return;
 
-      foreach (Person item in _persons) //_bioEngine.Database().PersonHolder.Data)
-      {
+      Users = null;
+      Users = _database.Persons.Data;
 
-        PermissionItem permissionItem = new PermissionItem()
-        {
-          ItemContext = item
-        , ItemActive = false
-        };
+      if (Users == null || Users.Count <= 0)
+        return;
 
-        PersonsList.Add(permissionItem);
-      }
+      UsersCollectionView = null;
+      UsersCollectionView = new PagingCollectionView(Users, PAGES_COUNT);
 
-      PersonsCollectionView = null;
-      PersonsCollectionView = CollectionViewSource.GetDefaultView(PersonsList);
+      PageController.UpdateData(UsersCollectionView);
+
+      CheckOnState();
     }
 
     public void Update(Location location)
     {
-      _location = location;
-
+      CurrentLocation = location;
       RefreshData();
     }
+
+    public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedPerson = null; }
 
     #endregion
 
     #region Interface
     public void OnSearchTextChanged(string SearchText)
     {
-      PersonsCollectionView.Filter = item =>
+      UsersCollectionView.Filtering = item =>
       {
-        PermissionItem permItem = item as PermissionItem;
-        if (permItem == null) return false;
+        Person vitem = item as Person;
+        if (vitem == null) return false;
 
         if (String.IsNullOrEmpty(SearchText))
           return true;
 
-        if (permItem.ItemContext.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
-            permItem.ItemContext.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
+        if (vitem.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
+            vitem.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
           return true;
 
         return false;
-      };
+      };    
     }
-
-    public void OnStateChange()
-    {
-      SetPermissionState();
-    }
+    
     private void SetPermissionState()
     {
-      if (SelectedState == PermissionState.Custom)
+      if (SelectedState == AccessType.Custom)
         return;
 
-      bool state = (SelectedState == PermissionState.All) ? true : false;
+      bool state = (SelectedState == AccessType.All) ? true : false;
 
-      foreach (PermissionItem item in PersonsList)
+      foreach (Person item in Users)
         ActiveDeactiveItem(item, state);
+
+      NotifyChanges();
     }
 
-    public void OnMouseRightButtonDown(PermissionItem permissionItem)
+    private void NotifyChanges()
     {
-      MenuRemoveStatus = (SelectedPerson != null);
-      SelectedPerson = permissionItem;
+      NotifyOfPropertyChange(() => AccessedPersons);
+      OnPermissionsChanged();
     }
-    public void OnSelectionChanged(SelectionChangedEventArgs e)
+
+    public RepeatedField<Person> GetResult()
     {
-      IList selectedRecords = e.AddedItems as IList;
+      if (SelectedState != Location.Types.AccessType.Custom)
+        return null;
+      
+      RepeatedField<Person> persons = new RepeatedField<Person>();
+
+      RepeatedField<Person> existingPersons = CurrentLocation.Persons;
+
+      if (AccessedPersons.Count > 0)
+      {
+        for (int i = 0; i < existingPersons.Count; ++i)
+        {
+          Person pp = existingPersons[i];
+          if (!AccessedPersons.Contains(pp.Id))
+            persons.Add(new Person() { EntityState = EntityState.Deleted, Id = pp.Id });
+        }
+
+        List<long> personsToAdd = new List<long>(AccessedPersons);
+        for (int i = 0; i < personsToAdd.Count; ++i)
+        {
+          Person pp = new Person { EntityState = EntityState.Added, Id = personsToAdd[i] };
+          persons.Add(pp);
+        }
+      }
+
+      return persons;
+    }
+
+    public void OnSelectionChanged(SelectionChangedEventArgs e)
+    {      
+      IList selectedRecords   = e.AddedItems as IList;
       IList unselectedRecords = e.RemovedItems as IList;
 
       if (selectedRecords == null || unselectedRecords == null)
         return;
 
-      foreach (PermissionItem currentItem in selectedRecords)
+      foreach (Person currentItem in selectedRecords)
         SelectedPersons.Add(currentItem);
 
-      foreach (PermissionItem currentItem in unselectedRecords)
+      foreach (Person currentItem in unselectedRecords)
         SelectedPersons.Remove(currentItem);
 
-      MenuRemoveStatus = (SelectedPersons.Count >= 1) ? true : false;
+      MenuRemoveStatus = (SelectedPersons.Count >= 1) ? true : false;      
     }
-
-    public void Apply()
-    {
-
-    }
+    
+    public void Apply() {}
 
     public void OnAllow(bool state)
     {
-      if (SelectedPersons.Count >= 1)
-      {
-        foreach (PermissionItem item in SelectedPersons)
-        {
-          ActiveDeactiveItem(item, state);
-          CheckOnState(state);
-        }
-      }
+      if (SelectedPersons.Count < 1)
+        return;
+      
+      foreach (Person item in SelectedPersons)        
+        ActiveDeactiveItem(item, state);
+        
+      CheckOnState();
+      NotifyChanges();
     }
 
-    private void CheckOnState(bool active)
+   
+
+    private void OnPermissionsChanged()
     {
-      if (active)
-        SelectedState = (activePersons.Count >= PersonsList.Count) ? PermissionState.All : PermissionState.Custom;
+      if (PermissionsChanged != null)
+        PermissionsChanged(null, EventArgs.Empty);
+    }
+    
+    private void CheckOnState()
+    {
+      if (AccessedPersons.Count >= Users.Count)
+        SelectedState = AccessType.All;
+      else if (AccessedPersons.Count <= 0)
+        SelectedState = AccessType.None;
       else
-        SelectedState = (activePersons.Count <= 0) ? PermissionState.None : PermissionState.Custom;
+        SelectedState = AccessType.Custom;    
     }
 
-    private void ActiveDeactiveItem(PermissionItem item, bool activate)
+    private void ActiveDeactiveItem(Person item, bool activate)
     {
-      item.ItemActive = activate;
-      item.ItemEnabled = !activate;
-
       if (activate)
-        activePersons.Add(item.ItemContext.Id);
+        AccessedPersons.Add(item.Id);
       else
-        activePersons.Remove(item.ItemContext.Id);
+        AccessedPersons.Remove(item.Id);      
     }
 
     #endregion
 
     #region UI
-
-    private ICollectionView _personsCollectionView;
-    public ICollectionView PersonsCollectionView
+    private IPagingCollectionView _personsCollectionView;
+    public IPagingCollectionView UsersCollectionView
     {
       get { return _personsCollectionView; }
       set
@@ -188,8 +210,7 @@ namespace BioModule.ViewModels
         if (_personsCollectionView != value)
         {
           _personsCollectionView = value;
-
-          NotifyOfPropertyChange(() => PersonsCollectionView);
+          NotifyOfPropertyChange(() => UsersCollectionView);
         }
       }
     }
@@ -208,36 +229,43 @@ namespace BioModule.ViewModels
       }
     }
 
-    private AsyncObservableCollection<PermissionItem> _personsList;
-    public AsyncObservableCollection<PermissionItem> PersonsList
+    private PageControllerViewModel _pageController;
+    public PageControllerViewModel PageController
     {
-      get { return _personsList; }
+      get { return _pageController; }
       set
       {
-        if (_personsList != value)
+        if (_pageController != value)
         {
-          _personsList = value;
-          NotifyOfPropertyChange(() => PersonsList);
+          _pageController = value;
+          NotifyOfPropertyChange(() => PageController);
+        }
+      }
+    }
+    
+    public bool IsAccessChanged
+    {
+      get {
+        RepeatedField<Person> p = GetResult();
+        return CurrentLocation.AccessType != SelectedState || ( p != null && p.Count > 0 ); }    
+    }
+
+    private HashSet<long> _accessedPersons;
+    public HashSet<long> AccessedPersons
+    {
+      get { return _accessedPersons; }
+      set
+      {
+        if (_accessedPersons != value)
+        {
+          _accessedPersons = value;        
+          NotifyOfPropertyChange(() => AccessedPersons);
         }
       }
     }
 
-    private PermissionItem _selectedPerson;
-    public PermissionItem SelectedPerson
-    {
-      get { return _selectedPerson; }
-      set
-      {
-        if (_selectedPerson != value)
-        {
-          _selectedPerson = value;
-          NotifyOfPropertyChange(() => SelectedPerson);
-        }
-      }
-    }
-
-    private ObservableCollection<PermissionItem> _selectedPersons;
-    public ObservableCollection<PermissionItem> SelectedPersons
+    private ObservableCollection<Person> _selectedPersons;
+    public ObservableCollection<Person> SelectedPersons
     {
       get { return _selectedPersons; }
       set
@@ -250,8 +278,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private PermissionState _selectedState;
-    public PermissionState SelectedState
+    private AccessType _selectedState;
+    public AccessType SelectedState
     {
       get { return _selectedState; }
       set
@@ -259,28 +287,73 @@ namespace BioModule.ViewModels
         if (_selectedState != value)
         {
           _selectedState = value;
+          SetPermissionState();
           NotifyOfPropertyChange(() => SelectedState);
         }
       }
     }
 
-    public List<string> StateSources
+    private List<string> _permissionStateSources;
+    public List<string> PermissionStateSources
     {
-      get { return new List<string>() { "All" , "None", "Custom"}; }
+      get {
+        if (_permissionStateSources == null)
+          _permissionStateSources = Enum.GetNames(typeof(AccessType)).ToList();
+        return _permissionStateSources;
+      }
     }
 
+    private AsyncObservableCollection<Person> _users;
+    public AsyncObservableCollection<Person> Users
+    {
+      get { return _users; }
+      set
+      {
+        if (_users != value)
+        {
+          _users = value;
+          NotifyOfPropertyChange(() => Users);
+        }
+      }
+    }
+
+    private Person _selectedPerson;
+    public Person SelectedPerson
+    {
+      get { return _selectedPerson; }
+      set
+      {
+        if (_selectedPerson != value)
+        {
+          _selectedPerson = value;
+          NotifyOfPropertyChange(() => SelectedPerson);
+        }
+      }
+    }
+
+    private Location _currentLocation;
+    public Location CurrentLocation
+    {
+      get { return _currentLocation; }
+      set
+      {
+        if ( _currentLocation != value)
+        {
+          _currentLocation = value;
+          NotifyOfPropertyChange(() => CurrentLocation);
+        }
+      }
+    }
     #endregion
 
     #region Global Variables
 
-    private Location                   _location  ;
-    private readonly IProcessorLocator _locator   ;
-    private readonly IBioEngine        _bioEngine ;
-    private readonly IServiceManager   _bioService;
+    private readonly IProcessorLocator    _locator   ;
+    private readonly IBioSkyNetRepository _database  ;
+    private int PAGES_COUNT = 100;
 
+    public event EventHandler PermissionsChanged;
     #endregion
-  }
-
-  public class PermissionItem : DeviceItemBase<Person> { }
+  }  
 
 }

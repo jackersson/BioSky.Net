@@ -152,6 +152,7 @@
     <Compile Include="ICaptureDeviceEngine.cs" />
     <Compile Include="IEntityFrameworkConnectionBuilder.cs" />
     <Compile Include="IFullHolder.cs" />
+    <Compile Include="IFullLocationHolder.cs" />
     <Compile Include="IFullPersonHolder.cs" />
     <Compile Include="IHolder.cs" />
     <Compile Include="ILocalStorage.cs" />

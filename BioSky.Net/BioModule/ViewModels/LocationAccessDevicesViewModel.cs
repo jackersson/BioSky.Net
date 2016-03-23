@@ -30,24 +30,23 @@ namespace BioModule.ViewModels
       _locator = locator;
 
       _bioEngine = _locator.GetProcessor<IBioEngine>();
+      _database  = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      _accessDevicesList = new AsyncObservableCollection<AccessDeviceItem>();
-
-      AccessDevicesNames = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
+      AccessDevicesNames = new AsyncObservableCollection<string>(); //_bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
     }
 
     #region Update
 
     protected override void OnActivate()
     {
-      AccessDevicesNames.CollectionChanged += AccessDevicesNames_CollectionChanged;
+      _bioEngine.AccessDeviceEngine().GetAccessDevicesNames().CollectionChanged += AccessDevicesNames_CollectionChanged;
       RefreshData();
       base.OnActivate();
     }
 
     protected override void OnDeactivate(bool close)
     {
-      AccessDevicesNames.CollectionChanged -= AccessDevicesNames_CollectionChanged;
+      _bioEngine.AccessDeviceEngine().GetAccessDevicesNames().CollectionChanged -= AccessDevicesNames_CollectionChanged;
       base.OnDeactivate(close);
     }
 
@@ -57,78 +56,58 @@ namespace BioModule.ViewModels
     }
     public void Update(Location location)
     {
-      _location = location;
+      CurrentLocation = location;
       RefreshData();
     }
     public void RefreshConnectedDevices()
     {
-      foreach (string deviceName in AccessDevicesNames)
+      AsyncObservableCollection<string> temp = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
+      foreach (string deviceName in temp)
       {
-        if (!IsDeviceUsed(deviceName))
-        {
-          AccessDevice device = new AccessDevice() { Portname = deviceName };
-          AccessDeviceItem deviceItem = new AccessDeviceItem()
-          {
-              ItemContext = device
-            , ItemActive = false
-            , ItemEnabled = true
-          };
-          AccessDevicesList.Add(deviceItem);
-        }
+        if (!AccessDevicesNames.Contains(deviceName))
+          AccessDevicesNames.Add(deviceName);
       }
     }
+
+    public AccessDevice GetDevice()
+    {
+      AccessDevice result = null;
+      if (DesiredCaptureDeviceName == ActiveCaptureDeviceName)
+        return result;
+
+      if (DesiredCaptureDeviceName == string.Empty && ActiveCaptureDeviceName != string.Empty)
+        return new AccessDevice() { Id = CurrentLocation.AccessDevice.Id, EntityState = EntityState.Deleted };
+
+      if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName == string.Empty)
+        return new AccessDevice() { EntityState = EntityState.Added };
+
+      return result;
+    }
+
+    public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedAccessDevice = null; }
+
 
     public void RefreshData()
     {
-      AccessDevicesList.Clear();
 
-     /* foreach (AccessDevice item in _bioEngine.Database().AccessDeviceHolder.Data)
+      if (!IsActive)
+        return;
+
+      foreach (AccessDevice ac in _database.Locations.AccessDevices)
       {
-        bool state = (_location.Id == item.Locationid);
-        AccessDeviceItem deviceItem = new AccessDeviceItem()
-        {
-          ItemContext = item
-                                                               ,
-          ItemActive = state
-                                                               ,
-          ItemEnabled = state
-        };
-
-        AccessDevicesList.Add(deviceItem);
+        if (ac == null)
+          continue;
+        if (!AccessDevicesNames.Contains(ac.Portname))
+          AccessDevicesNames.Add(ac.Portname);
       }
 
-      RefreshConnectedDevices();*/
+      RefreshConnectedDevices();      
     }
-
-    public bool IsDeviceUsed(string deviceName)
+    
+    private void OnDeviceChanged()
     {
-      foreach (AccessDeviceItem item in AccessDevicesList)
-      {
-        if (item.ItemContext.Portname == deviceName)
-          return true;
-      }
-      return false;
-    }
-
-    #endregion
-
-    #region BioService
-
-
-    public RepeatedField<AccessDevice> GetAccessDevices()
-    {
-      RepeatedField<AccessDevice> accessDevices = new RepeatedField<AccessDevice>();
-
-      foreach (AccessDeviceItem item in AccessDevicesList)
-      {
-        if (item.ItemActive)
-        {
-          AccessDevice accessDevice = item.ItemContext;
-          accessDevices.Add(accessDevice);
-        }
-      }
-
-      return accessDevices;
+      if (DeviceChanged != null)
+        DeviceChanged(null, EventArgs.Empty);
     }
 
     #endregion
@@ -137,20 +116,13 @@ namespace BioModule.ViewModels
 
     public void OnRemove(string source)
     {
-      SelectedAccessDevice.ItemEnabled = false;
+      if (DesiredCaptureDeviceName == SelectedAccessDevice)
+        DesiredCaptureDeviceName = string.Empty;
     }
 
-    public void OnActivate(string source)
+    public void OnActive(string source)
     {
-      foreach (AccessDeviceItem item in AccessDevicesList)
-        item.ItemEnabled = false;
-      SelectedAccessDevice.ItemEnabled = true;
-    }
-
-    public void OnMouseRightButtonDownAccess(AccessDeviceItem deviceItem)
-    {
-      MenuRemoveStatus = (SelectedAccessDevice != null);
-      SelectedAccessDevice = deviceItem;
+      DesiredCaptureDeviceName = SelectedAccessDevice;
     }
 
     public void Apply() { }
@@ -173,8 +145,60 @@ namespace BioModule.ViewModels
       }
     }
 
-    private AccessDeviceItem _selectedAccessDevice;
-    public AccessDeviceItem SelectedAccessDevice
+    public bool IsDeviceChanged
+    {
+      get { return DesiredCaptureDeviceName != ActiveCaptureDeviceName; }
+    }
+
+    private string _activeCaptureDeviceName;
+    public string ActiveCaptureDeviceName
+    {
+      get { return _activeCaptureDeviceName; }
+      set
+      {
+        if (_activeCaptureDeviceName != value)
+        {
+          _activeCaptureDeviceName = value;
+          NotifyOfPropertyChange(() => ActiveCaptureDeviceName);
+        }
+      }
+    }
+
+    private string _desiredCaptureDeviceName;
+    public string DesiredCaptureDeviceName
+    {
+      get { return _desiredCaptureDeviceName; }
+      set
+      {      
+         _desiredCaptureDeviceName = value;
+         OnDeviceChanged();
+         NotifyOfPropertyChange(() => DesiredCaptureDeviceName);        
+      }
+    }
+
+    private Location _currentLocation;
+    public Location CurrentLocation
+    {
+      get { return _currentLocation; }
+      set
+      {
+        if (_currentLocation != value)
+        {
+          _currentLocation = value;
+
+          NotifyOfPropertyChange(() => CurrentLocation);
+
+          if (value != null)
+          {           
+            ActiveCaptureDeviceName = value.AccessDevice == null ? string.Empty : value.AccessDevice.Portname;
+            DesiredCaptureDeviceName = ActiveCaptureDeviceName;
+          }
+        }
+      }
+    }
+
+    private string _selectedAccessDevice;
+    public string SelectedAccessDevice
     {
       get { return _selectedAccessDevice; }
       set
@@ -182,7 +206,7 @@ namespace BioModule.ViewModels
         if (_selectedAccessDevice != value)
         {
           _selectedAccessDevice = value;
-
+          MenuRemoveStatus = value == null ? false : true;
           NotifyOfPropertyChange(() => SelectedAccessDevice);
         }
       }
@@ -202,29 +226,17 @@ namespace BioModule.ViewModels
       }
     }
 
-    private AsyncObservableCollection<AccessDeviceItem> _accessDevicesList;
-    public AsyncObservableCollection<AccessDeviceItem> AccessDevicesList
-    {
-      get { return _accessDevicesList; }
-      set
-      {
-        if (_accessDevicesList != value)
-        {
-          _accessDevicesList = value;
-          NotifyOfPropertyChange(() => AccessDevicesList);
-        }
-      }
-    }
+
+
     #endregion
 
-    #region Global Variables
+    #region Global Variables    
+    private readonly IProcessorLocator    _locator  ;
+    private readonly IBioEngine           _bioEngine;
+    private readonly IBioSkyNetRepository _database ;
 
-    private Location _location;
-    private readonly IProcessorLocator _locator;
-    private readonly IBioEngine _bioEngine;
-
+    public event EventHandler DeviceChanged;
 
     #endregion
   }
-  public class AccessDeviceItem : DeviceItemBase<AccessDevice> { }
 }

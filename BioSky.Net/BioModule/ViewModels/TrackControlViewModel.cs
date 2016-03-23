@@ -109,7 +109,7 @@ namespace BioModule.ViewModels
 
     public void ShowLocationFlyout()
     {
-      if (SelectedTrackLocation != null)
+      if (SelectedTrackLocation == null)
         return;
 
       _selector.ShowContent(ShowableContentControl.FlyoutControlContent

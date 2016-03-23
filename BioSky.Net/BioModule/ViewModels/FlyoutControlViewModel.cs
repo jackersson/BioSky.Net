@@ -30,8 +30,11 @@ namespace BioModule.ViewModels
     {
       ActiveItem = Items.Where(x => x.GetType() == flyoutPage).FirstOrDefault();
 
-      if ( ActiveItem != null)
+      if (ActiveItem != null)
+      {
+        ActiveItem.Deactivate(false);
         ActiveItem.Activate();
+      }
 
       FlyoutOpenState = true;
       _methodInvoker.InvokeMethod(flyoutPage, "Update", ActiveItem, args);

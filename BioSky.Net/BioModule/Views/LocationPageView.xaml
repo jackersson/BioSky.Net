@@ -19,6 +19,7 @@
              >
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
     </UserControl.Resources>
 
@@ -42,7 +43,9 @@
                  Controls:TextBoxHelper.Watermark="{lex:Loc LocationName}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                  Controls:TextBoxHelper.ClearTextButton="True"
-                 Text="{Binding CurrentLocation.LocationName,  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding LocationName,  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged
+                              , NotifyOnValidationError=True
+                              , ValidatesOnDataErrors=True }"
                  >
         </TextBox>
 
@@ -50,7 +53,9 @@
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
                  Controls:TextBoxHelper.Watermark="{lex:Loc Description}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                 Text="{Binding CurrentLocation.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged
+                               , NotifyOnValidationError=True
+                               , ValidatesOnDataErrors=True  }"
                  >
         </TextBox>
 
@@ -91,6 +96,7 @@
         <Button Grid.Row="4" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
+                Visibility="{Binding CanApply, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 cal:Message.Attach="[Event Click]=[Action Apply]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
@@ -99,12 +105,14 @@
         <Button  Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" ToolTip="{lex:Loc RevertChanges}"
                  Style="{DynamicResource MetroCircleButtonStyle}"
+                 Visibility="{Binding CanRevert, Converter={StaticResource BooleanToVisibilityConverter}}"
                  cal:Message.Attach="[Event Click]=[Action Revert]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Width="32" Height="32"  />
         </Button>
 
         <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Delete}"
+                Visibility="{Binding CanDelete, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click]=[Action Delete]">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" Width="32" Height="32"  />

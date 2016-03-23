@@ -144,8 +144,8 @@ namespace BioModule.ViewModels
         if (String.IsNullOrEmpty(SearchText))
           return true;
 
-        if ((item as Person).Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
-            (item as Person).Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)        
+        if (vitem.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
+            vitem.Lastname.IndexOf (SearchText, StringComparison.OrdinalIgnoreCase) >= 0)        
           return true;
         
         return false;

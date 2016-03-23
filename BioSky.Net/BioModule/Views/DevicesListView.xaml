@@ -14,10 +14,11 @@
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance vm:LocationAccessDevicesViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance vm:DevicesListViewModel, IsDesignTimeCreatable=False}"
              >
     
     <UserControl.Resources>
+        <utils:MultiAccessDeviceToLocationConverter x:Key="MultiAccessDeviceToLocationConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <resloader:ResourceLoader x:Key="ResourceLoader"/>
     </UserControl.Resources>
@@ -43,25 +44,28 @@
 
                 <Label Grid.Row="0" Grid.Column="0" Content="{lex:Loc AccessDevices}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
-
-
-
-                <ListBox x:Name="AccessDevices"
-                          BorderThickness="1" Grid.Row="1" Grid.Column="0" Margin="1"                      
-                           SelectedIndex="0"                           
-                          ItemsSource="{Binding AccessDevicesList}"
-                          SelectedItem="{Binding SelectedAccessDevice}"                     
-                          ScrollViewer.CanContentScroll="False" SelectionMode="Single"                                                                    
-                          DataContext="{Binding Mode=OneWay}"
-                          cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDownAccess($mouseSelectedItem)]"                         
-                          >
+                <ListBox DataContext="{Binding AccessDevices}"
+                         BorderThickness="1" Grid.Row="1" Grid.Column="0" Margin="1"                      
+                         SelectedIndex="0"                           
+                         ItemsSource="{Binding AccessDevicesNames}"
+                         SelectedItem="{Binding SelectedAccessDevice}"                     
+                         ScrollViewer.CanContentScroll="False" SelectionMode="Single"  
+                         cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"
+                         x:Name="AccessDevicesUI">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                                <TextBlock  Text="{Binding ItemContext.Portname}" HorizontalAlignment="Stretch"/>
-                                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
-                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemActive, Converter={StaticResource BooleanToVisibilityConverter}}"  >                                    
+                                <Image 
+                                       Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemActive, Converter={StaticResource BooleanToVisibilityConverter}}"  >
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource MultiAccessDeviceToLocationConverter}">
+                                            <Binding Path=""/>
+                                            <Binding ElementName="AccessDevicesUI" Path="DataContext.ActiveCaptureDeviceName"></Binding>
+                                            <Binding ElementName="AccessDevicesUI" Path="DataContext.DesiredCaptureDeviceName"></Binding>
+                                        </MultiBinding>
+                                    </Image.Source>
                                 </Image>
+                                <TextBlock  Text="{Binding}" HorizontalAlignment="Stretch"/>                             
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -69,10 +73,10 @@
                     <ListBox.ContextMenu>
                       <ContextMenu IsEnabled="True">
                             <MenuItem Header="{lex:Loc Activate}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
-                                          cal:Message.Attach="[Event Click] = [Action OnActivate()]"/>
+                                          cal:Message.Attach="[Event Click] = [Action OnActive($mouseSelectedItem)]"/>
 
                             <MenuItem Header="{lex:Loc Remove}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
-                                          cal:Message.Attach="[Event Click] = [Action OnRemove()]"/>
+                                          cal:Message.Attach="[Event Click] = [Action OnRemove($mouseSelectedItem)]"/>
                         </ContextMenu>
                     </ListBox.ContextMenu>
 
@@ -88,22 +92,30 @@
                 <Label Grid.Row="0" Grid.Column="2" Content="{lex:Loc CaptureDevices}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
 
 
-                <ListBox x:Name="CaptureDevices"
-                          BorderThickness="1" Grid.Row="1" Grid.Column="2" Margin="1"                      
-                           SelectedIndex="0"                           
-                          ItemsSource="{Binding CaptureDevicesList}"
-                          SelectedItem="{Binding SelectedCaptureDevice}"                     
-                          ScrollViewer.CanContentScroll="False" SelectionMode="Single"                                                                    
-                          DataContext="{Binding Mode=OneWay}"
-                          cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDownCapture($mouseSelectedItem)]"                        
-                          >
+                <ListBox x:Name="CaptureDevicesUI"
+                         DataContext="{Binding CaptureDevices}"
+                         BorderThickness="1" Grid.Row="1" Grid.Column="2" Margin="1"                      
+                         SelectedIndex="0"  
+                         Tag="{Binding DataContext, ElementName=CaptureDevicesUI}"   
+                         ItemsSource="{Binding CaptureDevicesNames}"
+                         SelectedItem="{Binding SelectedCaptureDevice}"
+                         cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"
+                         ScrollViewer.CanContentScroll="False" SelectionMode="Single">                    
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
-                                <TextBlock  Text="{Binding ItemContext.Portname}" HorizontalAlignment="Stretch"/>
-                                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >                     
+                                
+                                <Image 
                                        Stretch="Fill" Width="18" Height="18" Visibility="{Binding ItemActive, Converter={StaticResource BooleanToVisibilityConverter}}"  >
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource MultiAccessDeviceToLocationConverter}">
+                                           <Binding Path=""/>
+                                           <Binding ElementName="CaptureDevicesUI" Path="DataContext.ActiveCaptureDeviceName"></Binding>
+                                           <Binding ElementName="CaptureDevicesUI" Path="DataContext.DesiredCaptureDeviceName"></Binding>
+                                        </MultiBinding>
+                                    </Image.Source>
                                 </Image>
+                                <TextBlock  Text="{Binding}" HorizontalAlignment="Stretch"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -115,13 +127,14 @@
                         </Style>
                     </ListBox.ItemContainerStyle>
 
-                    <ListBox.ContextMenu>
-                        <ContextMenu IsEnabled="True">
+                    <ListBox.ContextMenu>                      
+                        <ContextMenu IsEnabled="True"
+                                     cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                             <MenuItem Header="{lex:Loc Activate}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
-                                          cal:Message.Attach="[Event Click] = [Action OnActivate()]"/>
+                                          cal:Message.Attach="[Event Click] = [Action OnActive($mouseSelectedItem)]"/>
 
                             <MenuItem Header="{lex:Loc Remove}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
-                                          cal:Message.Attach="[Event Click] = [Action OnRemove()]"/>
+                                          cal:Message.Attach="[Event Click] = [Action OnRemove($mouseSelectedItem)]"/>
                         </ContextMenu>
                     </ListBox.ContextMenu>
                 </ListBox>
