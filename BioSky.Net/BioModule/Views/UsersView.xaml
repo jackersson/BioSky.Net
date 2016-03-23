@@ -12,6 +12,9 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:catel="http://catel.codeplex.com"
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
@@ -31,9 +34,26 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+            
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -108,8 +128,12 @@
                  Grid.Row="0" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" 
                  ToolTip="{lex:Loc AddNewUser}"
-                 cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]">
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" Width="32" Height="32" />
+                 cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]"
+                 IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                            , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                            , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">                 
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" 
+                   Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
         </Button>
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"

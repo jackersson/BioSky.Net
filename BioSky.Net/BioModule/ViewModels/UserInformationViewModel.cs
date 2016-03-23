@@ -197,8 +197,7 @@ namespace BioModule.ViewModels
     {
       if (ValidationStateChanged != null)
         ValidationStateChanged(state);
-    }
-        
+    }        
     #endregion
 
     public void OnDateofBirthChanged(string text)

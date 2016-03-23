@@ -36,119 +36,123 @@ namespace BioService {
             "aW9TZXJ2aWNlLkVudGl0eVN0YXRlEiYKCGNyaW1pbmFsGBEgASgLMhQuQmlv", 
             "U2VydmljZS5DcmltaW5hbCIoCgZHZW5kZXISCAoETm9uZRAAEggKBE1hbGUQ", 
             "ARIKCgZGZW1hbGUQAiI/CgZSaWdodHMSCgoGQ3VzdG9tEAASDAoIT3BlcmF0", 
-            "b3IQARILCgdNYW5hZ2VyEAISDgoKU3VwZXJ2aXNvchADIroBCgxBY2Nlc3NE", 
+            "b3IQARILCgdNYW5hZ2VyEAISDgoKU3VwZXJ2aXNvchADIo8CCgxBY2Nlc3NE", 
             "ZXZpY2USCgoCaWQYASABKAMSEgoKbG9jYXRpb25pZBgCIAEoAxIQCghwb3J0", 
             "bmFtZRgDIAEoCRI3CgR0eXBlGAQgASgOMikuQmlvU2VydmljZS5BY2Nlc3NE", 
-            "ZXZpY2UuQWNjZXNzRGV2aWNlVHlwZSI/ChBBY2Nlc3NEZXZpY2VUeXBlEg4K", 
-            "CkRldmljZU5vbmUQABIMCghEZXZpY2VJbhABEg0KCURldmljZU91dBACIkMK", 
-            "DUNhcHR1cmVEZXZpY2USCgoCaWQYASABKAMSEgoKbG9jYXRpb25pZBgCIAEo", 
-            "AxISCgpkZXZpY2VuYW1lGAMgASgJIpABCgRDYXJkEgoKAmlkGAEgASgDEhAK", 
-            "CHBlcnNvbmlkGAIgASgDEhUKDXVuaXF1ZV9udW1iZXIYAyABKAkSLQoMZW50", 
-            "aXR5X3N0YXRlGAQgASgOMhcuQmlvU2VydmljZS5FbnRpdHlTdGF0ZRIkCghk", 
-            "YnJlc3VsdBgFIAEoDjISLkJpb1NlcnZpY2UuUmVzdWx0IoMDCghMb2NhdGlv", 
-            "bhIKCgJpZBgBIAEoAxIVCg1sb2NhdGlvbl9uYW1lGAIgASgJEhMKC2Rlc2Ny", 
-            "aXB0aW9uGAMgASgJEi0KDGVudGl0eV9zdGF0ZRgEIAEoDjIXLkJpb1NlcnZp", 
-            "Y2UuRW50aXR5U3RhdGUSJAoIZGJyZXN1bHQYBSABKA4yEi5CaW9TZXJ2aWNl", 
-            "LlJlc3VsdBI0CgthY2Nlc3NfdHlwZRgGIAEoDjIfLkJpb1NlcnZpY2UuTG9j", 
-            "YXRpb24uQWNjZXNzVHlwZRIxCg5jYXB0dXJlRGV2aWNlcxgHIAMoCzIZLkJp", 
-            "b1NlcnZpY2UuQ2FwdHVyZURldmljZRIvCg1hY2Nlc3NEZXZpY2VzGAggAygL", 
-            "MhguQmlvU2VydmljZS5BY2Nlc3NEZXZpY2USIwoHcGVyc29ucxgJIAMoCzIS", 
-            "LkJpb1NlcnZpY2UuUGVyc29uIisKCkFjY2Vzc1R5cGUSCAoETm9uZRAAEgcK", 
-            "A0FsbBABEgoKBkN1c3RvbRACIkMKEUJpb21ldHJpY0xvY2F0aW9uEgwKBHhw", 
-            "b3MYASABKAISDAoEeXBvcxgCIAEoAhISCgpjb25maWRlbmNlGAMgASgCIncK", 
-            "EkV5ZXNDaGFyYWN0ZXJpc3RpYxIvCghsZWZ0X2V5ZRgBIAEoCzIdLkJpb1Nl", 
-            "cnZpY2UuQmlvbWV0cmljTG9jYXRpb24SMAoJcmlnaHRfZXllGAIgASgLMh0u", 
-            "QmlvU2VydmljZS5CaW9tZXRyaWNMb2NhdGlvbiKCAQoSRmFjZUNoYXJhY3Rl", 
-            "cmlzdGljEg0KBXdpZHRoGAEgASgDEi8KCGxvY2F0aW9uGAIgASgLMh0uQmlv", 
-            "U2VydmljZS5CaW9tZXRyaWNMb2NhdGlvbhIsCgRleWVzGAMgASgLMh4uQmlv", 
-            "U2VydmljZS5FeWVzQ2hhcmFjdGVyaXN0aWMikgEKFlBvcnRyYWl0Q2hhcmFj", 
-            "dGVyaXN0aWMSCwoDYWdlGAEgASgPEhMKC2ZhY2VzX2NvdW50GAIgASgPEg8K", 
-            "B2Zpcl91cmwYAyABKAkSFgoOZmlyX2J5dGVzdHJpbmcYBCABKAwSLQoFZmFj", 
-            "ZXMYBSADKAsyHi5CaW9TZXJ2aWNlLkZhY2VDaGFyYWN0ZXJpc3RpYyL3AgoF", 
-            "UGhvdG8SCgoCaWQYASABKAMSEAoIcGVyc29uaWQYAiABKAMSLAoJc2l6ZV90", 
-            "eXBlGAMgASgOMhkuQmlvU2VydmljZS5QaG90b1NpemVUeXBlEhAKCGRhdGV0", 
-            "aW1lGAQgASgDEhEKCXBob3RvX3VybBgFIAEoCRISCgpieXRlc3RyaW5nGAYg", 
-            "ASgMEjAKC29yaWdpbl90eXBlGAcgASgOMhsuQmlvU2VydmljZS5QaG90b09y", 
-            "aWdpblR5cGUSDQoFd2lkdGgYCCABKAMSDgoGaGVpZ2h0GAkgASgDEkMKF3Bv", 
-            "cnRyYWl0X2NoYXJhY3RlcmlzdGljGAogASgLMiIuQmlvU2VydmljZS5Qb3J0", 
-            "cmFpdENoYXJhY3RlcmlzdGljEi0KDGVudGl0eV9zdGF0ZRgLIAEoDjIXLkJp", 
-            "b1NlcnZpY2UuRW50aXR5U3RhdGUSJAoIZGJyZXN1bHQYDCABKA4yEi5CaW9T", 
-            "ZXJ2aWNlLlJlc3VsdCLhAQoHVmlzaXRvchIKCgJpZBgBIAEoAxIQCghwZXJz", 
-            "b25pZBgCIAEoAxIPCgdwaG90b2lkGAMgASgDEhIKCmxvY2F0aW9uaWQYBCAB", 
-            "KAMSDAoEdGltZRgFIAEoAxITCgtjYXJkX251bWJlchgGIAEoCRIiCgZzdGF0", 
-            "dXMYByABKA4yEi5CaW9TZXJ2aWNlLlJlc3VsdBIkCglmdWxscGhvdG8YCCAB", 
-            "KAsyES5CaW9TZXJ2aWNlLlBob3RvEiYKC2Nyb3BlZHBob3RvGAkgASgLMhEu", 
-            "QmlvU2VydmljZS5QaG90byI0CgtWaXNpdG9yTGlzdBIlCgh2aXNpdG9ycxgB", 
-            "IAMoCzITLkJpb1NlcnZpY2UuVmlzaXRvciI3CgxMb2NhdGlvbkxpc3QSJwoJ", 
-            "bG9jYXRpb25zGAEgAygLMhQuQmlvU2VydmljZS5Mb2NhdGlvbiIxCgpQZXJz", 
-            "b25MaXN0EiMKB3BlcnNvbnMYASADKAsyEi5CaW9TZXJ2aWNlLlBlcnNvbiIu", 
-            "CglQaG90b0xpc3QSIQoGcGhvdG9zGAEgAygLMhEuQmlvU2VydmljZS5QaG90", 
-            "byIsCghSZXNwb25zZRIgCgRnb29kGAEgASgOMhIuQmlvU2VydmljZS5SZXN1", 
-            "bHQiXwoSSWRlbnRpZmljYXRpb25EYXRhEiEKBmltYWdlcxgBIAMoCzIRLkJp", 
-            "b1NlcnZpY2UuUGhvdG8SJgoKcG9wdWxhdGlvbhgCIAMoCzISLkJpb1NlcnZp", 
-            "Y2UuUGVyc29uIlkKEFZlcmlmaWNhdGlvbkRhdGESIQoGaW1hZ2VzGAEgAygL", 
-            "MhEuQmlvU2VydmljZS5QaG90bxIiCgZwZXJzb24YAiABKAsyEi5CaW9TZXJ2", 
-            "aWNlLlBlcnNvbiJFCg5FbnJvbGxtZW50RGF0YRIhCgZpbWFnZXMYASADKAsy", 
-            "ES5CaW9TZXJ2aWNlLlBob3RvEhAKCHBlcnNvbmlkGAIgASgDImwKEkVucm9s", 
-            "bG1lbnRGZWVkYmFjaxIQCghwcm9ncmVzcxgBIAEoDxIRCglleWVzZm91bmQY", 
-            "AiABKAgSDwoHc3VjY2VzcxgDIAEoCBIgCgVwaG90bxgEIAEoCzIRLkJpb1Nl", 
-            "cnZpY2UuUGhvdG8iYgoUVmVyaWZpY2F0aW9uRmVlZGJhY2sSOwoTZW5yb2xs", 
-            "bWVudF9mZWVkYmFjaxgBIAEoCzIeLkJpb1NlcnZpY2UuRW5yb2xsbWVudEZl", 
-            "ZWRiYWNrEg0KBW1hdGNoGAIgASgCIpcBCgpRdWVyeVBob3RvEg4KBmZpZWxk", 
-            "cxgBIAEoAxIPCgdwZXJzb25zGAIgAygDEg4KBnBob3RvcxgDIAMoAxIWCg5p", 
-            "dGVtc19wZXJfcGFnZRgEIAEoAyJAChFUYXJnZXRQaG90b0ZpZWxkcxIHCgNB", 
-            "bGwQABIJCgVPdGhlchABEg4KCkJ5dGVzdHJpbmcQAhIHCgNGaXIQBCIdCgxR", 
-            "dWVyeVBlcnNvbnMSDQoFY291bnQYASABKAMiHwoOUXVlcnlMb2NhdGlvbnMS", 
-            "DQoFY291bnQYASABKAMiigEKDVF1ZXJ5VmlzaXRvcnMSEQoJY291bnRyaWVz", 
-            "GAIgAygJEhEKCWxvY2F0aW9ucxgDIAMoAxIPCgdwZXJzb25zGAQgAygDEhUK", 
-            "DWRhdGV0aW1lX2Zyb20YBSABKAMSEwoLZGF0ZXRpbWVfdG8YBiABKAMSFgoO", 
-            "aXRlbXNfcGVyX3BhZ2UYByABKAMiJgoTU29ja2V0Q29uZmlndXJhdGlvbhIP", 
-            "CgdhZGRyZXNzGAEgASgJKkIKC0VudGl0eVN0YXRlEg0KCVVuY2hhbmdlZBAA", 
-            "EgkKBUFkZGVkEAESDAoITW9kaWZpZWQQAhILCgdEZWxldGVkEAMqIQoGUmVz", 
-            "dWx0EgsKB1N1Y2Nlc3MQABIKCgZGYWlsZWQQASolCg1QaG90b1NpemVUeXBl", 
-            "EggKBEZ1bGwQABIKCgZDcm9wZWQQASo8Cg9QaG90b09yaWdpblR5cGUSDAoI", 
-            "RW5yb2xsZWQQABIMCghWZXJpZmllZBABEg0KCVRodW1ibmFpbBACMv0BChVC", 
-            "aW9tZXRyaWNGYWNpYWxTZXZpY2USRAoJQWRkU29ja2V0Eh8uQmlvU2Vydmlj", 
-            "ZS5Tb2NrZXRDb25maWd1cmF0aW9uGhQuQmlvU2VydmljZS5SZXNwb25zZSIA", 
-            "EkwKCkVucm9sbEZhY2USGi5CaW9TZXJ2aWNlLkVucm9sbG1lbnREYXRhGh4u", 
-            "QmlvU2VydmljZS5FbnJvbGxtZW50RmVlZGJhY2siADABElAKClZlcmlmeUZh", 
-            "Y2USHC5CaW9TZXJ2aWNlLlZlcmlmaWNhdGlvbkRhdGEaIC5CaW9TZXJ2aWNl", 
-            "LlZlcmlmaWNhdGlvbkZlZWRiYWNrIgAwATLLCAoXQmlvbWV0cmljRGF0YWJh", 
-            "c2VTZXZpY2USQgoMUGVyc29uU2VsZWN0EhguQmlvU2VydmljZS5RdWVyeVBl", 
-            "cnNvbnMaFi5CaW9TZXJ2aWNlLlBlcnNvbkxpc3QiABI1CglBZGRQZXJzb24S", 
-            "Ei5CaW9TZXJ2aWNlLlBlcnNvbhoSLkJpb1NlcnZpY2UuUGVyc29uIgASOAoM", 
-            "VXBkYXRlUGVyc29uEhIuQmlvU2VydmljZS5QZXJzb24aEi5CaW9TZXJ2aWNl", 
-            "LlBlcnNvbiIAEjgKDFJlbW92ZVBlcnNvbhISLkJpb1NlcnZpY2UuUGVyc29u", 
-            "GhIuQmlvU2VydmljZS5QZXJzb24iABI5CgxTZXRUaHVtYm5haWwSES5CaW9T", 
-            "ZXJ2aWNlLlBob3RvGhQuQmlvU2VydmljZS5SZXNwb25zZSIAEi8KB0FkZENh", 
-            "cmQSEC5CaW9TZXJ2aWNlLkNhcmQaEC5CaW9TZXJ2aWNlLkNhcmQiABI/CgtS", 
-            "ZW1vdmVDYXJkcxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoWLkJpb1NlcnZp", 
-            "Y2UuUmF3SW5kZXhlcyIAEj8KDFNlbGVjdFBob3RvcxIWLkJpb1NlcnZpY2Uu", 
-            "UXVlcnlQaG90bxoVLkJpb1NlcnZpY2UuUGhvdG9MaXN0IgASMgoIQWRkUGhv", 
-            "dG8SES5CaW9TZXJ2aWNlLlBob3RvGhEuQmlvU2VydmljZS5QaG90byIAEkAK", 
-            "DFJlbW92ZVBob3RvcxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoWLkJpb1Nl", 
-            "cnZpY2UuUmF3SW5kZXhlcyIAEkYKDlNlbGVjdFZpc2l0b3JzEhkuQmlvU2Vy", 
-            "dmljZS5RdWVyeVZpc2l0b3JzGhcuQmlvU2VydmljZS5WaXNpdG9yTGlzdCIA", 
-            "EkQKFUF0dGFjaFZpc2l0b3JUb1BlcnNvbhITLkJpb1NlcnZpY2UuVmlzaXRv", 
-            "choULkJpb1NlcnZpY2UuUmVzcG9uc2UiABJCCg5SZW1vdmVWaXNpdG9ycxIW", 
-            "LkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoWLkJpb1NlcnZpY2UuUmF3SW5kZXhl", 
-            "cyIAEkkKD1NlbGVjdExvY2F0aW9ucxIaLkJpb1NlcnZpY2UuUXVlcnlMb2Nh", 
-            "dGlvbnMaGC5CaW9TZXJ2aWNlLkxvY2F0aW9uTGlzdCIAEjsKC0FkZExvY2F0", 
-            "aW9uEhQuQmlvU2VydmljZS5Mb2NhdGlvbhoULkJpb1NlcnZpY2UuTG9jYXRp", 
-            "b24iABI+Cg5VcGRhdGVMb2NhdGlvbhIULkJpb1NlcnZpY2UuTG9jYXRpb24a", 
-            "FC5CaW9TZXJ2aWNlLkxvY2F0aW9uIgASQwoPUmVtb3ZlTG9jYXRpb25zEhYu", 
-            "QmlvU2VydmljZS5SYXdJbmRleGVzGhYuQmlvU2VydmljZS5SYXdJbmRleGVz", 
-            "IgBCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
+            "ZXZpY2UuQWNjZXNzRGV2aWNlVHlwZRItCgxlbnRpdHlfc3RhdGUYBSABKA4y", 
+            "Fy5CaW9TZXJ2aWNlLkVudGl0eVN0YXRlEiQKCGRicmVzdWx0GAYgASgOMhIu", 
+            "QmlvU2VydmljZS5SZXN1bHQiPwoQQWNjZXNzRGV2aWNlVHlwZRIOCgpEZXZp", 
+            "Y2VOb25lEAASDAoIRGV2aWNlSW4QARINCglEZXZpY2VPdXQQAiKYAQoNQ2Fw", 
+            "dHVyZURldmljZRIKCgJpZBgBIAEoAxISCgpsb2NhdGlvbmlkGAIgASgDEhIK", 
+            "CmRldmljZW5hbWUYAyABKAkSLQoMZW50aXR5X3N0YXRlGAQgASgOMhcuQmlv", 
+            "U2VydmljZS5FbnRpdHlTdGF0ZRIkCghkYnJlc3VsdBgFIAEoDjISLkJpb1Nl", 
+            "cnZpY2UuUmVzdWx0IpABCgRDYXJkEgoKAmlkGAEgASgDEhAKCHBlcnNvbmlk", 
+            "GAIgASgDEhUKDXVuaXF1ZV9udW1iZXIYAyABKAkSLQoMZW50aXR5X3N0YXRl", 
+            "GAQgASgOMhcuQmlvU2VydmljZS5FbnRpdHlTdGF0ZRIkCghkYnJlc3VsdBgF", 
+            "IAEoDjISLkJpb1NlcnZpY2UuUmVzdWx0IoEDCghMb2NhdGlvbhIKCgJpZBgB", 
+            "IAEoAxIVCg1sb2NhdGlvbl9uYW1lGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMg", 
+            "ASgJEi0KDGVudGl0eV9zdGF0ZRgEIAEoDjIXLkJpb1NlcnZpY2UuRW50aXR5", 
+            "U3RhdGUSJAoIZGJyZXN1bHQYBSABKA4yEi5CaW9TZXJ2aWNlLlJlc3VsdBI0", 
+            "CgthY2Nlc3NfdHlwZRgGIAEoDjIfLkJpb1NlcnZpY2UuTG9jYXRpb24uQWNj", 
+            "ZXNzVHlwZRIwCg1jYXB0dXJlRGV2aWNlGAcgASgLMhkuQmlvU2VydmljZS5D", 
+            "YXB0dXJlRGV2aWNlEi4KDGFjY2Vzc0RldmljZRgIIAEoCzIYLkJpb1NlcnZp", 
+            "Y2UuQWNjZXNzRGV2aWNlEiMKB3BlcnNvbnMYCSADKAsyEi5CaW9TZXJ2aWNl", 
+            "LlBlcnNvbiIrCgpBY2Nlc3NUeXBlEggKBE5vbmUQABIHCgNBbGwQARIKCgZD", 
+            "dXN0b20QAiJDChFCaW9tZXRyaWNMb2NhdGlvbhIMCgR4cG9zGAEgASgCEgwK", 
+            "BHlwb3MYAiABKAISEgoKY29uZmlkZW5jZRgDIAEoAiJ3ChJFeWVzQ2hhcmFj", 
+            "dGVyaXN0aWMSLwoIbGVmdF9leWUYASABKAsyHS5CaW9TZXJ2aWNlLkJpb21l", 
+            "dHJpY0xvY2F0aW9uEjAKCXJpZ2h0X2V5ZRgCIAEoCzIdLkJpb1NlcnZpY2Uu", 
+            "QmlvbWV0cmljTG9jYXRpb24iggEKEkZhY2VDaGFyYWN0ZXJpc3RpYxINCgV3", 
+            "aWR0aBgBIAEoAxIvCghsb2NhdGlvbhgCIAEoCzIdLkJpb1NlcnZpY2UuQmlv", 
+            "bWV0cmljTG9jYXRpb24SLAoEZXllcxgDIAEoCzIeLkJpb1NlcnZpY2UuRXll", 
+            "c0NoYXJhY3RlcmlzdGljIpIBChZQb3J0cmFpdENoYXJhY3RlcmlzdGljEgsK", 
+            "A2FnZRgBIAEoDxITCgtmYWNlc19jb3VudBgCIAEoDxIPCgdmaXJfdXJsGAMg", 
+            "ASgJEhYKDmZpcl9ieXRlc3RyaW5nGAQgASgMEi0KBWZhY2VzGAUgAygLMh4u", 
+            "QmlvU2VydmljZS5GYWNlQ2hhcmFjdGVyaXN0aWMi9wIKBVBob3RvEgoKAmlk", 
+            "GAEgASgDEhAKCHBlcnNvbmlkGAIgASgDEiwKCXNpemVfdHlwZRgDIAEoDjIZ", 
+            "LkJpb1NlcnZpY2UuUGhvdG9TaXplVHlwZRIQCghkYXRldGltZRgEIAEoAxIR", 
+            "CglwaG90b191cmwYBSABKAkSEgoKYnl0ZXN0cmluZxgGIAEoDBIwCgtvcmln", 
+            "aW5fdHlwZRgHIAEoDjIbLkJpb1NlcnZpY2UuUGhvdG9PcmlnaW5UeXBlEg0K", 
+            "BXdpZHRoGAggASgDEg4KBmhlaWdodBgJIAEoAxJDChdwb3J0cmFpdF9jaGFy", 
+            "YWN0ZXJpc3RpYxgKIAEoCzIiLkJpb1NlcnZpY2UuUG9ydHJhaXRDaGFyYWN0", 
+            "ZXJpc3RpYxItCgxlbnRpdHlfc3RhdGUYCyABKA4yFy5CaW9TZXJ2aWNlLkVu", 
+            "dGl0eVN0YXRlEiQKCGRicmVzdWx0GAwgASgOMhIuQmlvU2VydmljZS5SZXN1", 
+            "bHQi4QEKB1Zpc2l0b3ISCgoCaWQYASABKAMSEAoIcGVyc29uaWQYAiABKAMS", 
+            "DwoHcGhvdG9pZBgDIAEoAxISCgpsb2NhdGlvbmlkGAQgASgDEgwKBHRpbWUY", 
+            "BSABKAMSEwoLY2FyZF9udW1iZXIYBiABKAkSIgoGc3RhdHVzGAcgASgOMhIu", 
+            "QmlvU2VydmljZS5SZXN1bHQSJAoJZnVsbHBob3RvGAggASgLMhEuQmlvU2Vy", 
+            "dmljZS5QaG90bxImCgtjcm9wZWRwaG90bxgJIAEoCzIRLkJpb1NlcnZpY2Uu", 
+            "UGhvdG8iNAoLVmlzaXRvckxpc3QSJQoIdmlzaXRvcnMYASADKAsyEy5CaW9T", 
+            "ZXJ2aWNlLlZpc2l0b3IiNwoMTG9jYXRpb25MaXN0EicKCWxvY2F0aW9ucxgB", 
+            "IAMoCzIULkJpb1NlcnZpY2UuTG9jYXRpb24iMQoKUGVyc29uTGlzdBIjCgdw", 
+            "ZXJzb25zGAEgAygLMhIuQmlvU2VydmljZS5QZXJzb24iLgoJUGhvdG9MaXN0", 
+            "EiEKBnBob3RvcxgBIAMoCzIRLkJpb1NlcnZpY2UuUGhvdG8iLAoIUmVzcG9u", 
+            "c2USIAoEZ29vZBgBIAEoDjISLkJpb1NlcnZpY2UuUmVzdWx0Il8KEklkZW50", 
+            "aWZpY2F0aW9uRGF0YRIhCgZpbWFnZXMYASADKAsyES5CaW9TZXJ2aWNlLlBo", 
+            "b3RvEiYKCnBvcHVsYXRpb24YAiADKAsyEi5CaW9TZXJ2aWNlLlBlcnNvbiJZ", 
+            "ChBWZXJpZmljYXRpb25EYXRhEiEKBmltYWdlcxgBIAMoCzIRLkJpb1NlcnZp", 
+            "Y2UuUGhvdG8SIgoGcGVyc29uGAIgASgLMhIuQmlvU2VydmljZS5QZXJzb24i", 
+            "RQoORW5yb2xsbWVudERhdGESIQoGaW1hZ2VzGAEgAygLMhEuQmlvU2Vydmlj", 
+            "ZS5QaG90bxIQCghwZXJzb25pZBgCIAEoAyJsChJFbnJvbGxtZW50RmVlZGJh", 
+            "Y2sSEAoIcHJvZ3Jlc3MYASABKA8SEQoJZXllc2ZvdW5kGAIgASgIEg8KB3N1", 
+            "Y2Nlc3MYAyABKAgSIAoFcGhvdG8YBCABKAsyES5CaW9TZXJ2aWNlLlBob3Rv", 
+            "ImIKFFZlcmlmaWNhdGlvbkZlZWRiYWNrEjsKE2Vucm9sbG1lbnRfZmVlZGJh", 
+            "Y2sYASABKAsyHi5CaW9TZXJ2aWNlLkVucm9sbG1lbnRGZWVkYmFjaxINCgVt", 
+            "YXRjaBgCIAEoAiKXAQoKUXVlcnlQaG90bxIOCgZmaWVsZHMYASABKAMSDwoH", 
+            "cGVyc29ucxgCIAMoAxIOCgZwaG90b3MYAyADKAMSFgoOaXRlbXNfcGVyX3Bh", 
+            "Z2UYBCABKAMiQAoRVGFyZ2V0UGhvdG9GaWVsZHMSBwoDQWxsEAASCQoFT3Ro", 
+            "ZXIQARIOCgpCeXRlc3RyaW5nEAISBwoDRmlyEAQiHQoMUXVlcnlQZXJzb25z", 
+            "Eg0KBWNvdW50GAEgASgDIh8KDlF1ZXJ5TG9jYXRpb25zEg0KBWNvdW50GAEg", 
+            "ASgDIooBCg1RdWVyeVZpc2l0b3JzEhEKCWNvdW50cmllcxgCIAMoCRIRCgls", 
+            "b2NhdGlvbnMYAyADKAMSDwoHcGVyc29ucxgEIAMoAxIVCg1kYXRldGltZV9m", 
+            "cm9tGAUgASgDEhMKC2RhdGV0aW1lX3RvGAYgASgDEhYKDml0ZW1zX3Blcl9w", 
+            "YWdlGAcgASgDIiYKE1NvY2tldENvbmZpZ3VyYXRpb24SDwoHYWRkcmVzcxgB", 
+            "IAEoCSpCCgtFbnRpdHlTdGF0ZRINCglVbmNoYW5nZWQQABIJCgVBZGRlZBAB", 
+            "EgwKCE1vZGlmaWVkEAISCwoHRGVsZXRlZBADKiEKBlJlc3VsdBILCgdTdWNj", 
+            "ZXNzEAASCgoGRmFpbGVkEAEqJQoNUGhvdG9TaXplVHlwZRIICgRGdWxsEAAS", 
+            "CgoGQ3JvcGVkEAEqPAoPUGhvdG9PcmlnaW5UeXBlEgwKCEVucm9sbGVkEAAS", 
+            "DAoIVmVyaWZpZWQQARINCglUaHVtYm5haWwQAjL9AQoVQmlvbWV0cmljRmFj", 
+            "aWFsU2V2aWNlEkQKCUFkZFNvY2tldBIfLkJpb1NlcnZpY2UuU29ja2V0Q29u", 
+            "ZmlndXJhdGlvbhoULkJpb1NlcnZpY2UuUmVzcG9uc2UiABJMCgpFbnJvbGxG", 
+            "YWNlEhouQmlvU2VydmljZS5FbnJvbGxtZW50RGF0YRoeLkJpb1NlcnZpY2Uu", 
+            "RW5yb2xsbWVudEZlZWRiYWNrIgAwARJQCgpWZXJpZnlGYWNlEhwuQmlvU2Vy", 
+            "dmljZS5WZXJpZmljYXRpb25EYXRhGiAuQmlvU2VydmljZS5WZXJpZmljYXRp", 
+            "b25GZWVkYmFjayIAMAEyywgKF0Jpb21ldHJpY0RhdGFiYXNlU2V2aWNlEkIK", 
+            "DFBlcnNvblNlbGVjdBIYLkJpb1NlcnZpY2UuUXVlcnlQZXJzb25zGhYuQmlv", 
+            "U2VydmljZS5QZXJzb25MaXN0IgASNQoJQWRkUGVyc29uEhIuQmlvU2Vydmlj", 
+            "ZS5QZXJzb24aEi5CaW9TZXJ2aWNlLlBlcnNvbiIAEjgKDFVwZGF0ZVBlcnNv", 
+            "bhISLkJpb1NlcnZpY2UuUGVyc29uGhIuQmlvU2VydmljZS5QZXJzb24iABI4", 
+            "CgxSZW1vdmVQZXJzb24SEi5CaW9TZXJ2aWNlLlBlcnNvbhoSLkJpb1NlcnZp", 
+            "Y2UuUGVyc29uIgASOQoMU2V0VGh1bWJuYWlsEhEuQmlvU2VydmljZS5QaG90", 
+            "bxoULkJpb1NlcnZpY2UuUmVzcG9uc2UiABIvCgdBZGRDYXJkEhAuQmlvU2Vy", 
+            "dmljZS5DYXJkGhAuQmlvU2VydmljZS5DYXJkIgASPwoLUmVtb3ZlQ2FyZHMS", 
+            "Fi5CaW9TZXJ2aWNlLlJhd0luZGV4ZXMaFi5CaW9TZXJ2aWNlLlJhd0luZGV4", 
+            "ZXMiABI/CgxTZWxlY3RQaG90b3MSFi5CaW9TZXJ2aWNlLlF1ZXJ5UGhvdG8a", 
+            "FS5CaW9TZXJ2aWNlLlBob3RvTGlzdCIAEjIKCEFkZFBob3RvEhEuQmlvU2Vy", 
+            "dmljZS5QaG90bxoRLkJpb1NlcnZpY2UuUGhvdG8iABJACgxSZW1vdmVQaG90", 
+            "b3MSFi5CaW9TZXJ2aWNlLlJhd0luZGV4ZXMaFi5CaW9TZXJ2aWNlLlJhd0lu", 
+            "ZGV4ZXMiABJGCg5TZWxlY3RWaXNpdG9ycxIZLkJpb1NlcnZpY2UuUXVlcnlW", 
+            "aXNpdG9ycxoXLkJpb1NlcnZpY2UuVmlzaXRvckxpc3QiABJEChVBdHRhY2hW", 
+            "aXNpdG9yVG9QZXJzb24SEy5CaW9TZXJ2aWNlLlZpc2l0b3IaFC5CaW9TZXJ2", 
+            "aWNlLlJlc3BvbnNlIgASQgoOUmVtb3ZlVmlzaXRvcnMSFi5CaW9TZXJ2aWNl", 
+            "LlJhd0luZGV4ZXMaFi5CaW9TZXJ2aWNlLlJhd0luZGV4ZXMiABJJCg9TZWxl", 
+            "Y3RMb2NhdGlvbnMSGi5CaW9TZXJ2aWNlLlF1ZXJ5TG9jYXRpb25zGhguQmlv", 
+            "U2VydmljZS5Mb2NhdGlvbkxpc3QiABI7CgtBZGRMb2NhdGlvbhIULkJpb1Nl", 
+            "cnZpY2UuTG9jYXRpb24aFC5CaW9TZXJ2aWNlLkxvY2F0aW9uIgASPgoOVXBk", 
+            "YXRlTG9jYXRpb24SFC5CaW9TZXJ2aWNlLkxvY2F0aW9uGhQuQmlvU2Vydmlj", 
+            "ZS5Mb2NhdGlvbiIAEkMKD1JlbW92ZUxvY2F0aW9ucxIWLkJpb1NlcnZpY2Uu", 
+            "UmF3SW5kZXhlcxoWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcyIAQg8KB2V4Lmdy", 
+            "cGOiAgNSVEdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(new[] {typeof(global::BioService.EntityState), typeof(global::BioService.Result), typeof(global::BioService.PhotoSizeType), typeof(global::BioService.PhotoOriginType), }, new pbr::GeneratedCodeInfo[] {
             new pbr::GeneratedCodeInfo(typeof(global::BioService.RawIndexes), new[]{ "Indexes" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.Criminal), new[]{ "Id", "Description", "Alert" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.Person), new[]{ "Id", "Firstname", "Lastname", "Dateofbirth", "Gender", "Country", "City", "Photoid", "Comments", "Rights", "Email", "Dbresult", "Thumbnail", "Photos", "Cards", "EntityState", "Criminal" }, null, new[]{ typeof(global::BioService.Person.Types.Gender), typeof(global::BioService.Person.Types.Rights) }, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.AccessDevice), new[]{ "Id", "Locationid", "Portname", "Type" }, null, new[]{ typeof(global::BioService.AccessDevice.Types.AccessDeviceType) }, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.CaptureDevice), new[]{ "Id", "Locationid", "Devicename" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.AccessDevice), new[]{ "Id", "Locationid", "Portname", "Type", "EntityState", "Dbresult" }, null, new[]{ typeof(global::BioService.AccessDevice.Types.AccessDeviceType) }, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.CaptureDevice), new[]{ "Id", "Locationid", "Devicename", "EntityState", "Dbresult" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.Card), new[]{ "Id", "Personid", "UniqueNumber", "EntityState", "Dbresult" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.Location), new[]{ "Id", "LocationName", "Description", "EntityState", "Dbresult", "AccessType", "CaptureDevices", "AccessDevices", "Persons" }, null, new[]{ typeof(global::BioService.Location.Types.AccessType) }, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.Location), new[]{ "Id", "LocationName", "Description", "EntityState", "Dbresult", "AccessType", "CaptureDevice", "AccessDevice", "Persons" }, null, new[]{ typeof(global::BioService.Location.Types.AccessType) }, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.BiometricLocation), new[]{ "Xpos", "Ypos", "Confidence" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.EyesCharacteristic), new[]{ "LeftEye", "RightEye" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.FaceCharacteristic), new[]{ "Width", "Location", "Eyes" }, null, null, null),
@@ -1008,6 +1012,8 @@ namespace BioService {
       locationid_ = other.locationid_;
       portname_ = other.portname_;
       type_ = other.type_;
+      entityState_ = other.entityState_;
+      dbresult_ = other.dbresult_;
     }
 
     public AccessDevice Clone() {
@@ -1050,6 +1056,24 @@ namespace BioService {
       }
     }
 
+    public const int EntityStateFieldNumber = 5;
+    private global::BioService.EntityState entityState_ = global::BioService.EntityState.Unchanged;
+    public global::BioService.EntityState EntityState {
+      get { return entityState_; }
+      set {
+        entityState_ = value;
+      }
+    }
+
+    public const int DbresultFieldNumber = 6;
+    private global::BioService.Result dbresult_ = global::BioService.Result.Success;
+    public global::BioService.Result Dbresult {
+      get { return dbresult_; }
+      set {
+        dbresult_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as AccessDevice);
     }
@@ -1065,6 +1089,8 @@ namespace BioService {
       if (Locationid != other.Locationid) return false;
       if (Portname != other.Portname) return false;
       if (Type != other.Type) return false;
+      if (EntityState != other.EntityState) return false;
+      if (Dbresult != other.Dbresult) return false;
       return true;
     }
 
@@ -1074,6 +1100,8 @@ namespace BioService {
       if (Locationid != 0L) hash ^= Locationid.GetHashCode();
       if (Portname.Length != 0) hash ^= Portname.GetHashCode();
       if (Type != global::BioService.AccessDevice.Types.AccessDeviceType.DeviceNone) hash ^= Type.GetHashCode();
+      if (EntityState != global::BioService.EntityState.Unchanged) hash ^= EntityState.GetHashCode();
+      if (Dbresult != global::BioService.Result.Success) hash ^= Dbresult.GetHashCode();
       return hash;
     }
 
@@ -1098,6 +1126,14 @@ namespace BioService {
         output.WriteRawTag(32);
         output.WriteEnum((int) Type);
       }
+      if (EntityState != global::BioService.EntityState.Unchanged) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) EntityState);
+      }
+      if (Dbresult != global::BioService.Result.Success) {
+        output.WriteRawTag(48);
+        output.WriteEnum((int) Dbresult);
+      }
     }
 
     public int CalculateSize() {
@@ -1113,6 +1149,12 @@ namespace BioService {
       }
       if (Type != global::BioService.AccessDevice.Types.AccessDeviceType.DeviceNone) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
+      }
+      if (EntityState != global::BioService.EntityState.Unchanged) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EntityState);
+      }
+      if (Dbresult != global::BioService.Result.Success) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbresult);
       }
       return size;
     }
@@ -1132,6 +1174,12 @@ namespace BioService {
       }
       if (other.Type != global::BioService.AccessDevice.Types.AccessDeviceType.DeviceNone) {
         Type = other.Type;
+      }
+      if (other.EntityState != global::BioService.EntityState.Unchanged) {
+        EntityState = other.EntityState;
+      }
+      if (other.Dbresult != global::BioService.Result.Success) {
+        Dbresult = other.Dbresult;
       }
     }
 
@@ -1156,6 +1204,14 @@ namespace BioService {
           }
           case 32: {
             type_ = (global::BioService.AccessDevice.Types.AccessDeviceType) input.ReadEnum();
+            break;
+          }
+          case 40: {
+            entityState_ = (global::BioService.EntityState) input.ReadEnum();
+            break;
+          }
+          case 48: {
+            dbresult_ = (global::BioService.Result) input.ReadEnum();
             break;
           }
         }
@@ -1199,6 +1255,8 @@ namespace BioService {
       id_ = other.id_;
       locationid_ = other.locationid_;
       devicename_ = other.devicename_;
+      entityState_ = other.entityState_;
+      dbresult_ = other.dbresult_;
     }
 
     public CaptureDevice Clone() {
@@ -1232,6 +1290,24 @@ namespace BioService {
       }
     }
 
+    public const int EntityStateFieldNumber = 4;
+    private global::BioService.EntityState entityState_ = global::BioService.EntityState.Unchanged;
+    public global::BioService.EntityState EntityState {
+      get { return entityState_; }
+      set {
+        entityState_ = value;
+      }
+    }
+
+    public const int DbresultFieldNumber = 5;
+    private global::BioService.Result dbresult_ = global::BioService.Result.Success;
+    public global::BioService.Result Dbresult {
+      get { return dbresult_; }
+      set {
+        dbresult_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as CaptureDevice);
     }
@@ -1246,6 +1322,8 @@ namespace BioService {
       if (Id != other.Id) return false;
       if (Locationid != other.Locationid) return false;
       if (Devicename != other.Devicename) return false;
+      if (EntityState != other.EntityState) return false;
+      if (Dbresult != other.Dbresult) return false;
       return true;
     }
 
@@ -1254,6 +1332,8 @@ namespace BioService {
       if (Id != 0L) hash ^= Id.GetHashCode();
       if (Locationid != 0L) hash ^= Locationid.GetHashCode();
       if (Devicename.Length != 0) hash ^= Devicename.GetHashCode();
+      if (EntityState != global::BioService.EntityState.Unchanged) hash ^= EntityState.GetHashCode();
+      if (Dbresult != global::BioService.Result.Success) hash ^= Dbresult.GetHashCode();
       return hash;
     }
 
@@ -1274,6 +1354,14 @@ namespace BioService {
         output.WriteRawTag(26);
         output.WriteString(Devicename);
       }
+      if (EntityState != global::BioService.EntityState.Unchanged) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) EntityState);
+      }
+      if (Dbresult != global::BioService.Result.Success) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) Dbresult);
+      }
     }
 
     public int CalculateSize() {
@@ -1286,6 +1374,12 @@ namespace BioService {
       }
       if (Devicename.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Devicename);
+      }
+      if (EntityState != global::BioService.EntityState.Unchanged) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EntityState);
+      }
+      if (Dbresult != global::BioService.Result.Success) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbresult);
       }
       return size;
     }
@@ -1302,6 +1396,12 @@ namespace BioService {
       }
       if (other.Devicename.Length != 0) {
         Devicename = other.Devicename;
+      }
+      if (other.EntityState != global::BioService.EntityState.Unchanged) {
+        EntityState = other.EntityState;
+      }
+      if (other.Dbresult != global::BioService.Result.Success) {
+        Dbresult = other.Dbresult;
       }
     }
 
@@ -1322,6 +1422,14 @@ namespace BioService {
           }
           case 26: {
             Devicename = input.ReadString();
+            break;
+          }
+          case 32: {
+            entityState_ = (global::BioService.EntityState) input.ReadEnum();
+            break;
+          }
+          case 40: {
+            dbresult_ = (global::BioService.Result) input.ReadEnum();
             break;
           }
         }
@@ -1562,8 +1670,8 @@ namespace BioService {
       entityState_ = other.entityState_;
       dbresult_ = other.dbresult_;
       accessType_ = other.accessType_;
-      captureDevices_ = other.captureDevices_.Clone();
-      accessDevices_ = other.accessDevices_.Clone();
+      CaptureDevice = other.captureDevice_ != null ? other.CaptureDevice.Clone() : null;
+      AccessDevice = other.accessDevice_ != null ? other.AccessDevice.Clone() : null;
       persons_ = other.persons_.Clone();
     }
 
@@ -1625,20 +1733,22 @@ namespace BioService {
       }
     }
 
-    public const int CaptureDevicesFieldNumber = 7;
-    private static readonly pb::FieldCodec<global::BioService.CaptureDevice> _repeated_captureDevices_codec
-        = pb::FieldCodec.ForMessage(58, global::BioService.CaptureDevice.Parser);
-    private readonly pbc::RepeatedField<global::BioService.CaptureDevice> captureDevices_ = new pbc::RepeatedField<global::BioService.CaptureDevice>();
-    public pbc::RepeatedField<global::BioService.CaptureDevice> CaptureDevices {
-      get { return captureDevices_; }
+    public const int CaptureDeviceFieldNumber = 7;
+    private global::BioService.CaptureDevice captureDevice_;
+    public global::BioService.CaptureDevice CaptureDevice {
+      get { return captureDevice_; }
+      set {
+        captureDevice_ = value;
+      }
     }
 
-    public const int AccessDevicesFieldNumber = 8;
-    private static readonly pb::FieldCodec<global::BioService.AccessDevice> _repeated_accessDevices_codec
-        = pb::FieldCodec.ForMessage(66, global::BioService.AccessDevice.Parser);
-    private readonly pbc::RepeatedField<global::BioService.AccessDevice> accessDevices_ = new pbc::RepeatedField<global::BioService.AccessDevice>();
-    public pbc::RepeatedField<global::BioService.AccessDevice> AccessDevices {
-      get { return accessDevices_; }
+    public const int AccessDeviceFieldNumber = 8;
+    private global::BioService.AccessDevice accessDevice_;
+    public global::BioService.AccessDevice AccessDevice {
+      get { return accessDevice_; }
+      set {
+        accessDevice_ = value;
+      }
     }
 
     public const int PersonsFieldNumber = 9;
@@ -1666,8 +1776,8 @@ namespace BioService {
       if (EntityState != other.EntityState) return false;
       if (Dbresult != other.Dbresult) return false;
       if (AccessType != other.AccessType) return false;
-      if(!captureDevices_.Equals(other.captureDevices_)) return false;
-      if(!accessDevices_.Equals(other.accessDevices_)) return false;
+      if (!object.Equals(CaptureDevice, other.CaptureDevice)) return false;
+      if (!object.Equals(AccessDevice, other.AccessDevice)) return false;
       if(!persons_.Equals(other.persons_)) return false;
       return true;
     }
@@ -1680,8 +1790,8 @@ namespace BioService {
       if (EntityState != global::BioService.EntityState.Unchanged) hash ^= EntityState.GetHashCode();
       if (Dbresult != global::BioService.Result.Success) hash ^= Dbresult.GetHashCode();
       if (AccessType != global::BioService.Location.Types.AccessType.None) hash ^= AccessType.GetHashCode();
-      hash ^= captureDevices_.GetHashCode();
-      hash ^= accessDevices_.GetHashCode();
+      if (captureDevice_ != null) hash ^= CaptureDevice.GetHashCode();
+      if (accessDevice_ != null) hash ^= AccessDevice.GetHashCode();
       hash ^= persons_.GetHashCode();
       return hash;
     }
@@ -1715,8 +1825,14 @@ namespace BioService {
         output.WriteRawTag(48);
         output.WriteEnum((int) AccessType);
       }
-      captureDevices_.WriteTo(output, _repeated_captureDevices_codec);
-      accessDevices_.WriteTo(output, _repeated_accessDevices_codec);
+      if (captureDevice_ != null) {
+        output.WriteRawTag(58);
+        output.WriteMessage(CaptureDevice);
+      }
+      if (accessDevice_ != null) {
+        output.WriteRawTag(66);
+        output.WriteMessage(AccessDevice);
+      }
       persons_.WriteTo(output, _repeated_persons_codec);
     }
 
@@ -1740,8 +1856,12 @@ namespace BioService {
       if (AccessType != global::BioService.Location.Types.AccessType.None) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) AccessType);
       }
-      size += captureDevices_.CalculateSize(_repeated_captureDevices_codec);
-      size += accessDevices_.CalculateSize(_repeated_accessDevices_codec);
+      if (captureDevice_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(CaptureDevice);
+      }
+      if (accessDevice_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(AccessDevice);
+      }
       size += persons_.CalculateSize(_repeated_persons_codec);
       return size;
     }
@@ -1768,8 +1888,18 @@ namespace BioService {
       if (other.AccessType != global::BioService.Location.Types.AccessType.None) {
         AccessType = other.AccessType;
       }
-      captureDevices_.Add(other.captureDevices_);
-      accessDevices_.Add(other.accessDevices_);
+      if (other.captureDevice_ != null) {
+        if (captureDevice_ == null) {
+          captureDevice_ = new global::BioService.CaptureDevice();
+        }
+        CaptureDevice.MergeFrom(other.CaptureDevice);
+      }
+      if (other.accessDevice_ != null) {
+        if (accessDevice_ == null) {
+          accessDevice_ = new global::BioService.AccessDevice();
+        }
+        AccessDevice.MergeFrom(other.AccessDevice);
+      }
       persons_.Add(other.persons_);
     }
 
@@ -1805,11 +1935,17 @@ namespace BioService {
             break;
           }
           case 58: {
-            captureDevices_.AddEntriesFrom(input, _repeated_captureDevices_codec);
+            if (captureDevice_ == null) {
+              captureDevice_ = new global::BioService.CaptureDevice();
+            }
+            input.ReadMessage(captureDevice_);
             break;
           }
           case 66: {
-            accessDevices_.AddEntriesFrom(input, _repeated_accessDevices_codec);
+            if (accessDevice_ == null) {
+              accessDevice_ = new global::BioService.AccessDevice();
+            }
+            input.ReadMessage(accessDevice_);
             break;
           }
           case 74: {

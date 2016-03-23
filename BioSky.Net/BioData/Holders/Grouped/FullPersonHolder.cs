@@ -96,7 +96,7 @@ namespace BioData.Holders.Grouped
         DataChanged();
     }
 
-    private void OnDataUpdated(Google.Protobuf.Collections.RepeatedField<Person> list)
+    private void OnDataUpdated(RepeatedField<Person> list)
     {
       if (DataUpdated != null)
         DataUpdated(list);

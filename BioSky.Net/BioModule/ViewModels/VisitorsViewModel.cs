@@ -42,7 +42,7 @@ namespace BioModule.ViewModels
      // _database.PhotoHolder.DataChanged   += RefreshData;
       _database.Visitors.DataChanged      += RefreshData;
 
-      IsDeleteButtonEnabled = true;
+      IsDeleteButtonEnabled = false;
     } 
         
     #region Database

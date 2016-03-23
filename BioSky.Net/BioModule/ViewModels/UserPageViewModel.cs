@@ -75,7 +75,7 @@ namespace BioModule.ViewModels
     }
 
 
-  private void UinfoModel_ValidationStateChanged(bool state)
+    private void UinfoModel_ValidationStateChanged(bool state)
     {
       IsValid = state;      
       NotifyOfPropertyChange(() => CanRevert);

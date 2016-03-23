@@ -16,7 +16,7 @@ namespace BioContracts
   {
     ILocalStorage LocalStorage  { get; }
 
-    IFullHolder<Location> Locations  { get; }
+    IFullLocationHolder Locations  { get; }
 
     IFullPersonHolder Persons { get; }
 

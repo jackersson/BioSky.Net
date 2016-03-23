@@ -129,6 +129,10 @@
       <HintPath>..\packages\Google.Protobuf.3.0.0-alpha4\lib\portable-net45+netcore45+wpa81+wp8\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GrayscaleEffect, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GrayscaleEffect.1.0.1\lib\GrayscaleEffect.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Grpc.Core, Version=0.12.0.0, Culture=neutral, PublicKeyToken=d754f35622e28bad, processorArchitecture=MSIL">
       <HintPath>..\packages\Grpc.Core.0.12.0\lib\net45\Grpc.Core.dll</HintPath>
       <Private>True</Private>

@@ -16,7 +16,7 @@ namespace BioModule.Utils
     public PagingCollectionView( IList innerList, int itemsPerPage)
                                : base(innerList)
     {
-      this._innerList = innerList;
+      this._innerList    = innerList   ;
       this._itemsPerPage = itemsPerPage;      
     }
 
@@ -26,7 +26,7 @@ namespace BioModule.Utils
     }
     public int ItemsCount
     {
-      get { return this._innerList.Count; }
+      get { return this.InternalList.Count; }
     }
 
     public override int Count
@@ -38,7 +38,7 @@ namespace BioModule.Utils
           return this._itemsPerPage;
 
         //last page
-        int remainder = _innerList.Count % this._itemsPerPage;
+        int remainder = InternalList.Count % this._itemsPerPage;
 
         return remainder == 0 ? this._itemsPerPage : remainder;
       }
@@ -60,7 +60,7 @@ namespace BioModule.Utils
     {
       get
       {
-        return (this._innerList.Count + this._itemsPerPage - 1)
+        return (InternalList.Count + this._itemsPerPage - 1)
             / this._itemsPerPage;
       }
     }
@@ -70,7 +70,7 @@ namespace BioModule.Utils
       get
       {
         var end = this._currentPage * this._itemsPerPage;
-        return (end > this._innerList.Count) ? this._innerList.Count : end;
+        return (end > InternalList.Count) ? InternalList.Count : end;
       }
     }
 
@@ -84,9 +84,18 @@ namespace BioModule.Utils
       var offset = index % (this._itemsPerPage);
       int targetIndex = this.StartIndex + offset;
 
-      if (this._innerList.Count <= targetIndex)
+      if (InternalList.Count <= targetIndex)
         return null;
-      return base.GetItemAt(this.StartIndex + offset);
+      try
+      {
+        return base.GetItemAt(targetIndex);
+      }
+      catch ( Exception e)
+      {
+        Console.WriteLine(InternalList.Count);
+        Console.WriteLine(e.Message);
+        return null;
+      }
     }
 
     public void MoveToNextPage()
