@@ -14,7 +14,12 @@ namespace BioContracts
    , LocationUpdate = 1 << 4
    , LocationRemove = 1 << 5
 
+   , VisitorRemove  = 1 << 6
 
+   , CardAdd        = 1 << 7
+   , CardRemove     = 1 << 8
+
+   , PhotoRemove    = 1 << 8
   }
 
   public interface IBioEngine

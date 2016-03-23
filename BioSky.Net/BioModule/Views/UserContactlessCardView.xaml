@@ -7,6 +7,9 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
@@ -17,10 +20,25 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
-        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance"       x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"   />
         <utils:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
         <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <BooleanToVisibilityConverter  x:Key="BooleanToVisibilityConverter"/>
+
+        <Style x:Key="GreyScaleImage" TargetType="Image">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <ScrollViewer>
@@ -45,12 +63,14 @@
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 Grid.Row="0" Grid.RowSpan="3"
                 Visibility="{Binding CanAddCard, Converter={StaticResource BooleanToVisibilityConverter}}"
-                
+                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                           , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                           , ConverterParameter={x:Static bioContracts:Activity.CardAdd}}"            
                 ToolTip="{lex:Loc AddCard}"
                 cal:Message.Attach="[Event Click]=[Action AddCard]"               
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}"
-                   Height="32" Width="32" />
+                   Height="32" Width="32" Style="{StaticResource GreyScaleImage}"/>
         </Button>
 
         <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" Grid.RowSpan="3" 
@@ -58,8 +78,10 @@
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 Visibility="{Binding CanDeleteCard, Converter={StaticResource BooleanToVisibilityConverter}}"              
                 cal:Message.Attach="[Event Click] = [Action OnDeleteCards]"
-                >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" />
+                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                           , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                           , ConverterParameter={x:Static bioContracts:Activity.CardRemove}}">
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" Style="{StaticResource GreyScaleImage}"/>
         </Button>
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 

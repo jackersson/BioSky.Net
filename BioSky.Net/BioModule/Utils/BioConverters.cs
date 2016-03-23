@@ -101,6 +101,19 @@ namespace BioModule.Utils
         }
       }
     }
+
+    private static MultiPermissionConverter _multiPermissionToVisibilityConverter;
+    public static MultiPermissionConverter MultiPermissionToVisibilityConverter
+    {
+      get { return _multiPermissionToVisibilityConverter; }
+      set
+      {
+        if (_multiPermissionToVisibilityConverter != value)
+        {
+          _multiPermissionToVisibilityConverter = value;
+        }
+      }
+    }
     #endregion
 
 
@@ -111,12 +124,13 @@ namespace BioModule.Utils
       _bioEngine = _locator.GetProcessor<IBioEngine>();
       
 
-      PhotoIDConverter                  = new ConvertPhotoIdToImage          (_database)          ;
-      FileLocationToImageConverter      = new ConvertFileLocationToImage     (_database)          ;
-      PersonIdToFirstnameConverter      = new ConvertPersonIdToFirstname     (_database.Persons)  ;
-      PersonIdToLastnameConverter       = new ConvertPersonIdToLastname      (_database.Persons)  ;
-      LocationIdToLocationnameConverter = new ConvertLocationIdToLocationname(_database.Locations);
-      PermissionToVisibilityConverter   = new ConvertPermissionToVisibility  (_bioEngine)         ;
+      PhotoIDConverter                     = new ConvertPhotoIdToImage          (_database)          ;
+      FileLocationToImageConverter         = new ConvertFileLocationToImage     (_database)          ;
+      PersonIdToFirstnameConverter         = new ConvertPersonIdToFirstname     (_database.Persons)  ;
+      PersonIdToLastnameConverter          = new ConvertPersonIdToLastname      (_database.Persons)  ;
+      LocationIdToLocationnameConverter    = new ConvertLocationIdToLocationname(_database.Locations);
+      PermissionToVisibilityConverter      = new ConvertPermissionToVisibility  (_bioEngine)         ;
+      MultiPermissionToVisibilityConverter = new MultiPermissionConverter       (_bioEngine)         ;
     }
 
     private IProcessorLocator    _locator  ;
@@ -158,7 +172,7 @@ namespace BioModule.Utils
         Activity activity = (Activity)parameter;
         bool flag = _bioEngine.IsActivityAllowed(activity);
 
-        return flag; //!flag ? Visibility.Collapsed : Visibility.Visible;
+        return flag;
 
       }
       return null;
@@ -524,5 +538,46 @@ namespace BioModule.Utils
   }
   #endregion
 
-#endregion
+  #region MultiPermissionConverter
+  public class MultiPermissionConverter : IMultiValueConverter
+  {
+    public MultiPermissionConverter(IBioEngine bioEngine)
+    {
+      _bioEngine = bioEngine;
+    }
+    public object Convert(object[] values, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      //values[0] = CurrentPermissionRights
+      //values[1] = CurrentIsEnabledState
+      //values[2] = Parametr(Activity)
+
+      if (values[0] != null && values[2] != null)
+      {
+        Activity activity = (Activity)values[2];
+        bool flag = _bioEngine.IsActivityAllowed(activity);
+
+        if (!flag)
+        {
+          bool isEnabledFlag = (bool)values[1];
+          return isEnabledFlag;
+        }
+
+        return flag;
+      }
+      return null;
+
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+
+    private IBioEngine _bioEngine;
+  }
+  #endregion
+
+  #endregion
 }

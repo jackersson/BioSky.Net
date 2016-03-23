@@ -40,7 +40,9 @@ namespace BioModule.ViewModels
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
      // _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.Visitors.DataChanged      += RefreshData;      
+      _database.Visitors.DataChanged      += RefreshData;
+
+      IsDeleteButtonEnabled = true;
     } 
         
     #region Database

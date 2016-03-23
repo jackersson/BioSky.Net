@@ -6,6 +6,12 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"    
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:langs="clr-namespace:BioModule.Resources.langs"
+             xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:lex="http://wpflocalizeextension.codeplex.com" 
              lex:LocalizeDictionary.DesignCulture="en-EN"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
@@ -14,6 +20,24 @@
              d:DesignHeight="50" d:DesignWidth="250"
              d:DataContext="{d:DesignInstance vm:MainMenuViewModel, IsDesignTimeCreatable=False}">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="GreyScaleMenuItem" TargetType="MenuItem" BasedOn="{StaticResource MetroMenuItem}">
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
 
     <Grid>
@@ -25,25 +49,30 @@
                   HorizontalAlignment="Left" Foreground="#FFF1F1F1">
             <MenuItem Header="{lex:Loc File}">
                 <MenuItem Header="{lex:Loc Add}">
-                    <MenuItem Header="{lex:Loc User}" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"/>
-                    <MenuItem Header="{lex:Loc Location}" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"/>
+                    <MenuItem Header="{lex:Loc User}" 
+                              cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"
+                              Style="{StaticResource GreyScaleMenuItem}"
+                              IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                                         , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                                         , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}"/>
+                    <MenuItem Header="{lex:Loc Location}" 
+                              cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"
+                              Style="{StaticResource GreyScaleMenuItem}"
+                              IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                                         , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                                         , ConverterParameter={x:Static bioContracts:Activity.LocationAdd}}"/>
                 </MenuItem>
-                <Separator></Separator>
+                <Separator/>
                 <MenuItem Header="{lex:Loc SignIn}"
-                          cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">
-                </MenuItem>
+                          cal:Message.Attach="[Event Click] = [Action OpenTabAuthentication]"/>
                 <MenuItem Header="{lex:Loc SignOut}"
-                          cal:Message.Attach="[Event Click] = [Action OpenTabAuthentication]"
-                          >
-                </MenuItem>
-                <Separator></Separator>
+                          cal:Message.Attach="[Event Click] = [Action OnSignOut]"/>
+                <Separator/>
                 <MenuItem Header="{lex:Loc Exit}"/>
             </MenuItem>
             <MenuItem Header="{lex:Loc Edit}"/>
             <MenuItem Header="{lex:Loc View}" 
                           >
-                <MenuItem Header="{lex:Loc Settings}" 
-                          cal:Message.Attach="[Event Click] = [Action OpenFlayoutSettings]" />
                 <MenuItem Header="{lex:Loc Tracking}" 
                           cal:Message.Attach="[Event Click] = [Action OpenTabTrack]"/>
                 <MenuItem Header="{lex:Loc Users}"

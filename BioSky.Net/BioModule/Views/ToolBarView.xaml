@@ -44,10 +44,7 @@
                 <Button ToolTip="{lex:Loc HomePage}" cal:Message.Attach="[Event Click]=[Action OpenTabHomePage]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=HomeIconSource}" 
                            Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
-                </Button>        
-                
-                
-                
+                </Button>  
                 
                 <Separator></Separator>
                 <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]"
@@ -56,18 +53,13 @@
                                    , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" 
                            Width="32" Height="32" Style="{StaticResource GreyScaleImage}"/>
-                </Button>
-                
-                
-                
-                
-                
+                </Button>             
                 <Separator></Separator>
 
                 <Button ToolTip="{lex:Loc AddNewLocation}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]"
                         IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
                                    , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
-                                   , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">
+                                   , ConverterParameter={x:Static bioContracts:Activity.LocationAdd}}">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}" 
                            Width="32" Height="32" Style="{StaticResource GreyScaleImage}" />
                 </Button>                

@@ -12,6 +12,9 @@
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
@@ -25,22 +28,38 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
 
             <sys:Double x:Key="MyWidth">195</sys:Double>
 
-            <Style x:Key="MyTextBlock" TargetType="TextBlock">
+            <Style x:Key="GreyScaleImage" TargetType="Image">
                 <Style.Triggers>
-                    <Trigger  Property="IsMouseOver" Value="True">
-                        <Setter Property="Cursor" Value="Hand" />
-                        <Setter Property="Foreground" Value="#FF88C3DD" />
-                    </Trigger>
-                    <Trigger  Property="IsMouseOver" Value="False">
-                        <Setter Property="Cursor" Value="Arrow" />
-                        <Setter Property="Foreground" Value="#FF1D79F3" />
-                    </Trigger>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
                 </Style.Triggers>
             </Style>
-            
+
+            <Style x:Key="GreyScaleTextBlock" TargetType="TextBlock">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
         </ResourceDictionary>       
     </UserControl.Resources>
 
@@ -73,56 +92,59 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
             <TextBlock Text="Start" Foreground="White" FontSize="12" Margin="5,10,0,5"/>
 
             <Button cal:Message.Attach="[Event Click] = [Action OnAddNewUser]" BorderThickness="0" 
-                        VerticalAlignment="Center" HorizontalAlignment="Stretch" 
-                        Grid.Row="1" Margin="5,0,0,5"
-                        >
+                        VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="1" Margin="5,0,0,5"                        
+                        IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                                   , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                                   , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="26"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
-                               Height="25" Width="25" Grid.Column="0"></Image>
+                           Height="25" Width="25" Grid.Column="0" Style="{StaticResource GreyScaleImage}"/>
                     <Grid IsHitTestVisible="False" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Add Person" FontSize="15" Style="{StaticResource MyTextBlock}"
-                                       Foreground="White"
-                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
-                        <TextBlock Text="Creates new person" FontSize="10" Style="{StaticResource MyTextBlock}"
-                                       Grid.Row="1" Foreground="White"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Add Person" FontSize="15" 
+                                   Foreground="White" Style="{StaticResource  GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
+                        <TextBlock Text="Creates new person" FontSize="10"  
+                                   Grid.Row="1" Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
                     </Grid>
                 </Grid>
             </Button>
 
-            <Button cal:Message.Attach="[Event Click] = [Action OnAddNewLocation]" BorderThickness="0"
-                        Grid.Row="2" Margin="5,0,0,5" 
-                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
-                        >
+            <Button cal:Message.Attach="[Event Click] = [Action OnAddNewLocation]" BorderThickness="0"                    
+                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2" Margin="5,0,0,5" 
+                    IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                               , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                               , ConverterParameter={x:Static bioContracts:Activity.LocationAdd}}">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="26"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
-                               Height="25" Width="25" Grid.Column="0"></Image>
+                           Height="25" Width="25" Grid.Column="0" Style="{StaticResource GreyScaleImage}"/>
                     <Grid IsHitTestVisible="False" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Add Location" FontSize="15" Style="{StaticResource MyTextBlock}"
-                       cal:Message.Attach="[Event MouseDown] = [Action OnAddNewLocation]" Foreground="White"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
-                        <TextBlock Text="Creates new location" FontSize="10" Style="{StaticResource MyTextBlock}"
-                       cal:Message.Attach="[Event MouseDown] = [Action OnAddNewLocation]" Grid.Row="1" Foreground="White"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Add Location" FontSize="15" Style="{StaticResource GreyScaleTextBlock}"
+                                   cal:Message.Attach="[Event MouseDown] = [Action OnAddNewLocation]" Foreground="White"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
+                        <TextBlock Text="Creates new location" FontSize="10" Style="{StaticResource GreyScaleTextBlock}"
+                                   cal:Message.Attach="[Event MouseDown] = [Action OnAddNewLocation]" Grid.Row="1" Foreground="White"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
                     </Grid>
                 </Grid>
             </Button>
@@ -131,79 +153,76 @@
             <TextBlock Text="Continue" Grid.Row="0" Grid.Column="1" Foreground="White" FontSize="12" Margin="5,10,0,5"/>
 
             <Button cal:Message.Attach="[Event Click] = [Action OnTracking]" BorderThickness="0"
-                        Grid.Row="1" Grid.Column="1" Margin="5,0,0,5" 
-                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                        >
+                    Grid.Row="1" Grid.Column="1" Margin="5,0,0,5" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="{StaticResource MyWidth}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="26"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
-                   Height="25" Width="25"></Image>
+                           Height="25" Width="25" Style="{StaticResource GreyScaleImage}"/>
                     <Grid IsHitTestVisible="False" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Tracking" FontSize="15" Style="{StaticResource MyTextBlock}"
-                                       Foreground="White"
-                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
-                        <TextBlock Text="Allows to track location changes" FontSize="10" Style="{StaticResource MyTextBlock}"
-                                       Grid.Row="1" Foreground="White"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Tracking" FontSize="15" 
+                                   Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
+                        <TextBlock Text="Allows to track location changes" FontSize="10" 
+                                   Grid.Row="1" Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
                     </Grid>
                 </Grid>
             </Button>
 
             <Button cal:Message.Attach="[Event Click] = [Action OnUsers]" BorderThickness="0"
-                        Grid.Row="2" Grid.Column="1" Margin="5,0,0,5" 
-                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                        >
+                    Grid.Row="2" Grid.Column="1" Margin="5,0,0,5" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="{StaticResource MyWidth}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="26"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
-                   Height="25" Width="25"></Image>
+                           Height="25" Width="25" Style="{StaticResource GreyScaleImage}"/>
                     <Grid IsHitTestVisible="False" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Persons" FontSize="15" Style="{StaticResource MyTextBlock}"
-                                       Foreground="White"
-                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
-                        <TextBlock Text="Observes existing persons" FontSize="10" Style="{StaticResource MyTextBlock}"
-                                       Grid.Row="1" Foreground="White"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Persons" FontSize="15" 
+                                   Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
+                        <TextBlock Text="Observes existing persons" FontSize="10" 
+                                   Grid.Row="1" Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
                     </Grid>
                 </Grid>
             </Button>
 
             <Button cal:Message.Attach="[Event Click] = [Action OnVisitors]" BorderThickness="0"
-                        Grid.Row="3" Grid.Column="1" Margin="5,0,0,5" 
-                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                        >
+                    Grid.Row="3" Grid.Column="1" Margin="5,0,0,5" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="{StaticResource MyWidth}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="26"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
-                   Height="25" Width="25"></Image>
+                   Height="25" Width="25" Style="{StaticResource GreyScaleImage}"/>
                     <Grid IsHitTestVisible="False" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Visitors" FontSize="15" Style="{StaticResource MyTextBlock}"
-                                       Foreground="White"
-                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
-                        <TextBlock Text="Observes location's visitors" FontSize="10" Style="{StaticResource MyTextBlock}"
-                                       Grid.Row="1" Foreground="White"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Visitors" FontSize="15" 
+                                   Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
+                        <TextBlock Text="Observes location's visitors" FontSize="10" 
+                                   Grid.Row="1" Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"/>
                     </Grid>
                 </Grid>
             </Button>
@@ -211,8 +230,8 @@
             <TextBlock Text="Configuration" Grid.Row="0" Grid.Column="2" Foreground="White" FontSize="12" Margin="5,10,0,5"/>
 
             <Button cal:Message.Attach="[Event Click] = [Action OnSettings]" BorderThickness="0"
-                        Grid.Row="1" Grid.Column="2" Margin="5,0,0,5" 
-                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                    Grid.Row="1" Grid.Column="2" Margin="5,0,0,5" 
+                    VerticalAlignment="Center" HorizontalAlignment="Stretch"
                         >
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">
                     <Grid.ColumnDefinitions>
@@ -220,23 +239,22 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
-                   Height="25" Width="25"></Image>
+                           Height="25" Width="25" Style="{StaticResource GreyScaleImage}"/>
                     <Grid IsHitTestVisible="False" Grid.Column="1">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Settings " FontSize="15" Style="{StaticResource MyTextBlock}"
-                                       Foreground="White"
-                                       VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
-                        <TextBlock Text="Allows to change user settings" FontSize="10" Style="{StaticResource MyTextBlock}"
-                                       Grid.Row="1" Foreground="White"
-                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Settings " FontSize="15" 
+                                   Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                        <TextBlock Text="Allows to change user settings" FontSize="10" 
+                                   Grid.Row="1" Foreground="White" Style="{StaticResource GreyScaleTextBlock}"
+                                   VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
                     </Grid>
                 </Grid>
             </Button>
-
+            
         </Grid>
-
     </Grid>
 </UserControl>
