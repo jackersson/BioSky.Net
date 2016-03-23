@@ -70,7 +70,7 @@ namespace BioModule.ViewModels
     }
 
     [Required(ErrorMessage = "You must enter a First Name.")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The First Name must only contain letters (a-z, A-Z).")]  
+    [RegularExpression(@"^[a-zA-Zа-яА-яїі `\-]{2,}$", ErrorMessage = "The First Name must only contain letters (a-z, A-Z, а-я, А-Я, `).")]  
     public string FirstName
     {    
       get { return (_user != null) ? _user.Firstname : string.Empty; }
@@ -82,7 +82,7 @@ namespace BioModule.ViewModels
     }
 
     [Required(ErrorMessage = "You must enter a Last Name.")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The Last Name must only contain letters (a-z, A-Z).")]
+    [RegularExpression(@"^[a-zA-Zа-яА-яїі `\-]{2,}$", ErrorMessage = "The Last Name must only contain letters (a-z, A-Z, а-я, А-Я, `).")]
     public string LastName
     {
       get { return (_user != null) ? _user.Lastname : string.Empty; }
@@ -92,6 +92,81 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => LastName);
       }
     }
+
+    [RegularExpression(@"^[a-zA-Z0-9_\.]+@[a-zA-Z_]+?\.[a-zA-Z]{2,63}$", ErrorMessage = "Invalid email (Check for '@', '.')")]
+    public string Email
+    {
+      get { return (_user != null) ? _user.Email : string.Empty; }
+      set
+      {
+        _user.Email = value;
+        NotifyOfPropertyChange(() => Email);
+      }
+    }
+
+    //[RegularExpression(@"^[1-9`\-. :]{1,24}$", ErrorMessage = "Invalid datetime (Check for ':' '.' '-')")]
+    public long Dateofbirth
+    {
+      get { return (_user != null) ? _user.Dateofbirth : 0; }
+      set
+      {
+        _user.Dateofbirth = value;
+        NotifyOfPropertyChange(() => Dateofbirth);
+      }
+    }
+
+    [RegularExpression(@"^[a-zA-Zа-яА-яїі `\-]{2,}$", ErrorMessage = "The City must only contain letters (a-z, A-Z, а-я, А-Я, `).")]
+    public string City
+    {
+      get { return (_user != null) ? _user.City : string.Empty; }
+      set
+      {
+        _user.City = value;
+        NotifyOfPropertyChange(() => City);
+      }
+    }
+
+    public string Comments
+    {
+      get { return (_user != null) ? _user.Comments : string.Empty; }
+      set
+      {
+        _user.Comments = value;
+        NotifyOfPropertyChange(() => Comments);
+      }
+    }
+
+    public Person.Types.Rights Rights
+    {
+      get { return (_user != null) ? _user.Rights : Person.Types.Rights.Custom; }
+      set
+      {
+        _user.Rights = value;
+        NotifyOfPropertyChange(() => Rights);
+      }
+    }
+
+    public string Country
+    {
+      get { return (_user != null) ? _user.Country : string.Empty; }
+      set
+      {
+        _user.Country = value;
+        NotifyOfPropertyChange(() => Country);
+      }
+    }
+
+    public Person.Types.Gender Gender
+    {
+      get { return (_user != null) ? _user.Gender : Person.Types.Gender.None; }
+      set
+      {
+        _user.Gender = value;
+        NotifyOfPropertyChange(() => Gender);
+      }
+    }
+
+
 
     #region Validation    
     public string this[string columnName]

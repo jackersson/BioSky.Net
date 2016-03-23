@@ -121,6 +121,10 @@
       <HintPath>..\packages\Google.Protobuf.3.0.0-alpha4\lib\portable-net45+netcore45+wpa81+wp8\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GrayscaleEffect, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GrayscaleEffect.1.0.1\lib\GrayscaleEffect.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Grpc.Core, Version=0.12.0.0, Culture=neutral, PublicKeyToken=d754f35622e28bad, processorArchitecture=MSIL">
       <HintPath>..\packages\Grpc.Core.0.12.0\lib\net45\Grpc.Core.dll</HintPath>
       <Private>True</Private>
@@ -212,8 +216,10 @@
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
+    <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
+    <Compile Include="ViewModels\LoginPopupViewModel.cs" />
     <Compile Include="ViewModels\NotificationDialogViewModel.cs" />
     <Compile Include="ViewModels\PageControllerViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -246,16 +252,17 @@
     <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\LoaderViewModel.cs" />
     <Compile Include="ViewModels\LocationAccessDevicesViewModel.cs" />
-    <Compile Include="ViewModels\LoginDialogViewModel.cs" />
     <Compile Include="ViewModels\LoginInformationViewModel.cs" />
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
+    <Compile Include="ViewModels\PeriodTimePickerViewModel.cs" />
     <Compile Include="ViewModels\PhotoImageViewModel.cs" />
     <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
     <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
+    <Compile Include="ViewModels\VisitorsFilterMenuViewModel.cs" />
     <Compile Include="Views\AboutDialogView.xaml.cs">
       <DependentUpon>AboutDialogView.xaml</DependentUpon>
     </Compile>
@@ -293,6 +300,9 @@
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\HomePageView.xaml.cs">
+      <DependentUpon>HomePageView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Image\Video.xaml.cs">
       <DependentUpon>Video.xaml</DependentUpon>
     </Compile>
@@ -302,11 +312,11 @@
     <Compile Include="Views\LocationPermissionView.xaml.cs">
       <DependentUpon>LocationPermissionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\LoginDialogView.xaml.cs">
-      <DependentUpon>LoginDialogView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\LoginInformationView.xaml.cs">
       <DependentUpon>LoginInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginPopupView.xaml.cs">
+      <DependentUpon>LoginPopupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainMenuView.xaml.cs">
       <DependentUpon>MainMenuView.xaml</DependentUpon>
@@ -319,6 +329,9 @@
     </Compile>
     <Compile Include="Views\PageControllerView.xaml.cs">
       <DependentUpon>PageControllerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PeriodTimePickerView.xaml.cs">
+      <DependentUpon>PeriodTimePickerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PhotoImageView.xaml.cs">
       <DependentUpon>PhotoImageView.xaml</DependentUpon>
@@ -370,6 +383,9 @@
     </Compile>
     <Compile Include="Views\UsersView.xaml.cs">
       <DependentUpon>UsersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VisitorsFilterMenuView.xaml.cs">
+      <DependentUpon>VisitorsFilterMenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Visitors\Detailed.xaml.cs">
       <DependentUpon>Detailed.xaml</DependentUpon>
@@ -425,6 +441,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\HomePageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Image\Video.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -437,13 +457,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\LoginDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\LoginInformationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginPopupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainMenuView.xaml">
       <SubType>Designer</SubType>
@@ -458,6 +478,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\PageControllerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PeriodTimePickerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -522,6 +546,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UsersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VisitorsFilterMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -632,13 +660,14 @@
     <None Include="Resources\verified.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />
     <None Include="Resources\left_arrow.png" />
     <None Include="Resources\down_arrow.png" />
     <None Include="Resources\help_dialog.png" />
     <None Include="Resources\info_dialog.png" />
+    <None Include="Resources\home.png" />
     <Content Include="Resources\loader.PNG" />
-    <None Include="Resources\user_image.png" />
     <None Include="Resources\loadphotos.png" />
     <None Include="Resources\screenshot.png" />
     <None Include="Resources\right_arrow.png" />
@@ -646,6 +675,7 @@
     <None Include="Resources\settings.png" />
     <None Include="Resources\Stop.png" />
     <None Include="Resources\Start.png" />
+    <None Include="Resources\plus.png" />
     <Content Include="Resources\tracking.png" />
   </ItemGroup>
   <ItemGroup>

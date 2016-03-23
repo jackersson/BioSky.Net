@@ -20,7 +20,7 @@
                    d:DesignHeight="300" d:DesignWidth="300">
 
     <metro:MetroWindow.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
     </metro:MetroWindow.Resources>
 
     <Grid>

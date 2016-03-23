@@ -34,12 +34,41 @@
                             include three hues from the primary palette (and the associated forecolours).
                             Do not rename, keep in sequence; light to dark.
                         -->
-                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary50}"/>
+                   <!-- <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary50}"/>
                     <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
                     <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary50}"/>
                     <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
                     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary50}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary50Foreground}"/>-->
+
+                    <Color x:Key="MyWhiteColor">#FFF1F1F1</Color>
+                    <SolidColorBrush x:Key="MaterialDesignBackground" Color="#FF000000"/>
+                    <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF37474f"/>
+                    <SolidColorBrush x:Key="MaterialDesignBody" Color="#DDFFFFFF"/>
+                    <!--  BorderBrush="#FF3F3F46" Color="#DDFFFFFF"-->
+                    <SolidColorBrush x:Key="MaterialDesignBodyLight" Color="#89FFFFFF"/>
+                    <SolidColorBrush x:Key="MaterialDesignColumnHeader" Color="#BCFFFFFF"/>
+                    <!-- 74% -->
+
+                    <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="#89FFFFFF" />
+                    <SolidColorBrush x:Key="MaterialDesignCheckBoxDisabled" Color="#FF647076" />
+
+                    <SolidColorBrush x:Key="MaterialDesignTextBoxBorder" Color="#89FFFFFF" />
+
+                    <SolidColorBrush x:Key="MaterialDesignDivider" Color="#616161" />
+                    <SolidColorBrush x:Key="MaterialDesignSelection" Color="#757575" />
+
+                    <SolidColorBrush x:Key="MaterialDesignFlatButtonClick" Color="#757575" />
+                    <SolidColorBrush x:Key="MaterialDesignFlatButtonRipple" Color="#FFB6B6B6" />
+
+                    <SolidColorBrush x:Key="MaterialDesignToolTipBackground" Color="#eeeeee" />
+                    
+                    <SolidColorBrush x:Key="TextBrush"                                   Color="{StaticResource MyWhiteColor}"/>
+                    <SolidColorBrush x:Key="LabelTextBrush"                              Color="{StaticResource MyWhiteColor}"/>
+                    <SolidColorBrush x:Key="TextBoxMouseOverInnerBorderBrush"            Color="{StaticResource MyWhiteColor}"/>
+                    <SolidColorBrush x:Key="TextBoxFocusBorderBrush"                     Color="{StaticResource MyWhiteColor}"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="{StaticResource MyWhiteColor}"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}"    Color="{StaticResource MyWhiteColor}"/>
                 </ResourceDictionary>
 
                 <!-- secondary colour -->
@@ -50,8 +79,8 @@
                     </ResourceDictionary.MergedDictionaries>
 
                     <!-- include a single secondary accent color (and the associated forecolour) -->
-                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource Primary700}"/>
-                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource Primary700Foreground}"/>
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="{StaticResource MyWhiteColor}"/>
+                    <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="{StaticResource MyWhiteColor}"/>
                 </ResourceDictionary>
 
                 <!-- Include the Dragablz Material Design style -->
@@ -75,8 +104,8 @@
 
 
         <dragablz:TabablzControl x:Name="MyTabview" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
-                                 SelectedItem="{Binding ActiveItem}"    
-                                 ItemsSource="{Binding Items}"
+                                 SelectedItem="{Binding ActiveItem}"      
+                                 ItemsSource="{Binding Items}" Background="#FF3E3E42"
                                  AllowDrop="True" ShowDefaultCloseButton="True"
                                  cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged()]"                                 
                                  >
@@ -87,8 +116,8 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
                     <ContentControl x:Name="ActiveItem" 
-                              cal:View.Context="Detailed"                                    
-                              cal:View.Model="{Binding}"                              
+                                    cal:View.Context="Detailed"                                    
+                                    cal:View.Model="{Binding}"                              
                                  >
                     </ContentControl>
                 </DataTemplate>
@@ -98,17 +127,17 @@
                 <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
                     <local:TrackControlView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:TrackControlView>
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:AuthenticationPageViewModel}">
-                    <local:AuthenticationPageView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:AuthenticationPageView>
+                <DataTemplate DataType="{x:Type vm:HomePageViewModel}">
+                    <local:HomePageView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:HomePageView>
                 </DataTemplate>
             </dragablz:TabablzControl.Resources>
             <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
-                        <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False"/>
+                        <!--<lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False"/>-->
                         <!--<TextBlock Text="{Binding Result, ElementName=Proxy}" TextAlignment="Center" TextTrimming="WordEllipsis" />-->
 
-                        <TextBlock Text="{Binding DisplayName}" TextAlignment="Center" TextTrimming="WordEllipsis" />
+                        <TextBlock Text="{Binding DisplayName}" TextAlignment="Center" TextTrimming="WordEllipsis" FontSize="11" Foreground="#FFF1F1F1" />
                     </Grid>
                 </DataTemplate>
             </dragablz:TabablzControl.CustomHeaderItemTemplate>

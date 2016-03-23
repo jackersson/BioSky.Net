@@ -27,7 +27,7 @@ using System.ComponentModel;
 
 namespace BioModule.ViewModels
 {
-  enum UserPageMode
+  public enum UserPageMode
   {
      NewUser
    , ExistingUser
@@ -214,6 +214,16 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
+
+    public override int GetHashCode()
+    {   
+      return _user != null ?_user.Id.GetHashCode() : 0;
+    }
+
+    public UserPageMode GetUserPageMode()
+    {
+      return _userPageMode;
+    }
 
     public bool CanApply
     {

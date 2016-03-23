@@ -12,6 +12,17 @@ namespace BioModule.Utils
       _windowManager = _locator.GetProcessor<IWindowManager>(); 
     }
 
+    private PeriodTimePickerViewModel _periodTimePicker;
+    public PeriodTimePickerViewModel PeriodTimePicker
+    {
+      get
+      {
+        if (_periodTimePicker == null)
+          return _periodTimePicker = new PeriodTimePickerViewModel(_locator);
+        return _periodTimePicker;
+      }
+    }
+
     private AuthenticationPageViewModel _authenticationPage;
     public AuthenticationPageViewModel AuthenticationPage
     {
@@ -70,20 +81,9 @@ namespace BioModule.Utils
       } 
     } 
 
-    private LoginDialogViewModel _loginDialog; 
-    public LoginDialogViewModel LoginDialog
-    { 
-      get 
-      { 
-        if (_loginDialog == null) 
-          return _loginDialog = new LoginDialogViewModel(_windowManager); 
-        return _loginDialog; 
-      } 
-    } 
 
-
-    private readonly IWindowManager _windowManager; 
-    private readonly IProcessorLocator _locator; 
+    private readonly IWindowManager    _windowManager; 
+    private readonly IProcessorLocator _locator      ; 
 
 
   } 

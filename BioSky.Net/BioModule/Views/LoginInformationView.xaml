@@ -16,10 +16,10 @@
              >
 
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
     </UserControl.Resources>
-    
-    <Grid>
+
+    <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -28,33 +28,43 @@
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
 
+        <StackPanel Name="TestStackPanel" VerticalAlignment="Center" HorizontalAlignment="Stretch" 
+                    >
+            <TextBlock Name="SignBlock" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                       Foreground="#FF5E82A8" FontWeight="SemiBold" 
+                       cal:Message.Attach="[Event MouseDown] = [Action OpenTabAuthentication]"
+                       Text="{Binding UserName}"                          
+                       TextAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <Trigger  Property="IsMouseOver" Value="True">
+                                <Setter Property="TextDecorations" Value="Underline" />
+                                <Setter Property="Cursor" Value="Hand" />
 
-        <TextBlock Name="SignBlock" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Stretch"
-                   cal:Message.Attach="[Event MouseDown] = [Action OpenTabAuthentication]" 
-                   Text="{lex:Loc SignIn}"                          
-                   TextAlignment="Center">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Style.Triggers>
-                        <Trigger  Property="IsMouseOver" Value="True">
-                            <Setter Property="TextDecorations" Value="Underline" />
-                            <Setter Property="Cursor" Value="Hand" />
+                            </Trigger>
+                            <Trigger  Property="IsMouseOver" Value="False">
+                                <Setter Property="Cursor" Value="Arrow" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Text="{Binding Rights}" Foreground="Gray" Visibility="{Binding RightsVisibility}"
+                       VerticalAlignment="Center" HorizontalAlignment="Right" FontStyle="Italic"></TextBlock>
+        </StackPanel>
 
-                        </Trigger>
-                        <Trigger  Property="IsMouseOver" Value="False">
-                            <Setter Property="Cursor" Value="Arrow" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-
-        <Border BorderThickness="1" Grid.Column="1" VerticalAlignment="Stretch" 
+        <Border 
+            cal:Message.Attach="[Event MouseDown] = [Action OpenPopup]"
+            BorderThickness="1" Grid.Column="1" VerticalAlignment="Stretch" 
                    HorizontalAlignment="Stretch">
             <Image Grid.Column="1" VerticalAlignment="Stretch" 
-                   HorizontalAlignment="Stretch" Margin="1"
-                   
+                   HorizontalAlignment="Stretch" Margin="1"                   
                    Source="{Binding Source={StaticResource ResourceLoader}, Path=UserDefaultImageIconSource}"></Image>
         </Border>
+
+        <local:LoginPopupView DataContext="{Binding LoginPopup}" />
+
+
     </Grid>
 </UserControl>

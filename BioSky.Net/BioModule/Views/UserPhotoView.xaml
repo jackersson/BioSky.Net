@@ -18,7 +18,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <utils:MultiThumbnailConverter x:Key="MultiThumbnailConverter"></utils:MultiThumbnailConverter>
     </UserControl.Resources>
@@ -36,7 +36,22 @@
             <ColumnDefinition Width="48"/>
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
-        
+
+        <Border Grid.ColumnSpan="5" Grid.RowSpan="2" BorderBrush="#FF444444" BorderThickness="1">
+            <Grid  Grid.ColumnSpan="5" Grid.RowSpan="2" Background="#FF252525">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=EnrollFromCaptureDeviceIconSource}"
+                    Height="16" Width="16" Margin="0,0,10,0" />
+                    <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding PhotoAvailableText}"></TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
+
 
 
         <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 

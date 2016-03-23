@@ -41,6 +41,7 @@ namespace BioEngine.CaptureDevices
 
     public void Remove(string cameraName)
     {
+      
       СaptureDeviceListener listener;
       if (_captureDevices.TryGetValue(cameraName, out listener))
       {       

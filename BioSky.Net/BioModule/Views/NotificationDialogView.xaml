@@ -24,7 +24,7 @@
                    >
 
     <metro:MetroWindow.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         <utils:StringToStateConverter x:Key="converterState" />
         <utils:ConvertStateToImage x:Key="convertStateToImage" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>

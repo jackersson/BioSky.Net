@@ -17,7 +17,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         <utils:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
         <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <BooleanToVisibilityConverter  x:Key="BooleanToVisibilityConverter"/>
@@ -80,7 +80,7 @@
         <Expander             
             IsExpanded="{Binding CardEnrollmentExpanded, Mode=OneWayToSource}"
             Grid.Column="0" Grid.ColumnSpan="6"
-            Grid.Row="5" Background="#FFFFFFFF" BorderBrush="{x:Null}" 
+            Grid.Row="5" Background="#FF1E1E1E" BorderBrush="{x:Null}" 
            >     
             <Expander.Header >
                 <Grid>

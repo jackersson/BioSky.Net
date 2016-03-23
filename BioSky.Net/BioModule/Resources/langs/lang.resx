@@ -375,4 +375,25 @@
   <data name="string_supervisor" xml:space="preserve">
     <value>Superviser</value>
   </data>
+  <data name="NoAvailablePhotos" xml:space="preserve">
+    <value>NoAvailablePhotos</value>
+  </data>
+  <data name="YourPhotos" xml:space="preserve">
+    <value>YourPhotos</value>
+  </data>
+  <data name="Devices" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Criminal" xml:space="preserve">
+    <value>Criminal</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>SignOut</value>
+  </data>
+  <data name="HomePage" xml:space="preserve">
+    <value>HomePage</value>
+  </data>
 </root>

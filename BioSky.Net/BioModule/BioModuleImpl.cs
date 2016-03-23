@@ -26,7 +26,7 @@ namespace BioModule
 
     public BioModuleImpl( IProcessorLocator locator )     
     {
-      _locator = locator;     
+      _locator = locator;
     }
 
     public void Init()
@@ -35,10 +35,10 @@ namespace BioModule
       IBioStarter starter = _locator.GetProcessor<IBioStarter>();
       starter.Run();
 
-      ConverterInitializer initializer = new ConverterInitializer(_locator.GetProcessor<IBioSkyNetRepository>());     
+      ConverterInitializer initializer = new ConverterInitializer(_locator);     
       
       ViewModelSelector selector = _locator.GetProcessor<ViewModelSelector>();
-      selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.TrackPage);
+      selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.HomePage);
       
       IBioShell bioShell = _locator.GetProcessor<IBioShell>();
        
@@ -48,10 +48,7 @@ namespace BioModule
       bioShell.ToolBar          = _locator.GetProcessor<ToolBarViewModel>();
       bioShell.MainMenu         = _locator.GetProcessor<MainMenuViewModel>();
       bioShell.ProgressRing     = _locator.GetProcessor<INotifier>().LoadingViewModel;
-      bioShell.LoginInformation = _locator.GetProcessor<LoginInformationViewModel>();
-
-
-
+      bioShell.LoginInformation = _locator.GetProcessor<ILoginInformation>().LoginInformation;
     }
   }
 }

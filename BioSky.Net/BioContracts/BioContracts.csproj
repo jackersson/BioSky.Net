@@ -157,6 +157,7 @@
     <Compile Include="IHolder.cs" />
     <Compile Include="ILocalStorage.cs" />
     <Compile Include="ILogger.cs" />
+    <Compile Include="ILoginInformation.cs" />
     <Compile Include="INotifier.cs" />
     <Compile Include="IProcessorLocator.cs" />
     <Compile Include="IServiceManager.cs" />

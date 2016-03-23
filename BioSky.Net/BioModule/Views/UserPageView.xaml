@@ -7,25 +7,38 @@
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:cal="http://www.caliburnproject.org"
-             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect" 
              xmlns:bioEngine ="clr-namespace:BioEngine;assembly=BioEngine"
              lex:LocalizeDictionary.DesignCulture=""
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Background="#FF1E1E1E"
              d:DesignHeight="400" d:DesignWidth="400"
              d:DataContext="{d:DesignInstance vm:UserPageViewModel, IsDesignTimeCreatable=False}"
              >
 
     <UserControl.Resources>
-        <ResourceDictionary>            
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <ResourceDictionary>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
                 <ResourceDictionary>
                     <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource MetroTabItem}">
                         <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>                       
+                    </Style>
+                    <Style x:Key="GreyScaleImage" TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=IsEnabled }" Value="false">
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -90,27 +103,27 @@
         <Button  Grid.Row="5" Grid.Column="2" 
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 ToolTip="{lex:Loc Save}"           
-                 Visibility="{Binding CanApply, Converter={StaticResource BooleanToVisibilityConverter} }"
+                 ToolTip="{lex:Loc Save}" 
+                 IsEnabled="{Binding CanApply}"
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
         <Button ToolTip="{lex:Loc RevertChanges}" 
                 Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch"
-                Visibility="{Binding CanRevert, Converter={StaticResource BooleanToVisibilityConverter} }"
+                IsEnabled="{Binding CanRevert}"
                 VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click] = [Action Revert]"
                 >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
         <Button ToolTip="{lex:Loc DeleteUser}" Grid.Row="5" Grid.Column="4" 
                 cal:Message.Attach="[Event Click]=[Action Remove]"
-                Visibility="{Binding CanDelete, Converter={StaticResource BooleanToVisibilityConverter} }"
+                IsEnabled="{Binding CanDelete}"
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
         <ContentControl Grid.Column="0"

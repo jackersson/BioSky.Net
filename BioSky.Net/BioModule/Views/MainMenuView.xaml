@@ -7,7 +7,7 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:langs="clr-namespace:BioModule.Resources.langs"
              xmlns:lex="http://wpflocalizeextension.codeplex.com" 
-             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:LocalizeDictionary.DesignCulture="en-EN"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"  
              mc:Ignorable="d" 
@@ -20,19 +20,19 @@
         <Grid.ColumnDefinitions>
         </Grid.ColumnDefinitions>
         <Menu Grid.Row="0" Grid.Column="0" 
-                  Margin="5,5,0,5"
-                  VerticalAlignment="Stretch"            
-                  HorizontalAlignment="Left">
+                  Margin="5,5,0,5" FontSize="11"
+                  VerticalAlignment="Center"            
+                  HorizontalAlignment="Left" Foreground="#FFF1F1F1">
             <MenuItem Header="{lex:Loc File}">
                 <MenuItem Header="{lex:Loc Add}">
                     <MenuItem Header="{lex:Loc User}" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewPerson]"/>
                     <MenuItem Header="{lex:Loc Location}" cal:Message.Attach="[Event Click] = [Action OpenTabAddNewLocation]"/>
                 </MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="{lex:Loc LogIn}"
+                <MenuItem Header="{lex:Loc SignIn}"
                           cal:Message.Attach="[Event Click] = [Action ShowLogInDialog]">
                 </MenuItem>
-                <MenuItem Header="{lex:Loc LogOut}"
+                <MenuItem Header="{lex:Loc SignOut}"
                           cal:Message.Attach="[Event Click] = [Action OpenTabAuthentication]"
                           >
                 </MenuItem>

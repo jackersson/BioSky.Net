@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-             xmlns:cal="http://www.caliburnproject.org"   
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"             
              xmlns:utils="clr-namespace:BioModule.Utils"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
@@ -17,7 +17,7 @@
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              d:DataContext="{d:DesignInstance vm:VisitorsViewModel, IsDesignTimeCreatable=False}"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Background="#FF1E1E1E" BorderBrush="#FF3F3F46"
              d:DesignHeight="400" d:DesignWidth="400"              
              >  
 
@@ -27,11 +27,11 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />
-            
+
+            <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />            
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-            <resloader:ResourceLoader x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -40,29 +40,41 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>       
-        
+        </Grid.ColumnDefinitions>
+
         <Grid x:Name="GridLayout" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="48" />
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="45"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="48"/>
             </Grid.ColumnDefinitions>
 
-
+            
+            <!--******************************************** Search Menu ***************************************-->
+            <Expander Background="#FF1E1E1E" BorderBrush="{x:Null}" Panel.ZIndex="100"
+                      Grid.Row="1" Grid.ColumnSpan="5" Margin="2,0,0,0" >
+                <Expander.Header>
+                    <TextBlock Text="Search options"></TextBlock>
+                </Expander.Header>
+                <StackPanel>
+                    <local:VisitorsFilterMenuView Grid.Row="1" Grid.ColumnSpan="5"  DataContext="{Binding VisitorsFilterMenu}"></local:VisitorsFilterMenuView>
+                </StackPanel>
+            </Expander>
+            <!--******************************************** Search Menu ***************************************-->
 
             <ListBox Grid.Column="0" HorizontalAlignment="Stretch" 
                  Grid.ColumnSpan="5" BorderThickness="1" BorderBrush="#4C808080"
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
                  ItemsSource="{Binding VisitorsCollectionView}" 
-                 SelectionMode="Extended"
+                 SelectionMode="Extended" 
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                      [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)];
@@ -121,7 +133,6 @@
                                     </Image.Style>
                                 </Image>
                             </Grid>
-
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -131,20 +142,21 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
-            
+
             <local:PageControllerView
                 Grid.Column="2" Grid.ColumnSpan="2" Margin="1,1,1,1"
-                DataContext="{Binding PageController}">                
+                DataContext="{Binding PageController}">
             </local:PageControllerView>
-            
-  
-            
+
+
+
             <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0"
                     HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
-                    IsEnabled="{Binding IsDeleteButtonEnabled}"                    
+                    IsEnabled="True"                  
                     ToolTip="{lex:Loc Delete}"
-                    cal:Message.Attach="[Event Click] = [Action OnDeleteVisitors]"
+                    cal:Message.Attach="[Event Click] = [Action Select]"
                 >
+                <!-- IsEnabled="{Binding IsDeleteButtonEnabled}" cal:Message.Attach="[Event Click] = [Action OnDeleteVisitors]"  -->
                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
             </Button>
 

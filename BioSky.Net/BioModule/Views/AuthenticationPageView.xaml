@@ -9,7 +9,8 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:cal="http://www.caliburnproject.org"    
+             xmlns:cal="http://www.caliburnproject.org"   
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
@@ -18,13 +19,21 @@
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              WindowStartupLocation="CenterOwner"
-             Width="350" Height="500"
-             ResizeMode="NoResize" IsCloseButtonEnabled="False" IsWindowDraggable="False" 
-             ShowCloseButton="False" ShowInTaskbar="False" ShowSystemMenuOnRightClick="False"
+             Width="320" Height="500"
+             ResizeMode="NoResize" IsCloseButtonEnabled="True" IsWindowDraggable="False" 
+             ShowCloseButton="{Binding ShowCloseButton}"
+             ShowInTaskbar="False" ShowSystemMenuOnRightClick="False"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:AuthenticationPageViewModel, IsDesignTimeCreatable=False}"             
              d:DesignHeight="300" d:DesignWidth="300">
-    
+
+
+    <metro:MetroWindow.Resources>
+        <ResourceDictionary>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        </ResourceDictionary>
+    </metro:MetroWindow.Resources>
+
     <Grid Name="GridLayout" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -36,28 +45,53 @@
         </Grid.ColumnDefinitions>
 
         <TextBox x:Name="AuthenticationBox" Margin="0,0,0,10"
-                 Width="280"  HorizontalAlignment="Center"
+                 HorizontalAlignment="Stretch"
                  Controls:TextBoxHelper.Watermark="{lex:Loc AuthenticationBox}" Grid.Column="1" Grid.Row="0"
                  Controls:TextBoxHelper.UseFloatingWatermark="True" VerticalAlignment="Bottom"
                  Controls:TextBoxHelper.ClearTextButton="True"
-                 Text="{Binding User.Country, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{Binding LoginData, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Grid Grid.Row="0" Grid.Column="1">
             <local:PhotoImageView DataContext="{Binding PhotoImage}"></local:PhotoImageView>
         </Grid>
 
-        <Button Content="{lex:Loc Register}" Width="280"  HorizontalAlignment="Center" Margin="0,0,0,5"                 
-                VerticalAlignment="Stretch"
-                cal:Message.Attach="[Event Click]=[Action OnRegister()]"
-                Grid.Row="1" Grid.Column="1" Background="#FF6D8CB0" Foreground="White">
+        <Button cal:Message.Attach="[Event Click] = [Action OnRegister]" BorderThickness="0"
+                       Grid.Row="1" Grid.Column="1" 
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                        >
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="280">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="26"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                               Height="25" Width="25" Grid.Column="0"></Image>
+                <Grid IsHitTestVisible="False" Grid.Column="1">
+                    <TextBlock Text="{lex:Loc Register}" FontSize="15" 
+                            Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                </Grid>
+            </Grid>
         </Button>
-        
-        <Button Content="{lex:Loc SignIn}"
-                Width="280"  HorizontalAlignment="Center" Margin="0,5,0,0"
-                VerticalAlignment="Stretch"
-                cal:Message.Attach="[Event Click]=[Action OnLogin()]"
-                Grid.Row="2" Grid.Column="1" Background="#FF6D8CB0" Foreground="White">
+
+        <Button cal:Message.Attach="[Event Click] = [Action OnLogin]" BorderThickness="0"
+                Grid.Row="2" Grid.Column="1" Margin="0,2,0,0"
+                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                        >
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="280">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="26"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RightArrowIconSource}"
+                               Height="25" Width="25" Grid.Column="0"></Image>
+                <Grid IsHitTestVisible="False" Grid.Column="1">
+                    <TextBlock Text="{lex:Loc SignIn}" FontSize="15" 
+                            Foreground="White"
+                           VerticalAlignment="Center" Margin="10,0,0,0" FontWeight="Normal"></TextBlock>
+                </Grid>
+            </Grid>
         </Button>
-        
+
     </Grid>
 </metro:MetroWindow>

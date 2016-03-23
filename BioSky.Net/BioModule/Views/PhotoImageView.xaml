@@ -19,7 +19,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
     </UserControl.Resources>
@@ -101,7 +101,7 @@
                                 <RowDefinition Height="40"/>
                             </Grid.RowDefinitions>
 
-                            <ToggleButton x:Name="ExpanderButton" Background="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                            <ToggleButton x:Name="ExpanderButton" Background="{x:Null}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                        BorderThickness="1" BorderBrush="#7F3587BD"   Grid.Column="2"                           
                                       IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
                                       Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="Enrollment Settings"

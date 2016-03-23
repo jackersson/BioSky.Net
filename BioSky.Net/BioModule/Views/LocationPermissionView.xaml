@@ -24,7 +24,7 @@
         <utils:ConvertStateToImage x:Key="convertStateToImage" />
         <utils:MultiUserAccessToLocationConverter x:Key="MultiUserAccessToLocationConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
     </UserControl.Resources>
 
 

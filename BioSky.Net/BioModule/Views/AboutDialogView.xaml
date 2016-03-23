@@ -21,7 +21,7 @@
                    d:DesignHeight="300" d:DesignWidth="300">
 
     <metro:MetroWindow.Resources>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>        
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
     </metro:MetroWindow.Resources>
 
     <Grid>
@@ -40,11 +40,10 @@
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
 
-        
+        <Grid.Background>
+            <ImageBrush ImageSource="{Binding Source={StaticResource ResourceLoader}, Path=LoaderIconSource}"></ImageBrush>
+        </Grid.Background>
 
-        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0"
-               Source="{Binding Source={StaticResource ResourceLoader}, Path=LoaderIconSource}" Grid.ColumnSpan="3" Grid.RowSpan="6" Margin="0,0,-20,0" 
-               />
         <TextBlock Text="{lex:Loc WebSite}" Grid.Row="1" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>
         <TextBlock Text="http://bioskynet.com" Grid.Row="1" Foreground="LightSkyBlue"  Grid.Column="1" ></TextBlock>
         <TextBlock Text="{lex:Loc Company}" Grid.Row="2" Foreground="LightSkyBlue"  Grid.Column="0" ></TextBlock>

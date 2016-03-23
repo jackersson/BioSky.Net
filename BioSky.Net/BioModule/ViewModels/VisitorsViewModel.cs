@@ -13,6 +13,7 @@ using System.Collections;
 using System.ComponentModel;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
+using Grpc.Core;
 
 namespace BioModule.ViewModels
 {
@@ -33,16 +34,33 @@ namespace BioModule.ViewModels
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
 
 
-      _selectedVisitors = new ObservableCollection<Visitor>();
-      PageController        = new PageControllerViewModel();
+      _selectedVisitors  = new ObservableCollection<Visitor>();
+      PageController     = new PageControllerViewModel();
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
      // _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.Visitors.DataChanged      += RefreshData;
+      _database.Visitors.DataChanged      += RefreshData;      
     } 
         
     #region Database
+
+
+    public async void Select()
+    {
+      QueryVisitors query = GetQuery();      
+      try
+      {
+        //await _bioService.VisitorDataClient.Select(query);
+      }
+      catch (RpcException ex) {
+        Console.WriteLine(ex.Message);
+      }
+    }
+    public QueryVisitors GetQuery()
+    {
+      return VisitorsFilterMenu.GetQuery();
+    }
 
     private void RefreshData()
     {
@@ -70,10 +88,9 @@ namespace BioModule.ViewModels
       LastVisitor = Visitors.LastOrDefault();
     }
 
-    #endregion  
+    #endregion
 
     #region Interface
-
     public async void OnDeleteVisitors()
     {
       _dialogsHolder.AreYouSureDialog.Show();
@@ -127,6 +144,9 @@ namespace BioModule.ViewModels
         PhotoImage = new PhotoImageViewModel(_locator);
         PhotoImage.SetVisibility(true, false, false);
       }
+
+      if(VisitorsFilterMenu == null)
+        VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator, PAGES_COUNT);
     }
 
     protected override void OnActivate()
@@ -165,6 +185,10 @@ namespace BioModule.ViewModels
     public void OnSearchTextChanged(string SearchText)
     {        
       Dictionary<long, Person> dictionary = _database.Persons.DataSet;
+
+      if (VisitorsCollectionView == null)
+        return;
+
       VisitorsCollectionView.Filtering = item =>
       {
         if (String.IsNullOrEmpty(SearchText))
@@ -174,7 +198,7 @@ namespace BioModule.ViewModels
         if (vitem != null)
         {
           Person person = null;
-          if (dictionary.TryGetValue(vitem.Personid, out person) )
+          if (dictionary.TryGetValue(vitem.Personid, out person))
           {
             if (person.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
                 person.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)            
@@ -197,9 +221,13 @@ namespace BioModule.ViewModels
       foreach (Visitor visitor in SelectedVisitors)          
           ShowPerson(visitor);                
     }
+
+    //*********************************************Filters*************************************************
+
+   
     #endregion
 
-    #region UI
+    #region UI   
 
     private bool _isDeleteButtonEnabled;
     public bool IsDeleteButtonEnabled
@@ -225,6 +253,20 @@ namespace BioModule.ViewModels
         {
           _photoImage = value;
           NotifyOfPropertyChange(() => PhotoImage);
+        }
+      }
+    }
+
+    private VisitorsFilterMenuViewModel _visitorsFilterMenu;
+    public VisitorsFilterMenuViewModel VisitorsFilterMenu
+    {
+      get { return _visitorsFilterMenu; }
+      set
+      {
+        if (_visitorsFilterMenu != value)
+        {
+          _visitorsFilterMenu = value;
+          NotifyOfPropertyChange(() => VisitorsFilterMenu);
         }
       }
     }

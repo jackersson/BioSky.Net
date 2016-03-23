@@ -18,14 +18,15 @@ namespace BioModule.ViewModels
       _locator           = locator;
       _windowManager     = _locator.GetProcessor<IWindowManager>();
       _viewModelSelector = _locator.GetProcessor<ViewModelSelector>();
-
-
+      _bioEngine         = _locator.GetProcessor<IBioEngine>();
+      
       PhotoImage = new PhotoImageViewModel(_locator);
       PhotoImage.SetVisibility(false, false, true, false, false);
     }
-
     public void Show()
     {
+      LoginData = "";
+      ShowCloseButton = (_bioEngine.AuthenticatedPerson != null) ? true : false;
       _windowManager.ShowDialog(this);
     }
     public bool GetDialogResult()
@@ -42,6 +43,8 @@ namespace BioModule.ViewModels
     }
     public void OnLogin()
     {
+      _bioEngine.AuthenticatedPerson = new BioService.Person { Firstname = LoginData
+                                                             , Rights = BioService.Person.Types.Rights.Manager };
       TryClose(true);
     }
     protected override void OnActivate()
@@ -71,11 +74,40 @@ namespace BioModule.ViewModels
       }
     }
 
+    private bool _showCloseButton;
+    public bool ShowCloseButton
+    {
+      get { return _showCloseButton; }
+      set
+      {
+        if (_showCloseButton != value)
+        {
+          _showCloseButton = value;
+          NotifyOfPropertyChange(() => ShowCloseButton);
+        }
+      }
+    }
+
+    private string _loginData;
+    public string LoginData
+    {
+      get { return _loginData; }
+      set
+      {
+        if (_loginData != value)
+        {
+          _loginData = value;
+          NotifyOfPropertyChange(() => LoginData);
+        }
+      }
+    }
+
     #region Global Variables
 
     private IProcessorLocator _locator          ;
     private IWindowManager    _windowManager    ;
     private ViewModelSelector _viewModelSelector;
+    private IBioEngine        _bioEngine        ;
 
     #endregion
 

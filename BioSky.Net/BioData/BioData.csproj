@@ -152,6 +152,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BioAuthenticationService.cs" />
     <Compile Include="BioCultureSources.cs" />
     <Compile Include="BioDataInstaller.cs" />
     <Compile Include="BioLocalStorage.cs" />
