@@ -45,7 +45,9 @@
         <Expander        
             Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3"
             ExpandDirection="Up" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"
-            Background="#FFFFFFFF" BorderBrush="{x:Null}">
+            Background="#FFFFFFFF" BorderBrush="{x:Null}" 
+            cal:Message.Attach="[Event Expanded] = [Action OnExpand]"
+            >
             <Expander.ContentTemplate>
                 <DataTemplate>
                     <StackPanel DataContext="{Binding ElementName=GridLayout, Path=DataContext}">
@@ -100,16 +102,14 @@
         </Expander>
 
         <Button Width="32" Height="32" BorderThickness="1" 
-                HorizontalAlignment="Center" VerticalAlignment="Center" 
-                cal:Message.Attach="[Event Click]=[Action Apply]"
+                HorizontalAlignment="Center" VerticalAlignment="Center"                 
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 Grid.Row="1"  Grid.Column="3" >
             <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StartIconSource}" />
         </Button>
 
         <Button Width="32" Height="32" BorderThickness="1"
-                HorizontalAlignment="Center" VerticalAlignment="Center" 
-                cal:Message.Attach="[Event Click]=[Action ShowConfigurationPage]"
+                HorizontalAlignment="Center" VerticalAlignment="Center"                 
                 Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="4" >
             <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
         </Button>

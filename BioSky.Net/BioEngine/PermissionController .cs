@@ -42,9 +42,16 @@ namespace BioEngine
       long _operatorRole   = 0;  
       long _superviserRole = 0;
 
-      _superviserRole = SetFlag(_superviserRole, Activity.UserRemove);
-      _superviserRole = SetFlag(_superviserRole, Activity.UserAdd   );
-      _superviserRole = SetFlag(_superviserRole, Activity.UserUpdate);
+      _superviserRole = SetFlag(_superviserRole, Activity.UserAdd       );
+      _superviserRole = SetFlag(_superviserRole, Activity.UserUpdate    );
+      _superviserRole = SetFlag(_superviserRole, Activity.UserRemove    );
+      _superviserRole = SetFlag(_superviserRole, Activity.LocationAdd   );
+      _superviserRole = SetFlag(_superviserRole, Activity.LocationUpdate);
+      _superviserRole = SetFlag(_superviserRole, Activity.LocationRemove);
+      _superviserRole = SetFlag(_superviserRole, Activity.VisitorRemove );
+      _superviserRole = SetFlag(_superviserRole, Activity.CardAdd       );
+      _superviserRole = SetFlag(_superviserRole, Activity.CardRemove    );
+      _superviserRole = SetFlag(_superviserRole, Activity.PhotoRemove   );
 
       _managerRole = SetFlag(_managerRole, Activity.UserRemove);
       _managerRole = SetFlag(_managerRole, Activity.UserAdd);

@@ -17,7 +17,14 @@
              cal:Message.Attach="[Event DataContextChanged]=[Action OnDataContextChanged($datacontext)]"
              d:DataContext="{d:DesignInstance vm:PhotoInformationViewModel, IsDesignTimeCreatable=False}"         
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid >
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="MyColor" Color="#FF012943"></SolidColorBrush>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid Background="#7FFFFFFF">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -26,21 +33,21 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel  Grid.Column="0"  VerticalAlignment="Bottom">
-            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Age:"         ></TextBlock>
-            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Confidence:"  ></TextBlock>
-            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Faces Count:" ></TextBlock>
-            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Resolution:"  ></TextBlock>
-            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Size:"        ></TextBlock>
-            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" Text="Origin:"      ></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" Text="Age:" ForceCursor="True"         ></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" Text="Confidence:"  ></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" Text="Faces Count:" ></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" Text="Resolution:"  ></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" Text="Size:"        ></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" Text="Origin:"      ></TextBlock>
 
         </StackPanel>
         <StackPanel x:Name="DataPanel"   Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-            <TextBlock Text="{Binding Age       , Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD"  ></TextBlock>
-            <TextBlock Text="{Binding Confidence, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-            <TextBlock Text="{Binding FacesCount, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-            <TextBlock Text="{Binding Resolution, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-            <TextBlock Text="{Binding Size      , Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
-            <TextBlock Text="{Binding Origin    , Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="#FF3587BD" ></TextBlock>
+            <TextBlock Text="{Binding Age       , Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}"  ></TextBlock>
+            <TextBlock Text="{Binding Confidence, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" ></TextBlock>
+            <TextBlock Text="{Binding FacesCount, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" ></TextBlock>
+            <TextBlock Text="{Binding Resolution, Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" ></TextBlock>
+            <TextBlock Text="{Binding Size      , Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" ></TextBlock>
+            <TextBlock Text="{Binding Origin    , Mode=OneWay}" Margin="5,0,0,0" FontWeight="Bold" Foreground="{StaticResource MyColor}" ></TextBlock>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="BioModule.Views.ErrorViewerDialogView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                   xmlns:local="clr-namespace:BioModule.Views"
+                   xmlns:data="clr-namespace:BioData;assembly=BioData"
+                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"                  
+                   xmlns:vm="clr-namespace:BioModule.ViewModels"
+                   xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                   xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+                   xmlns:cal="http://www.caliburnproject.org"   
+                   xmlns:utils="clr-namespace:BioModule.Utils"
+                   xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+                   xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                   xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+                   xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+                   xmlns:catel="http://catel.codeplex.com"
+                   lex:LocalizeDictionary.DesignCulture="uk-UA"
+                   lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+                   lex:ResxLocalizationProvider.DefaultDictionary="lang"
+                   mc:Ignorable="d" 
+                   d:DataContext="{d:DesignInstance vm:ErrorViewerDialogViewModel, IsDesignTimeCreatable=False}"             
+                   d:DesignHeight="300" d:DesignWidth="300">
+
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Name="GridLayout">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+
+        <Grid Background="#FF1E1E1E">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="2" cal:Message.Attach="[Event Click] = [Action OnOpenFiles]">
+                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}" 
+                       Width="32" Height="32"/>
+            </Button>
+
+            <Button Grid.Column="0" cal:Message.Attach="[Event Click] = [Action OnPeriodCkick]" Content="Period..."/>
+
+            <Button Grid.Column="4" cal:Message.Attach="[Event Click] = [Action OnClear]" Content="Clear..."/>
+
+            <local:PageControllerView
+                Grid.Column="10"  Margin="1,1,1,1"
+                DataContext="{Binding PageController}">
+            </local:PageControllerView>
+        </Grid>
+
+
+        <DataGrid ItemsSource="{Binding LogRecordsCollectionView}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                  AutoGenerateColumns="False" Grid.Row="1" IsReadOnly="True" 
+                  CanUserAddRows="False" CanUserDeleteRows="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Message Type" Binding="{Binding MessageType     , TargetNullValue=''}"/>
+                <DataGridTextColumn Header="Time"         Binding="{Binding DetectedTime    , TargetNullValue=''
+                                                                   , Converter={StaticResource ConvertLongToDateTime}}"/>
+                
+                <DataGridTemplateColumn Header="Exception">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ExceptionMessage, TargetNullValue=''}" 
+                                       Width="200" TextWrapping="Wrap" 
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" Margin="2"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn Header="Class name"   Binding="{Binding ClassName       , TargetNullValue=''}"/>
+                <DataGridTextColumn Header="Line"         Binding="{Binding LineNumber      , TargetNullValue=''}"/>
+                <DataGridTextColumn Header="Comment"      Binding="{Binding Comment         , TargetNullValue=''}"/>
+
+
+
+
+            </DataGrid.Columns>
+        </DataGrid>            
+    </Grid>
+</UserControl>

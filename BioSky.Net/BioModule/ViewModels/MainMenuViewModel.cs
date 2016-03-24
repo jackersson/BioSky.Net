@@ -55,6 +55,10 @@ namespace BioModule.ViewModels
     {
       _bioEngine.AuthenticatedPerson = null;
     }
+    public void ShowErrorViewer()
+    {
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.ErrorViewer);
+    }
 
     public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
     {

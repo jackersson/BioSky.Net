@@ -44,7 +44,7 @@ namespace BioModule.ViewModels
     public void OnLogin()
     {
       _bioEngine.AuthenticatedPerson = new BioService.Person { Firstname = LoginData
-                                                             , Rights = BioService.Person.Types.Rights.Manager };
+                                                             , Rights = BioService.Person.Types.Rights.Supervisor };
       TryClose(true);
     }
     protected override void OnActivate()

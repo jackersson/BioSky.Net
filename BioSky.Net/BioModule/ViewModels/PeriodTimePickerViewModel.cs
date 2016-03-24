@@ -27,6 +27,13 @@ namespace BioModule.ViewModels
       _selectedDateFrom = _nullDateTime;
       _selectedDateTo   = _nullDateTime;
       Result = null;
+      //SelectedTimeFrom = _nullDateTime;
+      //SelectedTimeTo   = _nullDateTime;
+
+      //SelectedTimeFrom = new DateTime(2016, 03, 22);
+      //SelectedTimeTo   = new DateTime(2016, 03, 23);
+
+
 
 
       _windowManager.ShowDialog(this);
@@ -56,7 +63,15 @@ namespace BioModule.ViewModels
       Result.ToDateLong   = fullDateTo.Ticks  ;
             
       Result.FromDateString = fullDateFrom.ToShortDateString() + " " + fullDateFrom.ToShortTimeString();
-      Result.ToDateString   = fullDateTo.ToShortDateString() + " " + fullDateTo.ToShortTimeString();     
+      Result.ToDateString   = fullDateTo.ToShortDateString() + " " + fullDateTo.ToShortTimeString();
+
+
+     /* SelectedTimeFrom = new DateTime(2016, 3, 22, 11, 00, 00);
+      SelectedTimeTo = new DateTime(2016, 3, 23, 23, 00, 00);
+
+      Result.FromDateLong = SelectedTimeFrom.Ticks;
+      Result.ToDateLong = SelectedTimeTo.Ticks;*/
+
 
       TryClose(true);      
     }

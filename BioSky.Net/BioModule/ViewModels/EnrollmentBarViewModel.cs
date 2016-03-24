@@ -29,7 +29,7 @@ namespace BioModule.ViewModels
       DeviceObserver = new TrackLocationCaptureDeviceObserver(locator);
       Resolution     = new AsyncObservableCollection<string>();
 
-      DeviceObserver.DeviceChanged += UpdateVideoCapabilities;
+      //DeviceObserver.DeviceChanged += UpdateVideoCapabilities;
 
       DeviceConnected = false;
     }
@@ -74,6 +74,11 @@ namespace BioModule.ViewModels
     private void DeviceObserver_AccessDeviceState(bool status)
     {
       DeviceConnected = status;
+    }
+
+    public void OnExpand()
+    {
+      UpdateVideoCapabilities();
     }
 
     private void UpdateVideoCapabilities()

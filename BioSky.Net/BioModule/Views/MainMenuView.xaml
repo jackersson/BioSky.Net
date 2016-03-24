@@ -87,6 +87,8 @@
             <MenuItem Header="{lex:Loc Tools}">
                 <MenuItem Header="{lex:Loc Settings}"
                           cal:Message.Attach="[Event Click] = [Action ShowSettingsFlayout]"/>
+                <MenuItem Header="{lex:Loc ErrorViewer}"
+                          cal:Message.Attach="[Event Click] = [Action ShowErrorViewer]"/>
             </MenuItem>
         </Menu>
 

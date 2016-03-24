@@ -20,6 +20,18 @@ namespace BioModule.Utils
 
       return openFileDialog;
     }
+
+    public OpenFileDialog OpenFileDialogWithMultiselect()
+    {
+      string directoryPath = AppDomain.CurrentDomain.BaseDirectory + "Log";
+
+      OpenFileDialog openFileDialog = new OpenFileDialog();
+      openFileDialog.Multiselect = true;
+      openFileDialog.Filter = "Txt files (*.txt*)|*.txt*";
+      openFileDialog.InitialDirectory = directoryPath;
+
+      return openFileDialog;
+    }
     private string GetParametr(string parametr)
     {
       string path = AppDomain.CurrentDomain.BaseDirectory + "config.txt";

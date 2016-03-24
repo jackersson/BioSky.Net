@@ -20,6 +20,7 @@ namespace BioModule.Utils
     , GeneralSettings
     , AuthenticationPage
     , HomePage
+    , ErrorViewer
   }
 
   public enum ShowableContentControl
@@ -43,6 +44,7 @@ namespace BioModule.Utils
       _viewModels.Add(ViewModelsID.GeneralSettings   , Type.GetType("BioModule.ViewModels.GeneralSettingsPageViewModel"));
       _viewModels.Add(ViewModelsID.AuthenticationPage, Type.GetType("BioModule.ViewModels.AuthenticationPageViewModel" ));
       _viewModels.Add(ViewModelsID.HomePage          , Type.GetType("BioModule.ViewModels.HomePageViewModel"           ));
+      _viewModels.Add(ViewModelsID.ErrorViewer       , Type.GetType("BioModule.ViewModels.ErrorViewerDialogViewModel"        ));
 
 
 

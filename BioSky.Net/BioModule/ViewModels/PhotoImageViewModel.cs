@@ -23,7 +23,10 @@ namespace BioModule.ViewModels
       EnrollmentViewModel = new EnrollmentBarViewModel(locator);
 
       SetVisibility();
-      //UpdateFromPhoto(GetTestPhoto());
+
+      UpdateFromPhoto(GetTestPhoto());
+
+      
     }
 
 
@@ -35,7 +38,7 @@ namespace BioModule.ViewModels
       base.OnClear(viewWidth, viewHeight);
     }
 
-    /*
+    //for test
     public Photo GetTestPhoto()
     {
       Photo ph = new Photo();
@@ -58,7 +61,7 @@ namespace BioModule.ViewModels
       return ph;
 
     }
-    */
+    // for test
     #region Interface
 
     private string _message;

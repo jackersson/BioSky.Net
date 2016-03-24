@@ -216,6 +216,7 @@
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
+    <Compile Include="ViewModels\ErrorViewerDialogViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
@@ -296,6 +297,9 @@
     </Compile>
     <Compile Include="Views\EnrollmentBarView.xaml.cs">
       <DependentUpon>EnrollmentBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ErrorViewerDialogView.xaml.cs">
+      <DependentUpon>ErrorViewerDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
@@ -434,6 +438,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\EnrollmentBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ErrorViewerDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

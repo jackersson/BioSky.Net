@@ -130,6 +130,9 @@
                 <DataTemplate DataType="{x:Type vm:HomePageViewModel}">
                     <local:HomePageView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:HomePageView>
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:ErrorViewerDialogViewModel}">
+                    <local:ErrorViewerDialogView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:ErrorViewerDialogView>
+                </DataTemplate>
             </dragablz:TabablzControl.Resources>
             <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
