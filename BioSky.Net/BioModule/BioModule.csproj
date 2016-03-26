@@ -298,8 +298,8 @@
     <Compile Include="Views\EnrollmentBarView.xaml.cs">
       <DependentUpon>EnrollmentBarView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ErrorViewerDialogView.xaml.cs">
-      <DependentUpon>ErrorViewerDialogView.xaml</DependentUpon>
+    <Compile Include="Views\ErrorViewerView.xaml.cs">
+      <DependentUpon>ErrorViewerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
@@ -441,7 +441,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\ErrorViewerDialogView.xaml">
+    <Page Include="Views\ErrorViewerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -668,6 +668,7 @@
     <None Include="Resources\verified.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\warning.png" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />
     <None Include="Resources\left_arrow.png" />

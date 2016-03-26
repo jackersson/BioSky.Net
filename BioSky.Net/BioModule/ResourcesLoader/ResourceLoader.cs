@@ -125,9 +125,19 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _startIconSource;
     private static BitmapSource _plusIconSource;
     private static BitmapSource _homeIconSource;
+    private static BitmapSource _warningIconSource;
 
 
 
+    public static BitmapSource WarningIconSource
+    {
+      get
+      {
+        if (_warningIconSource == null)
+          _warningIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.warning);
+        return _warningIconSource;
+      }
+    }
     public static BitmapSource HomeIconSource
     {
       get

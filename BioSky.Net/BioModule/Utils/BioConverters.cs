@@ -212,6 +212,28 @@ namespace BioModule.Utils
     }
   }
 
+  public class ConvertLongToFullDateTime : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        long newvalue = (long)value;
+        return new DateTime((long)value);
+      }
+      return null;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        DateTime time = (DateTime)value;
+        return time.Ticks;
+      }
+      return null;
+    }
+  }
+
   #endregion
 
   #region ConvertPhotoIdToImage
@@ -406,6 +428,36 @@ namespace BioModule.Utils
           return ResourceLoader.OkIconSource;
       }
       return ResourceLoader.CancelIconSource;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+  }
+
+  #endregion
+
+  #region ConvertMessageTypeToImage
+  public class ConvertMessageTypeToImage : IValueConverter
+  {
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {
+        MessageType messageType = (MessageType)value;
+        switch(messageType)
+        {
+          case MessageType.Error:
+            return ResourceLoader.ErrorIconSource;
+
+          case MessageType.Information:
+            return ResourceLoader.InformationCircleIconSource;            
+
+          case MessageType.Warning:
+            return ResourceLoader.WarningIconSource;
+        }          
+      }
+      return ResourceLoader.ErrorIconSource;
     }
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {

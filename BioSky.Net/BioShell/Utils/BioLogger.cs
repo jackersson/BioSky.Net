@@ -39,24 +39,61 @@ namespace BioShell.Utils
       GetLogFile(record);
     }
 
+    
+
     private void GetLogFile(LogRecord record)
     {
-      DateTime now = DateTime.Now;
+      DateTime now = DateTime.Now;      
 
-      string month = now.Month.ToString();
+      //directory
+      string month = (now.Month < 10) ? "0" + now.Month : now.Month.ToString();
 
-      if (now.Month < 10)
-        month = "0" + now.Month;
+      string date          = String.Format("{0}\\{1}\\{2}\\", now.Year.ToString(), month, now.Day.ToString());
 
-      string date = now.Day.ToString() + "." + month + "." + now.Year.ToString();
-      string fileName = "log " + date + ".txt";
-      string directoryPath = AppDomain.CurrentDomain.BaseDirectory + "Log\\";
-      string path = directoryPath + fileName;
+      string directoryPath = String.Format("{0}Log\\{1}", AppDomain.CurrentDomain.BaseDirectory, date);
 
       Directory.CreateDirectory(directoryPath);
 
+      //file
+      string fileDate = String.Format("{0}.{1}.{2}", now.Year.ToString(), month, now.Day.ToString());
+
+      string fileName = String.Format("log {0}-{1}.txt", fileDate, 1);
+
+      string[] filePaths = Directory.GetFiles(directoryPath);
+
+      if (filePaths.Length != 0)
+        fileName = String.Format("log {0}-{1}.txt", fileDate, GetFileNumber(filePaths));     
+
+      string path = directoryPath + fileName;
+
       using (FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write))      
         record.WriteDelimitedTo(fs);      
+    }
+
+    private long FILE_SIZE = 5242880; // 5Mb
+    //private long FILE_SIZE = 100; // for test
+
+    public int GetFileNumber(string[] filePaths)
+    {
+      string currentFilePath = "";
+      int higherfile = 0;
+
+      foreach (string filePath in filePaths)
+      {
+        char lastChar = filePath[filePath.Length - 5];
+        int lastCharInt = (int)Char.GetNumericValue(lastChar);
+        int currentfile = Math.Max(higherfile, lastCharInt);
+
+        if (currentfile > higherfile)
+        {
+          currentFilePath = filePath;
+          higherfile = currentfile;
+        }          
+      }
+
+      FileInfo file = new FileInfo(currentFilePath);
+
+      return (file.Length > FILE_SIZE) ? higherfile + 1 : higherfile;
     }
 
     public void LogMessage(string message)

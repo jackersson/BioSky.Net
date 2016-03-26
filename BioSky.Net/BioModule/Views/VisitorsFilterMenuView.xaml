@@ -127,7 +127,7 @@
 
     <Grid>
         <Menu Grid.ColumnSpan="5" Grid.Row="1" FontSize="11">
-            <MenuItem Header="{Binding CountryFilterText}" VerticalAlignment="Center">
+            <MenuItem Header="{Binding Filters[1].CountryFilterText}" VerticalAlignment="Center">
                 <MenuItem Header="Country">
                     <MenuItem.Template>
                         <ControlTemplate>
@@ -136,15 +136,19 @@
                                       Controls:TextBoxHelper.Watermark="{lex:Loc Country}"
                                       Controls:TextBoxHelper.UseFloatingWatermark="True"
                                       Controls:TextBoxHelper.ClearTextButton="True"
-                                      SelectedItem="{Binding SelectedCountry, UpdateSourceTrigger=PropertyChanged}"                          
-                                      ItemsSource="{Binding CountryNames}"/>
+                                      SelectedItem="{Binding Filters[1].SelectedCountry, UpdateSourceTrigger=PropertyChanged}"                          
+                                      ItemsSource="{Binding Filters[1].CountryNames}"/>
                         </ControlTemplate>
                     </MenuItem.Template>
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="{Binding LocationFilterText}" VerticalAlignment="Center">
-                <MenuItem Header="All" cal:Message.Attach="[Event Click] = [Action OnLocationsAllClick]" />
-                <MenuItem Header="None" cal:Message.Attach="[Event Click] = [Action OnLocationsNoneClick]" />
+            <MenuItem Header="{Binding Filters[0].LocationFilterText}" VerticalAlignment="Center">
+                <MenuItem Header="All" 
+                          cal:Action.TargetWithoutContext="{Binding Filters[0]}"
+                          cal:Message.Attach="[Event Click] = [Action OnLocationsAllClick]" />
+                <MenuItem Header="None" 
+                          cal:Action.TargetWithoutContext="{Binding Filters[0]}"
+                          cal:Message.Attach="[Event Click] = [Action OnLocationsNoneClick]" />
 
                 <!--************************************************Locations************************************* -->
                 <MenuItem Header="Locations">
@@ -154,9 +158,8 @@
                                       VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                                       Controls:TextBoxHelper.Watermark="{lex:Loc Locations}"
                                       Controls:TextBoxHelper.UseFloatingWatermark="True"
-                                      Controls:TextBoxHelper.ClearTextButton="True"
-                                      SelectedItem="{Binding SelectedLocation, UpdateSourceTrigger=PropertyChanged}"                          
-                                      ItemsSource="{Binding LocationItems}">
+                                      Controls:TextBoxHelper.ClearTextButton="True"                          
+                                      ItemsSource="{Binding Filters[0].Locations}">
                                 <ComboBox.Style>
                                     <Style TargetType="ComboBox" BasedOn="{StaticResource MetroComboBox}">
                                         <Setter Property="Template">
@@ -170,16 +173,17 @@
                                                         <Popup AllowsTransparency="true" IsOpen="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                                                Placement="Bottom" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}"
                                                                Margin="1" x:Name="PART_Popup" Grid.ColumnSpan="2">
-                                                            <Border x:Name="DropDownBorder" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding Path=ActualWidth, ElementName=MainGrid}">
-                                                                <ScrollViewer CanContentScroll="true">
+                                                            <Border x:Name="DropDownBorder" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding Path=ActualWidth, ElementName=MainGrid}" >
+                                                                <ScrollViewer CanContentScroll="true" >
                                                                     <ListBox x:Name="lstBox" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                                                              KeyboardNavigation.DirectionalNavigation="Contained" 
                                                                              SelectionMode="Extended" ItemsSource="{TemplateBinding ItemsSource}"
+                                                                             cal:Action.TargetWithoutContext="{Binding Filters[0]}"
                                                                              cal:Message.Attach="[Event SelectionChanged]= [Action OnSelectionLocationChanged($eventArgs)];"
                                                                              >
                                                                         <ListBox.ItemTemplate>
-                                                                            <DataTemplate>                                                                                
-                                                                                    <TextBlock Text="{Binding Caption, Mode=OneWay}" Margin="2,0,2,0" ></TextBlock>                                                                               
+                                                                            <DataTemplate>
+                                                                                <TextBlock Text="{Binding LocationName, Mode=OneWay}" Margin="2,0,2,0" ></TextBlock>                                                                               
                                                                             </DataTemplate>
                                                                         </ListBox.ItemTemplate>
                                                                     </ListBox>
@@ -188,8 +192,8 @@
                                                         </Popup>
                                                         <ToggleButton Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2"
                                                                       IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                                      Style="{DynamicResource MetroToggleButton}" Content="{Binding LocationButtonText}"/>
-                                                        <ListBox IsHitTestVisible="false" ItemsSource="{Binding SelectedLocations}" Margin="4,0,0,0" Background="{x:Null}">
+                                                                      Style="{DynamicResource MetroToggleButton}" Content="{Binding Filters[0].LocationButtonText}"/>
+                                                        <ListBox IsHitTestVisible="false" ItemsSource="{Binding Filters[0].SelectedLocations}" Margin="4,0,0,0" Background="{x:Null}">
                                                             <ListBox.ItemsPanel>
                                                                 <ItemsPanelTemplate>
                                                                     <WrapPanel MaxWidth="250"/>
@@ -198,7 +202,7 @@
                                                             <ListBox.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <Border BorderThickness="1" BorderBrush="White" Margin="0,0,5,2" Background="{x:Null}">
-                                                                        <TextBlock Text="{Binding Caption, Mode=OneWay}" Margin="2,0,2,0" ></TextBlock>
+                                                                        <TextBlock Text="{Binding LocationName, Mode=OneWay}" Margin="2,0,2,0" ></TextBlock>
                                                                     </Border>                                                                    
                                                                 </DataTemplate>
                                                             </ListBox.ItemTemplate>

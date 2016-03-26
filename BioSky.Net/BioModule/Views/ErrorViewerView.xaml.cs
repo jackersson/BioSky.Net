@@ -19,9 +19,9 @@ namespace BioModule.Views
   /// <summary>
   /// Interaction logic for ErrorViewerDialogView.xaml
   /// </summary>
-  public partial class ErrorViewerDialogView : UserControl
+  public partial class ErrorViewerView : UserControl
   {
-    public ErrorViewerDialogView()
+    public ErrorViewerView()
     {
       InitializeComponent();
     }

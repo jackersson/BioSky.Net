@@ -27,14 +27,7 @@ namespace BioModule.ViewModels
       _selectedDateFrom = _nullDateTime;
       _selectedDateTo   = _nullDateTime;
       Result = null;
-      //SelectedTimeFrom = _nullDateTime;
-      //SelectedTimeTo   = _nullDateTime;
-
-      //SelectedTimeFrom = new DateTime(2016, 03, 22);
-      //SelectedTimeTo   = new DateTime(2016, 03, 23);
-
-
-
+      State = PeriodTimePickerState.None;
 
       _windowManager.ShowDialog(this);
     }
@@ -52,10 +45,27 @@ namespace BioModule.ViewModels
         _dialogsHolder.CustomTextDialog.Show();
         return;
       }
-      DateTime fullDateFrom = new DateTime(_selectedDateFrom.Year, _selectedDateFrom.Month, _selectedDateFrom.Day
-                                          , SelectedTimeFrom.Hour, SelectedTimeFrom.Minute, 0);
-      DateTime fullDateTo   = new DateTime(_selectedDateTo.Year, _selectedDateTo.Month, _selectedDateTo.Day
-                                          , SelectedTimeTo.Hour, SelectedTimeTo.Minute,0);
+
+      if (State != PeriodTimePickerState.DateAndTime)
+        State = PeriodTimePickerState.OnlyDate;
+
+      DateTime fullDateFrom;
+      DateTime fullDateTo;
+
+      if (State != PeriodTimePickerState.OnlyDate)
+      {
+        fullDateFrom = new DateTime(_selectedDateFrom.Year, _selectedDateFrom.Month, _selectedDateFrom.Day
+                                   , SelectedTimeFrom.Hour, SelectedTimeFrom.Minute, 0);
+        fullDateTo = new DateTime(_selectedDateTo.Year, _selectedDateTo.Month, _selectedDateTo.Day
+                                 , SelectedTimeTo.Hour, SelectedTimeTo.Minute, 0);
+      }
+      else
+      {
+        fullDateFrom = new DateTime(_selectedDateFrom.Year, _selectedDateFrom.Month, _selectedDateFrom.Day, 0, 0, 0);
+        fullDateTo = new DateTime(_selectedDateTo.Year, _selectedDateTo.Month, _selectedDateTo.Day
+                                 , 23, 59, 59);
+      }
+
       if (Result == null)
         Result = new PeriodTimePickerResult();
 
@@ -125,8 +135,9 @@ namespace BioModule.ViewModels
       set
       {
         if (_selectedTimeFrom != value)        
-          _selectedTimeFrom = value;     
+          _selectedTimeFrom = value;
 
+        State = PeriodTimePickerState.DateAndTime;
         NotifyOfPropertyChange(() => SelectedTimeFrom);
       }
     }
@@ -137,10 +148,24 @@ namespace BioModule.ViewModels
       get { return _selectedTimeTo; }
       set
       {
-        if (_selectedTimeTo != value)
-          _selectedTimeTo = value;       
+        if (_selectedTimeTo != value)        
+          _selectedTimeTo = value;
 
+        State = PeriodTimePickerState.DateAndTime;
         NotifyOfPropertyChange(() => SelectedTimeTo);
+      }
+    }
+
+    private PeriodTimePickerState _state;
+    public PeriodTimePickerState State
+    {
+      get { return _state; }
+      set
+      {
+        if (_state != value)
+          _state = value;
+
+        NotifyOfPropertyChange(() => State);
       }
     }
 
@@ -153,6 +178,13 @@ namespace BioModule.ViewModels
     private readonly IProcessorLocator _locator      ;
     private readonly DialogsHolder     _dialogsHolder;
 
+  }
+
+  public enum PeriodTimePickerState
+  {
+      None
+    , DateAndTime      
+    , OnlyDate
   }
 
   public class PeriodTimePickerResult

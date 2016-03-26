@@ -162,7 +162,7 @@ namespace BioModule.ViewModels
       }
 
       if(VisitorsFilterMenu == null)
-        VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator, PAGES_COUNT);
+        VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator);
     }
 
     protected override void OnActivate()

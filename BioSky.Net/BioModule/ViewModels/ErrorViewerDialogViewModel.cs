@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace BioModule.ViewModels
 {
-  public class ErrorViewerDialogViewModel : Screen
+  public class ErrorViewerViewModel : Screen
   {
     private int PAGES_COUNT = 15;
-    public ErrorViewerDialogViewModel(IProcessorLocator locator)
+    public ErrorViewerViewModel(IProcessorLocator locator)
     {
       //LogRecords = records;
       DisplayName = "Error Viever";
@@ -30,10 +30,24 @@ namespace BioModule.ViewModels
       PeriodTimePicker       = new PeriodTimePickerViewModel(_locator);
 
       _bioFileUtils = new BioFileUtils();
-    }    
+    }
 
     public void OnOpenFiles()
-    {     
+    {
+      if (!UploadState)
+        UploadFromDirectory();
+      else
+        UploadByFilter();
+    }
+      
+
+    private void UploadByFilter()
+    {
+
+    }
+
+    private void UploadFromDirectory()
+    {
 
       var dialog = _bioFileUtils.OpenFileDialogWithMultiselect();
       if (dialog.ShowDialog() == true)
@@ -89,12 +103,6 @@ namespace BioModule.ViewModels
       LogRecordsCollectionView.Filtering = item =>
       {
         LogRecord record = item as LogRecord;
-
-
-        DateTime detectedTime = DateTime.FromBinary(record.DetectedTime);
-        DateTime fromDateLong = DateTime.FromBinary(result.FromDateLong);
-        DateTime toDateLong   = DateTime.FromBinary(result.ToDateLong);
-
 
         if (record != null)
           return (record.DetectedTime >= result.FromDateLong
@@ -174,6 +182,20 @@ namespace BioModule.ViewModels
         {
           _logRecords = value;
           NotifyOfPropertyChange(() => LogRecords);
+        }
+      }
+    }
+
+    private bool _uploadState;
+    public bool UploadState
+    {
+      get { return _uploadState; }
+      set
+      {
+        if (_uploadState != value)
+        {
+          _uploadState = value;
+          NotifyOfPropertyChange(() => UploadState);
         }
       }
     }
