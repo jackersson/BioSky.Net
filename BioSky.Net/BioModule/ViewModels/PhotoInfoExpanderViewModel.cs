@@ -15,12 +15,12 @@ namespace BioModule.ViewModels
   {
     public PhotoInfoExpanderViewModel()
     {
-      PhotoInformation = new PhotoInformationViewModel();
+
     }
 
-    public void Update(Photo photo)
+    public void Update(object informationModel)
     {
-      PhotoInformation.Update(photo);
+      InformationItem = informationModel;
     }
 
     public void OnExpanded(bool isExpanded)
@@ -37,23 +37,18 @@ namespace BioModule.ViewModels
         ExpanderChanged(isExpanded);
     }
 
-    private PhotoInformationViewModel _photoInformation;
-    public PhotoInformationViewModel PhotoInformation
+    private object _informationItem;
+    public object InformationItem
     {
-      get { return _photoInformation; }
+      get { return _informationItem; }
       set
       {
-        if (_photoInformation != value)
+        if (_informationItem != value)
         {
-          _photoInformation = value;
-          NotifyOfPropertyChange(() => PhotoInformation);
+          _informationItem = value;
+          NotifyOfPropertyChange(() => InformationItem);
         }
       }
     }
-
-
-
-
   }
-
 }

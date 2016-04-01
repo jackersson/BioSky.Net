@@ -11,7 +11,10 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"  
+             xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase" 
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
@@ -38,6 +41,21 @@
                     <scm:SortDescription PropertyName="Time" Direction="Descending"/>
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
+
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -133,8 +151,11 @@
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
                 ToolTip="{lex:Loc Delete}"
-                >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
+                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                           , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                           , ConverterParameter={x:Static bioContracts:Activity.VisitorRemove}}">
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" 
+                   Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
         </Button>
 
         <TextBox  Margin="0, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   

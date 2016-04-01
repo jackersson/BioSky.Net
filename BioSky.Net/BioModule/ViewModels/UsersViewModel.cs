@@ -153,6 +153,8 @@ namespace BioModule.ViewModels
         
         return false;
       };
+
+      PageController.UpdateMove();
     }
     public void OnMouseRightButtonDown(Person user)
     {

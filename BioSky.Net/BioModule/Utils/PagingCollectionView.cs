@@ -16,7 +16,7 @@ namespace BioModule.Utils
     public PagingCollectionView( IList innerList, int itemsPerPage)
                                : base(innerList)
     {
-      this._innerList    = innerList   ;
+     // this._innerList    = innerList   ;
       this._itemsPerPage = itemsPerPage;      
     }
 
@@ -29,6 +29,7 @@ namespace BioModule.Utils
       get { return this.InternalList.Count; }
     }
 
+    
     public override int Count
     {
       get
@@ -40,13 +41,21 @@ namespace BioModule.Utils
         //last page
         int remainder = InternalList.Count % this._itemsPerPage;
 
-        return remainder == 0 ? this._itemsPerPage : remainder;
+        return remainder == 0 ? Math.Min(InternalList.Count, this._itemsPerPage ) : remainder;
       }
     }
+    
 
     public int CurrentPage
     {
-      get { return this._currentPage; }
+      get {
+
+
+        int previousCount = (_currentPage - 1) * this._itemsPerPage;
+        return (previousCount > this.InternalList.Count) ? 1 : _currentPage;
+        //return this._currentPage;
+
+      }
       set
       {
         this._currentPage = value;
@@ -69,23 +78,22 @@ namespace BioModule.Utils
     {
       get
       {
-        var end = this._currentPage * this._itemsPerPage;
+        var end = CurrentPage * this._itemsPerPage;
         return (end > InternalList.Count) ? InternalList.Count : end;
       }
     }
 
     public int StartIndex
     {
-      get { return (this._currentPage - 1) * this._itemsPerPage; }
+      get { return (CurrentPage - 1) * this._itemsPerPage; }
     }
 
     public override object GetItemAt(int index)
     {
+      
       var offset = index % (this._itemsPerPage);
       int targetIndex = this.StartIndex + offset;
 
-      if (InternalList.Count <= targetIndex)
-        return null;
       try
       {
         return base.GetItemAt(targetIndex);
@@ -96,6 +104,7 @@ namespace BioModule.Utils
         Console.WriteLine(e.Message);
         return null;
       }
+      
     }
 
     public void MoveToNextPage()
@@ -118,10 +127,22 @@ namespace BioModule.Utils
     public Predicate<object> Filtering
     {
       get { return this.Filter;   }
-      set { this.Filter = value;  }
+      set
+      {
+        OnFilterChanged();
+        this.Filter = value;
+      }
     }
 
-    private readonly IList _innerList;
+    public event FilterChangedEventHandler FilterChanged;   
+
+    private void OnFilterChanged()
+    {
+      if (FilterChanged != null)
+        FilterChanged();
+    }
+
+    // private readonly IList _innerList;
     private readonly int _itemsPerPage;
 
     private int _currentPage = 1;

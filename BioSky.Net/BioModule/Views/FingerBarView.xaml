@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="BioModule.Views.FingerBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader" 
+             xmlns:vm="clr-namespace:BioModule.ViewModels" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             d:DataContext="{d:DesignInstance vm:FingerBarViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" 
+             Height="64"
+             d:DesignHeight="300" d:DesignWidth="230">
+
+    <UserControl.Resources>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+    </UserControl.Resources>
+
+    <Grid x:Name="GridLayout">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="32"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox ItemsSource="{Binding DevicesNames}"
+                  SelectedItem="{Binding SelectedDevice, Mode=TwoWay}" 
+                  Controls:TextBoxHelper.Watermark="Devices"               
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch" 
+                  Grid.Row="1"                    
+                  Grid.Column="0">
+        </ComboBox>
+
+        <ComboBox ItemsSource="{Binding Fingers}"                   
+                  Controls:TextBoxHelper.Watermark="Fingers"               
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch" 
+                  Grid.Row="1"                    
+                  Grid.Column="2" >
+        </ComboBox>
+
+        
+    </Grid>
+</UserControl>

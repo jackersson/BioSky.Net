@@ -1,4 +1,5 @@
-﻿using BioService;
+﻿using BioModule.ViewModels;
+using BioService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace BioModule.Utils
 {
-  public interface IUserPhotoController
+  public interface IUserBioItemsController
   {
-    void Add    (Photo photo);
+    void Add   (Photo photo);
     void Remove(Photo photo);
     void Next();
     void Previous();
-    bool CanNext     { get; }
-    bool CanPrevious { get; }
-
-    Person User { get; }
+    bool CanNext           { get; }
+    bool CanPrevious       { get; }
+    PhotoViewEnum PageEnum { get; }
+    Person User            { get; }
   }
 }

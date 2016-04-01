@@ -1,6 +1,10 @@
 ﻿using BioContracts;
+using BioService;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Google.Protobuf;
+using System.IO;
 
 namespace BioShell.Utils
 {
@@ -11,8 +15,90 @@ namespace BioShell.Utils
       if (exception == null)
         return;
 
-      LogMessage(exception.Message);
+      LogMessage(exception.Message);      
+
+      SaveLogFile(GetLogRecordFromException(exception));
     }
+
+    private LogRecord GetLogRecordFromException(_Exception exception)
+    {
+      LogRecord record = new LogRecord();
+
+      var ex = exception.GetBaseException();
+
+      StackTrace st    = new StackTrace(ex, true);
+      StackFrame frame = st.GetFrame(0);
+
+      string exFilename = frame.GetFileName();
+      string className = "";
+      if (exFilename != null)
+        className = exFilename.Substring(exFilename.LastIndexOf('\\') + 1);
+      else
+        className = ex.Source;
+
+      record.FunctionName     = frame.GetMethod().Name;
+      record.LineNumber       = frame.GetFileLineNumber();
+      record.MessageType      = MessageType.Error;
+      record.ClassName        = className;
+      record.ExceptionMessage = exception.Message;
+      record.DetectedTime     = DateTime.Now.Ticks;
+
+      return record;
+    }
+    
+    private void SaveLogFile(LogRecord record)
+    {
+      string filePath = GetFilePath();
+
+      using (FileStream fs = new FileStream(filePath, FileMode.Append, FileAccess.Write))      
+        record.WriteDelimitedTo(fs);      
+    }
+
+    private long FILE_SIZE = 5242880; // 5Mb
+    //private long FILE_SIZE = 100; // for test
+
+    public string GetFilePath()
+    {
+      string currentFilePath = "";
+      DateTime higherfile    = new DateTime();
+      string fileFormat      = ".txt";
+      DateTime now           = DateTime.Now;
+
+      string month = (now.Month < 10) ? "0" + now.Month : now.Month.ToString();
+
+      string directoryPath = string.Format("{0}Log\\{1}\\{2}\\{3}\\"
+                                          , AppDomain.CurrentDomain.BaseDirectory
+                                          , now.Year.ToString()
+                                          , month
+                                          , now.Day.ToString());
+
+      Directory.CreateDirectory(directoryPath);
+
+      string[] filePaths = Directory.GetFiles(directoryPath);
+      foreach (string filePath in filePaths)
+      {
+        DateTime creationTime = File.GetCreationTime(filePath);
+
+        if (creationTime > higherfile)
+        {
+          currentFilePath = filePath;
+          higherfile = creationTime;
+        }          
+      }
+          
+      FileInfo file = new FileInfo(currentFilePath);
+
+      if (file.Length > FILE_SIZE)
+      {
+        string fileDate = string.Format("{0}-{1}-{2}", now.Year, month, now.Day);
+
+        string fileName = string.Format("log {0}-{1}{2}", fileDate, DateTime.Now.Ticks,fileFormat);
+
+        return directoryPath + fileName;
+      }
+      else
+        return currentFilePath;
+    }    
 
     public void LogMessage(string message)
     {

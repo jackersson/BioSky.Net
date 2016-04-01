@@ -14,6 +14,7 @@ using System.ComponentModel;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
 using Grpc.Core;
+using System.Diagnostics;
 
 namespace BioModule.ViewModels
 {
@@ -32,15 +33,18 @@ namespace BioModule.ViewModels
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier      = _locator.GetProcessor<INotifier>();
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
-
-
+      
       _selectedVisitors  = new ObservableCollection<Visitor>();
       PageController     = new PageControllerViewModel();
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
      // _database.PhotoHolder.DataChanged   += RefreshData;
-      _database.Visitors.DataChanged      += RefreshData;      
+      _database.Visitors.DataChanged      += RefreshData;
+
+      IsDeleteButtonEnabled = false;
+
+      RefreshData();
     } 
         
     #region Database
@@ -67,6 +71,18 @@ namespace BioModule.ViewModels
       if (!IsActive)
         return;
 
+      // for test
+      try
+      {
+        Visitors.Add(new Visitor());
+        throw new Exception();
+      }
+      catch (Exception ex)
+      {
+        _notifier.Notify(ex);        
+      }
+      // for test
+
       Visitors = null;
       Visitors = _database.Visitors.Data;
 
@@ -79,7 +95,7 @@ namespace BioModule.ViewModels
       VisitorsCollectionView = new PagingCollectionView(Visitors, PAGES_COUNT);
       VisitorsCollectionView.Sort(SortDescriptionByTime);
 
-      PageController.UpdateData(VisitorsCollectionView);
+      PageController.UpdateData(VisitorsCollectionView);     
     }
 
     private void GetLastVisitor()
@@ -146,7 +162,7 @@ namespace BioModule.ViewModels
       }
 
       if(VisitorsFilterMenu == null)
-        VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator, PAGES_COUNT);
+        VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator);
     }
 
     protected override void OnActivate()
@@ -207,7 +223,9 @@ namespace BioModule.ViewModels
         }      
 
         return false;
-      };      
+      };
+
+      PageController.UpdateMove();     
     }
 
     public void OnMouseRightButtonDown(Visitor visitor)

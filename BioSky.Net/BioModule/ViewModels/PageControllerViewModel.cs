@@ -26,16 +26,18 @@ namespace BioModule.ViewModels
         return;
 
       _controller = controller;
-
+      controller.FilterChanged += UpdateMove;
       UpdateMove();
     }
 
-    private void UpdateMove()
+    public void UpdateMove()
     {
       if (_controller == null)
-        return;
+        return;     
 
-      Text = FormatPageText( _controller.StartIndex + 1
+      int startIndex = (_controller.ItemsCount == 0) ? 0 : _controller.StartIndex + 1; 
+
+      Text = FormatPageText(  startIndex
                            , _controller.EndIndex, _controller.ItemsCount);
 
       IsRightArrowEnabled = (_controller.EndIndex < _controller.ItemsCount);

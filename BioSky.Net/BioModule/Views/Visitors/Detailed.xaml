@@ -11,6 +11,9 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
@@ -28,10 +31,25 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+            
             <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage" />            
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -150,14 +168,21 @@
 
 
 
-            <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0"
-                    HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
-                    IsEnabled="True"                  
-                    ToolTip="{lex:Loc Delete}"
+            <Button Name="DeleteButton" Style="{DynamicResource MetroCircleButtonStyle}" Grid.Column="4" Grid.Row="0"
+                    HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"                 
+                    ToolTip="{lex:Loc Delete}" Tag="{x:Static bioContracts:Activity.VisitorRemove}"
                     cal:Message.Attach="[Event Click] = [Action Select]"
                 >
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
+                        <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                        <Binding Path="IsDeleteButtonEnabled"/>
+                        <Binding ElementName="DeleteButton" Path="Tag"/>                        
+                    </MultiBinding>
+                </Button.IsEnabled>
                 <!-- IsEnabled="{Binding IsDeleteButtonEnabled}" cal:Message.Attach="[Event Click] = [Action OnDeleteVisitors]"  -->
-                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
+                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" 
+                       Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
             </Button>
 
             <TextBox  Margin="2, 5, 0, 5" Grid.Column="0"  Grid.Row="0"   

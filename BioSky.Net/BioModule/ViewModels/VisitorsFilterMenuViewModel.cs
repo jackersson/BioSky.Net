@@ -1,247 +1,151 @@
 ﻿using BioContracts;
 using BioModule.Utils;
+using BioModule.ViewModels;
 using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Controls;
+using WPFLocalizeExtension.Extensions;
 
 namespace BioModule.ViewModels
 {
-  public class VisitorsFilterMenuViewModel : Screen
+  public interface IFilterable : INotifyPropertyChanged
   {
-    public VisitorsFilterMenuViewModel(IProcessorLocator locator, int pagesCount)
+    void Apply(QueryVisitors query);
+    void Reset();
+    bool CanRevert { get; }    
+  }
+
+  public class LocationFilter : PropertyChangedBase, IFilterable
+  {
+    private readonly IProcessorLocator    _locator ;
+    private readonly IBioSkyNetRepository _database;    
+    
+    public LocationFilter(IProcessorLocator locator)
     {
-      _locator       = locator;
-      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
-      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
-      _bioEngine     = _locator.GetProcessor<IBioEngine>();
+      _locator  = locator;
+      _database = locator.GetProcessor<IBioSkyNetRepository>();
 
-      _pagesCount = pagesCount;
-
-      TimeFilterText      = "Time";
-      TimeFilterState     = TimeEnum.None;
-      LocationFilterState = LocationsEnum.None;
-      LocationButtonText  = "Select location...";
-      LocationFilterText  = "Location";
-      CountryFilterText   = "Countries";
-
-      _query                 = new QueryVisitors();
-      SelectedLocations      = new ObservableCollection<TrackLocation>();
-      
-      //CheckOnTimeFilters();
+      SelectedLocations = new ObservableCollection<Location>(); 
+       
     }
-
-    int _pagesCount;
-
-    #region Time
-
-    public void ShowPeriodTimePicker()
-    {
-      _dialogsHolder.PeriodTimePicker.Show();
-      PeriodTimePickerResult result = _dialogsHolder.PeriodTimePicker.GetResult();
-
-      if (result != null)
-      {
-        TimeFilterText = result.FromDateString + "-" + result.ToDateString;
-
-        long[] timeFilter = { result.FromDateLong, result.ToDateLong };
-        periodTime = timeFilter;
-        SetTimeFilterState(TimeEnum.Period);
-      }
-    }
-
-    private long[] periodTime        = { 0, 0 };
-    private long[] currentTimeFilter = { 0, 0 };
-
-
-    public long[] GetTimeFilterInterval(TimeEnum state)
-    {
-      long fromTime = 0;
-      long toTime = 0;
-
-      DateTime nullDate = DateTime.Now;
-      DateTime now = DateTime.Now;
-      DateTime dateTo = now;
-      DateTime dateFrom = now;
-
-      switch (state)
-      {
-        case TimeEnum.AllTime:
-          dateTo = nullDate;
-          dateFrom = nullDate;
-          TimeFilterText = "All Time";
-          break;
-
-        case TimeEnum.LastHour:
-          dateFrom = now.AddHours(-1);
-          TimeFilterText = "Last Hour";
-          break;
-
-        case TimeEnum.Last24Hours:
-          dateFrom = now.AddHours(-24);
-          TimeFilterText = "Last 24 Hours";
-          break;
-
-        case TimeEnum.LastMonth:
-          dateFrom = now.AddMonths(-1);
-          TimeFilterText = "Last Month";
-          break;
-
-        case TimeEnum.LastWeek:
-          dateFrom = now.AddDays(-7);
-          TimeFilterText = "Last Week";
-          break;
-
-        case TimeEnum.LastYear:
-          dateFrom = now.AddYears(-7);
-          TimeFilterText = "Last Year";
-          break;
-      }
-
-      fromTime = dateFrom.Ticks;
-      toTime = dateTo.Ticks;
-
-      long[] timeFilter = { fromTime, toTime };
-
-      return timeFilter;
-    }
-    public void SetTimeFilterState(TimeEnum state)
-    {
-      TimeFilterState = state;
-      if (state != TimeEnum.Period)
-        currentTimeFilter = GetTimeFilterInterval(TimeFilterState);
-      else
-        currentTimeFilter = periodTime;
-    }
-
-    public void CheckOnTimeFilters()
-    {
-      if(TimeFilterState != TimeEnum.AllTime)      
-        IsAllTimeChecked = false;     
-
-      if (TimeFilterState != TimeEnum.Last24Hours)      
-        Is24HoursChecked = false;      
-
-      if (TimeFilterState != TimeEnum.LastHour)      
-        IsLastHourChecked = false;     
-
-      if (TimeFilterState != TimeEnum.LastMonth)      
-        IsMonthChecked = false;     
-
-      if (TimeFilterState != TimeEnum.LastWeek)      
-        IsWeekChecked = false;          
-
-      if (TimeFilterState != TimeEnum.LastYear)      
-        IsYearChecked = false;           
-    }
-
-    #endregion
-
-    #region Location
-
+     
     public void OnLocationsAllClick()
     {
-      foreach(TrackLocation location in LocationItems)      
+      SelectedLocations.Clear();
+
+      foreach (Location location in Locations)
         SelectedLocations.Add(location);
-      
-      LocationFilterText = "All locations";
-      LocationFilterState = LocationsEnum.All;
+
+      RefreshUI();
     }
 
     public void OnLocationsNoneClick()
     {
       SelectedLocations.Clear();
-      LocationFilterText = "Location";
-      LocationFilterState = LocationsEnum.None;
+      RefreshUI();
     }
 
     public void OnSelectionLocationChanged(SelectionChangedEventArgs e)
     {
-      IList selectedRecords   = e.AddedItems as IList;
+      IList selectedRecords   = e.AddedItems   as IList;
       IList unselectedRecords = e.RemovedItems as IList;
 
       if (selectedRecords == null || unselectedRecords == null)
         return;
 
-      foreach (TrackLocation location in selectedRecords)
-        SelectedLocations.Add(location);
+      foreach (Location location in selectedRecords)
+      {
+        if(!SelectedLocations.Contains(location))
+          SelectedLocations.Add(location);
+      }
 
-      foreach (TrackLocation location in unselectedRecords)
+
+      foreach (Location location in unselectedRecords)
         SelectedLocations.Remove(location);
 
-      bool isLocationSelect = (SelectedLocations.Count >= 1) ? true : false;
-      if (isLocationSelect)
-      {
-        LocationButtonText = "";
-        LocationFilterText = "Location" + " (" + SelectedLocations.Count + ")";
-        LocationFilterState = LocationsEnum.Several;
-      }
-      else
-      {
-        LocationButtonText = "Select location...";
-        LocationFilterState = LocationsEnum.None;
-      }
+      RefreshUI();
+    }  
 
-      if (SelectedLocations.Count == LocationItems.Count)
-        LocationFilterState = LocationsEnum.All;      
+    public void Apply(QueryVisitors query)
+    {
+      if (SelectedLocations == null || SelectedLocations.Count <= 0)
+        return; 
+      
+      foreach (Location trackLocation in SelectedLocations)
+        query.Locations.Add(trackLocation.Id);      
     }
 
-    #endregion
-
-    public void ResetSettings()
+    public void Reset()
     {
-      SelectedCountry = null;
-      CountryFilterText = "Countries";
-
-      TimeFilterState   = TimeEnum.None;
-      currentTimeFilter = null;
-
       SelectedLocations.Clear();
-      LocationFilterText = "Location";
-      LocationFilterState = LocationsEnum.None;
-
-      IsResetButtonEnabled = false;
+      NotifyOfPropertyChange(() => SelectedLocations);
     }
 
-    #region Query
-    public void UpdateQuery()
+    private void RefreshUI()
     {
-      _query.ItemsPerPage = _pagesCount;
+      NotifyOfPropertyChange(() => SelectedLocations);
+      NotifyOfPropertyChange(() => LocationFilterText);
+      NotifyOfPropertyChange(() => LocationButtonText);
+      NotifyOfPropertyChange(() => CanRevert);
+    }
 
-      if (SelectedLocations != null || SelectedLocations.Count > 0)
+
+    public ObservableCollection<Location> Locations {
+      get { return _database.Locations.Data; }    
+    }
+
+    public string LocationFilterText
+    {
+      get {
+        string text = "Locations";
+        if ( SelectedLocations.Count > 1 )
+          text = string.Format("{0} ({1})", text, SelectedLocations.Count);
+        else if (SelectedLocations.Count == Locations.Count && Locations.Count != 0)
+          text = "Locations All";
+        return text;
+      }     
+    }
+
+    private ObservableCollection<Location> _selectedLocations;
+    public ObservableCollection<Location> SelectedLocations
+    {
+      get { return _selectedLocations; }
+      set
       {
-        foreach (TrackLocation trackLocation in SelectedLocations)
-          _query.Locations.Add(trackLocation.CurrentLocation.Id);
-      }
-
-      if (SelectedCountry != null)
-        _query.Countries.Add(SelectedCountry);
-
-      if (currentTimeFilter != null)
-      {
-        _query.DatetimeFrom = currentTimeFilter[0];
-        _query.DatetimeTo   = currentTimeFilter[1];
+        if (_selectedLocations != value)
+        {
+          _selectedLocations = value;
+          RefreshUI();
+        }
       }
     }
 
-    public QueryVisitors GetQuery()
-    {
-      UpdateQuery();
-      return _query;
+    public string LocationButtonText {
+      get { return SelectedLocations.Count > 0 ? string.Empty : "Select location..."; }    
     }
 
-    #endregion
+    public bool CanRevert  {  get { return SelectedLocations.Count > 0; } }   
+  }
 
-    #region UI
+  public class CountryFilter : PropertyChangedBase, IFilterable
+  {
+    private readonly IProcessorLocator _locator;
+    private readonly IBioSkyNetRepository _database;
 
-    #region Country
-    public string[] CountryNames
+    public CountryFilter(IProcessorLocator locator)
     {
+      _locator = locator;
+      _database = locator.GetProcessor<IBioSkyNetRepository>();          
+    }
+
+    public string[] CountryNames {
       get { return _database.BioCultureSources.CountriesNames; }
     }
-
 
     private string _selectedCountry;
     public string SelectedCountry
@@ -252,120 +156,278 @@ namespace BioModule.ViewModels
         if (_selectedCountry != value)
         {
           _selectedCountry = value;
-          if (_selectedCountry != null)
-          {
-            CountryFilterText = "Countries" + " (" + 1 + ")";
-            IsResetButtonEnabled = true;
-          }
 
           NotifyOfPropertyChange(() => SelectedCountry);
-        }
-      }
-    }
-
-    private string _countryFilterText;
-    public string CountryFilterText
-    {
-      get { return _countryFilterText; }
-      set
-      {
-        if (_countryFilterText != value)
-        {
-          _countryFilterText = value;
           NotifyOfPropertyChange(() => CountryFilterText);
         }
       }
     }
 
-    #endregion
-
-    #region Location
-    public AsyncObservableCollection<TrackLocation> LocationItems
+    public string CountryFilterText
     {
-      get { return _bioEngine.TrackLocationEngine().TrackLocations; }
+      get {      
+        string count = SelectedCountry == null ? "" : "(1)";
+        return "Country" + count;
+      }
     }
 
-    private LocationsEnum _locationFilterState;
-    public LocationsEnum LocationFilterState
+    public void Apply(QueryVisitors query)
     {
-      get { return _locationFilterState; }
+      if (SelectedCountry != null)
+        query.Countries.Add(SelectedCountry);
+    }
+
+    public void Reset() { SelectedCountry = null; }
+    public bool CanRevert { get { return SelectedCountry != null; } }
+  }
+
+  public class TimeFilterItem : PropertyChangedBase
+  {
+    public TimeFilterItem(string name, DateInterval interval, TimeEnum enumState)
+    {
+      _name      = name     ;
+      Interval   = interval ;
+      _enumState = enumState;
+
+      TimeFilter = new DateTimePeriod();
+    }
+
+    public DateTimePeriod GetInterval()
+    {
+      DateTime from = DateTime.Now;
+      from = from.AddYears  (Interval.Year   );
+      from = from.AddMonths (Interval.Month  );
+      from = from.AddDays   (Interval.Day    );
+      from = from.AddHours  (Interval.Hour   );
+      from = from.AddMinutes(Interval.Minutes);
+      from = from.AddSeconds(Interval.Seconds);
+
+      TimeFilter.DateTimeFrom = from;
+      TimeFilter.DateTimeTo   = new DateTime();
+
+      return TimeFilter;
+    }
+
+    public void Reset()
+    {
+      IsActive = false;
+    }
+
+    public DateInterval Interval { get; set; }
+
+    private string _name;
+    public string Name
+    {
+      get { return _name; }
+    }
+
+    private DateTimePeriod _timeFilter;
+    public DateTimePeriod TimeFilter
+    {
+      get { return _timeFilter; }
       set
       {
-        if (_locationFilterState != value)
+        if (_timeFilter != value)
         {
-          _locationFilterState = value;
-          if (_locationFilterState != LocationsEnum.None)
-            IsResetButtonEnabled = true;
-                      
-          NotifyOfPropertyChange(() => LocationFilterState);
+          _timeFilter = value;
         }
       }
     }
 
-    private string _locationFilterText;
-    public string LocationFilterText
+    private TimeEnum _enumState;
+    public TimeEnum EnumState
     {
-      get { return _locationFilterText; }
+      get { return _enumState; }
+    }
+
+    private bool _isActive;
+    public bool IsActive
+    {
+      get { return _isActive; }
       set
       {
-        if (_locationFilterText != value)
+        if (_isActive != value)
         {
-          _locationFilterText = value;
-          NotifyOfPropertyChange(() => LocationFilterText);
+          _isActive = value;
+          NotifyOfPropertyChange(() => IsActive);
+        }
+      }
+    }
+  }
+
+  public class DateInterval
+  {
+    public DateInterval(int year, int month, int day, int hour, int minutes, int seconds)
+    {
+      Year    = year   ;
+      Month   = month  ;
+      Day     = day    ;
+      Hour    = hour   ;
+      Minutes = minutes;
+      Seconds = seconds;
+    }
+    public int Year    { get; set; }
+    public int Month   { get; set; }
+    public int Day     { get; set; }
+    public int Hour    { get; set; }
+    public int Minutes { get; set; }
+    public int Seconds { get; set; }
+
+  }
+
+  public class DateTimePeriod
+  {
+    public void Reset()
+    {
+      DateTimeFrom = new DateTime();
+      DateTimeTo   = new DateTime();
+    }
+
+    public bool IsEmpty()
+    {
+      return DateTimeFrom.Ticks == 0 && DateTimeTo.Ticks == 0;
+    }
+    public DateTime DateTimeFrom { get; set; }
+    public DateTime DateTimeTo   { get; set; }
+
+  }
+
+  public class TimeFilter : PropertyChangedBase, IFilterable
+  {
+    private readonly IProcessorLocator    _locator      ;
+    private readonly IBioSkyNetRepository _database     ;
+    private          DialogsHolder        _dialogsHolder;
+
+    private DateTimePeriod _period = new DateTimePeriod();
+
+    private ObservableCollection<TimeFilterItem> _timeFilters;
+    public ObservableCollection<TimeFilterItem> TimeFilters
+    {
+      get { return _timeFilters; }
+      set
+      {
+        if (_timeFilters != value)
+        {
+          _timeFilters = value;
+          NotifyOfPropertyChange(() => TimeFilters);
         }
       }
     }
 
-    private ObservableCollection<TrackLocation> _selectedLocations;
-    public ObservableCollection<TrackLocation> SelectedLocations
+    public TimeFilter(IProcessorLocator locator)
     {
-      get { return _selectedLocations; }
-      set
+      _locator       = locator;
+      _database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
+
+      TimeFilters   = new ObservableCollection<TimeFilterItem>();
+
+      TimeFilterText = DefaultName;
+
+      InitializeIntervals();
+    }
+
+    public DateTimePeriod GetPeriod()
+    {
+      return _period;
+    }
+
+    private void InitializeIntervals()
+    {
+      DateInterval intervalYear      = new DateInterval(-1, 0, 0, 0,  0, 0);
+      DateInterval intervalMonth     = new DateInterval(0, -1, 0, 0,  0, 0);
+      DateInterval intervalDay       = new DateInterval(0, 0, -1, 0,  0, 0);
+      DateInterval intervalWeek      = new DateInterval(0, 0, -7, 0,  0, 0);
+      DateInterval intervalHour      = new DateInterval(0, 0, 0, -1,  0, 0);
+      DateInterval interval10Minutes = new DateInterval(0, 0, 0,  0,-10, 0);
+
+
+      TimeFilterItem lastYear      = new TimeFilterItem("Last Year"      , intervalYear     , TimeEnum.LastYear     );
+      TimeFilterItem lastMonth     = new TimeFilterItem("Last Month"     , intervalMonth    , TimeEnum.LastMonth    );
+      TimeFilterItem last24Hours   = new TimeFilterItem("Last 24 Hours"  , intervalDay      , TimeEnum.Last24Hours  );
+      TimeFilterItem lastWeek      = new TimeFilterItem("Last Week"      , intervalWeek     , TimeEnum.LastWeek     );
+      TimeFilterItem lastHour      = new TimeFilterItem("Last Hour"      , intervalHour     , TimeEnum.LastHour     );
+      TimeFilterItem last10Minutes = new TimeFilterItem("Last 10 Minutes", interval10Minutes, TimeEnum.Last10Minutes);
+
+
+      TimeFilters.Add(lastYear     );
+      TimeFilters.Add(lastMonth    );
+      TimeFilters.Add(lastWeek     );
+      TimeFilters.Add(last24Hours  );
+      TimeFilters.Add(lastHour     );
+      TimeFilters.Add(last10Minutes);
+    }
+
+    public void OnFilterClick(TimeEnum timeFilter)
+    {
+      foreach (TimeFilterItem item in TimeFilters)
       {
-        if (_selectedLocations != value)
+        if (timeFilter == item.EnumState)
         {
-          _selectedLocations = value;
-          NotifyOfPropertyChange(() => SelectedLocations);
+          bool flag = !item.IsActive;
+          item.IsActive = flag;
+
+          if(flag)
+          {
+            _period = item.GetInterval();
+            TimeFilterText = item.Name;
+          }
+          else
+          {
+            _period.Reset();
+            TimeFilterText = DefaultName;
+          }
         }
+        else
+          item.IsActive = false;
       }
     }
 
-    private string _locationButtonText;
-    public string LocationButtonText
+    public void OnAllTimeClick()
     {
-      get { return _locationButtonText; }
-      set
+      Reset();
+    }
+    public void OnPeriodClick()
+    {
+      _dialogsHolder.PeriodTimePicker.Show();
+      PeriodTimePickerResult result = _dialogsHolder.PeriodTimePicker.GetResult();
+
+      if (result == null)
+        return;
+      
+      TimeFilterText = result.FromDateString + "-" + result.ToDateString;
+
+      _period.DateTimeFrom = result.FromDateLong;
+      _period.DateTimeTo   = result.ToDateLong  ; 
+    }
+
+    private void RemoveAllFilters()
+    {
+      foreach (TimeFilterItem item in TimeFilters)
+        item.Reset();
+
+      TimeFilterText = DefaultName;
+    }
+
+    public void Apply(QueryVisitors query)
+    {
+      if (_period != null)
       {
-        if (_locationButtonText != value)
-        {
-          _locationButtonText = value;
-          NotifyOfPropertyChange(() => LocationButtonText);
-        }
+        query.DatetimeFrom = _period.DateTimeFrom.Ticks;
+        query.DatetimeTo   = _period.DateTimeTo.Ticks;
       }
     }
 
-    #endregion
-
-    #region Time
-
-    private TimeEnum _timeFilterState;
-    public TimeEnum TimeFilterState
+    public void Reset()
     {
-      get { return _timeFilterState; }
-      set
-      {
-        if (_timeFilterState != value)
-        {
-          _timeFilterState = value;
-          if (_timeFilterState != TimeEnum.None)
-            IsResetButtonEnabled = true;
-          if (_timeFilterState == TimeEnum.None)
-            TimeFilterText = "Time";
-
-          CheckOnTimeFilters();
-        }
-      }
+      _period.Reset();
+      RemoveAllFilters();
     }
+    public bool CanRevert {
+      get{ return (TimeFilterText == DefaultName) ? false : true;}
+    }  
+
+    private string DefaultName { get { return "Time"; } }
 
     private string _timeFilterText;
     public string TimeFilterText
@@ -377,139 +439,99 @@ namespace BioModule.ViewModels
         {
           _timeFilterText = value;
           NotifyOfPropertyChange(() => TimeFilterText);
+          NotifyOfPropertyChange(() => CanRevert);
         }
       }
-    }
+    } 
 
-    private bool _isYearChecked;
-    public bool IsYearChecked
+  }
+
+  public class VisitorsFilterMenuViewModel : Screen
+  {
+    private ObservableCollection<IFilterable> _filters;
+    public ObservableCollection<IFilterable> Filters
     {
-      get { return _isYearChecked; }
+      get { return _filters; }
       set
       {
-        if (_isYearChecked != value)
+        if (_filters != value)
         {
-          _isYearChecked = value;
-          if(_isYearChecked)
-            SetTimeFilterState(TimeEnum.LastYear);
-
-          NotifyOfPropertyChange(() => IsYearChecked);
+          _filters = value;
+          NotifyOfPropertyChange(() => Filters);
         }
       }
     }
 
-    private bool _isMonthChecked;
-    public bool IsMonthChecked
+    public VisitorsFilterMenuViewModel(IProcessorLocator locator)
     {
-      get { return _isMonthChecked; }
-      set
-      {
-        if (_isMonthChecked != value)
-        {
-          _isMonthChecked = value;
-          if(_isMonthChecked)
-            SetTimeFilterState(TimeEnum.LastMonth);
+      _locator       = locator;
 
-          NotifyOfPropertyChange(() => IsMonthChecked);
-        }
-      }
+      Filters = new ObservableCollection<IFilterable>();
+      Filters.Add(new LocationFilter(locator));
+      Filters.Add(new CountryFilter (locator));
+      Filters.Add(new TimeFilter    (locator));
+
+      _query = new QueryVisitors();
     }
 
-    private bool _isWeekChecked;
-    public bool IsWeekChecked
+    protected override void OnActivate()
     {
-      get { return _isWeekChecked; }
-      set
-      {
-        if (_isWeekChecked != value)
-        {
-          _isWeekChecked = value;
-          if(_isWeekChecked)
-            SetTimeFilterState(TimeEnum.LastWeek);
+      foreach (IFilterable filter in Filters)
+        Filters[0].PropertyChanged += OnFiltersChanged;
 
-          NotifyOfPropertyChange(() => IsWeekChecked);
-        }
-      }
+      base.OnActivate();
     }
 
-    private bool _is24HoursChecked;
-    public bool Is24HoursChecked
+    protected override void OnDeactivate(bool close)
     {
-      get { return _is24HoursChecked; }
-      set
-      {
-        if (_is24HoursChecked != value)
-        {
-          _is24HoursChecked = value;
-          if(_is24HoursChecked)
-            SetTimeFilterState(TimeEnum.Last24Hours);
+      foreach (IFilterable filter in Filters)
+        Filters[0].PropertyChanged -= OnFiltersChanged;
 
-          NotifyOfPropertyChange(() => Is24HoursChecked);
-        }
-      }
+      base.OnDeactivate(close);
     }
 
-    private bool _isLastHourChecked;
-    public bool IsLastHourChecked
+    public void ResetSettings()
     {
-      get { return _isLastHourChecked; }
-      set
-      {
-        if (_isLastHourChecked != value)
-        {
-          _isLastHourChecked = value;
-          if(_isLastHourChecked)
-            SetTimeFilterState(TimeEnum.LastHour);
-
-          NotifyOfPropertyChange(() => IsLastHourChecked);
-        }
-      }
+      foreach (IFilterable filter in Filters)
+        filter.Reset();     
     }
 
-    private bool _isAllTimeChecked;
-    public bool IsAllTimeChecked
+   
+    public void UpdateQuery()
     {
-      get { return _isAllTimeChecked; }
-      set
-      {
-        if (_isAllTimeChecked != value)
-        {
-          _isAllTimeChecked = value;
-          if(_isAllTimeChecked)
-            SetTimeFilterState(TimeEnum.AllTime);
-
-          NotifyOfPropertyChange(() => IsAllTimeChecked);
-        }
-      }
+      foreach (IFilterable filter in Filters)
+        filter.Apply(_query);     
     }
-    #endregion
 
-    private bool _isResetButtonEnabled;
+    public QueryVisitors GetQuery()
+    {
+      UpdateQuery();
+      return _query;
+    }
+
+    public void OnFiltersChanged(object sender, PropertyChangedEventArgs e)
+    {
+      NotifyOfPropertyChange(() => IsResetButtonEnabled);
+    }
+     
+
+ 
     public bool IsResetButtonEnabled
     {
-      get { return _isResetButtonEnabled; }
-      set
+      get
       {
-        if (_isResetButtonEnabled != value)
+        foreach (IFilterable filter in Filters)
         {
-          _isResetButtonEnabled = value;
-          NotifyOfPropertyChange(() => IsResetButtonEnabled);
+          if (filter.CanRevert)
+            return true;
         }
+        return false;
       }
     }
 
-    #endregion
+                     QueryVisitors     _query  ;
+    private readonly IProcessorLocator _locator; 
 
-    #region GlobalVariables
-
-    QueryVisitors _query;
-    private readonly IProcessorLocator    _locator      ;
-    private readonly DialogsHolder        _dialogsHolder;
-    private readonly IBioSkyNetRepository _database     ;
-    private readonly IBioEngine           _bioEngine    ;
-
-
-    #endregion
   }
 
   public enum TimeEnum
@@ -521,13 +543,7 @@ namespace BioModule.ViewModels
    , LastWeek
    , LastMonth
    , LastYear
+   , Last10Minutes
    , Period
-  }
-
-  public enum LocationsEnum
-  {
-     None
-   , All
-   , Several
   }
 }

@@ -98,7 +98,7 @@
             <Image Width="16" Height="16" Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
-        <Button  Name="RightButton"
+        <Button  Name="RightButton" Background="#FF1E1E1E" 
                  HorizontalAlignment="Stretch"
                  IsEnabled="{Binding IsRightArrowEnabled}"
                  VerticalAlignment="Stretch" ToolTip="{lex:Loc Forward}"

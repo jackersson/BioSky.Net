@@ -47,6 +47,11 @@ namespace BioData
 
       SaveGeneralSettings(LocalStoragePath, FaceServiceStoragePath, DatabaseServiceStoragePath, Language);
 
+
+      //LOG
+      LogDirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "Log\\";
+      LogFileFormat    = ".txt";
+
       // "192.168.1.127:50052" Taras
       //"192.168.1.178:50051"  Serg
     }
@@ -114,6 +119,34 @@ namespace BioData
         {
           _language = value;
           NotifyOfPropertyChange(() => Language);
+        }
+      }
+    }
+
+    private string _LogDirectoryPath;
+    public string LogDirectoryPath
+    {
+      get { return _LogDirectoryPath; }
+      set
+      {
+        if (_LogDirectoryPath != value)
+        {
+          _LogDirectoryPath = value;
+          NotifyOfPropertyChange(() => LogDirectoryPath);
+        }
+      }
+    }
+
+    private string _logFileFormat;
+    public string LogFileFormat
+    {
+      get { return _logFileFormat; }
+      set
+      {
+        if (_logFileFormat != value)
+        {
+          _logFileFormat = value;
+          NotifyOfPropertyChange(() => LogFileFormat);
         }
       }
     }

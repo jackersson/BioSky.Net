@@ -8,9 +8,9 @@ using BioService;
 
 namespace BioModule.Utils
 {
-  public interface IUserPhotoUpdatable
+  public interface IUserBioItemsUpdatable
   {
-    void UpdatePhotoController(IUserPhotoController controller);
+    void UpdateBioItemsController(IUserBioItemsController controller);
     void UpdateFromPhoto(Photo photo);
     void Clear();
 

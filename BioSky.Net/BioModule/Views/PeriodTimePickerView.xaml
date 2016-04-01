@@ -77,12 +77,12 @@
             <TextBlock Text="To"        Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" FontWeight="Bold"></TextBlock>
 
             <DatePicker Name="DateBoxFrom" Grid.Column="1" Grid.Row="1" 
-                        Controls:TextBoxHelper.Watermark="Select A Date"
+                        Controls:TextBoxHelper.Watermark="Select A Date" 
                         Controls:TextBoxHelper.UseFloatingWatermark="True"
                         cal:Message.Attach="[Event SelectedDateChanged]=[Action OnDateFromChanged(DateBoxFrom.Text)]"
                         ></DatePicker>
             <DatePicker Name="DateBoxTo" Grid.Column="1" Grid.Row="3" BorderBrush="Gray"
-                        Controls:TextBoxHelper.Watermark="Select A Date"
+                        Controls:TextBoxHelper.Watermark="Select A Date" 
                         Controls:TextBoxHelper.UseFloatingWatermark="True"
                         cal:Message.Attach="[Event SelectedDateChanged]=[Action OnDateToChanged(DateBoxTo.Text)]"
                         ></DatePicker>

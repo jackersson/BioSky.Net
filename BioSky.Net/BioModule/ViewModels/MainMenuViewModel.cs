@@ -15,17 +15,21 @@ namespace BioModule.ViewModels
 
       _viewModelSelector = _locator.GetProcessor<ViewModelSelector>();
       _dialogsHolder     = _locator.GetProcessor<DialogsHolder>();
-
+      _bioEngine         = _locator.GetProcessor<IBioEngine>();
     }
 
     public void OpenTabAddNewPerson()
     {
-      _viewModelSelector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.UserPage);
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent
+                              , ViewModelsID.UserPage
+                              , new object[] { null });
     }
 
     public void OpenTabAddNewLocation()
     {
-      _viewModelSelector.ShowContent(ShowableContentControl.FlyoutControlContent, ViewModelsID.LocationSettings);
+      _viewModelSelector.ShowContent(ShowableContentControl.FlyoutControlContent
+                              , ViewModelsID.LocationSettings
+                              , new object[] { null });
     }
 
     public void OpenTabVisitors()
@@ -33,9 +37,27 @@ namespace BioModule.ViewModels
       _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.VisitorsPage);
     }
 
+    public void OpenTabTrack()
+    {
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.TrackPage);
+    }
+    public void OpenTabUsers()
+    {
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.UsersPage);
+    }
+
     public void OpenTabAuthentication()
     {
       _dialogsHolder.AuthenticationPage.Show();
+    }
+
+    public void OnSignOut()
+    {
+      _bioEngine.AuthenticatedPerson = null;
+    }
+    public void ShowErrorViewer()
+    {
+      _viewModelSelector.ShowContent(ShowableContentControl.TabControlContent, ViewModelsID.ErrorViewer);
     }
 
     public void UpdateUserPassword(bool register, string name, System.Security.SecureString password)
@@ -47,9 +69,6 @@ namespace BioModule.ViewModels
     {
        _dialogsHolder.AboutDialog.Show();
        var result = _dialogsHolder.AboutDialog.GetDialogResult();  
-    }
-    public void ShowLogInDialog()
-    {
     }
 
     public void ShowSettingsFlayout()
@@ -63,6 +82,7 @@ namespace BioModule.ViewModels
     private ViewModelSelector          _viewModelSelector;
     private readonly DialogsHolder     _dialogsHolder    ;
     private readonly IProcessorLocator _locator          ;
+    private readonly IBioEngine        _bioEngine        ;
 
   }
 }

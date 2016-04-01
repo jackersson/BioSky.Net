@@ -42,18 +42,27 @@ namespace BioEngine
       long _operatorRole   = 0;  
       long _superviserRole = 0;
 
-      _superviserRole = SetFlag(_superviserRole, Activity.UserRemove);
-      _superviserRole = SetFlag(_superviserRole, Activity.UserAdd   );
-      _superviserRole = SetFlag(_superviserRole, Activity.UserUpdate);
-
-      _managerRole = SetFlag(_managerRole, Activity.UserRemove);
-      _managerRole = SetFlag(_managerRole, Activity.UserAdd);
-      _managerRole = SetFlag(_managerRole, Activity.UserUpdate);
+      _managerRole = AddToMAnagerRole(_managerRole);
 
       roleDictionary.Add(Rights.Operator  , _operatorRole  );
       roleDictionary.Add(Rights.Supervisor, _superviserRole);
       roleDictionary.Add(Rights.Manager   , _managerRole   );
       roleDictionary.Add(Rights.Custom    , _customRole    );
+    }
+
+    private long AddToMAnagerRole(long _managerRole)
+    {
+      _managerRole = SetFlag(_managerRole, Activity.UserAdd       );
+      _managerRole = SetFlag(_managerRole, Activity.UserUpdate    );
+      _managerRole = SetFlag(_managerRole, Activity.UserRemove    );
+      _managerRole = SetFlag(_managerRole, Activity.LocationAdd   );
+      _managerRole = SetFlag(_managerRole, Activity.LocationUpdate);
+      _managerRole = SetFlag(_managerRole, Activity.LocationRemove);
+      _managerRole = SetFlag(_managerRole, Activity.VisitorRemove );
+      _managerRole = SetFlag(_managerRole, Activity.CardAdd       );
+      _managerRole = SetFlag(_managerRole, Activity.CardRemove    );
+      _managerRole = SetFlag(_managerRole, Activity.PhotoRemove   );
+      return _managerRole;
     }
     public void UpdateAuthenticatedPersonRights(Rights rights)
     {    

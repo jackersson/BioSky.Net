@@ -1,64 +1,138 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 using Caliburn.Micro;
 using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
-
-using Microsoft.Win32;
 using System.IO;
 using System.Drawing;
-using MahApps.Metro.Controls;
-using BioData;
-using BioService;
-using System.Windows.Threading;
 using BioModule.Utils;
+using System.Collections.ObjectModel;
+using System.Windows.Threading;
 using BioContracts;
 
 namespace BioModule.ViewModels
 {
-  public class ImageViewModel : Screen
+  public interface IImageViewUpdate
   {
-    public ImageViewModel()
+    void UpdateOneImage(ref Bitmap img);
+
+    void UpdateTwoImage(ref Bitmap img1, ref Bitmap img2);
+
+    void SetOneImage(BitmapSource img);
+
+    void SetTwoImages(BitmapSource img, BitmapSource img2);
+  }
+
+  public class ImageViewModel : Screen, IImageViewUpdate
+  {
+    public ImageViewModel(IProcessorLocator locator)
     {    
       _bitmapUtils   = new BitmapUtils();
-      _bioFileUtils  = new BioFileUtils();
+      _bioFileUtils  = new BioFileUtils();     
 
-      _faceFinder = new FaceFinder ();
-      _marker     = new MarkerUtils();
+      ZoomToFitState = true;      
 
-      ZoomToFitState = true;    
+      BitmapSources = new AsyncObservableCollection<BitmapSource>();
+
+      ImageDispathcer = Dispatcher.CurrentDispatcher;
+
+      _notifier = locator.GetProcessor<INotifier>();
+    }
+
+    private AsyncObservableCollection<BitmapSource> _bitmapSources;
+    public AsyncObservableCollection<BitmapSource> BitmapSources
+    {
+      get { return _bitmapSources; }
+      set
+      {
+        if (_bitmapSources != value)
+        {
+          _bitmapSources = value;
+          NotifyOfPropertyChange(() => BitmapSources);
+        }
+      }
     }
 
     #region Update
-  
-    public void UpdateFromImage(ref Bitmap img)
+
+    public void SetOneImage(BitmapSource img)
+    {
+      if(img != null)
+      {
+        BitmapSources.Clear();
+        BitmapSources.Add(img);
+        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
+      }
+    }
+
+    public void SetTwoImages(BitmapSource img, BitmapSource img2)
+    {
+      if (img != null || img2 != null)
+      {
+        BitmapSources.Clear();
+        BitmapSources.Add(img);
+        BitmapSources.Add(img2);
+        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
+      }
+    }
+
+    public void UpdateOneImage(ref Bitmap img)
     {
       if (img == null)
         return;
 
-      Bitmap processedFrame = DrawFaces(ref img);
-
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
       newFrame.Freeze();
 
-      CurrentImageSource = newFrame;      
+      if(BitmapSources.Count != 1)
+      {
+        BitmapSources.Clear();
+        BitmapSources.Add(newFrame);
+      }
+
+      BitmapSources[0] = newFrame;
 
       if (_width != _imageViewWidth || _height != _imageViewHeight)
-      { 
-        _width  = _imageViewWidth;
+      {
+        _width = _imageViewWidth;
         _height = _imageViewHeight;
-        Zoom(_imageViewWidth, _imageViewHeight);
+        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
       }
     }
 
-    public Bitmap DrawFaces(ref Bitmap img)
-    {      
-      return _marker.DrawRectangles(_faceFinder.GetFaces(ref img), ref img);
+    public void UpdateTwoImage(ref Bitmap img1, ref Bitmap img2)
+    {
+      if (img1 != null)
+      {
+        BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img1);
+        newFrame.Freeze();
+
+        if (BitmapSources.Count < 2)
+          BitmapSources.Add(newFrame);
+
+        BitmapSources[0] = newFrame;
+      }
+
+      if(img2 != null)
+      {
+        BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img2);
+        newFrame.Freeze();
+
+        if (BitmapSources.Count < 2)
+          BitmapSources.Add(newFrame);
+        if(BitmapSources.Count == 2)
+          BitmapSources[1] = newFrame;
+        else
+          BitmapSources[0] = newFrame;
+      }
+
+      if (_width != _imageViewWidth || _height != _imageViewHeight)
+      {
+        _width = _imageViewWidth;
+        _height = _imageViewHeight;
+        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
+      }
     }
 
     public string Upload()
@@ -82,8 +156,11 @@ namespace BioModule.ViewModels
       }
        
       BitmapImage bmp    = _bitmapUtils.GetImageSource(fileName);
-      CurrentImageSource = bmp;
-      Zoom(_imageViewWidth, _imageViewHeight);
+
+      BitmapSources.Clear();
+      BitmapSources.Add(bmp);
+
+      Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
 
       return bmp;      
     }  
@@ -91,29 +168,62 @@ namespace BioModule.ViewModels
 
     #region Interface
     public virtual void Clear()
-    {    
-      CurrentImageSource = null;
-      Zoom(_imageViewWidth, _imageViewHeight);
+    {
+      BitmapSources.Clear();
+      Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
     }
     
-    public virtual void OnClear(double viewWidth, double viewHeight)
+    public virtual void OnClear(double viewWidth, double viewHeight, double imageControlWidth, double imageControlHeight)
     {
       Clear();
-      Zoom(viewWidth, viewHeight);      
-    }    
+      Zoom(viewWidth, viewHeight, _imageControllWidth, _imageControllHeight);      
+    }  
 
-    public void Zoom(double viewWidth, double viewHeight)
+    public void Zoom(double viewWidth, double viewHeight, double itemsViewWidth, double itemsViewHeight)
     {
+      if (BitmapSources.Count == 0)
+        return;
+
+      if (viewWidth == 0 && viewHeight == 0)
+        return;
+
       _imageViewWidth  = viewWidth;
       _imageViewHeight = viewHeight;
-      
-      double imageWidth  = CurrentImageSource.Width  == 0 ? viewWidth  : CurrentImageSource.Width;
-      double imageHeight = CurrentImageSource.Height == 0 ? viewHeight : CurrentImageSource.Height;
 
-      double maxWidthScale  = viewWidth  / imageWidth ;      
+      _imageControllWidth = itemsViewWidth;
+      _imageControllHeight = itemsViewHeight;
+
+      double width  = itemsViewWidth;
+      double height = itemsViewHeight;
+
+      try
+      {
+        //if (width == 0 && height == 0)
+        //{
+          if (BitmapSources.Count == 1)
+          {
+            width = BitmapSources[0].Width;
+            height = BitmapSources[0].Height;
+          }
+          else if (BitmapSources.Count == 2)
+          {
+            width = BitmapSources[0].Width + BitmapSources[1].Width;
+            height = Math.Max(BitmapSources[0].Height, BitmapSources[1].Height);
+          }
+        //}
+      }
+      catch(Exception ex)
+      {
+        _notifier.Notify(ex);
+      }
+
+      double imageWidth  = width  == 0 ? viewWidth : width;
+      double imageHeight = height == 0 ? viewHeight : height;
+
+      double maxWidthScale  = viewWidth / imageWidth;
       double maxHeightScale = viewHeight / imageHeight;
 
-      CalculatedImageScale = Math.Min(maxHeightScale, maxWidthScale) * ZoomRate / 100;     
+      CalculatedImageScale = Math.Min(maxHeightScale, maxWidthScale) * ZoomRate / 100;
     }
     #endregion
 
@@ -131,8 +241,22 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => CalculatedImageScale);
         }
       }
-    }    
-    
+    }
+
+    private Dispatcher _imageDispathcer;
+    public Dispatcher ImageDispathcer
+    {
+      get { return _imageDispathcer; }
+      set
+      {
+        if (_imageDispathcer != value)
+        {
+          _imageDispathcer = value;
+          NotifyOfPropertyChange(() => ImageDispathcer);
+        }
+      }
+    }
+
 
     private double _zoomRate;
     public double ZoomRate
@@ -164,41 +288,17 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private BitmapSource _currentImageSource;
-    public BitmapSource CurrentImageSource
-    {
-      get
-      {
-        if (_currentImageSource == null)
-          _currentImageSource = ResourceLoader.UserDefaultImageIconSource;
-        return _currentImageSource;
-      }
-      protected set
-      {
-        try
-        {
-          if (_currentImageSource != value)
-          {
-            _currentImageSource = value;
-            NotifyOfPropertyChange(() => CurrentImageSource);
-          }
-        }
-        catch (TaskCanceledException ex)
-        {
-          Console.WriteLine(ex.Message);
-        }
-      }
-    }  
-      
-    #endregion    
+    
+    #endregion
 
     #region Global Variables
 
-    private double _imageViewWidth  = 0;
-    private double _imageViewHeight = 0;
-    private double _width           = 0;
-    private double _height          = 0;
+    private double _imageViewWidth      = 0;
+    private double _imageViewHeight     = 0;
+    private double _imageControllWidth  = 0;
+    private double _imageControllHeight = 0;
+    private double _width               = 0;
+    private double _height              = 0;
 
     private const double ZOOM_TO_FIT_RATE = 99;   
 
@@ -206,6 +306,7 @@ namespace BioModule.ViewModels
     private   BioFileUtils _bioFileUtils ; 
     protected FaceFinder   _faceFinder   ;
     protected MarkerUtils  _marker       ;
+    private INotifier _notifier;
     #endregion
   }
 }

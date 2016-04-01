@@ -8,6 +8,10 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
+             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
@@ -19,8 +23,24 @@
              >
 
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-        <resloader:ResourceLoader x:Key="ResourceLoader"/>
+        <ResourceDictionary>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+            
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
@@ -43,9 +63,10 @@
                  Controls:TextBoxHelper.Watermark="{lex:Loc LocationName}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
                  Controls:TextBoxHelper.ClearTextButton="True"
-                 Text="{Binding LocationName,  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged
-                              , NotifyOnValidationError=True
-                              , ValidatesOnDataErrors=True }"
+                 Text="{Binding LocationName,  Mode=TwoWay
+                       , UpdateSourceTrigger=PropertyChanged
+                       , NotifyOnValidationError=True
+                       , ValidatesOnDataErrors=True }"
                  >
         </TextBox>
 
@@ -53,9 +74,10 @@
                  Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="1"
                  Controls:TextBoxHelper.Watermark="{lex:Loc Description}"
                  Controls:TextBoxHelper.UseFloatingWatermark="True"
-                 Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged
-                               , NotifyOnValidationError=True
-                               , ValidatesOnDataErrors=True  }"
+                 Text="{Binding Description, Mode=TwoWay
+                       , UpdateSourceTrigger=PropertyChanged
+                       , NotifyOnValidationError=True
+                       , ValidatesOnDataErrors=True  }"
                  >
         </TextBox>
 
@@ -96,26 +118,37 @@
         <Button Grid.Row="4" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
-                Visibility="{Binding CanApply, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Style="{DynamicResource MetroCircleButtonStyle}"
-                cal:Message.Attach="[Event Click]=[Action Apply]">
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" />
+                cal:Message.Attach="[Event Click]=[Action Apply]"
+                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                           , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                           , ConverterParameter={x:Static bioContracts:Activity.LocationRemove}}"
+                >
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
         <Button  Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" ToolTip="{lex:Loc RevertChanges}"
                  Style="{DynamicResource MetroCircleButtonStyle}"
-                 Visibility="{Binding CanRevert, Converter={StaticResource BooleanToVisibilityConverter}}"
-                 cal:Message.Attach="[Event Click]=[Action Revert]">
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Width="32" Height="32"  />
+                 cal:Message.Attach="[Event Click]=[Action Revert]"
+                 IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                            , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                            , ConverterParameter={x:Static bioContracts:Activity.LocationAdd}}"
+                 >
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" 
+                   Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
         </Button>
 
         <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Delete}"
-                Visibility="{Binding CanDelete, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Style="{DynamicResource MetroCircleButtonStyle}" 
-                cal:Message.Attach="[Event Click]=[Action Delete]">
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" Width="32" Height="32"  />
+                cal:Message.Attach="[Event Click]=[Action Delete]"
+                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                           , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
+                           , ConverterParameter={x:Static bioContracts:Activity.LocationRemove}}"
+                >
+            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" 
+                   Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
         </Button>
     </Grid>
 </UserControl>
