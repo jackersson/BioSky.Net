@@ -73,17 +73,18 @@
 
 
 
-        <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
+        <Button Name="DeleteButton" ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"            
                 Visibility="{Binding CanDeleteItem, Converter={StaticResource BooleanToVisibilityConverter}}"
                 cal:Message.Attach="[Event Click]=[Action DeletePhoto]"
+                Tag="{x:Static bioContracts:Activity.VisitorRemove}"
                 >
             <Button.IsEnabled>
                 <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}" >
                     <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
                     <Binding Path="CanDeleteItem"/>
-                    <Binding Path="{x:Static bioContracts:Activity.PhotoRemove}"/>
+                    <Binding ElementName="DeleteButton" Path="Tag"/>
                 </MultiBinding>
             </Button.IsEnabled>
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}"

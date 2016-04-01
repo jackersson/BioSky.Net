@@ -90,15 +90,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.Core.3.0.0-alpha\lib\net45\Caliburn.Micro.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.Core.3.0.0\lib\net45\Caliburn.Micro.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Caliburn.Micro.Platform, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0-alpha\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Caliburn.Micro.3.0.0-alpha\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -153,7 +153,7 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Catel.MVVM.4.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\Caliburn.Micro.3.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xaml" />
@@ -217,7 +217,10 @@
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\ErrorViewerDialogViewModel.cs" />
+    <Compile Include="ViewModels\FingerBarViewModel.cs" />
+    <Compile Include="ViewModels\FingerInformationViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\IrisInformationViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
     <Compile Include="ViewModels\LoginPopupViewModel.cs" />
@@ -262,6 +265,8 @@
     <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
+    <Compile Include="ViewModels\UserFingerViewModel.cs" />
+    <Compile Include="ViewModels\UserIrisViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
     <Compile Include="ViewModels\VisitorsFilterMenuViewModel.cs" />
     <Compile Include="Views\AboutDialogView.xaml.cs">
@@ -301,6 +306,12 @@
     <Compile Include="Views\ErrorViewerView.xaml.cs">
       <DependentUpon>ErrorViewerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\FingerBarView.xaml.cs">
+      <DependentUpon>FingerBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FingerInformationView.xaml.cs">
+      <DependentUpon>FingerInformationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
     </Compile>
@@ -309,6 +320,9 @@
     </Compile>
     <Compile Include="Views\Image\Video.xaml.cs">
       <DependentUpon>Video.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\IrisInformationView.xaml.cs">
+      <DependentUpon>IrisInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoaderView.xaml.cs">
       <DependentUpon>LoaderView.xaml</DependentUpon>
@@ -367,8 +381,14 @@
     <Compile Include="Views\UserContactlessCardView.xaml.cs">
       <DependentUpon>UserContactlessCardView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserFingerView.xaml.cs">
+      <DependentUpon>UserFingerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserInformationView.xaml.cs">
       <DependentUpon>UserInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserIrisView.xaml.cs">
+      <DependentUpon>UserIrisView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserPageView.xaml.cs">
       <DependentUpon>UserPageView.xaml</DependentUpon>
@@ -445,6 +465,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FingerBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FingerInformationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FlyoutControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -454,6 +482,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Image\Video.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\IrisInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -533,7 +565,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\UserFingerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UserInformationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserIrisView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -676,6 +716,8 @@
     <None Include="Resources\help_dialog.png" />
     <None Include="Resources\info_dialog.png" />
     <None Include="Resources\home.png" />
+    <None Include="Resources\finger_scan.png" />
+    <None Include="Resources\iris_scan_image.png" />
     <Content Include="Resources\loader.PNG" />
     <None Include="Resources\loadphotos.png" />
     <None Include="Resources\screenshot.png" />

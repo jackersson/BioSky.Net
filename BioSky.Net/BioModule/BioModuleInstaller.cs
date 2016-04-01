@@ -54,6 +54,8 @@ namespace BioModule
 
 
 
+
+
         //container.Register(Component.For<IWindsorContainer>().Instance(container));
         container.Register(Component.For<TabViewModel>());
         container.Register(Component.For<FlyoutControlViewModel>());

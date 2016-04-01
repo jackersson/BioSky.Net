@@ -69,8 +69,8 @@ namespace BioModule.ViewModels
       if (Result == null)
         Result = new PeriodTimePickerResult();
 
-      Result.FromDateLong = fullDateFrom.Ticks;
-      Result.ToDateLong   = fullDateTo.Ticks  ;
+      Result.FromDateLong = fullDateFrom;
+      Result.ToDateLong   = fullDateTo;
             
       Result.FromDateString = fullDateFrom.ToShortDateString() + " " + fullDateFrom.ToShortTimeString();
       Result.ToDateString   = fullDateTo.ToShortDateString() + " " + fullDateTo.ToShortTimeString();
@@ -193,7 +193,7 @@ namespace BioModule.ViewModels
 
     public string ToDateString { get; set; }
 
-    public long FromDateLong { get; set; }
-    public long ToDateLong { get; set; }
+    public DateTime FromDateLong { get; set; }
+    public DateTime ToDateLong { get; set; }
   }
 }

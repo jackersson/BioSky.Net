@@ -11,14 +11,14 @@ using WPFLocalizeExtension.Extensions;
 namespace BioModule.ViewModels
 {
 
-  public class UserPhotoViewModel : Screen, IUpdatable, IUserPhotoController
+  public class UserPhotoViewModel : Screen, IUpdatable, IUserBioItemsController
   {
-    public UserPhotoViewModel( IUserPhotoUpdatable   imageViewer, 
+    public UserPhotoViewModel( IUserBioItemsUpdatable   imageViewer, 
                                IProcessorLocator locator     )
     {
       _locator             = locator      ;    
       _imageViewer         = imageViewer  ;
-      _imageViewer.UpdatePhotoController(this);
+      _imageViewer.UpdateBioItemsController(this);
       //_imageViewer.U
 
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -280,13 +280,15 @@ namespace BioModule.ViewModels
         }
       }
     }
+
+    public PhotoViewEnum PageEnum { get { return PhotoViewEnum.Faces; } }
     #endregion
 
     #region Global Variables
 
     private readonly Enroller                 _enroller           ;
     private readonly IProcessorLocator        _locator            ;   
-    private readonly IUserPhotoUpdatable          _imageViewer        ;
+    private readonly IUserBioItemsUpdatable          _imageViewer        ;
     private readonly IDatabaseService         _bioService         ;    
     private readonly IBioSkyNetRepository     _database           ;
     private readonly INotifier                _notifier           ;

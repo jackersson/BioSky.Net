@@ -387,4 +387,7 @@
   <data name="HomePage" xml:space="preserve">
     <value>Домашняя страница</value>
   </data>
+  <data name="Fingers" xml:space="preserve">
+    <value>Пальцы</value>
+  </data>
 </root>

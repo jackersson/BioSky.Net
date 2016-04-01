@@ -26,7 +26,7 @@ namespace BioModule.ViewModels
         return;
 
       _controller = controller;
-
+      controller.FilterChanged += UpdateMove;
       UpdateMove();
     }
 

@@ -33,7 +33,7 @@
     </UserControl.Resources>
     <Grid Name="GridLayout">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -43,10 +43,11 @@
 
         <Grid Background="#FF1E1E1E">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="48" />
+                <RowDefinition Height="32" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="150" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="5" />
@@ -59,17 +60,267 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            
-            <Button Grid.Column="0" cal:Message.Attach="[Event Click] = [Action OnPeriodCkick]" Content="Period..."/>
+            <TextBlock Grid.Row="1" Grid.ColumnSpan="15" Text="{Binding PeriodText}" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
 
-            <CheckBox  Grid.Column="4" IsChecked="{Binding UploadState}" Content="Upload by filter"></CheckBox>
+            <Menu FontSize="11" VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="#FF1E1E1E">
+                <MenuItem Header="{Binding Filters[0].TimeFilterText}" Grid.RowSpan="2" 
+                      HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <MenuItem Header="All time"  
+                          cal:Action.TargetWithoutContext="{Binding Filters[0]}"
+                          cal:Message.Attach="[Event Click]= [Action OnAllTimeClick()];"/>
 
-            <Button Grid.Column="6" cal:Message.Attach="[Event Click] = [Action OnOpenFiles]">
+                    <MenuItem Header="Last10Minutes">
+                        <MenuItem.Template>
+                            <ControlTemplate>
+                                <Grid Name="MenuItemGrid" Height="25" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  cal:Action.TargetWithoutContext="{Binding Filters[0]}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <cal:ActionMessage MethodName="OnFilterClick">
+                                                <cal:Parameter Value="{x:Static vm:TimeEnum.Last10Minutes}" />
+                                            </cal:ActionMessage>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Image Grid.Column="0" 
+                                       Visibility="{Binding Filters[0].TimeFilters[5].IsActive, Converter={StaticResource BooleanToVisibilityConverter} }"                                       
+                                       Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Width="16" Height="16" />
+                                    <TextBlock Name="nameText" Grid.Column="1" VerticalAlignment="Center"
+                                       Text="{Binding Filters[0].TimeFilters[5].Name}">
+                                    </TextBlock>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Style.Triggers>
+                                                <Trigger  Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF333334" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+
+
+                    <MenuItem Header="LastHour">
+                        <MenuItem.Template>
+                            <ControlTemplate>
+                                <Grid Name="MenuItemGrid" Height="25" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  cal:Action.TargetWithoutContext="{Binding Filters[0]}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <cal:ActionMessage MethodName="OnFilterClick">
+                                                <cal:Parameter Value="{x:Static vm:TimeEnum.LastHour}" />
+                                            </cal:ActionMessage>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Image Grid.Column="0" 
+                                       Visibility="{Binding Filters[0].TimeFilters[4].IsActive, Converter={StaticResource BooleanToVisibilityConverter} }"                                       
+                                       Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Width="16" Height="16" />
+                                    <TextBlock Name="nameText" Grid.Column="1" VerticalAlignment="Center"
+                                       Text="{Binding Filters[0].TimeFilters[4].Name}">
+                                    </TextBlock>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Style.Triggers>
+                                                <Trigger  Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF333334" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+                    <MenuItem Header="Last24Hours">
+                        <MenuItem.Template>
+                            <ControlTemplate>
+                                <Grid Name="MenuItemGrid" Height="25" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  cal:Action.TargetWithoutContext="{Binding Filters[0]}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <cal:ActionMessage MethodName="OnFilterClick">
+                                                <cal:Parameter Value="{x:Static vm:TimeEnum.Last24Hours}" />
+                                            </cal:ActionMessage>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Image Grid.Column="0" 
+                                       Visibility="{Binding Filters[0].TimeFilters[3].IsActive, Converter={StaticResource BooleanToVisibilityConverter} }"                                       
+                                       Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Width="16" Height="16" />
+                                    <TextBlock Name="nameText" Grid.Column="1" VerticalAlignment="Center"
+                                       Text="{Binding Filters[0].TimeFilters[3].Name}">
+                                    </TextBlock>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Style.Triggers>
+                                                <Trigger  Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF333334" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+                    <MenuItem Header="LastWeek">
+                        <MenuItem.Template>
+                            <ControlTemplate>
+                                <Grid Name="MenuItemGrid" Height="25" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  cal:Action.TargetWithoutContext="{Binding Filters[0]}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <cal:ActionMessage MethodName="OnFilterClick">
+                                                <cal:Parameter Value="{x:Static vm:TimeEnum.LastWeek}" />
+                                            </cal:ActionMessage>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Image Grid.Column="0" 
+                                       Visibility="{Binding Filters[0].TimeFilters[2].IsActive, Converter={StaticResource BooleanToVisibilityConverter} }"                                       
+                                       Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Width="16" Height="16" />
+                                    <TextBlock Name="nameText" Grid.Column="1" VerticalAlignment="Center"
+                                       Text="{Binding Filters[0].TimeFilters[2].Name}">
+                                    </TextBlock>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Style.Triggers>
+                                                <Trigger  Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF333334" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+                    <MenuItem Header="LastMonth">
+                        <MenuItem.Template>
+                            <ControlTemplate>
+                                <Grid Name="MenuItemGrid" Height="25" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  cal:Action.TargetWithoutContext="{Binding Filters[0]}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <cal:ActionMessage MethodName="OnFilterClick">
+                                                <cal:Parameter Value="{x:Static vm:TimeEnum.LastMonth}" />
+                                            </cal:ActionMessage>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Image Grid.Column="0" 
+                                       Visibility="{Binding Filters[0].TimeFilters[1].IsActive, Converter={StaticResource BooleanToVisibilityConverter} }"                                       
+                                       Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Width="16" Height="16" />
+                                    <TextBlock Name="nameText" Grid.Column="1" VerticalAlignment="Center"
+                                       Text="{Binding Filters[0].TimeFilters[1].Name}">
+                                    </TextBlock>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Style.Triggers>
+                                                <Trigger  Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF333334" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+                    <MenuItem Header="LastYear">
+                        <MenuItem.Template>
+                            <ControlTemplate>
+                                <Grid Name="MenuItemGrid" Height="25" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                  cal:Action.TargetWithoutContext="{Binding Filters[0]}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDown">
+                                            <cal:ActionMessage MethodName="OnFilterClick">
+                                                <cal:Parameter Value="{x:Static vm:TimeEnum.LastYear}" />
+                                            </cal:ActionMessage>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Image Grid.Column="0" 
+                                       Visibility="{Binding Filters[0].TimeFilters[0].IsActive, Converter={StaticResource BooleanToVisibilityConverter} }"                                       
+                                       Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" 
+                                       Width="16" Height="16" />
+                                    <TextBlock Name="nameText" Grid.Column="1" VerticalAlignment="Center"
+                                       Text="{Binding Filters[0].TimeFilters[0].Name}">
+                                    </TextBlock>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Style.Triggers>
+                                                <Trigger  Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#FF333334" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                </Grid>
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+
+                    <Separator></Separator>
+                    <MenuItem Header="Period..."
+                          cal:Action.TargetWithoutContext="{Binding Filters[0]}"
+                          cal:Message.Attach="[Event Click]= [Action OnPeriodClick()];"/>
+                </MenuItem>
+            </Menu>
+
+            <Button Grid.Column="6" cal:Message.Attach="[Event Click] = [Action UploadFromDirectory]">
                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}" 
                        Width="32" Height="32"/>
             </Button>            
 
-            <Button Grid.Column="8" cal:Message.Attach="[Event Click] = [Action OnClear]" Content="Clear..."/>
+            <Button Grid.Column="8" cal:Message.Attach="[Event Click] = [Action OnClear]" Content="Clear"/>
 
             <local:PageControllerView
                 Grid.Column="10"  Margin="1,1,1,1"
@@ -108,10 +359,6 @@
                 <DataGridTextColumn Header="Class name"   Binding="{Binding ClassName       , TargetNullValue=''}"/>
                 <DataGridTextColumn Header="Line"         Binding="{Binding LineNumber      , TargetNullValue=''}"/>
                 <DataGridTextColumn Header="Comment"      Binding="{Binding Comment         , TargetNullValue=''}"/>
-
-
-
-
             </DataGrid.Columns>
         </DataGrid>            
     </Grid>

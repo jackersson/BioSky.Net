@@ -72,7 +72,7 @@ namespace BioModule.ViewModels
         return;
 
       // for test
-      /*try
+      try
       {
         Visitors.Add(new Visitor());
         throw new Exception();
@@ -80,7 +80,7 @@ namespace BioModule.ViewModels
       catch (Exception ex)
       {
         _notifier.Notify(ex);        
-      }*/
+      }
       // for test
 
       Visitors = null;

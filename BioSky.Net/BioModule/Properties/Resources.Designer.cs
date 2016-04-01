@@ -173,6 +173,16 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap finger_scan {
+            get {
+                object obj = ResourceManager.GetObject("finger_scan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap fingerprint_scan {
             get {
                 object obj = ResourceManager.GetObject("fingerprint_scan", resourceCulture);
@@ -236,6 +246,16 @@ namespace BioModule.Properties {
         internal static System.Drawing.Bitmap iris_scan {
             get {
                 object obj = ResourceManager.GetObject("iris_scan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap iris_scan_image {
+            get {
+                object obj = ResourceManager.GetObject("iris_scan_image", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

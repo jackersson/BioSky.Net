@@ -82,6 +82,12 @@
                 <DataTemplate DataType="{x:Type vm:UserPhotoViewModel}">
                     <local:UserPhotoView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserPhotoView>
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:UserFingerViewModel}">
+                    <local:UserFingerView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserFingerView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:UserIrisViewModel}">
+                    <local:UserIrisView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserIrisView>
+                </DataTemplate>
             </TabControl.Resources> 
             <TabControl.ItemTemplate>
                 <DataTemplate>
@@ -131,7 +137,7 @@
                         VerticalAlignment="Stretch"                     
                         Grid.RowSpan="6"                                  
                         >
-            <local:PhotoImageView cal:View.Model="{Binding CurrentPhotoImageView}"></local:PhotoImageView>
+            <local:PhotoImageView DataContext="{Binding CurrentPhotoImageView}"></local:PhotoImageView>
         </ContentControl>
     </Grid>
 </UserControl>

@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace BioModule.Utils
 {
-
+  public delegate void FilterChangedEventHandler();
   public interface IPageController
   {
     int EndIndex     { get; }
@@ -18,12 +18,14 @@ namespace BioModule.Utils
 
     void MoveToPreviousPage();
     void MoveToNextPage();
+
+    event FilterChangedEventHandler FilterChanged;
   }
 
   public interface IPagingCollectionView : IPageController
   {    
     void Sort(SortDescription description);
 
-    Predicate<object> Filtering { get; set; }   
+    Predicate<object> Filtering { get; set; }    
   }
 }

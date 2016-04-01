@@ -396,4 +396,7 @@
   <data name="HomePage" xml:space="preserve">
     <value>HomePage</value>
   </data>
+  <data name="Fingers" xml:space="preserve">
+    <value>Fingers</value>
+  </data>
 </root>

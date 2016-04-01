@@ -3,13 +3,10 @@ using BioModule.Utils;
 using BioService;
 using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioModule.ViewModels
 {
@@ -17,117 +14,239 @@ namespace BioModule.ViewModels
   {
     private int PAGES_COUNT = 15;
     public ErrorViewerViewModel(IProcessorLocator locator)
-    {
-      //LogRecords = records;
+    {      
       DisplayName = "Error Viever";
-
-      _locator       = locator;
-      _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
+     
+      _dialogsHolder = locator.GetProcessor<DialogsHolder>();
+      _database      = locator.GetProcessor<IBioSkyNetRepository>();
 
       _sortDescriptionByTime = new SortDescription("DetectedTime", ListSortDirection.Descending);
       PageController         = new PageControllerViewModel();
       LogRecords             = new ObservableCollection<LogRecord>();
-      PeriodTimePicker       = new PeriodTimePickerViewModel(_locator);
+
+      Filters                = new ObservableCollection<TimeFilter>();
+      CurrentDateTimePeriod  = new DateTimePeriod();
+
+      Filters.Add(new TimeFilter(locator));
 
       _bioFileUtils = new BioFileUtils();
+
+      logFileFormat = _database.LocalStorage.LogFileFormat;
     }
 
-    public void OnOpenFiles()
+    private string logFileFormat;
+
+    protected override void OnActivate()
     {
-      if (!UploadState)
-        UploadFromDirectory();
-      else
-        UploadByFilter();
+      foreach (TimeFilter filter in Filters)
+        filter.PropertyChanged += OnFiltersChanged;
+      base.OnActivate();
     }
-      
 
+    protected override void OnDeactivate(bool close)
+    {
+      foreach (TimeFilter filter in Filters)
+        filter.PropertyChanged -= OnFiltersChanged;
+      base.OnDeactivate(close);
+    }
+
+    public void OnFiltersChanged(object sender, PropertyChangedEventArgs e)
+    {
+      foreach (TimeFilter filter in Filters)
+        CurrentDateTimePeriod = filter.GetPeriod(); 
+      UploadByFilter();
+    }
+    
     private void UploadByFilter()
     {
+      OnClear();
 
+      string directoryPath = _database.LocalStorage.LogDirectoryPath;
+
+      if (CurrentDateTimePeriod.IsEmpty())
+      {
+        string[] files = Directory.GetFiles(directoryPath, "*" + logFileFormat, SearchOption.AllDirectories);
+        LoadRecords(files);
+        UpdateCollectionView();
+        return;
+      }           
+
+      DateTime dateTo = (CurrentDateTimePeriod.DateTimeTo.Ticks == 0) 
+                                                                    ? DateTime.Now 
+                                                                    : CurrentDateTimePeriod.DateTimeTo;
+
+      DateTime dateFrom = CurrentDateTimePeriod.DateTimeFrom;
+
+      while (dateFrom.Date <= dateTo.Date)
+      {
+        string month = (dateFrom.Month < 10) ? "0" + dateFrom.Month : dateFrom.Month.ToString();
+
+        string path = string.Format("{0}\\{1}\\{2}", dateFrom.Year, month, dateFrom.Day);        
+      
+        string fullPath = directoryPath + path;
+
+        dateFrom = dateFrom.AddDays(1);
+
+        if (!Directory.Exists(fullPath))
+          continue;
+
+        string[] files = Directory.GetFiles(fullPath, "*" + logFileFormat);
+
+        LoadRecords(files);
+      }
+
+      UpdateCollectionView();
     }
 
-    private void UploadFromDirectory()
+    public void UploadFromDirectory()
     {
+      string directoryPath = _database.LocalStorage.LogDirectoryPath;
 
-      var dialog = _bioFileUtils.OpenFileDialogWithMultiselect();
+      var dialog = _bioFileUtils.OpenFileDialogWithMultiselect(directoryPath);
       if (dialog.ShowDialog() == true)
       {
-        LogRecords.Clear();
+        foreach (TimeFilter filter in Filters)
+          filter.Reset();
 
-        LogRecord newRecord;
+        OnClear();
+        LoadRecords(dialog.FileNames);      
 
-        foreach (string fileName in dialog.FileNames)
-        {
-          using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-          {
-            while (fs.Position != fs.Length)
-            {
-              try
-              {
-                newRecord = LogRecord.Parser.ParseDelimitedFrom(fs);
-                if (newRecord == null)
-                  break;
-                LogRecords.Add(newRecord);
-              }
-              catch (Exception ex)
-              {
-                Console.WriteLine(ex);
-                break;
-              }
-            }
-          }
-        }
-
-        LogRecordsCollectionView = null;
-        LogRecordsCollectionView = new PagingCollectionView(LogRecords, PAGES_COUNT);
-        LogRecordsCollectionView.Sort(SortDescriptionByTime);
-
-        PageController.UpdateData(LogRecordsCollectionView);
+        UpdateCollectionView();
       }
     }
 
-    public void OnSearch()
+    private void UpdateCollectionView()
     {
-
-    }
-
-    public void OnPeriodCkick()
-    {
-      _dialogsHolder.PeriodTimePicker.Show();
-     PeriodTimePickerResult result =  _dialogsHolder.PeriodTimePicker.Result;
-
+      LogRecordsCollectionView = null;
+      LogRecordsCollectionView = new PagingCollectionView(LogRecords, PAGES_COUNT);
+      LogRecordsCollectionView.Sort(_sortDescriptionByTime);
       
-      if (result == null || LogRecordsCollectionView == null)
+      PageController.UpdateData(LogRecordsCollectionView);
+
+      if(!CurrentDateTimePeriod.IsEmpty())
+        FilteringList();
+
+      NotifyOfPropertyChange(() => PeriodText);
+    }
+    private void FilteringList()
+    {
+      if (LogRecordsCollectionView == null)
         return;
 
       LogRecordsCollectionView.Filtering = item =>
       {
         LogRecord record = item as LogRecord;
 
+        long dateTimeTo = (CurrentDateTimePeriod.DateTimeTo.Ticks == 0) 
+                                                                       ? DateTime.Now.Ticks 
+                                                                       : CurrentDateTimePeriod.DateTimeTo.Ticks;
+
         if (record != null)
-          return (record.DetectedTime >= result.FromDateLong
-                 && record.DetectedTime <= result.ToDateLong) ? true : false;
+          return (record.DetectedTime >= CurrentDateTimePeriod.DateTimeFrom.Ticks
+                 && record.DetectedTime <= dateTimeTo) ? true : false;
 
         return false;
-      };
+      };      
+    }
 
-      PageController.UpdateMove();
+    private void LoadRecords(string[] fileNames)
+    {       
+      foreach (string filePath in fileNames)
+      {
+        using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        {
+          while (fs.Position != fs.Length)
+          {
+            try  {
+              LogRecord newRecord = LogRecord.Parser.ParseDelimitedFrom(fs);
+              if (newRecord != null)
+                LogRecords.Add(newRecord);
+            }
+            catch (Exception ex) {
+              Console.WriteLine(ex);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    public void OnPeriodClick()
+    {
+      _dialogsHolder.PeriodTimePicker.Show();
+     PeriodTimePickerResult result =  _dialogsHolder.PeriodTimePicker.Result;
+      
+      if (result == null || LogRecordsCollectionView == null)
+        return;
+
+      CurrentDateTimePeriod.DateTimeFrom = result.FromDateLong;
+      CurrentDateTimePeriod.DateTimeTo   = result.ToDateLong;
+
+      FilteringList();
     }
 
     public void OnClear()
     {
       LogRecords.Clear();
+      NotifyOfPropertyChange(() => PeriodText);
+      PageController.UpdateMove();
     }
 
 
     #region UI
 
-    private SortDescription _sortDescriptionByTime;
-    public SortDescription SortDescriptionByTime
+    private string _periodText;
+    public string PeriodText
     {
-      get { return _sortDescriptionByTime; }
+      get {
+        string dateFrom = "";
+        string dateTo   = "";
+
+        if (LogRecords.Count > 0)
+        {
+          LogRecord record = LogRecords.FirstOrDefault();
+          if(record != null)
+            dateFrom = new DateTime(LogRecords.FirstOrDefault().DetectedTime).ToString();
+
+          record = LogRecords.LastOrDefault();
+          if (record != null)
+            dateTo = new DateTime(LogRecords.LastOrDefault().DetectedTime).ToString();
+        }
+
+        _periodText = (LogRecords.Count == 0) ? "No Files" : string.Format("{0} - {1}", dateFrom, dateTo);
+
+        return _periodText;
+      }
     }
 
+    private DateTimePeriod _currentDateTimePeriod;
+    public DateTimePeriod CurrentDateTimePeriod
+    {
+      get { return _currentDateTimePeriod; }
+      set
+      {
+        if (_currentDateTimePeriod != value)
+        {
+          _currentDateTimePeriod = value;
+          NotifyOfPropertyChange(() => CurrentDateTimePeriod);
+        }
+      }
+    }
+
+    private ObservableCollection<TimeFilter> _filters;
+    public ObservableCollection<TimeFilter> Filters
+    {
+      get { return _filters; }
+      set
+      {
+        if (_filters != value)
+        {
+          _filters = value;
+          NotifyOfPropertyChange(() => Filters);
+        }
+      }
+    }    
+    
     private PageControllerViewModel _pageController;
     public PageControllerViewModel PageController
     {
@@ -142,20 +261,6 @@ namespace BioModule.ViewModels
       }
     }
 
-    private PeriodTimePickerViewModel _periodTimePicker;
-    public PeriodTimePickerViewModel PeriodTimePicker
-    {
-      get { return _periodTimePicker; }
-      set
-      {
-        if (_periodTimePicker != value)
-        {
-          _periodTimePicker = value;
-          NotifyOfPropertyChange(() => PeriodTimePicker);
-        }
-      }
-    }
-
     private IPagingCollectionView _logRecordsCollectionView;
     public IPagingCollectionView LogRecordsCollectionView
     {
@@ -165,14 +270,12 @@ namespace BioModule.ViewModels
         if (_logRecordsCollectionView != value)
         {
           _logRecordsCollectionView = value;
-
           NotifyOfPropertyChange(() => LogRecordsCollectionView);
         }
       }
     }
 
     private ObservableCollection<LogRecord> _logRecords;   
-
     public ObservableCollection<LogRecord> LogRecords
     {
       get { return _logRecords; }
@@ -185,29 +288,13 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private bool _uploadState;
-    public bool UploadState
-    {
-      get { return _uploadState; }
-      set
-      {
-        if (_uploadState != value)
-        {
-          _uploadState = value;
-          NotifyOfPropertyChange(() => UploadState);
-        }
-      }
-    }
-
     #endregion
 
     #region GlobalVariables
-
-    private BioFileUtils      _bioFileUtils ;
-    private IProcessorLocator _locator      ;
-    private DialogsHolder     _dialogsHolder;
-
+    private SortDescription      _sortDescriptionByTime;
+    private BioFileUtils         _bioFileUtils         ;
+    private DialogsHolder        _dialogsHolder        ;
+    private IBioSkyNetRepository _database             ;
     #endregion
   }
 }

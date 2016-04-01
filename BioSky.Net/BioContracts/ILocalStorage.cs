@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace BioContracts
 {
   public interface ILocalStorage
-  {   
+  {
     string LocalStoragePath { get; }
 
     string FaceServiceStoragePath { get; }
@@ -15,6 +15,10 @@ namespace BioContracts
     string DatabaseServiceStoragePath { get; }
 
     string Language { get; }
+
+    string LogDirectoryPath { get;}
+
+    string LogFileFormat { get; }
 
     void SaveGeneralSettings(string local, string face, string service, string language);
   }

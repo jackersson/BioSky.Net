@@ -29,15 +29,24 @@
                   
                   RenderTransformOrigin="0.5,0.5">
 
+            <ContentControl Content="{Binding InformationItem}">
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type vm:PhotoInformationViewModel}">
+                        <local:PhotoInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
+                        </local:PhotoInformationView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:FingerInformationViewModel}">
+                        <local:FingerInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
+                        </local:FingerInformationView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:IrisInformationViewModel}">
+                        <local:IrisInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
+                        </local:IrisInformationView>
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
 
-            <Expander.ContentTemplate>
-                <DataTemplate>
-                    <StackPanel DataContext="{Binding ElementName=GridLayout, Path=DataContext}">
-                        <local:PhotoInformationView cal:View.Model="{Binding PhotoInformation}"
-                        VerticalAlignment="Stretch" HorizontalAlignment="Left"></local:PhotoInformationView>
-                    </StackPanel>
-                </DataTemplate>
-            </Expander.ContentTemplate>
+
 
 
             <Expander.Template>

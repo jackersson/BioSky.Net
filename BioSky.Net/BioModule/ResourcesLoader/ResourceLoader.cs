@@ -126,8 +126,28 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _plusIconSource;
     private static BitmapSource _homeIconSource;
     private static BitmapSource _warningIconSource;
+    private static BitmapSource _fingerScanIconSource;
+    private static BitmapSource _IrisScanImageIconSource;
 
 
+    public static BitmapSource IrisScanImageIconSource
+    {
+      get
+      {
+        if (_IrisScanImageIconSource == null)
+          _IrisScanImageIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.iris_scan_image);
+        return _IrisScanImageIconSource;
+      }
+    }
+    public static BitmapSource FingerScanIconSource
+    {
+      get
+      {
+        if (_fingerScanIconSource == null)
+          _fingerScanIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.finger_scan);
+        return _fingerScanIconSource;
+      }
+    }
 
     public static BitmapSource WarningIconSource
     {

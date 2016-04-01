@@ -16,7 +16,7 @@ namespace BioModule.Utils
     public PagingCollectionView( IList innerList, int itemsPerPage)
                                : base(innerList)
     {
-      this._innerList    = innerList   ;
+     // this._innerList    = innerList   ;
       this._itemsPerPage = itemsPerPage;      
     }
 
@@ -127,10 +127,22 @@ namespace BioModule.Utils
     public Predicate<object> Filtering
     {
       get { return this.Filter;   }
-      set { this.Filter = value;  }
+      set
+      {
+        OnFilterChanged();
+        this.Filter = value;
+      }
     }
 
-    private readonly IList _innerList;
+    public event FilterChangedEventHandler FilterChanged;   
+
+    private void OnFilterChanged()
+    {
+      if (FilterChanged != null)
+        FilterChanged();
+    }
+
+    // private readonly IList _innerList;
     private readonly int _itemsPerPage;
 
     private int _currentPage = 1;

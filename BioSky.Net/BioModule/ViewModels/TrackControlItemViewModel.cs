@@ -48,7 +48,7 @@ namespace BioModule.ViewModels
       if (bitmap == null || ImageView == null)
         return;
 
-      ImageView.UpdateFromImage(ref bitmap);
+      ImageView.UpdateOneImage(ref bitmap);
     }
    
     private void OnLocationStatusChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -67,7 +67,7 @@ namespace BioModule.ViewModels
     public void OnDataContextChanged()
     {
       if (ImageView != null)
-        ImageView = new ImageViewModel();
+        ImageView = new ImageViewModel(_locator);
     } 
     private void Initialize(IProcessorLocator locator)
     {

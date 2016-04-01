@@ -21,10 +21,8 @@ namespace BioModule.Utils
       return openFileDialog;
     }
 
-    public OpenFileDialog OpenFileDialogWithMultiselect()
+    public OpenFileDialog OpenFileDialogWithMultiselect(string directoryPath)
     {
-      string directoryPath = AppDomain.CurrentDomain.BaseDirectory + "Log";
-
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.Multiselect = true;
       openFileDialog.Filter = "Txt files (*.txt*)|*.txt*";
