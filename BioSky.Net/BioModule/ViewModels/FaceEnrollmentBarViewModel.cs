@@ -10,56 +10,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Drawing;
 
 namespace BioModule.ViewModels
 {
   public delegate void SelectedDeviceChangedEventHandler();
-  public class EnrollmentBarViewModel : Screen
+  public class FaceEnrollmentBarViewModel : Screen, ICaptureDeviceObserver
   {
 
     public event SelectedDeviceChangedEventHandler SelectedDeviceChanged;
 
-    public EnrollmentBarViewModel(IProcessorLocator locator)
+    public FaceEnrollmentBarViewModel(IProcessorLocator locator)
     {
-      _deviceEngine  = locator.GetProcessor<ICaptureDeviceEngine>();
-      _dialogsHolder = locator.GetProcessor<DialogsHolder>();
-
-      DevicesNames = _deviceEngine.GetCaptureDevicesNames();
-
-      DeviceObserver = new TrackLocationCaptureDeviceObserver(locator);
-      Resolution     = new AsyncObservableCollection<string>();
-
-      DeviceObserver.DeviceChanged += UpdateVideoCapabilities;
-
-      DeviceConnected = false;
+      _captureDeviceEngine  = locator.GetProcessor<ICaptureDeviceEngine>();
+      _dialogsHolder        = locator.GetProcessor<DialogsHolder>();
+      Resolution            = new AsyncObservableCollection<string>();      
     }
-
-    private void OnSelectedDeviceChanged()
-    {
-      if (SelectedDeviceChanged != null)
-        SelectedDeviceChanged();
-    }
-
-    private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
+    
+    private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)  {
       NotifyOfPropertyChange(() => AvaliableDevicesCount);
     }
 
-    public string AvaliableDevicesCount
-    {
-      get { return String.Format("Available Devices ({0})", _devicesNames.Count); }
-    }
+    public string AvaliableDevicesCount {
+      get {
+        if (DevicesNames == null)
+          DevicesNames = _captureDeviceEngine.GetDevicesNames();
 
-    public bool CaptureDevicePropertyPageVisibility
-    {
-      get { return true; }
+        return String.Format("Available Devices ({0})", _devicesNames.Count); }
     }
-
+    
     protected override void OnActivate()
     {
-      DevicesNames = _deviceEngine.GetCaptureDevicesNames();
+      DevicesNames                    = _captureDeviceEngine.GetDevicesNames();
+      DevicesNames.CollectionChanged += DevicesNames_CollectionChanged;
 
-      DevicesNames.CollectionChanged += DevicesNames_CollectionChanged;  
+      StartCaptureDevice();
 
       base.OnActivate();
     }
@@ -67,30 +52,50 @@ namespace BioModule.ViewModels
     protected override void OnDeactivate(bool close)
     {
       DevicesNames.CollectionChanged -= DevicesNames_CollectionChanged;
-    
+      StopCaptureDevice();
       base.OnDeactivate(close);
     }
 
-    private void DeviceObserver_AccessDeviceState(bool status)
+    private void StartCaptureDevice()
     {
-      DeviceConnected = status;
+      if (string.IsNullOrEmpty(SelectedDevice))
+        return;
+
+      Resolution.Clear();
+      _captureDeviceEngine.Add(SelectedDevice);
+      _captureDeviceEngine.Subscribe(this, SelectedDevice);
     }
 
-    private void UpdateVideoCapabilities()
+    private void StopCaptureDevice()
     {
-      if (DeviceObserver.DeviceName == null)
+
+      Resolution.Clear();
+      _captureDeviceEngine.Unsubscribe(this);
+      _captureDeviceEngine.Remove(SelectedDevice);     
+    }
+
+    private void ApplyVideoDeviceCapability() {
+      _captureDeviceEngine.ApplyResolution(SelectedDevice, SelectedResolution);     
+    }
+
+    public void OnFrame(ref Bitmap frame) {}
+
+    public void OnStop(bool stopped, string message) { NotifyOfPropertyChange(() => DeviceConnectedIcon);   }
+
+    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)
+    {
+      NotifyOfPropertyChange(() => DeviceConnectedIcon);
+      UpdateResolution(active, all);
+    }
+
+    private void UpdateResolution(VideoCapabilities active, VideoCapabilities[] all)
+    {
+      if (all == null)
         return;
-
-      VideoCapabilities[] videoCapabilities =  DeviceObserver.GetVideoCapabilities();
-
-      if (videoCapabilities == null)
-        return;
-
-      VideoCapabilities currentVideoResolution = DeviceObserver.GetVideoResolution();      
 
       Resolution.Clear();
       int i = 0;
-      foreach (VideoCapabilities vc in videoCapabilities)
+      foreach (VideoCapabilities vc in all)
       {
         string item = string.Format("{0}x{1}, {2} fps"
                                     , vc.FrameSize.Width
@@ -99,18 +104,13 @@ namespace BioModule.ViewModels
 
         Resolution.Add(item);
 
-        if (vc == currentVideoResolution)
+        if (vc == active)
           SelectedResolution = i;
 
         i++;
       }
 
       NotifyOfPropertyChange(() => Resolution);
-    }
-
-    private void ApplyVideoDeviceCapability()
-    {
-      DeviceObserver.SetVideoCapabilities(SelectedResolution);
     }
 
     #region UI
@@ -144,18 +144,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private TrackLocationCaptureDeviceObserver _deviceObserver;
-    public TrackLocationCaptureDeviceObserver DeviceObserver
-    {
-      get { return _deviceObserver; }
-      private set
-      {
-        if (_deviceObserver != value)
-          _deviceObserver = value;
-      }
-    }
-
+ 
     private AsyncObservableCollection<string> _devicesNames;
     public AsyncObservableCollection<string> DevicesNames
     {
@@ -172,7 +161,7 @@ namespace BioModule.ViewModels
 
     public BitmapSource DeviceConnectedIcon
     {
-      get { return DeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
+      get { return _captureDeviceEngine.IsDeviceActive(SelectedDevice) ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
     }
 
     private string _selectedDevice;
@@ -183,39 +172,20 @@ namespace BioModule.ViewModels
       {
         if (_selectedDevice != value)
         {
+          StopCaptureDevice();
           _selectedDevice = value;
-
-          DeviceObserver.Update(_selectedDevice);
-
-          OnSelectedDeviceChanged();
-
+          StartCaptureDevice();
+      
           NotifyOfPropertyChange(() => SelectedDevice);
-          //Subscribe();
+         
         }
       }
-    }
-
-    private bool _deviceConnected;
-    public bool DeviceConnected
-    {
-      get { return _deviceConnected; }
-      set
-      {
-        if (_deviceConnected != value)
-        {
-          _deviceConnected = value;
-          NotifyOfPropertyChange(() => DeviceConnectedIcon);
-        }
-      }
-    }
-
+    }  
     #endregion
 
     #region Global Variables
-
     private readonly DialogsHolder        _dialogsHolder;
-    private readonly ICaptureDeviceEngine _deviceEngine;
-
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
     #endregion
 
   }

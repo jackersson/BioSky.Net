@@ -20,7 +20,7 @@ namespace BioEngine.CaptureDevices
       _captureDevicesNames = new AsyncObservableCollection<string>();
     }
 
-    public override void Run()
+    protected override void Run()
     {
       Active = true;
 

@@ -137,14 +137,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstracts\Threadable.cs" />
-    <Compile Include="AccessDevice\AccessDeviceActivity.cs" />
+    <Compile Include="AccessDevices\AccessDeviceActivity.cs" />
+    <Compile Include="AccessDevices\IAccessDeviceObserver.cs" />
     <Compile Include="Common\AsyncObservableCollection.cs" />
+    <Compile Include="Common\BioObserver.cs" />
+    <Compile Include="Common\ICaptureDeviceObserver.cs" />
     <Compile Include="Common\TrackLocationAccessDeviceObserver.cs" />
     <Compile Include="Common\TrackLocationCaptureDeviceObserver.cs" />
     <Compile Include="Holders\IPhotoHolder.cs" />
     <Compile Include="IAccessDeviceEngine.cs" />
     <Compile Include="IBioCultureSources.cs" />
     <Compile Include="IBioEngine.cs" />
+    <Compile Include="IBioObservable.cs" />
     <Compile Include="IBioShell.cs" />
     <Compile Include="IBioModule.cs" />
     <Compile Include="IBioSkyNetRepository.cs" />

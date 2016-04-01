@@ -1,45 +1,21 @@
-﻿using AForge.Video.DirectShow;
+﻿using BioContracts.Common;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public delegate void FrameEventHandler(object sender, ref Bitmap bitmap);
-  public delegate void ListenerStartEventHandler();
-
   public interface ICaptureDeviceEngine
   {
-
     void Stop();
+    void Add(string deviceName);
+    void Remove(string deviceName);
+    bool IsDeviceActive(string deviceName);    
+    void Subscribe  (ICaptureDeviceObserver observer, string deviceName);
+    void Unsubscribe(ICaptureDeviceObserver observer);
+    bool HasObserver(ICaptureDeviceObserver observer, string deviceName);
+    void ApplyResolution(string deviceName, int resolutionIndex);
 
-    void Add(string cameraName);
-
-
-    void Remove(string cameraName);
-
-
-    bool CaptureDeviceActive(string cameraName);
-
-
-
-    void Subscribe(FrameEventHandler eventListener, string cameraName);
-
-    void Unsubscribe(FrameEventHandler eventListener, string cameraName);
-
-    void ShowCaptureDevicePropertyPage(string cameraName, IntPtr parentWindow);
-
-    VideoCapabilities[] GetCaptureDeviceVideoCapabilities(string cameraName);
-
-    void SetCaptureDeviceVideoCapabilities(string cameraName, int selectedResolution);
-
-    VideoCapabilities GetVideoResolution(string cameraName);
-
-    AsyncObservableCollection<string> GetCaptureDevicesNames();
-
-    event ListenerStartEventHandler ListenerStart;
+    void ApplyProperties(string deviceName, IntPtr parentWindow );
+    AsyncObservableCollection<string> GetDevicesNames();
+    
   }
 }

@@ -18,7 +18,7 @@ using BioContracts.Common;
 
 namespace BioModule.ViewModels
 {
-  public class UserContactlessCardViewModel : Conductor<IScreen>.Collection.OneActive, IUpdatable
+  public class UserContactlessCardViewModel : Conductor<IScreen>.Collection.OneActive, IUpdatable, IAccessDeviceObserver
   {
     public UserContactlessCardViewModel(IProcessorLocator locator)
     {
@@ -36,35 +36,48 @@ namespace BioModule.ViewModels
       
       _userCards = new AsyncObservableCollection<Card>();
       
-      IsEnabled = true;
-
-      CanAddCard = true;
+      IsEnabled = true;      
     }
 
     private void ActivateCardEnrollment(bool flag)
     {
-      if (flag)
-      {
-        ActivateItem(CardEnrollment);       
-        CardEnrollment.DeviceObserver.CardDetected += OnCardDetected;
-      }
-      else
-      {        
-        CardEnrollment.DeviceObserver.CardDetected      -= OnCardDetected;
-        DeactivateItem(CardEnrollment, false);       
-      }     
+      if (flag)      
+        ActivateItem(CardEnrollment);         
+      else      
+        DeactivateItem(CardEnrollment, false);            
     }    
    
     protected override void OnActivate()
     {
       base.OnActivate();
       RefreshData();
+      CardEnrollment.Subscribe(this);
     }
 
-    private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
+    protected override void OnDeactivate(bool close)
     {
-      CardNumber = cardNumber;
-      CheckCard(cardNumber);
+      CardEnrollment.UnsubscribeAll();
+      base.OnDeactivate(close);
+    }
+
+    public void CheckCard()
+    {
+      CanAddCard = false;
+
+      //TODO make as validator
+      if (string.IsNullOrEmpty(CardNumber))
+      {
+        CardState = "CardNumber";
+        return;
+      }
+
+      Person person = _database.Persons.GetPersonByCardNumber(CardNumber);
+      if (person != null)
+        CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
+
+
+      CardState = "Card is avaliable to use";
+      CanAddCard = true;
     }
 
     #region Update
@@ -102,7 +115,7 @@ namespace BioModule.ViewModels
       Card card = new Card() { UniqueNumber = CardNumber
                              , Personid = _user.Id };    
       
-      //!!!CanAddCard = false;
+      CanAddCard = false;
 
       try  {
         await _bioService.CardsDataClient.Add(_user, card);
@@ -111,23 +124,7 @@ namespace BioModule.ViewModels
         _notifier.Notify(e);
       }         
     }
-    #endregion
-
-    #region Database
-
-    public void CheckCard(string cardNumber)
-    {
-      //!!!CanAddCard = false; 
-
-      Person person = _bioEngine.Database().Persons.GetPersonByCardNumber(cardNumber);
-      if (person != null)             
-        CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;             
-           
-      
-      CardState = "Card is avaliable to use";
-      CanAddCard = true;                  
-    }
-    #endregion
+    #endregion  
     
     #region Interface
     public async void OnDeleteCards()
@@ -152,13 +149,16 @@ namespace BioModule.ViewModels
     public void Apply() {}
     #endregion
 
+    #region Observer
+    public void OnCardDetected(string cardNumber)  {  CardNumber = cardNumber; }
+        
+    public void OnError(Exception ex) {}
+
+    public void OnReady(bool isReady) {}
+    #endregion
+
     #region UI
-
-    public bool CanDeleteCard
-    {
-      get { return SelectedCard != null; }
-    }
-
+    public bool CanDeleteCard { get { return SelectedCard != null; } }
 
     private CardEnrollmentBarViewModel _cardEnrollment;
     public CardEnrollmentBarViewModel CardEnrollment
@@ -226,6 +226,7 @@ namespace BioModule.ViewModels
         if (_cardNumber != value)
         {
           _cardNumber = value;
+          CheckCard();
           NotifyOfPropertyChange(() => CardNumber);
         }
       }
@@ -277,12 +278,11 @@ namespace BioModule.ViewModels
     #region Global Variables
     private readonly DialogsHolder        _dialogs      ;
     private          Person               _user         ;
-    private readonly IBioEngine           _bioEngine    ;
     private readonly IProcessorLocator    _locator      ; 
     private readonly IDatabaseService     _bioService   ;
     private readonly INotifier            _notifier     ;
     private readonly IBioSkyNetRepository _database     ;
-    private readonly TrackLocationAccessDeviceObserver _observer;
+
     #endregion   
   }
 }

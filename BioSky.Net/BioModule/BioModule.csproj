@@ -215,7 +215,7 @@
     <Compile Include="ViewModels\AuthenticationPageViewModel.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
-    <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
+    <Compile Include="ViewModels\FaceEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
@@ -294,8 +294,8 @@
     <Compile Include="Views\DevicesListView.xaml.cs">
       <DependentUpon>DevicesListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\EnrollmentBarView.xaml.cs">
-      <DependentUpon>EnrollmentBarView.xaml</DependentUpon>
+    <Compile Include="Views\FaceEnrollmentBarView.xaml.cs">
+      <DependentUpon>FaceEnrollmentBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
@@ -433,7 +433,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\EnrollmentBarView.xaml">
+    <Page Include="Views\FaceEnrollmentBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

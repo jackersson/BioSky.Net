@@ -11,61 +11,99 @@ using System.Windows.Media.Imaging;
 
 namespace BioModule.ViewModels
 {  
-  public class CardEnrollmentBarViewModel : Screen
+  public class CardEnrollmentBarViewModel : Screen, IAccessDeviceObserver
   { 
-    public CardEnrollmentBarViewModel( IProcessorLocator locator )
-    {
-      _deviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
-
-      DevicesNames = _deviceEngine.GetAccessDevicesNames();
-
-      DeviceObserver = new TrackLocationAccessDeviceObserver(locator);
-      
-      DeviceConnected = false;
+    public CardEnrollmentBarViewModel( IProcessorLocator locator  )
+    {   
+      _deviceEngine = locator.GetProcessor<IAccessDeviceEngine>();            
     }
 
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => AvaliableDevicesCount);
     }
-
-    public string AvaliableDevicesCount
-    {
-      get { return String.Format("Available Devices ({0})", _devicesNames.Count); }
-    }
-
+      
     protected override void OnActivate()
     {
-      DevicesNames = _deviceEngine.GetAccessDevicesNames();
+      DevicesNames = _deviceEngine.GetDevicesNames();
 
-      DevicesNames.CollectionChanged   += DevicesNames_CollectionChanged;
-      DeviceObserver.AccessDeviceState += DeviceObserver_AccessDeviceState;
-  
+      DevicesNames.CollectionChanged   += DevicesNames_CollectionChanged;     
       base.OnActivate();
     }    
 
     protected override void OnDeactivate( bool close )
     {      
       DevicesNames.CollectionChanged   -= DevicesNames_CollectionChanged;
-      DeviceObserver.AccessDeviceState -= DeviceObserver_AccessDeviceState;
       base.OnDeactivate(close);
     }
-
-    private void DeviceObserver_AccessDeviceState(bool status)
+         
+    private void StopPreviousDevice()
     {
-      DeviceConnected = status;
+      _deviceEngine.Remove(_selectedDevice);
+      _deviceEngine.Unsubscribe(this);
     }
-    
-    private TrackLocationAccessDeviceObserver _deviceObserver;
-    public TrackLocationAccessDeviceObserver DeviceObserver
+
+    private void StartSelectedDevice()
     {
-      get { return _deviceObserver; }
-      private set
+      _deviceEngine.Add(_selectedDevice);
+      _deviceEngine.Subscribe(this, SelectedDevice);
+    }
+
+    #region Observer
+    public void OnCardDetected(string cardNumber)
+    {
+      foreach (IAccessDeviceObserver observer in Observers)
+        observer.OnCardDetected(cardNumber);
+    }
+
+    public void OnError(Exception ex)
+    {
+      NotifyOfPropertyChange(() => DeviceConnectedIcon);
+    }
+
+    public void OnReady(bool isReady)
+    {
+      NotifyOfPropertyChange(() => DeviceConnectedIcon);
+    }
+
+    #endregion
+
+    #region Observerable
+
+    public void Subscribe(IAccessDeviceObserver observer)
+    {
+      if (!HasObserver(observer))
+        Observers.Add(observer);
+    }
+
+    public void Unsubscribe(IAccessDeviceObserver observer)
+    {
+      if (HasObserver(observer))
+        Observers.Remove(observer);
+    }
+
+    public void UnsubscribeAll()
+    {
+      Observers.RemoveAll(x => true);
+    }
+
+    private bool HasObserver(IAccessDeviceObserver observer)
+    {
+      return Observers.Contains(observer);
+    }
+    #endregion
+
+    #region UI
+    public string AvaliableDevicesCount
+    {
+      get
       {
-        if (_deviceObserver != value)        
-          _deviceObserver = value;            
+        if (_devicesNames == null)
+          DevicesNames = _deviceEngine.GetDevicesNames();
+        return String.Format("Available Devices ({0})", _devicesNames.Count);
       }
     }
+
 
     private AsyncObservableCollection<string> _devicesNames;
     public AsyncObservableCollection<string> DevicesNames
@@ -83,8 +121,9 @@ namespace BioModule.ViewModels
 
     public BitmapSource DeviceConnectedIcon
     {
-      get { return DeviceConnected ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
+      get { return _deviceEngine.IsDeviceActive(SelectedDevice) ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
     }
+
 
     private string _selectedDevice;
     public string SelectedDevice
@@ -94,29 +133,28 @@ namespace BioModule.ViewModels
       {
         if (_selectedDevice != value)
         {
+          StopPreviousDevice();
+
           _selectedDevice = value;
 
-          DeviceObserver.Update(_selectedDevice);
+          StartSelectedDevice();
+
           NotifyOfPropertyChange(() => SelectedDevice);
-          //Subscribe();
         }
       }
     }
 
-    private bool _deviceConnected;
-    public bool DeviceConnected
+    private List<IAccessDeviceObserver> _observers;
+    private List<IAccessDeviceObserver> Observers
     {
-      get { return _deviceConnected; }
-      set
-      {
-        if (_deviceConnected != value)
-        {
-          _deviceConnected = value;
-          NotifyOfPropertyChange(() => DeviceConnectedIcon);
-        }
+      get {
+        if (_observers == null)
+          _observers = new List<IAccessDeviceObserver>();
+        return _observers; 
       }
     }
+    #endregion
 
-    private readonly IAccessDeviceEngine _deviceEngine;
+    private readonly IAccessDeviceEngine   _deviceEngine  ;
   }
 }

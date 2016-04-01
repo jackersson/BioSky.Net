@@ -155,6 +155,7 @@ namespace BioModule.Utils
     }
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
+      return true;
       if (value != null)
       {
         Activity activity = (Activity)parameter;

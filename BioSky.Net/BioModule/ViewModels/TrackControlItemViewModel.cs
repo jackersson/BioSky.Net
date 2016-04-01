@@ -30,7 +30,7 @@ namespace BioModule.ViewModels
     {
       if (CurrentLocation != null)
       {
-        CurrentLocation.FrameChanged    -= OnNewFrame;
+     //   CurrentLocation.FrameChanged    -= OnNewFrame;
         CurrentLocation.PropertyChanged -= OnLocationStatusChanged;
       }
 
@@ -40,7 +40,7 @@ namespace BioModule.ViewModels
       CurrentLocation = trackLocation;
 
       CurrentLocation.PropertyChanged += OnLocationStatusChanged;    
-      trackLocation.FrameChanged      += OnNewFrame;      
+     // trackLocation.FrameChanged      += OnNewFrame;      
     }
 
     private void OnNewFrame(object sender, ref Bitmap bitmap)
@@ -92,7 +92,8 @@ namespace BioModule.ViewModels
         if (CurrentLocation == null)
           return ResourceLoader.ErrorIconSource;
         else
-          return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
+          return ResourceLoader.ErrorIconSource;
+         // return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
       }
     }
     public BitmapSource VerificationIconSource

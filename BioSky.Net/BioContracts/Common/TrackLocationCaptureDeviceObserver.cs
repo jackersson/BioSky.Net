@@ -10,15 +10,14 @@ using System.Windows.Interop;
 
 namespace BioContracts.Common
 {
-  public class BiometricPerformerBase
+  public abstract class BiometricPerformerBase
   {    
     public BiometricPerformerBase(IProcessorLocator locator )
     {
       _utils  = new BioImageUtils();
       _photos = new RepeatedField<Photo>();
 
-      _bioService          = locator.GetProcessor<IServiceManager>();
-      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      _bioService          = locator.GetProcessor<IServiceManager>();      
       _notifier            = locator.GetProcessor<INotifier>();
       
       resetTimer = new Timer(MAX_CAPTURE_TIME);
@@ -26,6 +25,21 @@ namespace BioContracts.Common
       resetTimer.Stop();
     }
 
+    public bool Busy { get { return _busy; } }
+
+    //Returns ImageData that should be sent to Recognition Server
+    public Photo GetCapturedPhoto()
+    {
+      return _photos.FirstOrDefault();
+    }
+
+    protected abstract void PerformRequest();
+    protected abstract void SubscribeOnFeedback(bool subscribe);
+    protected abstract void StartAquireDataFromDevice();
+    protected abstract void StopAquireDataFromDevice ();
+
+
+    //Starts verification directly from device (aquiring information)
     protected void Start(string deviceName)
     {
       if (_busy)
@@ -34,6 +48,7 @@ namespace BioContracts.Common
       Init(deviceName);      
     }
 
+    //Starts verification from ImageData uploaded by user
     protected void Start(Photo photo)
     {
       if (_busy)
@@ -41,19 +56,9 @@ namespace BioContracts.Common
 
       Init();
       AddPhoto(photo);       
-    }   
+    }       
 
-    public bool Busy
-    {
-       get { return _busy; }
-    }
-
-    public Photo GetCapturedPhoto()
-    {     
-      return _photos.FirstOrDefault();  
-    }
-
-    private void OnImage(object sender, ref Bitmap bitmap)
+    protected void OnFrame(ref Bitmap bitmap)
     {
       if (bitmap == null)
         return;
@@ -73,38 +78,27 @@ namespace BioContracts.Common
     {
       if (count >= MAX_IMAGES_COUNT)
       {
-        _captureDeviceEngine.Unsubscribe(OnImage, _deviceName);
+        StopAquireDataFromDevice();      
         SubscribeOnFeedback(true);
         PerformRequest();        
         Reset();
       }
     }
 
-    //Only this to override
-    protected virtual void PerformRequest() { }
-
-    protected virtual void SubscribeOnFeedback( bool subscribe ) { }
-
     private void Reset()
     {      
-      _busy = false;      
-      _captureDeviceEngine.Unsubscribe(OnImage, _deviceName);      
+      _busy = false;
+      StopAquireDataFromDevice();
     }
 
     private void Init(string deviceName)
     {
       Init();
-      _deviceName = deviceName;     
-      _captureDeviceEngine.Add(deviceName);
-      _captureDeviceEngine.Subscribe(OnImage, deviceName);
-    }
+      _deviceName = deviceName;
 
-    private void ResetTimer_Elapsed(object sender, ElapsedEventArgs e)
-    {
-      resetTimer.Stop();
-      Reset();
+      StartAquireDataFromDevice();
     }
-
+    
     private void Init()
     {
       resetTimer.Start();
@@ -113,26 +107,39 @@ namespace BioContracts.Common
       _busy = true;      
     }
     
+    //If acquiring process from device longer than MAX_CAPTURE_TIME stop process automatically
+    private void ResetTimer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+      resetTimer.Stop();
+      Reset();
+    }
+
+    public string DeviceName { get { return _deviceName; } }
+
     private readonly Timer resetTimer;
-    private const int MAX_CAPTURE_TIME = 10000;
 
     private string _deviceName;
     private bool   _busy      ;
   
-    private readonly BioImageUtils _utils;    
+    private readonly BioImageUtils _utils;
 
-    private const int MAX_IMAGES_COUNT = 1;
+    private const int MAX_CAPTURE_TIME = 10000;
+    private const int MAX_IMAGES_COUNT = 1    ;
+
     protected RepeatedField<Photo> _photos;
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;
-    protected readonly IServiceManager _bioService;
-    protected readonly INotifier         _notifier;
+   
+    protected readonly IServiceManager    _bioService;
+    protected readonly INotifier          _notifier;
   }
 
 
-  public class Enroller : BiometricPerformerBase
+  public class Enroller : BiometricPerformerBase, ICaptureDeviceObserver
   {
     public event RecognitionEventHandler EnrollmentDone;
-    public Enroller( IProcessorLocator locator ) : base(locator) { }
+    public Enroller( IProcessorLocator locator ) : base(locator)
+    {
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+    }
 
     public void Start(string deviceName, Person person)
     {
@@ -210,20 +217,38 @@ namespace BioContracts.Common
         OnEnrolled(photo, _person);
       }
     }
+
+    protected override void StartAquireDataFromDevice() {
+      _captureDeviceEngine.Subscribe(this, DeviceName);
+    }
+
+    protected override void StopAquireDataFromDevice() {
+      _captureDeviceEngine.Unsubscribe(this);
+    }
+
+    void ICaptureDeviceObserver.OnFrame(ref Bitmap frame) {
+      OnFrame(ref frame);
+    }
+
+    public void OnStop(bool stopped, string message) {}
+    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {}
     
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private Person _person;
   }
 
   public delegate void RecognitionEventHandler(Photo photo, Person person);
 
 
-  public class Verifyer : BiometricPerformerBase
+  public class Verifyer : BiometricPerformerBase, ICaptureDeviceObserver
   {
     public event RecognitionEventHandler VerificationDone;
 
     public Verifyer( IProcessorLocator locator ) 
                    : base(locator)
-    {}
+    {
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+    }
 
     public void Start( string deviceName, Person person)
     {
@@ -291,108 +316,27 @@ namespace BioContracts.Common
 
         OnVerified(feedbackPhoto, _person);       
       }      
-    }      
+    }
+
+    void ICaptureDeviceObserver.OnFrame(ref Bitmap frame) {
+      OnFrame(ref frame);
+    }
+
+    public void OnStop (bool stopped, string message) {}
+    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {}
+
+    protected override void StartAquireDataFromDevice() {
+      _captureDeviceEngine.Subscribe(this, DeviceName);
+    }
+
+    protected override void StopAquireDataFromDevice() {
+      _captureDeviceEngine.Unsubscribe(this);
+    }
     
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
     private Person _person;
   }
-
-
-  public class TrackLocationCaptureDeviceObserver
-  {
-    public TrackLocationCaptureDeviceObserver(IProcessorLocator locator)
-    {
-      Init(locator);
-      _captureDeviceEngine.ListenerStart += OnDeviceChanged;
-    }
-
-    public TrackLocationCaptureDeviceObserver(IProcessorLocator locator, string deviceName)
-    {
-      Init(locator);
-      Update(deviceName);
-    }
-
-    public TrackLocationCaptureDeviceObserver(IProcessorLocator locator, CaptureDevice captureDevice)
-    {
-      Init(locator);
-      Update(captureDevice.Devicename);
-    }   
-
-    public void Update(string deviceName)
-    {
-      if (DeviceName != null && DeviceName != "")      
-        _captureDeviceEngine.Remove(DeviceName);      
-
-      DeviceName = deviceName;
-      _captureDeviceEngine.Add(DeviceName);     
-    }
-
-    public void ShowPropertyPage()
-    {
-      System.Windows.Window window = _locator.GetProcessor<System.Windows.Window>();
-      IntPtr parentWindow = new WindowInteropHelper(window).Handle;
-      _captureDeviceEngine.ShowCaptureDevicePropertyPage(DeviceName, parentWindow);
-    }
-
-    public void Subscribe(FrameEventHandler handler)
-    {
-      _captureDeviceEngine.Subscribe(handler, DeviceName);
-    }
-
-    public void Unsubscribe(FrameEventHandler handler)
-    {
-      _captureDeviceEngine.Unsubscribe(handler, DeviceName);
-    }
-
-    public void Stop()
-    {        
-      _captureDeviceEngine.Remove(DeviceName);
-    }
-
-    public VideoCapabilities[] GetVideoCapabilities()
-    {
-      return _captureDeviceEngine.GetCaptureDeviceVideoCapabilities(DeviceName);
-    }
-    public void SetVideoCapabilities(int selectedResolution)
-    {
-      _captureDeviceEngine.SetCaptureDeviceVideoCapabilities(DeviceName, selectedResolution);
-    }
-
-    public VideoCapabilities GetVideoResolution()
-    {
-      return _captureDeviceEngine.GetVideoResolution(DeviceName);
-    }
-
-    private void Init(IProcessorLocator locator)
-    {
-      _locator = locator;
-      _captureDeviceEngine = _locator.GetProcessor<ICaptureDeviceEngine>();
-    }
-
-    private string _deviceName;
-    public string DeviceName
-    {
-      get { return _deviceName; }
-      private set
-      {
-        if (_deviceName != value)
-          _deviceName = value;
-      }
-    }
-
-    public event DeviceChangedEventHandler DeviceChanged;
-    public delegate void DeviceChangedEventHandler();
-
-    private void OnDeviceChanged()
-    {
-      if (DeviceChanged != null)
-        DeviceChanged();
-    }
-
-    private IProcessorLocator _locator      ;
-
-    private ICaptureDeviceEngine _captureDeviceEngine;
-  }
-
+  
   public class BioImageUtils
   {
     public byte[] ImageToByte(Image img)

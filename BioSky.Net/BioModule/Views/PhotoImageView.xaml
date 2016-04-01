@@ -74,7 +74,7 @@
             <Expander.ContentTemplate>
                 <DataTemplate>
                     <StackPanel DataContext="{Binding ElementName=GridLayout, Path=DataContext}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <local:EnrollmentBarView DataContext="{Binding EnrollmentViewModel}"></local:EnrollmentBarView>
+                        <local:FaceEnrollmentBarView DataContext="{Binding EnrollmentViewModel}"></local:FaceEnrollmentBarView>
                     </StackPanel>
                 </DataTemplate>
             </Expander.ContentTemplate>

@@ -38,7 +38,7 @@ namespace BioContracts.Abstract
 
     }
 
-    public abstract void Run();
+    protected abstract void Run();
 
     protected CancellationTokenSource CancellationTokenResult
     {

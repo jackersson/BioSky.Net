@@ -10,6 +10,7 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect" 
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -17,10 +18,29 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
+        <ResourceDictionary>
         <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
         <utils:ConvertToFormatedNumber x:Key="ConvertToFormatedNumber" />
         <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <BooleanToVisibilityConverter  x:Key="BooleanToVisibilityConverter"/>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary>
+          
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+           </ResourceDictionary>
+         </ResourceDictionary.MergedDictionaries>
+       </ResourceDictionary>
     </UserControl.Resources>
 
     <ScrollViewer>
@@ -43,23 +63,23 @@
         
             <Button Width="48" Height="48" Grid.Column="3" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
-                Grid.Row="0" Grid.RowSpan="3"
-                Visibility="{Binding CanAddCard, Converter={StaticResource BooleanToVisibilityConverter}}"
-                
+                Grid.Row="0" Grid.RowSpan="3"               
+                IsEnabled="{Binding CanAddCard}"      
                 ToolTip="{lex:Loc AddCard}"
                 cal:Message.Attach="[Event Click]=[Action AddCard]"               
                 >
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}"
-                   Height="32" Width="32" />
+                   Height="32" Width="32" Style="{StaticResource GreyScaleImage}"/>
         </Button>
 
         <Button ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" Grid.RowSpan="3" 
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                 Style="{DynamicResource MetroCircleButtonStyle}"
-                Visibility="{Binding CanDeleteCard, Converter={StaticResource BooleanToVisibilityConverter}}"              
+                IsEnabled="{Binding CanDeleteCard}"                      
                 cal:Message.Attach="[Event Click] = [Action OnDeleteCards]"
                 >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Height="32" Width="32" />
+                <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}"
+                       Height="32" Width="32" Style="{StaticResource GreyScaleImage}"/>
         </Button>
 
         <ListBox BorderThickness="1" HorizontalAlignment="Stretch" 
@@ -108,12 +128,12 @@
 
         </Expander>
 
-            <TextBox Text="{Binding CardNumber, Mode=TwoWay}"
+            <TextBox Text="{Binding CardNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" 
-                 TextWrapping="Wrap" 
+                 TextWrapping="Wrap"               
                  Controls:TextBoxHelper.Watermark="{Binding CardState}"
-                 Controls:TextBoxHelper.UseFloatingWatermark="True"
-                 Controls:TextBoxHelper.ClearTextButton="True"  
+                 Controls:TextBoxHelper.UseFloatingWatermark="True"      
+                 Controls:TextBoxHelper.ClearTextButton="True"     
                  VerticalAlignment="Stretch" Grid.Row="0" Grid.RowSpan="3">
 
         </TextBox>

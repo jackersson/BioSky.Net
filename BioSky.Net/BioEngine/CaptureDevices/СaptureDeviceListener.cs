@@ -2,6 +2,7 @@
 using AForge.Video.DirectShow;
 using BioContracts;
 using BioContracts.Abstract;
+using BioContracts.Common;
 using System;
 using System.Collections.Concurrent;
 using System.Drawing;
@@ -10,9 +11,7 @@ using System.Threading;
 
 namespace BioEngine.CaptureDevices
 {
-  //Todo add camera settings
-
-  public class СaptureDeviceListener : Threadable
+  public class СaptureDeviceListener : Threadable, IBioObservable<ICaptureDeviceObserver>
   {
     private enum CaptureDeviceCommands
     {
@@ -27,57 +26,55 @@ namespace BioEngine.CaptureDevices
       _cameraName         = cameraName;
       _capDevConnectivity = capDevConnectivity;
 
+      _observer = new BioObserver<ICaptureDeviceObserver>();
+
       _commands = new ConcurrentQueue<CaptureDeviceCommands>();      
       _commands.Enqueue(CaptureDeviceCommands.Connect);    
     }
 
-    private void Connect(FilterInfo fi)
-    {    
-      if (fi == null)      
-        return;
-
-      _videoSource = new VideoCaptureDevice(fi.MonikerString);  
-     
-      _videoSource.PlayingFinished += _videoSource_PlayingFinished;
-      _videoSource.NewFrame        += _videoSource_NewFrame;
-
-      _videoSource.VideoResolution = _videoSource.VideoCapabilities.LastOrDefault();
-      _videoSource.Start();
+    public void Kill()
+    {
+      _commands.Enqueue(CaptureDeviceCommands.Kill);
     }
 
-    public void ShowPropertyPage( IntPtr parentWindow)
+    public void StopPlay()
+    {
+      _commands.Enqueue(CaptureDeviceCommands.Stop);
+    }
+    public void StartPlay()
+    {
+      _commands.Enqueue(CaptureDeviceCommands.Start);
+    }
+
+    public void Subscribe(ICaptureDeviceObserver observer)
+    {
+      _observer.Subscribe(observer);
+    }
+
+    public void Unsubscribe(ICaptureDeviceObserver observer)
+    {
+      _observer.Unsubscribe(observer);
+    }
+
+    public void UnsubscribeAll()
+    {
+      _observer.UnsubscribeAll();
+    }
+
+    public bool HasObserver(ICaptureDeviceObserver observer)
+    {
+      return _observer.HasObserver(observer);
+    }
+
+    public void ApplyProperties(IntPtr parentWindow)
     {
       if (_videoSource == null)
         return;
 
-      _videoSource.DisplayPropertyPage(parentWindow);      
+      _videoSource.DisplayPropertyPage(parentWindow);
     }
 
-    private void _videoSource_PlayingFinished(object sender, ReasonToFinishPlaying reason)
-    {
-      if ( reason != ReasonToFinishPlaying.StoppedByUser)
-        _commands.Enqueue(CaptureDeviceCommands.Connect);
-    }    
-
-    private void OnNewFrame( Bitmap bmp )
-    {
-      if (NewFrame != null)
-        NewFrame(this, ref bmp);
-    }
-
-    private void _videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
-    {
-      OnNewFrame(eventArgs.Frame);
-    } 
-    
-    public VideoCapabilities[] GetVideoCapabilities()
-    {
-      if(_videoSource != null)
-        return _videoSource.VideoCapabilities;
-      return null;
-    }
-
-    public void SetVideoCapability(int selectedResolution)
+    public void ApplyResolution(int selectedResolution)
     {
       if (_videoSource.VideoCapabilities.Length <= selectedResolution || selectedResolution < 0)
         return;
@@ -91,15 +88,54 @@ namespace BioEngine.CaptureDevices
         StartPlay();
       }
     }
+    
 
-    public VideoCapabilities GetVideoResolution()
+    private void Connect(FilterInfo fi)
+    {    
+      if (fi == null)      
+        return;
+
+      _videoSource = new VideoCaptureDevice(fi.MonikerString);  
+     
+      _videoSource.PlayingFinished += OnVideoSourcePlayingFinished;
+      _videoSource.NewFrame        += _videoSource_NewFrame;
+
+      _videoSource.VideoResolution = GetBestResolution();
+      _videoSource.Start();
+
+      OnStart(true, _videoSource.VideoResolution, _videoSource.VideoCapabilities);     
+    }    
+
+    private VideoCapabilities GetBestResolution()
     {
-      if (_videoSource != null)
-        return _videoSource.VideoResolution;
-      return null;
+      VideoCapabilities result = _videoSource.VideoCapabilities.FirstOrDefault();
+      if (result == null)
+        return result;
+
+      foreach (VideoCapabilities vc in _videoSource.VideoCapabilities)
+      {
+        if (result.FrameSize.Height * result.FrameSize.Width < vc.FrameSize.Width * vc.FrameSize.Height)
+          result = vc;
+      }
+
+      return result;
     }
 
-    public override void Run()
+    private void OnVideoSourcePlayingFinished(object sender, ReasonToFinishPlaying reason)
+    {
+      if ( reason != ReasonToFinishPlaying.StoppedByUser)
+        _commands.Enqueue(CaptureDeviceCommands.Connect);
+
+      OnStop(true, reason.ToString());      
+    }    
+    
+    private void _videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
+    {
+      Bitmap frame = eventArgs.Frame;
+      OnFrame(ref frame);
+    }
+
+    protected override void Run()
     {     
       Active = true;
       
@@ -163,10 +199,10 @@ namespace BioEngine.CaptureDevices
         _videoSource.WaitForStop();      
 
         if (_videoSource.IsRunning)
-          _videoSource.Stop();        
+          _videoSource.Stop();         
+         
       }
-      catch (Exception ex)
-      {
+      catch (Exception ex) {
         Console.WriteLine(ex.Message);
       }
     }
@@ -176,30 +212,33 @@ namespace BioEngine.CaptureDevices
       if (_videoSource == null)
         return false;
       return _videoSource.IsRunning;
-    }    
-
-    public void Kill()
-    {
-      _commands.Enqueue(CaptureDeviceCommands.Kill);     
     }
 
-    public void StopPlay()
+    private void OnFrame(ref Bitmap frame)
     {
-      _commands.Enqueue(CaptureDeviceCommands.Stop);
-    }
-    public void StartPlay()
-    {
-      _commands.Enqueue(CaptureDeviceCommands.Start);
+      foreach (ICaptureDeviceObserver observer in _observer.Observers)
+        observer.OnFrame(ref frame);
     }
 
+    private void OnStop(bool stopped, string message)
+    {
+      foreach (ICaptureDeviceObserver observer in _observer.Observers)
+        observer.OnStop(true, message);
+    }
+
+    private void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)
+    {
+      foreach (ICaptureDeviceObserver observer in _observer.Observers)
+        observer.OnStart(started, active, all);
+    }
+    
+
+    private BioObserver<ICaptureDeviceObserver> _observer;
     private VideoCaptureDevice _videoSource;    
-
     private readonly ICaptureDeviceConnectivity _capDevConnectivity;
     private readonly string _cameraName;
     private ConcurrentQueue<CaptureDeviceCommands> _commands;
-
-    public event FrameEventHandler NewFrame;
-
+    
 
   }
 }

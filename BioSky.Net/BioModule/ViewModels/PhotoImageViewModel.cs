@@ -20,7 +20,7 @@ namespace BioModule.ViewModels
       PhotoDetails        = new PhotoInfoExpanderViewModel();
       _enroller           = new Enroller(locator);
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
-      EnrollmentViewModel = new EnrollmentBarViewModel(locator);
+      EnrollmentViewModel = new FaceEnrollmentBarViewModel(locator);
 
       SetVisibility();
       //UpdateFromPhoto(GetTestPhoto());
@@ -80,16 +80,16 @@ namespace BioModule.ViewModels
       PhotoDetails.ExpanderChanged += ShowPhotoDetails;
       EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
             
-      if(EnrollmentViewModel.DeviceObserver.DeviceName != null)
-        EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
+     // if(EnrollmentViewModel.DeviceObserver.DeviceName != null)
+      //  EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
 
       base.OnActivate();
     }
 
     private void EnrollmentViewModel_SelectedDeviceChanged()
     {
-      EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
-      EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
+      //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+     // EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
     }
 
     private void OnNewFrame(object sender, ref Bitmap bitmap)
@@ -101,7 +101,7 @@ namespace BioModule.ViewModels
     {
       PhotoDetails.ExpanderChanged -= ShowPhotoDetails;
       EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
-      EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+     // EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
       base.OnDeactivate(close);
     }
 
@@ -307,8 +307,8 @@ namespace BioModule.ViewModels
       get { return _markerBitmapHolder; }    
     }
 
-    private EnrollmentBarViewModel _enrollmentViewModel;
-    public EnrollmentBarViewModel EnrollmentViewModel
+    private FaceEnrollmentBarViewModel _enrollmentViewModel;
+    public FaceEnrollmentBarViewModel EnrollmentViewModel
     {
       get { return _enrollmentViewModel; }
       set

@@ -3,6 +3,7 @@ using System;
 
 namespace BioContracts.Common
 {
+  /*
   public delegate void StateEventHandler  (bool status   );
   public delegate void CardEventHandler   (TrackLocationAccessDeviceObserver sender, string cardNumber);
 
@@ -122,4 +123,5 @@ namespace BioContracts.Common
     private IAccessDeviceEngine  _accessDeviceEngine;     
     private IBioSkyNetRepository _database;
   }
+  */
 }

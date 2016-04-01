@@ -3,11 +3,149 @@ using BioContracts.Services;
 using BioService;
 using Caliburn.Micro;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
+using AForge.Video.DirectShow;
 
 namespace BioContracts
 {
+  public interface ILocationDeviceObserver
+  {
+    void Stop();
+    void Start(Location location);
+    bool IsDeviceOk { get; }
+  }
+
+  public class LocationAccessDeviceObserver : ILocationDeviceObserver, IAccessDeviceObserver
+  {
+    public LocationAccessDeviceObserver(IProcessorLocator locator)
+    {
+      _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
+    }
+    public void Stop()
+    {
+      _accessDeviceEngine.Unsubscribe(this);
+      if (!string.IsNullOrEmpty(_deviceName))
+        _accessDeviceEngine.Remove(_deviceName);
+    }
+
+    public void Start(string deviceName)
+    {
+      if (_deviceName == deviceName && _accessDeviceEngine.IsDeviceActive(deviceName))
+        return;
+
+      if (string.IsNullOrEmpty(_deviceName))
+        return;
+
+      _deviceName = deviceName;
+
+      _accessDeviceEngine.Add(_deviceName);
+      _accessDeviceEngine.Subscribe(this, _deviceName);
+    }
+
+    public void Start(Location location)
+    {
+      _location = location;
+
+      if (location == null)
+        return;
+
+      if (location.AccessDevice != null)
+        Start(location.AccessDevice.Portname);
+    }
+
+    public void OnCardDetected(string cardNumber) { }
+
+    public void OnError(Exception ex) { IsDeviceOk = false; }
+
+    public void OnReady(bool isReady) { IsDeviceOk = isReady; }
+
+    private bool _isDeviceOk;
+    public bool IsDeviceOk
+    {
+      get { return _isDeviceOk; }
+      set
+      {
+        if (_isDeviceOk != value)
+          _isDeviceOk = value;
+      }
+    }
+
+    private string   _deviceName;
+    private Location _location  ;
+    private readonly IAccessDeviceEngine _accessDeviceEngine;
+  }
+
+  public class LocationCaptureDeviceObserver : ILocationDeviceObserver,  ICaptureDeviceObserver
+  {
+    public LocationCaptureDeviceObserver(IProcessorLocator locator)
+    {
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+    }
+
+    public void Stop()
+    {
+      _captureDeviceEngine.Unsubscribe(this);
+      if (!string.IsNullOrEmpty(_deviceName))
+        _captureDeviceEngine.Remove(_deviceName);
+    }
+
+    public void Start(string deviceName)
+    {
+      if (_deviceName == deviceName && _captureDeviceEngine.IsDeviceActive(deviceName))
+        return;
+
+      if (string.IsNullOrEmpty(_deviceName))
+        return;
+            
+      _deviceName = deviceName;
+
+      _captureDeviceEngine.Add(_deviceName);
+      _captureDeviceEngine.Subscribe(this, _deviceName);
+    }
+
+    public void Start(Location location)
+    {
+      _location = location;
+
+      if (location == null)
+        return;
+
+      if (location.CaptureDevice != null)
+        Start(location.CaptureDevice.Devicename);
+    }
+
+    public void OnFrame(ref Bitmap frame) { }
+
+    public void OnStop(bool stopped, string message) { IsDeviceOk = !stopped; }
+
+    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { IsDeviceOk = started; }
+    
+    private bool _isDeviceOk;
+    public bool IsDeviceOk
+    {
+      get { return _isDeviceOk; }
+      set
+      {
+        if (_isDeviceOk != value)        
+          _isDeviceOk = value;       
+      }
+    }
+
+    private string   _deviceName;
+    private Location _location  ;
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+  }
+
+  enum LocationDevice
+  {
+       Card
+     , AccessDevice
+     , CaptureDevice
+     , FingerprintDevice
+     , IrisDevice
+  }
+
   public class TrackLocation : PropertyChangedBase
   {   
     public TrackLocation(IProcessorLocator locator, Location location)
@@ -17,11 +155,13 @@ namespace BioContracts
       _database            = locator.GetProcessor<IBioSkyNetRepository>();     
       _bioService          = locator.GetProcessor<IServiceManager>().DatabaseService;
       _notifier            = locator.GetProcessor<INotifier>();
+      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      
+      //_veryfier = new Verifyer(_locator);
 
-      CaptureDeviceObserver = new TrackLocationCaptureDeviceObserver(locator);
-      AccessDeviceObserver  = new TrackLocationAccessDeviceObserver (locator);     
-
-      _veryfier = new Verifyer(_locator);     
+      _devices = new Dictionary<LocationDevice, ILocationDeviceObserver>();
+     
 
       Update(location);
     }
@@ -31,29 +171,31 @@ namespace BioContracts
       if (location == null)
         return;
 
-      _location = location;
-      RefreshData();
+      _currentLocation = location;
+      Start();
     }
 
-    private void RefreshData()
+    private void Start()
     {
-      RefreshCaptureDevices();
-      RefreshAccessDevices ();
+      Init();
+
+      foreach (KeyValuePair<LocationDevice, ILocationDeviceObserver> pair in _devices)
+        pair.Value.Start(_currentLocation); 
     }
 
-    private void RefreshCaptureDevices()
-    {      
-      CaptureDevice newCaptureDevice = _location.CaptureDevice;
-      if (newCaptureDevice == null )
+    private void Init()
+    {
+      if (_currentLocation == null)
         return;
-     
-      if (newCaptureDevice.Devicename == CaptureDeviceObserver.DeviceName)
-        return;
-           
-     // CaptureDeviceObserver.Update(newCaptureDevice.Devicename);
-    //  CaptureDeviceObserver.Subscribe(OnFrameChanged);         
-    }
 
+      if (_currentLocation.AccessDevice != null)
+        _devices.Add(LocationDevice.AccessDevice, new LocationAccessDeviceObserver(_locator));
+
+      if (_currentLocation.CaptureDevice != null)
+        _devices.Add(LocationDevice.AccessDevice, new LocationCaptureDeviceObserver(_locator));
+
+    }
+ /*
     private async void OnVisitorVerified(Photo photo, Person person)
     {
       try
@@ -74,66 +216,29 @@ namespace BioContracts
       {
         _notifier.Notify(e);
       }
-    }
-
-    private void OnFrameChanged(object sender, ref Bitmap bitmap)
-    {
-      if (FrameChanged != null)      
-        FrameChanged(sender,ref  bitmap);      
-    }
-
-    private void StopAccessDevice()
-    {      
-      AccessDeviceObserver.AccessDeviceState -= OnAccessDeviceStateChanged;
-      AccessDeviceObserver.Stop();
-    }
-
-    private void StopCaptureDevice( )
-    {
-      CaptureDeviceObserver.Unsubscribe(OnFrameChanged);
-      CaptureDeviceObserver.Stop();    
-    }
-
-    private void RefreshAccessDevices()
-    {
-      //StopAccessDevice();
-
-      AccessDevice newAccessDevice = _location.AccessDevice;
-      if (newAccessDevice == null)
-        return;
-      
-      if (newAccessDevice.Portname == AccessDeviceObserver.DeviceName)
-        return;
-      
-     // AccessDeviceObserver.Update(newAccessDevice.Portname);
-      //AccessDeviceObserver.AccessDeviceState += OnAccessDeviceStateChanged;
-     // AccessDeviceObserver.CardDetected      += OnCardDetected            ;          
-    }
-
-    private void OnAccessDeviceStateChanged(bool status )
-    {
-      AccessDevicesStatus = status;      
-    }
+    }    
+   */
 
     public void Stop()
     {
-      StopAccessDevice();
-      StopCaptureDevice();
+      foreach (KeyValuePair<LocationDevice, ILocationDeviceObserver> pair in _devices)
+        pair.Value.Stop();
     }
 
     public IScreen ScreenViewModel { get; set; }
 
     public string Caption
     {
-      get { return _location.LocationName; }
+      get { return _currentLocation.LocationName; }
     }
 
     public Location CurrentLocation
     {
-      get { return _location; }
+      get { return _currentLocation; }
     }
 
-    private void OnCardDetected(TrackLocationAccessDeviceObserver sender, string cardNumber)
+    /*
+    public void OnCardDetected(string cardNumber)
     {      
       if (_veryfier.Busy)
         return;
@@ -142,7 +247,7 @@ namespace BioContracts
 
       Person person = _database.Persons.GetPersonByCardNumber(cardNumber);
 
-      _visitor = new Visitor() { Locationid   = _location.Id                                      
+      _visitor = new Visitor() { Locationid   = _currentLocation.Id                                      
                                , Time         = DateTime.Now.Ticks                                           
                                , CardNumber   = cardNumber   };
 
@@ -150,64 +255,32 @@ namespace BioContracts
       if (person != null)      
         _visitor.Personid = person.Id;            
 
-      _veryfier.VerificationDone -= OnVisitorVerified;
-      _veryfier.VerificationDone += OnVisitorVerified; 
-      _veryfier.Start(CaptureDeviceObserver.DeviceName, person);     
-    }
+     // _veryfier.VerificationDone -= OnVisitorVerified;
+     // _veryfier.VerificationDone += OnVisitorVerified; 
 
-    #region UI
-    private TrackLocationCaptureDeviceObserver _captureDeviceObserver;
-    public TrackLocationCaptureDeviceObserver CaptureDeviceObserver
-    {
-      get { return _captureDeviceObserver; }
-      private set
-      {
-        if (_captureDeviceObserver != value)
-          _captureDeviceObserver = value;
-      }
-    }
-
-    private TrackLocationAccessDeviceObserver _accessDeviceObserver;
-    public TrackLocationAccessDeviceObserver AccessDeviceObserver
-    {
-      get { return _accessDeviceObserver; }
-      private set
-      {
-        if (_accessDeviceObserver != value)
-          _accessDeviceObserver = value;
-      }
-    }
-
-
-    private bool _accessDevicesStatus;
-    public bool AccessDevicesStatus
-    {
-      get { return _accessDevicesStatus; }
-      set
-      {
-        if (_accessDevicesStatus != value)
-        {
-          _accessDevicesStatus = value;
-          NotifyOfPropertyChange(() => AccessDevicesStatus);    
-        }
-      }
-    }
-
+      //TODO check on NULL
+     // _veryfier.Start(CurrentLocation.CaptureDevice.Devicename, person);     
+    }  
+    */
+   
+    #region UI   
+   
     #endregion
 
-    #region Global Variables
-    public event FrameEventHandler          FrameChanged;
+    #region Global Variables  
+   // private Verifyer _veryfier;
+    private Location _currentLocation ;
 
-    private Verifyer _veryfier;
-    private Location _location;
+    //private Visitor  _visitor  ;
 
-    private Visitor _visitor  ;
+    private Dictionary<LocationDevice, ILocationDeviceObserver> _devices;
     
     private readonly IDatabaseService     _bioService         ;
     private readonly IBioSkyNetRepository _database           ;
     private readonly IProcessorLocator    _locator            ;
     private readonly INotifier            _notifier           ;
-
+    private readonly IAccessDeviceEngine  _accessDeviceEngine ;
+    private readonly ICaptureDeviceEngine _captureDeviceEngine;
     #endregion
   }
 }
