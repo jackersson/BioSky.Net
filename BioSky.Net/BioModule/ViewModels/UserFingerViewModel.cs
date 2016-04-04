@@ -34,6 +34,16 @@ namespace BioModule.ViewModels
       base.OnDeactivate(close);
     }
 
+    public void OnFingerCheck(int finger)
+    {
+      Console.WriteLine(finger);
+    }
+
+    public bool IsFingerExist
+    {
+      get { return true; }
+    }
+
     public void Add(Photo photo)
     {
       throw new NotImplementedException();
@@ -72,7 +82,7 @@ namespace BioModule.ViewModels
     public PhotoViewEnum PageEnum { get { return PhotoViewEnum.Fingers; }}
     public Person User { get { return _user; }}
 
-    private Person _user;
+    private Person                 _user       ;
     private IUserBioItemsUpdatable _imageViewer;
   }
 }

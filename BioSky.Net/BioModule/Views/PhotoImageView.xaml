@@ -51,7 +51,9 @@
                         </ItemsControl.LayoutTransform>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <Border>
+                                    <Image Source="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>

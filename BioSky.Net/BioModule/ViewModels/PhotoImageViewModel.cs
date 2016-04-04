@@ -722,6 +722,8 @@ namespace BioModule.ViewModels
         if (view.EnumState == controller.PageEnum)
         {
           view.UpdateController(controller);
+          if (UserController == null)
+            UserController = CurrentPhotoView.Controller;
         }
       }    
     }
