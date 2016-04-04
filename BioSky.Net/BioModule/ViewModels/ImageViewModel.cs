@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Caliburn.Micro;
 using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
@@ -15,126 +14,49 @@ namespace BioModule.ViewModels
 {
   public interface IImageViewUpdate
   {
-    void UpdateOneImage(ref Bitmap img);
-
-    void UpdateTwoImage(ref Bitmap img1, ref Bitmap img2);
-
-    void SetOneImage(BitmapSource img);
-
-    void SetTwoImages(BitmapSource img, BitmapSource img2);
+    void SetSingleImage(BitmapSource img);
+    void SetDoubleImage(BitmapSource first, BitmapSource second);
   }
 
   public class ImageViewModel : Screen, IImageViewUpdate
   {
-    public ImageViewModel(IProcessorLocator locator)
+    public ImageViewModel()
     {    
       _bitmapUtils   = new BitmapUtils();
       _bioFileUtils  = new BioFileUtils();     
+      
+      ImageItems = new AsyncObservableCollection<ImageItemViewModel>();
 
-      ZoomToFitState = true;      
-
-      BitmapSources = new AsyncObservableCollection<BitmapSource>();
-
-      ImageDispathcer = Dispatcher.CurrentDispatcher;
-
-      _notifier = locator.GetProcessor<INotifier>();
-    }
-
-    private AsyncObservableCollection<BitmapSource> _bitmapSources;
-    public AsyncObservableCollection<BitmapSource> BitmapSources
-    {
-      get { return _bitmapSources; }
-      set
-      {
-        if (_bitmapSources != value)
-        {
-          _bitmapSources = value;
-          NotifyOfPropertyChange(() => BitmapSources);
-        }
-      }
-    }
+      ZoomToFitState = true;
+    }  
 
     #region Update
 
-    public void SetOneImage(BitmapSource img)
+    public void SetSingleImage(BitmapSource img)
     {
-      if(img != null)
-      {
-        BitmapSources.Clear();
-        BitmapSources.Add(img);
-        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
-      }
+      if (ImageItems.Count > 1)      
+        ImageItems.Clear();
+      
+      ShowImage(img, 0);      
+    }
+    public void SetDoubleImage(BitmapSource first, BitmapSource second)
+    {
+      ShowImage(first , 0);
+      ShowImage(second, 1);
     }
 
-    public void SetTwoImages(BitmapSource img, BitmapSource img2)
+    private void ShowImage(BitmapSource img, int index )
     {
-      if (img != null || img2 != null)
+      if (ImageItems.Count <= index)
       {
-        BitmapSources.Clear();
-        BitmapSources.Add(img);
-        BitmapSources.Add(img2);
-        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
-      }
-    }
-
-    public void UpdateOneImage(ref Bitmap img)
-    {
-      if (img == null)
-        return;
-
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img);
-      newFrame.Freeze();
-
-      if(BitmapSources.Count != 1)
-      {
-        BitmapSources.Clear();
-        BitmapSources.Add(newFrame);
+        ImageItems.Add(new ImageItemViewModel());
+        NotifyOfPropertyChange(() => ImageItems);
       }
 
-      BitmapSources[0] = newFrame;
-
-      if (_width != _imageViewWidth || _height != _imageViewHeight)
-      {
-        _width = _imageViewWidth;
-        _height = _imageViewHeight;
-        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
-      }
-    }
-
-    public void UpdateTwoImage(ref Bitmap img1, ref Bitmap img2)
-    {
-      if (img1 != null)
-      {
-        BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img1);
-        newFrame.Freeze();
-
-        if (BitmapSources.Count < 2)
-          BitmapSources.Add(newFrame);
-
-        BitmapSources[0] = newFrame;
-      }
-
-      if(img2 != null)
-      {
-        BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(img2);
-        newFrame.Freeze();
-
-        if (BitmapSources.Count < 2)
-          BitmapSources.Add(newFrame);
-        if(BitmapSources.Count == 2)
-          BitmapSources[1] = newFrame;
-        else
-          BitmapSources[0] = newFrame;
-      }
-
-      if (_width != _imageViewWidth || _height != _imageViewHeight)
-      {
-        _width = _imageViewWidth;
-        _height = _imageViewHeight;
-        Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
-      }
-    }
-
+      ImageItems[index].UpdateImageSource(img);
+      ImageItems[index].Zoom(_scrollFieldWidth, _scrollFieldHeight);
+    } 
+   
     public string Upload()
     {
       var dialog = _bioFileUtils.OpenFileDialog();
@@ -157,10 +79,7 @@ namespace BioModule.ViewModels
        
       BitmapImage bmp    = _bitmapUtils.GetImageSource(fileName);
 
-      BitmapSources.Clear();
-      BitmapSources.Add(bmp);
-
-      Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
+      SetSingleImage(bmp);
 
       return bmp;      
     }  
@@ -169,66 +88,36 @@ namespace BioModule.ViewModels
     #region Interface
     public virtual void Clear()
     {
-      BitmapSources.Clear();
-      Zoom(_imageViewWidth, _imageViewHeight, _imageControllWidth, _imageControllHeight);
+      ImageItems.Clear();
+      Zoom(_scrollFieldWidth, _scrollFieldHeight);
     }
     
-    public virtual void OnClear(double viewWidth, double viewHeight, double imageControlWidth, double imageControlHeight)
+    /*
+    public virtual void OnClear(double viewWidth, double viewHeight)
     {
       Clear();
-      Zoom(viewWidth, viewHeight, _imageControllWidth, _imageControllHeight);      
+      Zoom(viewWidth, viewHeight);      
     }  
-
-    public void Zoom(double viewWidth, double viewHeight, double itemsViewWidth, double itemsViewHeight)
+    */
+    public void Zoom(double viewWidth, double viewHeight)
     {
-      if (BitmapSources.Count == 0)
+
+      if (viewWidth == _scrollFieldWidth && _scrollFieldHeight == viewHeight)
         return;
+      
+      _scrollFieldWidth  = viewWidth;
+      _scrollFieldHeight = viewHeight;
 
-      if (viewWidth == 0 && viewHeight == 0)
-        return;
+      int itemsCount  = ImageItems.Count;
+      double zoomRate = ZoomRate / 100;
+      foreach (ImageItemViewModel imageItem in ImageItems)      
+        imageItem.Zoom(viewWidth * zoomRate / itemsCount, viewHeight * zoomRate / itemsCount);      
 
-      _imageViewWidth  = viewWidth;
-      _imageViewHeight = viewHeight;
-
-      _imageControllWidth = itemsViewWidth;
-      _imageControllHeight = itemsViewHeight;
-
-      double width  = itemsViewWidth;
-      double height = itemsViewHeight;
-
-      try
-      {
-        //if (width == 0 && height == 0)
-        //{
-          if (BitmapSources.Count == 1)
-          {
-            width = BitmapSources[0].Width;
-            height = BitmapSources[0].Height;
-          }
-          else if (BitmapSources.Count == 2)
-          {
-            width = BitmapSources[0].Width + BitmapSources[1].Width;
-            height = Math.Max(BitmapSources[0].Height, BitmapSources[1].Height);
-          }
-        //}
-      }
-      catch(Exception ex)
-      {
-        _notifier.Notify(ex);
-      }
-
-      double imageWidth  = width  == 0 ? viewWidth : width;
-      double imageHeight = height == 0 ? viewHeight : height;
-
-      double maxWidthScale  = viewWidth / imageWidth;
-      double maxHeightScale = viewHeight / imageHeight;
-
-      CalculatedImageScale = Math.Min(maxHeightScale, maxWidthScale) * ZoomRate / 100;
     }
     #endregion
 
     #region UI
-
+    /*
     private double _calculatedImageScale;
     public double CalculatedImageScale
     {
@@ -242,21 +131,20 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private Dispatcher _imageDispathcer;
-    public Dispatcher ImageDispathcer
+    */
+    private AsyncObservableCollection<ImageItemViewModel> _imageItems;
+    public AsyncObservableCollection<ImageItemViewModel> ImageItems
     {
-      get { return _imageDispathcer; }
+      get { return _imageItems; }
       set
       {
-        if (_imageDispathcer != value)
+        if (_imageItems != value)
         {
-          _imageDispathcer = value;
-          NotifyOfPropertyChange(() => ImageDispathcer);
+          _imageItems = value;
+          NotifyOfPropertyChange(() => ImageItems);
         }
       }
     }
-
 
     private double _zoomRate;
     public double ZoomRate
@@ -293,20 +181,15 @@ namespace BioModule.ViewModels
 
     #region Global Variables
 
-    private double _imageViewWidth      = 0;
-    private double _imageViewHeight     = 0;
-    private double _imageControllWidth  = 0;
-    private double _imageControllHeight = 0;
-    private double _width               = 0;
-    private double _height              = 0;
-
+    private double _scrollFieldWidth      = 0 ;
+    private double _scrollFieldHeight     = 0 ;
+        
     private const double ZOOM_TO_FIT_RATE = 99;   
 
     private   BitmapUtils  _bitmapUtils  ;
     private   BioFileUtils _bioFileUtils ; 
-    protected FaceFinder   _faceFinder   ;
-    protected MarkerUtils  _marker       ;
-    private INotifier _notifier;
+
+   // private INotifier _notifier;
     #endregion
   }
 }

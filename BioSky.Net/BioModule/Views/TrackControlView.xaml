@@ -8,11 +8,11 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"          
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-             xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:local="clr-namespace:BioModule.Views"        
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"  
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:utils ="clr-namespace:BioModule.Utils"
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -24,7 +24,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-
+            <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
@@ -36,7 +36,7 @@
 
 
     <Grid>
-        <Grid Visibility="{Binding NormalLocationGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Visibility="{Binding AnyLocationExists, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="24"/>
@@ -108,7 +108,7 @@
             </local:TrackTabControlView>
         </Grid>
 
-        <Grid Visibility="{Binding ZeroLocationGrid, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Visibility="{Binding AnyLocationExists, Converter={StaticResource InverseBooleanConverter}}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
                 <Button cal:Message.Attach="[Event Click] = [Action OnAddNewLocation]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=PlusIconSource}"

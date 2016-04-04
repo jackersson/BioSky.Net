@@ -161,17 +161,17 @@ namespace BioContracts
       //_veryfier = new Verifyer(_locator);
 
       _devices = new Dictionary<LocationDevice, ILocationDeviceObserver>();
-     
 
-      Update(location);
+       Update(location);
     }
 
     public void Update(Location location)
     {
       if (location == null)
         return;
+      _previousLocation = _currentLocation;
 
-      _currentLocation = location;
+      _currentLocation  = location;
       Start();
     }
 
@@ -189,10 +189,17 @@ namespace BioContracts
         return;
 
       if (_currentLocation.AccessDevice != null)
-        _devices.Add(LocationDevice.AccessDevice, new LocationAccessDeviceObserver(_locator));
+      {
+        if (!_devices.ContainsKey(LocationDevice.AccessDevice))
+          _devices.Add(LocationDevice.AccessDevice, new LocationAccessDeviceObserver(_locator));         
+      }
 
       if (_currentLocation.CaptureDevice != null)
-        _devices.Add(LocationDevice.AccessDevice, new LocationCaptureDeviceObserver(_locator));
+      {
+        if (!_devices.ContainsKey(LocationDevice.AccessDevice))
+          _devices.Add(LocationDevice.CaptureDevice, new LocationCaptureDeviceObserver(_locator));        
+      }
+
 
     }
  /*
@@ -270,7 +277,7 @@ namespace BioContracts
     #region Global Variables  
    // private Verifyer _veryfier;
     private Location _currentLocation ;
-
+    private Location _previousLocation;
     //private Visitor  _visitor  ;
 
     private Dictionary<LocationDevice, ILocationDeviceObserver> _devices;

@@ -9,6 +9,7 @@ using BioContracts.Common;
 using System;
 using System.Collections.ObjectModel;
 using Caliburn.Micro;
+using AForge.Video.DirectShow;
 
 namespace BioModule.ViewModels
 {
@@ -33,12 +34,13 @@ namespace BioModule.ViewModels
 
   }
 
-  public class FacesModel :  PropertyChangedBase, IPhotoView
+  #region facemodel
+  public class FacesModel :  PropertyChangedBase, IPhotoView, ICaptureDeviceObserver
   {
     public FacesModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       PhotoInformation    = new PhotoInformationViewModel();
-      EnrollmentViewModel = new EnrollmentBarViewModel(locator);
+      EnrollmentViewModel = new FaceEnrollmentBarViewModel(locator);
       _marker             = new MarkerUtils();
       _faceFinder         = new FaceFinder();
 
@@ -47,24 +49,26 @@ namespace BioModule.ViewModels
 
     public void Activate()
     {
-      EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
+      EnrollmentViewModel.Subscribe(this);
+     // EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
 
-      if (EnrollmentViewModel.DeviceObserver.DeviceName != null)
-        EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
-      else
-        _imageView.SetOneImage(PhotoImageSource);   
+      //if (EnrollmentViewModel.DeviceObserver.DeviceName != null)
+      //  EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
+      // else
+      _imageView.SetSingleImage(PhotoImageSource);           
     }
 
     public void Deactivate()
     {
-      EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
-      EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+      //EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
+      //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
     }
     private void EnrollmentViewModel_SelectedDeviceChanged()
     {
-      EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
-      EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
+    //  EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+    //  EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
     }
+    /*
     public void UpdateFromImage(ref Bitmap img)
     {
       if (img == null)
@@ -72,16 +76,18 @@ namespace BioModule.ViewModels
 
       Bitmap processedFrame = DrawFaces(ref img);
 
-      _imageView.UpdateOneImage(ref processedFrame); 
+     // _imageView.UpdateOneImage(ref processedFrame); 
     }
-    public Bitmap DrawFaces(ref Bitmap img)
-    {
+    */
+    public Bitmap DrawFaces(ref Bitmap img){
       return _marker.DrawRectangles(_faceFinder.GetFaces(ref img), ref img);
     }
+    /*
     private void OnNewFrame(object sender, ref Bitmap bitmap)
     {
       UpdateFromImage(ref bitmap);
     }
+    */
 
     public void Reset()
     {
@@ -98,9 +104,7 @@ namespace BioModule.ViewModels
       if(controller != null)
         Controller = controller;
     }
-
-    #region UI
-
+    
     public object GetInformation()
     {
       return PhotoInformation;
@@ -111,8 +115,27 @@ namespace BioModule.ViewModels
       return EnrollmentViewModel;
     }
 
-    public PhotoViewEnum EnumState
+    public void OnFrame(ref Bitmap frame)
     {
+      if (frame == null)
+      {
+        _imageView.SetSingleImage(null);
+        return;
+      }
+
+      Bitmap processedFrame = DrawFaces(ref frame);
+
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
+      newFrame.Freeze();
+
+      _imageView.SetSingleImage(newFrame);
+    }
+
+    public void OnStop(bool stopped, string message) { _imageView.SetSingleImage(null);  }
+
+    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {}
+
+    public PhotoViewEnum EnumState    {
       get { return PhotoViewEnum.Faces; }
     }
     public BitmapSource SettingsToogleButtonBitmap
@@ -157,8 +180,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private EnrollmentBarViewModel _enrollmentViewModel;
-    public EnrollmentBarViewModel EnrollmentViewModel
+    private FaceEnrollmentBarViewModel _enrollmentViewModel;
+    public FaceEnrollmentBarViewModel EnrollmentViewModel
     {
       get { return _enrollmentViewModel; }
       set
@@ -184,14 +207,17 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    #endregion
+    
 
     private MarkerUtils      _marker    ;
     private FaceFinder       _faceFinder;
     private IImageViewUpdate _imageView ;
   }
 
+  #endregion
+
+
+  #region fingersmodel
   public class FingersModel :  PropertyChangedBase, IPhotoView
   {
     public FingersModel(IImageViewUpdate imageView)
@@ -229,7 +255,7 @@ namespace BioModule.ViewModels
 
     public void Activate()
     {
-      _imageView.SetOneImage(FingerImageSource);
+      _imageView.SetSingleImage(FingerImageSource);
     }
 
     public void Deactivate()
@@ -305,7 +331,9 @@ namespace BioModule.ViewModels
 
     private IImageViewUpdate _imageView;
   }
+  #endregion
 
+  #region irises
   public class IrisesModel :  PropertyChangedBase, IPhotoView
   {
     public IrisesModel(IImageViewUpdate imageView)
@@ -341,7 +369,7 @@ namespace BioModule.ViewModels
 
     public void Activate()
     {
-      _imageView.SetTwoImages(LeftEyeImageSource, RightEyeImageSource);
+      _imageView.SetDoubleImage(LeftEyeImageSource, RightEyeImageSource);
     }
 
     public void Deactivate()
@@ -414,6 +442,8 @@ namespace BioModule.ViewModels
 
     private IImageViewUpdate _imageView;
   }
+  #endregion
+
 
   public enum PhotoViewEnum
   {
@@ -422,64 +452,37 @@ namespace BioModule.ViewModels
    , Fingers
   }
 
+  //TODO rename class BioImageViewModel
   public class PhotoImageViewModel : ImageViewModel, IUserBioItemsUpdatable
   {
-    public PhotoImageViewModel(IProcessorLocator locator) : base(locator)    
+    public PhotoImageViewModel(IProcessorLocator locator) 
     {      
       _notifier       = locator.GetProcessor<INotifier>();
       _database       = locator.GetProcessor<IBioSkyNetRepository>();
-
-
+      
+      //TODO rename BioImageModel
       PhotoViews = new ObservableCollection<IPhotoView>();
 
       PhotoViews.Add(new FacesModel  (locator, this));
       PhotoViews.Add(new FingersModel(this)         );
       PhotoViews.Add(new IrisesModel (this)         );
 
-
+      //TODO rename BioImage details
       PhotoDetails        = new PhotoInfoExpanderViewModel();
-      _enroller           = new Enroller(locator);
-      _markerBitmapHolder = new MarkerBitmapSourceHolder();
+
+      //_enroller           = new Enroller(locator);
+      //_markerBitmapHolder = new MarkerBitmapSourceHolder();
 
       SetVisibility();
 
-      UpdateFromPhoto(GetTestPhoto());
+     // UpdateFromPhoto(GetTestPhoto());
 
-      ChangeView(PhotoViewEnum.Faces);
-      ChangeView(PhotoViewEnum.Faces);
+      ChangeView(PhotoViewEnum.Faces);     
 
-    }
+    }    
+    
 
-    //*************************************************************************************************************
-
-    private IPhotoView _currentPhotoView;
-    public IPhotoView CurrentPhotoView
-    {
-      get { return _currentPhotoView; }
-      set
-      {
-        if (_currentPhotoView != value)
-        {
-          _currentPhotoView = value;
-          NotifyOfPropertyChange(() => CurrentPhotoView);
-        }
-      }
-    }
-
-    private ObservableCollection<IPhotoView> _photoViews;
-    public ObservableCollection<IPhotoView> PhotoViews
-    {
-      get { return _photoViews; }
-      set
-      {
-        if (_photoViews != value)
-        {
-          _photoViews = value;
-          NotifyOfPropertyChange(() => PhotoViews);
-        }
-      }
-    }
-
+    //TODO why so many parametrs???????
     public void OnChangeViewClick(PhotoViewEnum state, double scrollWidth, double scrollHeight
                                  , double imageControllerWidth, double imageControllerHeight)
     {
@@ -494,9 +497,10 @@ namespace BioModule.ViewModels
         {
           view.Activate();
 
+          //why not just pass ViewModel in XAML
           CurrentPhotoView = view;
           ExpanderBarModel = view.GetBarViewModel();
-          UserController = view.Controller;
+          UserController   = view.Controller;
 
           PhotoDetails.Update(view.GetInformation());
 
@@ -504,45 +508,29 @@ namespace BioModule.ViewModels
           _loadFromFileButtonBitmap   = view.LoadFromFileButtonBitmap;         
 
           NotifyOfPropertyChange(() => SettingsToogleButtonBitmap);
-          NotifyOfPropertyChange(() => LoadFromFileButtonBitmap);
+          NotifyOfPropertyChange(() => LoadFromFileButtonBitmap);          
         }
         else
           view.Deactivate();
       }
     }
+
     public void OnLoadFromFile()
     {
       Photo photo = UploadPhotoFromFile();
 
       if(CurrentPhotoView != null)
-        CurrentPhotoView.UploadPhoto(photo);      
-
-      /*if (_enroller.Busy)
-      {
-        _notifier.Notify("Wait for finnishing previous operation", WarningLevel.Warning);
-        return;
-      }
-
-      Photo photo = UploadPhotoFromFile();
-      if (photo == null || photo.Bytestring.Length <= 0)
-      {
-        _notifier.Notify("Please load correct image", WarningLevel.Warning);
-        return;
-      }
-
-      _enroller.EnrollmentDone -= OnEnrollmentDone;
-      _enroller.EnrollmentDone += OnEnrollmentDone;
-      _enroller.Start(photo, UserPhotoController.User);*/
+        CurrentPhotoView.UploadPhoto(photo);            
     }
-    public override void OnClear( double viewWidth, double viewHeight
-                                , double imageControlWidth, double imageControlHeight)
+    public override void Clear()
     {
       if (CanUsePhotoController)
         UserController.Remove(CurrentPhoto);
 
-      base.OnClear(viewWidth, viewHeight, imageControlWidth, imageControlHeight);
+      base.Clear();
     }
 
+    /*
     //for test
     public Photo GetTestPhoto()
     {
@@ -567,6 +555,8 @@ namespace BioModule.ViewModels
 
     }
     // for test
+    */
+
     #region Interface
     public void Add()
     {
@@ -593,7 +583,7 @@ namespace BioModule.ViewModels
     }
     protected override void OnActivate()
     {
-      PhotoDetails.ExpanderChanged += ShowPhotoDetails;
+      //PhotoDetails.ExpanderChanged += ShowPhotoDetails;
 
       if (CurrentPhotoView != null)
         CurrentPhotoView.Activate();
@@ -603,7 +593,7 @@ namespace BioModule.ViewModels
 
     protected override void OnDeactivate(bool close)
     {
-      PhotoDetails.ExpanderChanged -= ShowPhotoDetails;
+     // PhotoDetails.ExpanderChanged -= ShowPhotoDetails;
 
       if (CurrentPhotoView != null)
         CurrentPhotoView.Deactivate();
@@ -653,6 +643,7 @@ namespace BioModule.ViewModels
       PhotoDetails.Update(CurrentPhoto);
     }        
 
+    /*
     private void OnEnrollmentDone(Photo photo, Person person)
     {      
       _enroller.EnrollmentDone -= OnEnrollmentDone;
@@ -669,18 +660,18 @@ namespace BioModule.ViewModels
         return;
       }      
     }
-
+    
     public void ShowPhotoDetails(bool isExpanded)
     {
-      /*if (isExpanded)      
+      if (isExpanded)      
         DrawPortraitCharacteristics();
       else
-        CurrentImageSource = MarkerBitmapHolder.Unmarked;*/
+        CurrentImageSource = MarkerBitmapHolder.Unmarked;
     }
 
     public void DrawPortraitCharacteristics()
     {
-      /*if (CurrentPhoto == null)
+      if (CurrentPhoto == null)
         return;
 
       MarkerBitmapHolder.Unmarked = CurrentImageSource;
@@ -689,10 +680,12 @@ namespace BioModule.ViewModels
                                      , BitmapConversion.BitmapSourceToBitmap(CurrentImageSource));
       
       CurrentImageSource = BitmapConversion.BitmapToBitmapSource(detailedBitmap);
-      MarkerBitmapHolder.Marked = CurrentImageSource;*/
+      MarkerBitmapHolder.Marked = CurrentImageSource;
     }
+    */
 
-    public void SetVisibility(bool arrows = true         , bool cancelButton = true
+    //Make as style
+    public void SetVisibility( bool arrows = true         , bool cancelButton = true
                              , bool enrollExpander = true, bool controllPanel = true, bool enrollFromPhoto = true)
     {
       //ArrowsVisibility          = arrows         ;
@@ -706,11 +699,13 @@ namespace BioModule.ViewModels
 
     #region BioService
 
+    /*
     public override void Clear()
     {
       CurrentPhoto = null;
       base.Clear();     
     }
+    */
 
     public void UpdateBioItemsController(Utils.IUserBioItemsController controller)
     {
@@ -719,15 +714,43 @@ namespace BioModule.ViewModels
 
       foreach (IPhotoView view in PhotoViews)
       {
-        if (view.EnumState == controller.PageEnum)
-        {
-          view.UpdateController(controller);
-        }
+        if (view.EnumState == controller.PageEnum)        
+          view.UpdateController(controller);        
       }    
     }
     #endregion
 
     #region UI
+
+
+    private IPhotoView _currentPhotoView;
+    public IPhotoView CurrentPhotoView
+    {
+      get { return _currentPhotoView; }
+      set
+      {
+        if (_currentPhotoView != value)
+        {
+          _currentPhotoView = value;
+          NotifyOfPropertyChange(() => CurrentPhotoView);
+        }
+      }
+    }
+
+    private ObservableCollection<IPhotoView> _photoViews;
+    public ObservableCollection<IPhotoView> PhotoViews
+    {
+      get { return _photoViews; }
+      set
+      {
+        if (_photoViews != value)
+        {
+          _photoViews = value;
+          NotifyOfPropertyChange(() => PhotoViews);
+        }
+      }
+    }
+
 
     private BitmapSource _settingsToogleButtonBitmap;
     public BitmapSource SettingsToogleButtonBitmap

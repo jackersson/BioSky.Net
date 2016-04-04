@@ -35,33 +35,12 @@
             <RowDefinition Height="32"/>
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
-        <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Grid.RowSpan="2">
-            <Grid>
-                <ScrollViewer x:Name="CurrentImageScrollViewer" 
-                              cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, ImageControl.ActualWidth, ImageControl.ActualHeight)];
-                                                  [Event SizeChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, ImageControl.ActualWidth, ImageControl.ActualHeight)]"           
-                              
-                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
-
-                    <ItemsControl Name="ImageControl"                        
-                                  ItemsSource="{Binding BitmapSources}" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <ItemsControl.LayoutTransform>
-                            <ScaleTransform ScaleX="{Binding CalculatedImageScale}" 
-                                            ScaleY="{Binding CalculatedImageScale}"/>
-                        </ItemsControl.LayoutTransform>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollViewer>
-            </Grid>
+        <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" 
+                Grid.Column="0" Grid.Row="0"
+                Grid.ColumnSpan="5" Grid.RowSpan="3">
+            <local:ImageView DataContext="{Binding Mode=OneWay}">
+                
+            </local:ImageView>            
         </Border>
 
         <TextBlock Grid.ColumnSpan="2"
@@ -83,9 +62,9 @@
             
             <ContentControl Content="{Binding ExpanderBarModel}">
                 <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type vm:EnrollmentBarViewModel}">
-                        <local:EnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
-                        </local:EnrollmentBarView>
+                    <DataTemplate DataType="{x:Type vm:FaceEnrollmentBarViewModel}">
+                        <local:FaceEnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                        </local:FaceEnrollmentBarView>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:FingerBarViewModel}">
                         <local:FingerBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
@@ -177,8 +156,9 @@
             </ContentControl>
         </Grid>
 
+        
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
-        <Grid Grid.Row="2" Grid.ColumnSpan ="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+      <!--  <Grid Grid.Row="2" Grid.ColumnSpan ="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48"/>
                 <ColumnDefinition Width="*"/>
@@ -214,7 +194,7 @@
                          cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, ImageControl.ActualWidth, ImageControl.ActualHeight)]"                               
                          IsChecked="{Binding ZoomToFitState, Mode=TwoWay}" ToolTip="{lex:Loc ZoomToFit}"/>
 
-        </Grid>
+        </Grid> -->
 
         <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2"
                     Orientation="Vertical" HorizontalAlignment="Left" Width="40">
@@ -238,10 +218,10 @@
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="OnChangeViewClick">
                             <cal:Parameter Value="{x:Static vm:PhotoViewEnum.Fingers}" />
-                            <cal:Parameter Value="{Binding ElementName=CurrentImageScrollViewer, Path=ActualWidth}"/>
-                            <cal:Parameter Value="{Binding ElementName=CurrentImageScrollViewer, Path=ActualHeight}"/>
-                            <cal:Parameter Value="{Binding ElementName=ImageControl, Path=ActualWidth}"/>
-                            <cal:Parameter Value="{Binding ElementName=ImageControl, Path=ActualHeight}"/>
+                            <cal:Parameter Value="{Binding ActualWidth, ElementName=CurrentImageScrollViewer}"/>
+                            <cal:Parameter Value="{Binding ActualHeight, ElementName=CurrentImageScrollViewer}"/>
+                            <cal:Parameter Value="{Binding ActualWidth, ElementName=ImageControl}"/>
+                            <cal:Parameter Value="{Binding ActualHeight, ElementName=ImageControl}"/>
                         </cal:ActionMessage>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
@@ -263,7 +243,7 @@
         </StackPanel>
 
 
-        <Button cal:Message.Attach="[Event Click] = [Action OnClear(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, ImageControl.ActualWidth, ImageControl.ActualHeight)]"  
+        <Button cal:Message.Attach="[Event Click] = [Action Clear()]"  
                 Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 ToolTip="{lex:Loc Cancel}" Width="32" Height="32"   

@@ -1,0 +1,122 @@
+﻿<UserControl x:Class="BioModule.Views.ImageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"             
+             xmlns:vm="clr-namespace:BioModule.ViewModels"     
+             xmlns:local="clr-namespace:BioModule.Views"             
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             mc:Ignorable="d" 
+             x:Name="ImageViewModel"             
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    </UserControl.Resources>
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="106*"/>
+            <ColumnDefinition Width="96*"/>
+            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="48"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="48"/>
+        </Grid.RowDefinitions>
+<!--
+        <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
+            <Grid>
+                <ScrollViewer x:Name="CurrentImageScrollViewer" 
+                              cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
+                                                  [Event SizeChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"           
+                              
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
+                    <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding CurrentImageSource}">
+                        <Image.LayoutTransform>
+                            <ScaleTransform ScaleX="{Binding CalculatedImageScale}" ScaleY="{Binding CalculatedImageScale}">
+
+                            </ScaleTransform>
+                        </Image.LayoutTransform>
+                    </Image>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+-->
+
+        <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Grid.RowSpan="2">
+            <Grid>
+                <ScrollViewer x:Name="CurrentImageScrollViewer" 
+                              cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
+                                                  [Event SizeChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"           
+                              
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
+
+                    <ItemsControl Name="ImageControl"            
+                                
+                                  ItemsSource="{Binding ImageItems}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                 
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:ImageItemView DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>                             
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+
+         <Grid Grid.Row="2" Grid.ColumnSpan ="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48"/>
+            </Grid.RowDefinitions>
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ControllPanelVisibility}"
+                                 Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ControllPanelVisibility}" 
+                                 Value="False">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <Slider x:Name="Slider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
+                    Minimum="30"
+                    Maximum="200"
+                    Value="{Binding ZoomRate, Mode=TwoWay}"
+                    LargeChange="20"
+                    SmallChange="10" Margin="0,15"                   
+                    />
+
+            <RadioButton x:Name="Switch" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+                         cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"                               
+                         IsChecked="{Binding ZoomToFitState, Mode=TwoWay}" ToolTip="{lex:Loc ZoomToFit}"/>
+
+        </Grid> 
+    </Grid>
+</UserControl>

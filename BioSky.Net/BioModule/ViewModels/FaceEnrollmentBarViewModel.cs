@@ -14,16 +14,15 @@ using System.Drawing;
 
 namespace BioModule.ViewModels
 {
-  public delegate void SelectedDeviceChangedEventHandler();
-  public class FaceEnrollmentBarViewModel : Screen, ICaptureDeviceObserver
-  {
-
-    public event SelectedDeviceChangedEventHandler SelectedDeviceChanged;
-
+  //public delegate void SelectedDeviceChangedEventHandler();
+  public class FaceEnrollmentBarViewModel : Screen, ICaptureDeviceObserver, IBioObservable<ICaptureDeviceObserver>
+  {    
     public FaceEnrollmentBarViewModel(IProcessorLocator locator)
     {
       _captureDeviceEngine  = locator.GetProcessor<ICaptureDeviceEngine>();
       _dialogsHolder        = locator.GetProcessor<DialogsHolder>();
+      _observer             = new BioObserver<ICaptureDeviceObserver>();
+
       Resolution            = new AsyncObservableCollection<string>();      
     }
     
@@ -78,9 +77,17 @@ namespace BioModule.ViewModels
       _captureDeviceEngine.ApplyResolution(SelectedDevice, SelectedResolution);     
     }
 
-    public void OnFrame(ref Bitmap frame) {}
+    public void OnFrame(ref Bitmap frame) {
+      foreach (ICaptureDeviceObserver observer in _observer.Observers)
+        observer.OnFrame(ref frame);
+    }
 
-    public void OnStop(bool stopped, string message) { NotifyOfPropertyChange(() => DeviceConnectedIcon);   }
+    public void OnStop(bool stopped, string message) {
+
+      NotifyOfPropertyChange(() => DeviceConnectedIcon);
+      foreach (ICaptureDeviceObserver observer in _observer.Observers)
+        observer.OnStop(stopped, message);
+    }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)
     {
@@ -112,6 +119,28 @@ namespace BioModule.ViewModels
 
       NotifyOfPropertyChange(() => Resolution);
     }
+
+    #region observer
+    public void Subscribe(ICaptureDeviceObserver observer)
+    {
+      _observer.Subscribe(observer);
+    }
+
+    public void Unsubscribe(ICaptureDeviceObserver observer)
+    {
+      _observer.Unsubscribe(observer);
+    }
+
+    public void UnsubscribeAll()
+    {
+      _observer.UnsubscribeAll();
+    }
+
+    public bool HasObserver(ICaptureDeviceObserver observer)
+    {
+      return _observer.HasObserver(observer);
+    }
+    #endregion
 
     #region UI
 
@@ -180,12 +209,13 @@ namespace BioModule.ViewModels
          
         }
       }
-    }  
+    }
     #endregion
 
     #region Global Variables
-    private readonly DialogsHolder        _dialogsHolder;
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;
+    private BioObserver<ICaptureDeviceObserver> _observer           ;
+    private readonly DialogsHolder              _dialogsHolder      ;
+    private readonly ICaptureDeviceEngine       _captureDeviceEngine;
     #endregion
 
   }

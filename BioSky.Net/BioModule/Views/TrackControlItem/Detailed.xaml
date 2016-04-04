@@ -61,18 +61,27 @@
                Visibility="{Binding UserVerificationIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                Grid.Column="5" />
 -->
+
+            <Border  Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="#4C808080" 
+                Grid.Column="0" Grid.Row="1"
+                Grid.ColumnSpan="6" Margin="0,2,5,0">
+                <local:ImageView DataContext="{Binding ImageView}">
+
+                </local:ImageView>
+            </Border>
+<!--
             <ContentControl Grid.Column="0" Grid.Row="1" 
                         Grid.ColumnSpan="6" Margin="0,2,5,0"             
                         cal:View.Model="{Binding ImageView}" cal:View.Context="Video" >
             </ContentControl>
-
+-->
             <Label Grid.Column="0" Content="{Binding CurrentLocation.Caption}" HorizontalAlignment="Left" 
                VerticalAlignment="Top" Background="{x:Null}" 
-               Foreground="#FF61792F" Grid.ColumnSpan="2">
+               Foreground="#FFF0EFF1" Grid.ColumnSpan="2">
             </Label>
 
             <Label Content="21.01.2015 15:15:18" HorizontalAlignment="Right" VerticalAlignment="Top" 
-                   Background="{x:Null}" Width="Auto" Foreground="#FF657E30" Grid.ColumnSpan="3" Grid.Column="2"/>
+                   Background="{x:Null}" Width="Auto" Foreground="#FFF0EFF1" Grid.ColumnSpan="3" Grid.Column="2"/>
 
         </Grid>
 
@@ -83,7 +92,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="48"/>
             </Grid.RowDefinitions>
-            <ContentControl Width="165" Grid.Row="1" Margin="0,1,0,0" cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
+            <ContentControl Width="165" Grid.Row="1" Margin="0,1,0,0"
+                            cal:View.Context="Photo" cal:View.Model="{Binding VisitorsView}"></ContentControl>
         </Grid>
 
     </Grid>

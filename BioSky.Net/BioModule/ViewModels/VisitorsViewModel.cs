@@ -44,7 +44,7 @@ namespace BioModule.ViewModels
 
       IsDeleteButtonEnabled = false;
 
-      RefreshData();
+      //RefreshData();
     } 
         
     #region Database
@@ -70,19 +70,7 @@ namespace BioModule.ViewModels
     {
       if (!IsActive)
         return;
-
-      // for test
-      try
-      {
-        Visitors.Add(new Visitor());
-        throw new Exception();
-      }
-      catch (Exception ex)
-      {
-        _notifier.Notify(ex);        
-      }
-      // for test
-
+      
       Visitors = null;
       Visitors = _database.Visitors.Data;
 

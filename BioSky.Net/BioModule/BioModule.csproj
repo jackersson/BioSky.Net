@@ -215,8 +215,13 @@
     <Compile Include="ViewModels\AuthenticationPageViewModel.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
+    <Compile Include="ViewModels\ErrorViewerDialogViewModel.cs" />
     <Compile Include="ViewModels\FaceEnrollmentBarViewModel.cs" />
+    <Compile Include="ViewModels\FingerBarViewModel.cs" />
+    <Compile Include="ViewModels\FingerInformationViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\ImageItemViewModel.cs" />
+    <Compile Include="ViewModels\IrisInformationViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
     <Compile Include="ViewModels\LoginPopupViewModel.cs" />
@@ -261,6 +266,8 @@
     <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
+    <Compile Include="ViewModels\UserFingerViewModel.cs" />
+    <Compile Include="ViewModels\UserIrisViewModel.cs" />
     <Compile Include="ViewModels\UserPhotoViewModel.cs" />
     <Compile Include="ViewModels\VisitorsFilterMenuViewModel.cs" />
     <Compile Include="Views\AboutDialogView.xaml.cs">
@@ -294,8 +301,17 @@
     <Compile Include="Views\DevicesListView.xaml.cs">
       <DependentUpon>DevicesListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ErrorViewerView.xaml.cs">
+      <DependentUpon>ErrorViewerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FaceEnrollmentBarView.xaml.cs">
       <DependentUpon>FaceEnrollmentBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FingerBarView.xaml.cs">
+      <DependentUpon>FingerBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FingerInformationView.xaml.cs">
+      <DependentUpon>FingerInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
@@ -303,8 +319,14 @@
     <Compile Include="Views\HomePageView.xaml.cs">
       <DependentUpon>HomePageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Image\Video.xaml.cs">
-      <DependentUpon>Video.xaml</DependentUpon>
+    <Compile Include="Views\ImageItemView.xaml.cs">
+      <DependentUpon>ImageItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImageView.xaml.cs">
+      <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\IrisInformationView.xaml.cs">
+      <DependentUpon>IrisInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoaderView.xaml.cs">
       <DependentUpon>LoaderView.xaml</DependentUpon>
@@ -363,8 +385,14 @@
     <Compile Include="Views\UserContactlessCardView.xaml.cs">
       <DependentUpon>UserContactlessCardView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\UserFingerView.xaml.cs">
+      <DependentUpon>UserFingerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserInformationView.xaml.cs">
       <DependentUpon>UserInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserIrisView.xaml.cs">
+      <DependentUpon>UserIrisView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserPageView.xaml.cs">
       <DependentUpon>UserPageView.xaml</DependentUpon>
@@ -433,9 +461,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\ErrorViewerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\FaceEnrollmentBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FingerBarView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\FingerInformationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FlyoutControlView.xaml">
       <SubType>Designer</SubType>
@@ -445,9 +485,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Image\Video.xaml">
+    <Page Include="Views\ImageItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\IrisInformationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LoaderView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -525,9 +573,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\UserFingerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\UserInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserIrisView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UserPageView.xaml">
       <SubType>Designer</SubType>
@@ -660,6 +716,7 @@
     <None Include="Resources\verified.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\warning.png" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />
     <None Include="Resources\left_arrow.png" />
@@ -667,6 +724,8 @@
     <None Include="Resources\help_dialog.png" />
     <None Include="Resources\info_dialog.png" />
     <None Include="Resources\home.png" />
+    <Content Include="Resources\finger_scan.png" />
+    <Content Include="Resources\iris_scan_image.png" />
     <Content Include="Resources\loader.PNG" />
     <None Include="Resources\loadphotos.png" />
     <None Include="Resources\screenshot.png" />
@@ -699,7 +758,9 @@
   <ItemGroup>
     <None Include="Resources\logo.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Image\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

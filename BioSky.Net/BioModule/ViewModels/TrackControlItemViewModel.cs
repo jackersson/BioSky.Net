@@ -12,7 +12,9 @@ namespace BioModule.ViewModels
   {    
     public TrackControlItemViewModel(IProcessorLocator locator)
     {      
-      Initialize(locator);      
+      Initialize(locator);
+
+      OnDataContextChanged();
     }
 
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
@@ -20,7 +22,10 @@ namespace BioModule.ViewModels
       _locator = locator;   
       
       Initialize(locator);
-      
+
+      OnDataContextChanged();
+
+
       if ( location != null )
        Update(location);
     }
@@ -48,7 +53,7 @@ namespace BioModule.ViewModels
       if (bitmap == null || ImageView == null)
         return;
 
-      ImageView.UpdateOneImage(ref bitmap);
+      //ImageView.UpdateOneImage(ref bitmap);
     }
    
     private void OnLocationStatusChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -67,7 +72,7 @@ namespace BioModule.ViewModels
     public void OnDataContextChanged()
     {
       if (ImageView != null)
-        ImageView = new ImageViewModel(_locator);
+        ImageView = new ImageViewModel();
     } 
     private void Initialize(IProcessorLocator locator)
     {
@@ -122,7 +127,11 @@ namespace BioModule.ViewModels
     private ImageViewModel _imageView;
     public ImageViewModel ImageView
     {
-      get { return _imageView; }
+      get {
+        if (_imageView == null)
+          _imageView = new ImageViewModel();
+        return _imageView;
+      }
       set
       {
         if (_imageView != value)
