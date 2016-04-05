@@ -30,7 +30,7 @@ namespace BioModule.ViewModels
     public void OnBioImageViewLoaded()
     {
       if (ImageView == null)
-        ImageView = new PhotoImageViewModel(_locator);
+        ImageView = new BioImageViewModel(_locator);
     }
 
     public void Update(TrackLocation location)
@@ -137,12 +137,12 @@ namespace BioModule.ViewModels
     }
 
     
-    private PhotoImageViewModel _imageView;
-    public PhotoImageViewModel ImageView
+    private BioImageViewModel _imageView;
+    public BioImageViewModel ImageView
     {
       get {
         if (_imageView == null)
-          _imageView = new PhotoImageViewModel(_locator);
+          _imageView = new BioImageViewModel(_locator);
         return _imageView;
       }
       set

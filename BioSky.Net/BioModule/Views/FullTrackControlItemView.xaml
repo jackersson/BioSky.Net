@@ -81,7 +81,7 @@
                             HorizontalAlignment="Stretch" 
                             VerticalAlignment="Stretch"                     
                             Grid.ColumnSpan="6" >
-                <local:PhotoImageView  DataContext="{Binding BioImageView}"></local:PhotoImageView>
+                <local:BioImageView  DataContext="{Binding BioImageView}"></local:BioImageView>
             </ContentControl>
             <!--
             <ContentControl Grid.Column="0" Grid.Row="1" 

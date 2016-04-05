@@ -21,7 +21,7 @@ namespace BioModule.ViewModels
       _bioEngine         = _locator.GetProcessor<IBioEngine>();
       
       PhotoImage = new BioImageViewModel(_locator);
-      PhotoImage.SetVisibility(false, false, true, false, false);
+      //PhotoImage.SetVisibility(false, false, true, false, false);
     }
     public void Show()
     {

@@ -13,11 +13,6 @@ namespace BioModule.ViewModels
 {
   public class PhotoInfoExpanderViewModel : Screen
   {
-    public PhotoInfoExpanderViewModel()
-    {
-
-    }
-
     public void Update(object informationModel)
     {
       InformationItem = informationModel;

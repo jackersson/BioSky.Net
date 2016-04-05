@@ -19,7 +19,7 @@ namespace BioModule.ViewModels
 
       _bioEngine = locator.GetProcessor<IBioEngine>();
 
-      BioImageView = new PhotoImageViewModel(locator);
+      BioImageView = new BioImageViewModel(locator);
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
     }
@@ -31,8 +31,8 @@ namespace BioModule.ViewModels
       _bioEngine.AccessDeviceEngine() .Unsubscribe(this);
       _bioEngine.CaptureDeviceEngine().Unsubscribe(this);
 
-      if (BioImageView.CurrentPhotoView is ICaptureDeviceObserver)
-        _bioEngine.CaptureDeviceEngine().Unsubscribe(BioImageView.CurrentPhotoView as ICaptureDeviceObserver);
+      if (BioImageView.CurrentBioImage is ICaptureDeviceObserver)
+        _bioEngine.CaptureDeviceEngine().Unsubscribe(BioImageView.CurrentBioImage as ICaptureDeviceObserver);
     }
 
     public void OnFrame(ref Bitmap frame)
@@ -79,8 +79,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private PhotoImageViewModel _bioImageView;
-    public PhotoImageViewModel BioImageView
+    private BioImageViewModel _bioImageView;
+    public BioImageViewModel BioImageView
     {
       get {  return _bioImageView; }
       set

@@ -25,17 +25,18 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
-                <Setter Property="Background" Value="#FFEF5350"/>
+                <Setter Property="Background" Value="Transparent"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag }" Value="true">
-                        <Setter Property="Background" Value="#FF81C784"/>
+                        <Setter Property="Background" Value="#FF0C6303"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Viewbox>
         <Grid>
             <Grid.RowDefinitions>
@@ -45,51 +46,54 @@
                 <ColumnDefinition Width="25*" />
             </Grid.ColumnDefinitions>
 
-            <Image Source="C:/Users/user/Pictures/hand22222.png"></Image>
+            <Image Width="512" Height="289"
+                   Source="{Binding Source={StaticResource ResourceLoader}, Path=HandsIconSource}" />
+            
+            <!-- Left Hand-->
 
-            <RadioButton Background="Red" Name="FingerOne"
+            <RadioButton 
                          cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left"  Tag="{Binding IsFingerExist}"
-                         Grid.Column="2" Panel.ZIndex="10" Margin="35,60,0,0">
-            </RadioButton>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('2')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="55,2,0,0" Tag="{Binding IsFingerExist}">
-            </RadioButton>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('3')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="75,8,0,0" Tag="{Binding IsFingerExist}"/>
-
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="19,39,0,0"/>
+            <RadioButton  
+                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="65,10,0,0"/>
             <RadioButton 
                          cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('4')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="98,8,0,0" Tag="{Binding IsFingerExist}"/>
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="110,0,0,0" Tag="{Binding IsFingerExist}"/>
+            <RadioButton 
+                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('3')]" 
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="154,16,0,0" Tag="{Binding IsFingerExist}"/>
+            <RadioButton  
+                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="219,123,0,0"/>
+
+
+             <!-- Right Hand-->
+            <RadioButton 
+                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="275,123,0,0"/>
             <RadioButton 
                          cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('5')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="115,25,0,0"/>
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="331,16,0,0"/>
             <RadioButton 
                          cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="35,60,0,0"/>
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="380,0,0,0"/>
+            
+            <RadioButton  Name="FingerOne"
+                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
+                         VerticalAlignment="Top" HorizontalAlignment="Left"  Tag="{Binding IsFingerExist}" Panel.ZIndex="10" Margin="425,10,0,0"/>
             <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="35,60,0,0"/>
-            <RadioButton  
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="35,60,0,0"/>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="35,60,0,0"/>
-            <RadioButton  
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="35,60,0,0"/>
+                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('2')]" 
+                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="468,39,0,0" Tag="{Binding IsFingerExist}"/>
+
+
+
+
+
+
+
+
+
 
 
 

@@ -202,6 +202,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BioDataLoader.cs" />
+    <Compile Include="BioModels\FacesImageModel.cs" />
+    <Compile Include="BioModels\FingersImageModel.cs" />
+    <Compile Include="BioModels\IrisesImageModel.cs" />
     <Compile Include="BioModuleImpl.cs" />
     <Compile Include="BioModuleInstaller.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
@@ -542,10 +545,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PhotoImageView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\PhotoInfoExpanderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -726,6 +725,7 @@
     <None Include="Resources\fingerprint_scan.png" />
     <None Include="Resources\iris_scan_color.png" />
     <None Include="Resources\iris_scan.png" />
+    <None Include="Resources\bothHands.png" />
     <Content Include="Resources\warning.png" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />
