@@ -34,35 +34,28 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-
+   <!-- Visibility="{Binding AnyLocationExists, Converter={StaticResource BooleanToVisibilityConverter}}" -->
     <Grid>
-        <Grid Visibility="{Binding AnyLocationExists, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid >
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="24"/>
-                <RowDefinition Height="36"/>
-                <RowDefinition Height="50*"/>
-
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="7*"/>
-                <ColumnDefinition Width="56"/>
-                <ColumnDefinition Width="78"/>
-                <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="48"/>
-
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="220"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="2"  Grid.Row="1" 
-                   Grid.ColumnSpan="2" Text="{lex:Loc Locations}"
-                   VerticalAlignment="Bottom"></TextBlock>
+            <TextBlock
+                Grid.Column="1"
+                      Text="{lex:Loc Locations}"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Bottom"
+                       ></TextBlock>
 
-            <WrapPanel Grid.ColumnSpan="2"  >
-
-            </WrapPanel>
-
-            <DataGrid BorderThickness="0.8" ItemsSource="{Binding TrackControlItems}" 
+            <!--
+            <DataGrid BorderBrush="#FF3E3E42" BorderThickness="1"  ItemsSource="{Binding TrackControlItems}" 
                  SelectedItem="{Binding SelectedTrackLocation}"
                  SelectionMode="Single" HeadersVisibility="None" AutoGenerateColumns="False" 
                  CanUserAddRows="False" CanUserDeleteRows="False"
@@ -70,7 +63,7 @@
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  ScrollViewer.CanContentScroll="False"
                  DataContext="{Binding Mode=OneWay}"
-                 Grid.Column="2"  Grid.Row="2" Grid.ColumnSpan="4"  Grid.RowSpan="3" Margin="3,2,0,0"
+                 Grid.Column="1"  Grid.Row="1" Margin="2"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                      [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)]"                                     
                  >
@@ -86,7 +79,7 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ContentControl Width="200"  Content="{Binding ScreenViewModel}" Margin="2, 2, 5, 2" 
+                                <ContentControl Width="210"  Content="{Binding ScreenViewModel}" Margin="2, 2, 2, 2" 
                                                  HorizontalAlignment="Left"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -102,13 +95,46 @@
                     </ContextMenu>
                 </DataGrid.ContextMenu>
 
-            </DataGrid>
+            </DataGrid>-->
 
-            <local:TrackTabControlView  DataContext="{Binding TrackTabControlView}" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2">
+            <ContentControl Content="{Binding ExpanderBarModel}">
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
+                        <local:TrackTabShortControlView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                        </local:TrackTabShortControlView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
+                        <local:TrackTabShortControlView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                        </local:TrackTabShortControlView>
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
+
+            <local:TrackTabShortControlView Grid.Column="1"  Grid.Row="1" 
+                                            DataContext="{Binding Mode=OneWay}"></local:TrackTabShortControlView>
+
+            <local:TrackTabControlView Margin="2" DataContext="{Binding TrackTabControlView}" Grid.Row="1" Grid.Column="0">
             </local:TrackTabControlView>
         </Grid>
 
-        <Grid Visibility="{Binding AnyLocationExists, Converter={StaticResource InverseBooleanConverter}}">
+<!--
+        <ContentControl Content="{Binding ExpanderBarModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type vm:FaceEnrollmentBarViewModel}">
+                    <local:FaceEnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                    </local:FaceEnrollmentBarView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:FingerBarViewModel}">
+                    <local:FingerBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                    </local:FingerBarView>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
+        -->
+
+
+        <!-- Visibility="{Binding AnyLocationExists, Converter={StaticResource InverseBooleanConverter}}" -->
+        <Grid Visibility="Collapsed">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
                 <Button cal:Message.Attach="[Event Click] = [Action OnAddNewLocation]">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=PlusIconSource}"

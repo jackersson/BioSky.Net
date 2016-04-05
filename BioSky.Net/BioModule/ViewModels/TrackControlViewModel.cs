@@ -46,7 +46,7 @@ namespace BioModule.ViewModels
         return;
 
       NotifyOfPropertyChange(() => AnyLocationExists);
-
+      
       if (!AnyLocationExists)
         return;
 

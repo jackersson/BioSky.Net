@@ -146,7 +146,7 @@ namespace BioModule.ViewModels
       if (PhotoImage == null)
       {
         PhotoImage = new PhotoImageViewModel(_locator);
-        PhotoImage.SetVisibility(true, false, false);
+        //PhotoImage.SetVisibility(true, false, false);
       }
 
       if(VisitorsFilterMenu == null)

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 using BioShell.ViewModels;
 using BioContracts;
-using Grpc.Core;
 
 namespace BioShell
 {
@@ -25,8 +19,7 @@ namespace BioShell
     public object TabControl
     {
       get { return _shellViewModel.TabControl;  }
-      set
-      {        
+      set {        
          _shellViewModel.TabControl = value;        
       }
     }
@@ -34,8 +27,7 @@ namespace BioShell
     public object FlyoutControl
     {
       get { return _shellViewModel.FlyoutControl; }
-      set
-      {
+      set {
         _shellViewModel.FlyoutControl = value;
       }
     }   
@@ -43,8 +35,7 @@ namespace BioShell
     public object ToolBar
     {
       get { return _shellViewModel.ToolBar;  }
-      set
-      {
+      set {
         _shellViewModel.ToolBar = value;
       }
     }
@@ -52,30 +43,26 @@ namespace BioShell
     public object MainMenu
     {
       get { return _shellViewModel.MainMenu; }
-      set
-      {
+      set {
         _shellViewModel.MainMenu = value;
       }
     }
     public object ProgressRing
     {
       get { return _shellViewModel.ProgressRing; }
-      set
-      {
+      set {
         _shellViewModel.ProgressRing = value;
       }
     }
     public object LoginInformation
     {
       get { return _shellViewModel.LoginInformation; }
-      set
-      {
+      set {
         _shellViewModel.LoginInformation = value;
       }
     }
 
-    public IBioModule LoadModule(Assembly assembly)
-    {
+    public IBioModule LoadModule(Assembly assembly) {
       return _loader.LoadModule(assembly);
     }
   }

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BioModule.Views.TrackControlItem
+namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for Detailed.xaml
+  /// Interaction logic for TrackTabShortControlView.xaml
   /// </summary>
-  public partial class Detailed : UserControl
+  public partial class TrackTabShortControlView : UserControl
   {
-    public Detailed()
+    public TrackTabShortControlView()
     {
       InitializeComponent();
     }

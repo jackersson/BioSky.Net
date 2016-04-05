@@ -32,14 +32,14 @@ namespace BioModule.ViewModels
 
     #region Update
 
-    public void SetSingleImage(BitmapSource img)
+    public virtual void SetSingleImage(BitmapSource img)
     {
       if (ImageItems.Count > 1)      
         ImageItems.Clear();
       
       ShowImage(img, 0);      
     }
-    public void SetDoubleImage(BitmapSource first, BitmapSource second)
+    public virtual void SetDoubleImage(BitmapSource first, BitmapSource second)
     {
       ShowImage(first , 0);
       ShowImage(second, 1);
@@ -92,46 +92,27 @@ namespace BioModule.ViewModels
       Zoom(_scrollFieldWidth, _scrollFieldHeight);
     }
     
-    /*
-    public virtual void OnClear(double viewWidth, double viewHeight)
-    {
-      Clear();
-      Zoom(viewWidth, viewHeight);      
-    }  
-    */
     public void Zoom(double viewWidth, double viewHeight)
-    {
-
+    {      
       if (viewWidth == _scrollFieldWidth && _scrollFieldHeight == viewHeight)
         return;
-      
+
       _scrollFieldWidth  = viewWidth;
       _scrollFieldHeight = viewHeight;
 
-      int itemsCount  = ImageItems.Count;
-      double zoomRate = ZoomRate / 100;
-      foreach (ImageItemViewModel imageItem in ImageItems)      
-        imageItem.Zoom(viewWidth * zoomRate / itemsCount, viewHeight * zoomRate / itemsCount);      
+      Zoom(ZoomRate);
+    }
 
+    public void Zoom(double zoomRate)
+    {   
+      double zR = zoomRate / 100 / ImageItems.Count;
+      foreach (ImageItemViewModel imageItem in ImageItems)
+        imageItem.Zoom(_scrollFieldWidth * zR, _scrollFieldHeight * zR);
     }
     #endregion
 
     #region UI
-    /*
-    private double _calculatedImageScale;
-    public double CalculatedImageScale
-    {
-      get { return _calculatedImageScale; }
-      set
-      {
-        if (_calculatedImageScale != value)
-        {
-          _calculatedImageScale = value;
-          NotifyOfPropertyChange(() => CalculatedImageScale);
-        }
-      }
-    }
-    */
+  
     private AsyncObservableCollection<ImageItemViewModel> _imageItems;
     public AsyncObservableCollection<ImageItemViewModel> ImageItems
     {
@@ -157,6 +138,7 @@ namespace BioModule.ViewModels
           _zoomRate = value;
 
           ZoomToFitState = (_zoomRate == ZOOM_TO_FIT_RATE);
+          Zoom(_zoomRate);
           NotifyOfPropertyChange(() => ZoomRate);
         }
       }
@@ -187,9 +169,7 @@ namespace BioModule.ViewModels
     private const double ZOOM_TO_FIT_RATE = 99;   
 
     private   BitmapUtils  _bitmapUtils  ;
-    private   BioFileUtils _bioFileUtils ; 
-
-   // private INotifier _notifier;
+    private   BioFileUtils _bioFileUtils ;     
     #endregion
   }
 }

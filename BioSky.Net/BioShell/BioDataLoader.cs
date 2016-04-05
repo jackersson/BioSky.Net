@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
 using System.Reflection;
@@ -10,7 +6,7 @@ using Castle.Windsor;
 using Castle.Windsor.Installer;
 
 namespace BioShell
-{  
+{
   class BioDataLoader
   {
     private readonly IWindsorContainer _mainContainer;

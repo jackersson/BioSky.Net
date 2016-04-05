@@ -15,9 +15,9 @@ namespace BioModule.ViewModels
     {
       _locator       = locator      ;
      
-      _visitorsView  = new VisitorsViewModel(_locator);
-
-      Items.Add(new TrackControlItemViewModel(_locator));
+      _visitorsView    = new VisitorsViewModel(_locator);
+      FullTrackControl = new FullTrackControlItemViewModel(_locator);
+      Items.Add(FullTrackControl);
       Items.Add(_visitorsView);
 
       ActiveItem = Items[0];
@@ -34,7 +34,9 @@ namespace BioModule.ViewModels
       if (location == null)
         return;
 
-      Items[0] = location.ScreenViewModel;      
+     // FullTrackControl.Update((TrackControlItemViewModel)location.ScreenViewModel);
+
+      //Items[0] = location.ScreenViewModel;      
       ActiveItem = Items[0];
       OpenTab();
     }
@@ -49,6 +51,20 @@ namespace BioModule.ViewModels
         {
           _visitorsView = value;
           NotifyOfPropertyChange(() => VisitorsView);
+        }
+      }
+    }
+
+    private FullTrackControlItemViewModel _fullTrackControl;
+    public FullTrackControlItemViewModel FullTrackControl
+    {
+      get { return _fullTrackControl; }
+      set
+      {
+        if (_fullTrackControl != value)
+        {
+          _fullTrackControl = value;
+          NotifyOfPropertyChange(() => FullTrackControl);
         }
       }
     }

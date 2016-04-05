@@ -5,60 +5,49 @@ using System.Windows.Media.Imaging;
 using BioContracts;
 using System.Drawing;
 using WPFLocalizeExtension.Extensions;
+using System;
+using BioContracts.Common;
+using AForge.Video.DirectShow;
 
 namespace BioModule.ViewModels
 {
-  public class TrackControlItemViewModel : Conductor<IScreen>.Collection.AllActive
+  public class TrackControlItemViewModel : Conductor<IScreen>.Collection.AllActive, IAccessDeviceObserver, ICaptureDeviceObserver
   {    
-    public TrackControlItemViewModel(IProcessorLocator locator)
-    {      
+    public TrackControlItemViewModel(IProcessorLocator locator) {      
       Initialize(locator);
-
-      OnDataContextChanged();
     }
 
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
-    {
-      _locator = locator;   
-      
+    {   
       Initialize(locator);
-
-      OnDataContextChanged();
-
 
       if ( location != null )
        Update(location);
     }
 
     #region Update
-    public void Update(TrackLocation trackLocation)
+
+    public void OnBioImageViewLoaded()
+    {
+      if (ImageView == null)
+        ImageView = new PhotoImageViewModel(_locator);
+    }
+
+    public void Update(TrackLocation location)
     {
       if (CurrentLocation != null)
       {
      //   CurrentLocation.FrameChanged    -= OnNewFrame;
-        CurrentLocation.PropertyChanged -= OnLocationStatusChanged;
+       // CurrentLocation.PropertyChanged -= OnLocationStatusChanged;
       }
 
-      if (trackLocation == null)
+      if (location == null)
         return;
 
-      CurrentLocation = trackLocation;
+      CurrentLocation = location;
 
-      CurrentLocation.PropertyChanged += OnLocationStatusChanged;    
+    //  CurrentLocation.PropertyChanged += OnLocationStatusChanged;    
      // trackLocation.FrameChanged      += OnNewFrame;      
-    }
-
-    private void OnNewFrame(object sender, ref Bitmap bitmap)
-    {
-      if (bitmap == null || ImageView == null)
-        return;
-
-      //ImageView.UpdateOneImage(ref bitmap);
-    }
-   
-    private void OnLocationStatusChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-      NotifyOfPropertyChange(() => OkIconSource);
     }
     #endregion
 
@@ -69,13 +58,11 @@ namespace BioModule.ViewModels
         ActivateItem(_visitorsView);
       base.OnActivate();
     }
-    public void OnDataContextChanged()
-    {
-      if (ImageView != null)
-        ImageView = new ImageViewModel();
-    } 
+
     private void Initialize(IProcessorLocator locator)
     {
+      _locator = locator;
+
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
 
       UserVerified = true;
@@ -85,6 +72,31 @@ namespace BioModule.ViewModels
 
       Items.Add(_visitorsView);
 
+    }
+
+    public void OnCardDetected(string cardNumber){
+      LocationStateIcon = ResourceLoader.UserContactlessCardsIconSource;
+    }
+
+    public void OnError(Exception ex) {
+      LocationStateIcon = ResourceLoader.WarningIconSource;
+    }
+
+    public void OnReady(bool isReady) {
+      LocationStateIcon = ResourceLoader.OkIconSource;
+    }
+
+    public void OnFrame(ref Bitmap frame) {
+      BitmapSource convertedFrame = BitmapConversion.BitmapToBitmapSource(frame);
+      ImageView.SetSingleImage(convertedFrame);
+    }
+
+    public void OnStop(bool stopped, string message) {
+      LocationStateIcon = ResourceLoader.StopIconSource;
+    }
+
+    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {
+      LocationStateIcon = ResourceLoader.OkIconSource;
     }
     #endregion
 
@@ -124,12 +136,13 @@ namespace BioModule.ViewModels
       }
     }
 
-    private ImageViewModel _imageView;
-    public ImageViewModel ImageView
+    
+    private PhotoImageViewModel _imageView;
+    public PhotoImageViewModel ImageView
     {
       get {
         if (_imageView == null)
-          _imageView = new ImageViewModel();
+          _imageView = new PhotoImageViewModel(_locator);
         return _imageView;
       }
       set
@@ -141,6 +154,7 @@ namespace BioModule.ViewModels
         }
       }
     }
+    
 
 
     private bool _accessDeviceOK;
@@ -201,6 +215,21 @@ namespace BioModule.ViewModels
       }
     }
 
+    private BitmapSource _locationStateIcon;
+    public BitmapSource LocationStateIcon
+    {
+      get { return _locationStateIcon; }
+      set
+      {
+        if (_locationStateIcon != value)
+        {
+          _locationStateIcon = value;
+          NotifyOfPropertyChange(() => LocationStateIcon);
+        }
+      }
+    }
+    
+
     private TrackLocation _currentLocation;
     public TrackLocation CurrentLocation
     {
@@ -211,15 +240,14 @@ namespace BioModule.ViewModels
         if (_currentLocation != value)
         {
           _currentLocation = value;
-          NotifyOfPropertyChange(() => CurrentLocation);
-          NotifyOfPropertyChange(() => AccessDeviceOK);
+          NotifyOfPropertyChange(() => CurrentLocation);         
         }
       }
     }
     #endregion
 
     #region Global Variables
-    private readonly IProcessorLocator    _locator;
+    private IProcessorLocator    _locator;
     #endregion
      
   }  

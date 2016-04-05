@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="BioModule.Views.TrackTabShortControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BioModule.Views"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"  
+             xmlns:utils ="clr-namespace:BioModule.Utils"
+             xmlns:vm="clr-namespace:BioModule.ViewModels"     
+             lex:LocalizeDictionary.DesignCulture="uk-UA"
+             lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <DataGrid BorderBrush="#FF3E3E42" BorderThickness="1"  
+                  ItemsSource="{Binding TrackControlItems}"            
+                  SelectedItem="{Binding SelectedTrackLocation}"           
+                  SelectionMode="Single" HeadersVisibility="None" AutoGenerateColumns="False"           
+                  CanUserAddRows="False" CanUserDeleteRows="False"            
+                  ColumnWidth="600"           
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"           
+                  ScrollViewer.CanContentScroll="False"           
+                  DataContext="{Binding Mode=OneWay}"                    
+                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
+                                      [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)]">
+           
+               <DataGrid.Resources>
+                   <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
+                       <ContentControl cal:View.Context="Shorted" cal:View.Model="{Binding}">
+                       </ContentControl>
+                   </DataTemplate>
+               </DataGrid.Resources>
+           
+               <DataGrid.Columns>
+                   <DataGridTemplateColumn>
+                       <DataGridTemplateColumn.CellTemplate>
+                           <DataTemplate>
+                               <ContentControl Width="210"  Content="{Binding ScreenViewModel}" Margin="2, 2, 2, 2" 
+                                            HorizontalAlignment="Left"/>
+                           </DataTemplate>
+                       </DataGridTemplateColumn.CellTemplate>
+                   </DataGridTemplateColumn>
+               </DataGrid.Columns>
+           
+               <DataGrid.ContextMenu >
+                   <ContextMenu IsEnabled="True" >
+                       <MenuItem Header="{lex:Loc OpenSettings}"  
+                         IsEnabled="{Binding CanOpenSettings, Mode=TwoWay}"
+                         cal:Message.Attach="[Event Click] = [Action ShowLocationFlyout()]"
+                         />
+                   </ContextMenu>
+               </DataGrid.ContextMenu>
+           
+           </DataGrid>       
+        </Grid>
+</UserControl>

@@ -51,11 +51,11 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Image  Grid.Column="0" Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
-                         Stretch="Fill" Width="50" Height="50">                   
-
-                </Image>
-
+                <Border Grid.Column="0" BorderBrush="#FF3E3E42" BorderThickness="1" >
+                    <Image  Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                         Stretch="Fill" Width="50" Height="50">                  
+                   </Image>
+                </Border>
                 <StackPanel Margin="5,-4,0,0" Grid.Column="1">
                     <TextBlock>Last Activity</TextBlock>
           <!--          <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToLastnameConverter}}" 

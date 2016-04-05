@@ -25,36 +25,17 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="106*"/>
-            <ColumnDefinition Width="96*"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
+            <ColumnDefinition Width="32"/>
+            <ColumnDefinition Width="*"/>       
+         
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
-<!--
-        <Border Name="ScrollViewerGrid" BorderThickness="1" BorderBrush="Black" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4">
-            <Grid>
-                <ScrollViewer x:Name="CurrentImageScrollViewer" 
-                              cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
-                                                  [Event SizeChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"           
-                              
-                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" >
-                    <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding CurrentImageSource}">
-                        <Image.LayoutTransform>
-                            <ScaleTransform ScaleX="{Binding CalculatedImageScale}" ScaleY="{Binding CalculatedImageScale}">
 
-                            </ScaleTransform>
-                        </Image.LayoutTransform>
-                    </Image>
-                </ScrollViewer>
-            </Grid>
-        </Border>
--->
-
-        <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Grid.RowSpan="2">
+        <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" 
+                Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" >
             <Grid>
                 <ScrollViewer x:Name="CurrentImageScrollViewer" 
                               cal:Message.Attach="[Event Loaded]      = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)];
@@ -83,7 +64,7 @@
 
          <Grid Grid.Row="2" Grid.ColumnSpan ="5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -105,15 +86,16 @@
             </Grid.Style>
 
             <Slider x:Name="Slider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                  
                 cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"
                     Minimum="30"
                     Maximum="200"
                     Value="{Binding ZoomRate, Mode=TwoWay}"
                     LargeChange="20"
-                    SmallChange="10" Margin="0,15"                   
+                    SmallChange="10" Margin="0,0, 5, 0"                   
                     />
 
-            <RadioButton x:Name="Switch" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
+            <RadioButton x:Name="Switch" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
                          cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"                               
                          IsChecked="{Binding ZoomToFitState, Mode=TwoWay}" ToolTip="{lex:Loc ZoomToFit}"/>
 

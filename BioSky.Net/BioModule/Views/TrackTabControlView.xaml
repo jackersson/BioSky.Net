@@ -16,20 +16,20 @@
              d:DataContext="{d:DesignInstance vm:TrackTabControlViewModel, IsDesignTimeCreatable=False}"
              >
     <Grid>
-        <TabControl Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch"
-                    Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="0,2,5,0"
-                    VerticalAlignment="Stretch" ItemsSource="{Binding Items}"               
+        <TabControl HorizontalAlignment="Stretch"                    
+                    VerticalAlignment="Stretch" 
+                    ItemsSource="{Binding Items}"               
                     SelectedItem="{Binding ActiveItem}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"                    
-                    BorderThickness="2"
+                    BorderThickness="1"
                     >
             <TabControl.Resources>
-                <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
-                    <ContentControl x:Name="ActiveItem" 
-                              cal:View.Context="Detailed"                                    
-                              cal:View.Model="{Binding}"                              
+                 <DataTemplate DataType="{x:Type vm:FullTrackControlItemViewModel}">
+                    <local:FullTrackControlItemView
+                              x:Name="ActiveItem" 
+                              DataContext="{Binding Mode=OneWay}"                            
                                  >
-                    </ContentControl>
+                    </local:FullTrackControlItemView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
                     <ContentControl x:Name="ActiveItem" 

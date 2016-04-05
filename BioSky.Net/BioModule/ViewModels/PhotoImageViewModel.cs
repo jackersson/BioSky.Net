@@ -13,7 +13,18 @@ using AForge.Video.DirectShow;
 
 namespace BioModule.ViewModels
 {
-  
+
+  public enum BioImageStyle : long
+  {  
+    Zoom               = 1 << 0
+  , BioSelector        = 1 << 1
+  , LiveEnrollment     = 1 << 2
+  , EnrollmentFromFile = 1 << 3
+  , Information        = 1 << 4
+  , Arrows             = 1 << 5
+  , CancelBtn          = 1 << 6
+  }
+
   public interface IPhotoView
   {
     void Activate();
@@ -454,8 +465,14 @@ namespace BioModule.ViewModels
 
   //TODO rename class BioImageViewModel
   public class PhotoImageViewModel : ImageViewModel, IUserBioItemsUpdatable
-  {
-    public PhotoImageViewModel(IProcessorLocator locator) 
+  {                                                               
+    public const long MIN_BIO_IMAGE_STYLE = (long)( BioImageStyle.Zoom   | BioImageStyle.CancelBtn);
+    public const long MAX_BIO_IMAGE_STYLE = (long)( BioImageStyle.Zoom   | BioImageStyle.CancelBtn
+                                                   | BioImageStyle.Arrows | BioImageStyle.BioSelector
+                                                   | BioImageStyle.EnrollmentFromFile | BioImageStyle.Information
+                                                   | BioImageStyle.LiveEnrollment);
+      
+    public PhotoImageViewModel(IProcessorLocator locator, long style = MIN_BIO_IMAGE_STYLE) 
     {      
       _notifier       = locator.GetProcessor<INotifier>();
       _database       = locator.GetProcessor<IBioSkyNetRepository>();
@@ -473,7 +490,10 @@ namespace BioModule.ViewModels
       //_enroller           = new Enroller(locator);
       //_markerBitmapHolder = new MarkerBitmapSourceHolder();
 
-      SetVisibility();
+      // SetVisibility();
+
+      SetStyle(style);
+      
 
      // UpdateFromPhoto(GetTestPhoto());
 
@@ -488,6 +508,7 @@ namespace BioModule.ViewModels
     {
       ChangeView(state);      
     }
+    
 
     private void ChangeView(PhotoViewEnum state)
     {  
@@ -641,7 +662,7 @@ namespace BioModule.ViewModels
 
       CurrentPhoto = photo;
       PhotoDetails.Update(CurrentPhoto);
-    }        
+    }
 
     /*
     private void OnEnrollmentDone(Photo photo, Person person)
@@ -685,28 +706,23 @@ namespace BioModule.ViewModels
     */
 
     //Make as style
-    public void SetVisibility( bool arrows = true         , bool cancelButton = true
-                             , bool enrollExpander = true, bool controllPanel = true, bool enrollFromPhoto = true)
-    {
-      //ArrowsVisibility          = arrows         ;
-      CancelButtonVisibility    = cancelButton   ;
-      EnrollExpanderVisibility  = enrollExpander ;
-      ControllPanelVisibility   = controllPanel  ;
-      EnrollFromPhotoVisibility = enrollFromPhoto;
+
+    
+
+    private long SetFlag(long currentStyle, BioImageStyle style){
+      return currentStyle | (long)style;
     }
+    private bool HasFlag(long currentStyle, BioImageStyle style) {
+      long activityL = (long)style;
+      return (currentStyle & activityL) == activityL;
+    }
+    public void SetStyle( long style ) { ControlStyle = style;  }
+
    
     #endregion
 
     #region BioService
-
-    /*
-    public override void Clear()
-    {
-      CurrentPhoto = null;
-      base.Clear();     
-    }
-    */
-
+    
     public void UpdateBioItemsController(Utils.IUserBioItemsController controller)
     {
       if (controller == null)
@@ -806,12 +822,12 @@ namespace BioModule.ViewModels
 
     public bool CanMoveNext
     {
-      get { return true; }//CanUsePhotoController && UserController.CanNext; }
+      get { return ArrowsVisibility; }//CanUsePhotoController && UserController.CanNext; }
     }
 
     public bool CanMovePrevious
     {
-      get { return true; }//CanUsePhotoController && UserController.CanPrevious; }
+      get { return ArrowsVisibility; }//CanUsePhotoController && UserController.CanPrevious; }
     }
 
     public bool CanUsePhotoController
@@ -834,67 +850,61 @@ namespace BioModule.ViewModels
       }
     }
 
-    private MarkerBitmapSourceHolder _markerBitmapHolder;
-    public MarkerBitmapSourceHolder MarkerBitmapHolder
+    #region style
+    private long _controlStyle;
+    public long ControlStyle
     {
-      get { return _markerBitmapHolder; }    
-    }
-
-    private bool _enrollFromPhotoVisibility;
-    public bool EnrollFromPhotoVisibility
-    {
-      get { return _enrollFromPhotoVisibility; }
+      get { return _controlStyle; }
       set
       {
-        if (_enrollFromPhotoVisibility != value)
+        if (_controlStyle != value)
         {
-          _enrollFromPhotoVisibility = value;
-          NotifyOfPropertyChange(() => EnrollFromPhotoVisibility);
+          _controlStyle = value;
+          NotifyOfPropertyChange(() => ControlStyle);
+          NotifyOfPropertyChange(() => EnrollFromPhotoVisibility );
+          NotifyOfPropertyChange(() => LiveEnrollmentVisibility  );
+          NotifyOfPropertyChange(() => CancelButtonVisibility    );
+          NotifyOfPropertyChange(() => EnrollExpanderVisibility  );
+          NotifyOfPropertyChange(() => BioImageDetailsVisibility );
+          NotifyOfPropertyChange(() => BioImageSelectorVisibility);
+          NotifyOfPropertyChange(() => ArrowsVisibility          );
+          NotifyOfPropertyChange(() => ZoomVisibility            );
         }
       }
     }
 
-    private bool _cancelButtonVisibility;
-    public bool CancelButtonVisibility
-    {
-      get { return _cancelButtonVisibility; }
-      set
-      {
-        if (_cancelButtonVisibility != value)
-        {
-          _cancelButtonVisibility = value;
-          NotifyOfPropertyChange(() => CancelButtonVisibility);
-        }
-      }
+    public bool EnrollFromPhotoVisibility {
+      get { return HasFlag(ControlStyle, BioImageStyle.EnrollmentFromFile); }   
     }
 
-    private bool _enrollExpanderVisibility;
-    public bool EnrollExpanderVisibility
-    {
-      get { return _enrollExpanderVisibility; }
-      set
-      {
-        if (_enrollExpanderVisibility != value)
-        {
-          _enrollExpanderVisibility = value;
-          NotifyOfPropertyChange(() => EnrollExpanderVisibility);
-        }
-      }
+    public bool LiveEnrollmentVisibility    {
+      get { return HasFlag(ControlStyle, BioImageStyle.LiveEnrollment); }
     }
 
-    private bool _controllPanelVisibility;
-    public bool ControllPanelVisibility
-    {
-      get { return _controllPanelVisibility; }
-      set
-      {
-        if (_controllPanelVisibility != value)
-        {
-          _controllPanelVisibility = value;
-          NotifyOfPropertyChange(() => ControllPanelVisibility);
-        }
-      }
+    public bool CancelButtonVisibility {
+      get { return HasFlag(ControlStyle, BioImageStyle.CancelBtn); }      
     }
+    
+    public bool EnrollExpanderVisibility  {
+      get { return HasFlag(ControlStyle, BioImageStyle.EnrollmentFromFile) || HasFlag(ControlStyle, BioImageStyle.LiveEnrollment); }    
+    }
+
+    public bool BioImageDetailsVisibility {
+      get { return HasFlag(ControlStyle, BioImageStyle.Information); }
+    }
+
+    public bool BioImageSelectorVisibility    {
+      get { return HasFlag(ControlStyle, BioImageStyle.BioSelector); }
+    }
+
+    public bool ArrowsVisibility {
+      get { return HasFlag(ControlStyle, BioImageStyle.Arrows); }
+    }
+
+    public bool ZoomVisibility {
+      get { return HasFlag(ControlStyle, BioImageStyle.Zoom); }
+    }
+    #endregion
 
     private Photo _currentPhoto;
     public Photo CurrentPhoto
@@ -933,16 +943,9 @@ namespace BioModule.ViewModels
 
     #endregion
 
-    #region Global Variables    
-    private readonly Enroller  _enroller;    
+    #region Global Variables     
     private readonly INotifier _notifier;
     private readonly IBioSkyNetRepository _database; 
     #endregion
-  }
-
-  public class MarkerBitmapSourceHolder
-  {
-    public BitmapSource Unmarked;
-    public BitmapSource Marked  ;
-  }
+  }  
 }

@@ -199,32 +199,33 @@ namespace BioContracts
         if (!_devices.ContainsKey(LocationDevice.AccessDevice))
           _devices.Add(LocationDevice.CaptureDevice, new LocationCaptureDeviceObserver(_locator));        
       }
-
-
     }
- /*
-    private async void OnVisitorVerified(Photo photo, Person person)
-    {
-      try
-      {
-        _veryfier.VerificationDone -= OnVisitorVerified;
 
-        bool status = (photo != null && person != null && photo.Personid == person.Id);
-        _visitor.Personid = status ? person.Id : 0;
+    
+    /*
 
-        if (photo != null)        
-          _visitor.Personid = photo.Personid;       
-        
-        _visitor.Status = status ? Result.Success : Result.Failed;
+       private async void OnVisitorVerified(Photo photo, Person person)
+       {
+         try
+         {
+           _veryfier.VerificationDone -= OnVisitorVerified;
 
-        await _bioService.VisitorDataClient.Add(_visitor);
-      }
-      catch (Exception e)
-      {
-        _notifier.Notify(e);
-      }
-    }    
-   */
+           bool status = (photo != null && person != null && photo.Personid == person.Id);
+           _visitor.Personid = status ? person.Id : 0;
+
+           if (photo != null)        
+             _visitor.Personid = photo.Personid;       
+
+           _visitor.Status = status ? Result.Success : Result.Failed;
+
+           await _bioService.VisitorDataClient.Add(_visitor);
+         }
+         catch (Exception e)
+         {
+           _notifier.Notify(e);
+         }
+       }    
+      */
 
     public void Stop()
     {

@@ -32,7 +32,7 @@
             <RowDefinition Height="24"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Background="#e1f5fe">
+        <StackPanel Background="#FF686868">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="24"/>
@@ -64,7 +64,8 @@
                >
             </Image>
 
-            <Label Content="{Binding CurrentLocation.Caption}" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="#FF657E30" Grid.Column="3" FontWeight="Bold"/>
+            <Label Content="{Binding CurrentLocation.Caption}" HorizontalAlignment="Right" 
+                   VerticalAlignment="Top" Foreground="#FFF1F1F1" Grid.Column="3" FontWeight="Bold"/>
             </Grid>
         </StackPanel>
         

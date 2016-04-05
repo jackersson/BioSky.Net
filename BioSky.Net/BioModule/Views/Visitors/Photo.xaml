@@ -59,7 +59,7 @@
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"              
                   cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                       [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)];
-                                      [Event MouseDoubleClick]     = [Action OnMouseDoubleClick($mouseSelectedItem)]">
+                                      [Event MouseDoubleClick]     = [Action OnMouseDoubleClick($mouseSelectedItem)]" BorderBrush="#FF3E3E42">
 
             <ListBox.ItemTemplate>
                 <DataTemplate>                        
