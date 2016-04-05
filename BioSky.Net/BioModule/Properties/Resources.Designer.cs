@@ -163,6 +163,16 @@ namespace BioModule.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap face_scan_color {
+            get {
+                object obj = ResourceManager.GetObject("face_scan_color", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap facial_scan {
             get {
                 object obj = ResourceManager.GetObject("facial_scan", resourceCulture);
@@ -186,6 +196,16 @@ namespace BioModule.Properties {
         internal static System.Drawing.Bitmap fingerprint_scan {
             get {
                 object obj = ResourceManager.GetObject("fingerprint_scan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fingerprint_scan_color {
+            get {
+                object obj = ResourceManager.GetObject("fingerprint_scan_color", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -246,6 +266,16 @@ namespace BioModule.Properties {
         internal static System.Drawing.Bitmap iris_scan {
             get {
                 object obj = ResourceManager.GetObject("iris_scan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap iris_scan_color {
+            get {
+                object obj = ResourceManager.GetObject("iris_scan_color", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

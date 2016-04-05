@@ -26,10 +26,10 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
-                <Setter Property="Background" Value="Red"/>
+                <Setter Property="Background" Value="#FFEF5350"/>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag }" Value="true">
-                        <Setter Property="Background" Value="Green"/>
+                        <Setter Property="Background" Value="#FF81C784"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -55,7 +55,7 @@
             <RadioButton 
                          cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('2')]" 
                          VerticalAlignment="Top" HorizontalAlignment="Left" 
-                         Grid.Column="2" Panel.ZIndex="10" Margin="55,20,0,0" Tag="{Binding IsFingerExist}">
+                         Grid.Column="2" Panel.ZIndex="10" Margin="55,2,0,0" Tag="{Binding IsFingerExist}">
             </RadioButton>
             <RadioButton 
                          cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('3')]" 

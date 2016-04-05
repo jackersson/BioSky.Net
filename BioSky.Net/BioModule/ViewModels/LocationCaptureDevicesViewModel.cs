@@ -27,7 +27,7 @@ namespace BioModule.ViewModels
     #region Update
     public void RefreshConnectedDevices()
     {
-      AsyncObservableCollection<string> temp = _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames();
+      AsyncObservableCollection<string> temp = _bioEngine.CaptureDeviceEngine().GetDevicesNames();
       foreach (string deviceName in temp)
       {       
         if (!CaptureDevicesNames.Contains(deviceName))
@@ -67,13 +67,13 @@ namespace BioModule.ViewModels
     protected override void OnActivate()
     {
       base.OnActivate();
-      _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames().CollectionChanged += CaptureDevicesNames_CollectionChanged;
+      _bioEngine.CaptureDeviceEngine().GetDevicesNames().CollectionChanged += CaptureDevicesNames_CollectionChanged;
       RefreshData(); 
     }
 
     protected override void OnDeactivate(bool close)
     {
-      _bioEngine.CaptureDeviceEngine().GetCaptureDevicesNames().CollectionChanged -= CaptureDevicesNames_CollectionChanged;
+      _bioEngine.CaptureDeviceEngine().GetDevicesNames().CollectionChanged -= CaptureDevicesNames_CollectionChanged;
 
       base.OnDeactivate(close);
     }

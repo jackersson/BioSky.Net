@@ -44,6 +44,8 @@ namespace BioModule.ViewModels
     {
       base.OnActivate();
       RefreshData();
+
+      _imageViewer.ChangeBioImageModel(PageEnum);
     }
 
     public void Update(Person user)

@@ -137,7 +137,7 @@
                         VerticalAlignment="Stretch"                     
                         Grid.RowSpan="6"                                  
                         >
-            <local:PhotoImageView DataContext="{Binding CurrentPhotoImageView}"></local:PhotoImageView>
+            <local:BioImageView DataContext="{Binding CurrentPhotoImageView}"></local:BioImageView>
         </ContentControl>
     </Grid>
 </UserControl>

@@ -52,7 +52,7 @@
                  Text="{Binding LoginData, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Grid Grid.Row="0" Grid.Column="1">
-            <local:PhotoImageView DataContext="{Binding PhotoImage}"></local:PhotoImageView>
+            <local:BioImageView DataContext="{Binding PhotoImage}"></local:BioImageView>
         </Grid>
 
         <Button cal:Message.Attach="[Event Click] = [Action OnRegister]" BorderThickness="0"

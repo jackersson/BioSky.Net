@@ -1,14 +1,8 @@
-﻿using BioAccessDevice.Abstract;
-using BioContracts;
+﻿using BioContracts;
 using BioContracts.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO.Ports;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BioAccessDevice
 {
@@ -20,7 +14,7 @@ namespace BioAccessDevice
       _accessDevicesNames = new AsyncObservableCollection<string>();
     }
 
-    public override void Run()
+    protected override void Run()
     {
       Active = true;
 
@@ -72,7 +66,7 @@ namespace BioAccessDevice
     }
 
     private AsyncObservableCollection<string> _accessDevicesNames;
-    public AsyncObservableCollection<string> AccessDevicesNames
+    public AsyncObservableCollection<string> DevicesNames
     {
       get { return _accessDevicesNames; }
       set

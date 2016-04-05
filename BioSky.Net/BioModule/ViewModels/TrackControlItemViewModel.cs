@@ -12,7 +12,9 @@ namespace BioModule.ViewModels
   {    
     public TrackControlItemViewModel(IProcessorLocator locator)
     {      
-      Initialize(locator);      
+      Initialize(locator);
+
+      OnDataContextChanged();
     }
 
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
@@ -20,7 +22,10 @@ namespace BioModule.ViewModels
       _locator = locator;   
       
       Initialize(locator);
-      
+
+      OnDataContextChanged();
+
+
       if ( location != null )
        Update(location);
     }
@@ -30,7 +35,7 @@ namespace BioModule.ViewModels
     {
       if (CurrentLocation != null)
       {
-        CurrentLocation.FrameChanged    -= OnNewFrame;
+     //   CurrentLocation.FrameChanged    -= OnNewFrame;
         CurrentLocation.PropertyChanged -= OnLocationStatusChanged;
       }
 
@@ -40,7 +45,7 @@ namespace BioModule.ViewModels
       CurrentLocation = trackLocation;
 
       CurrentLocation.PropertyChanged += OnLocationStatusChanged;    
-      trackLocation.FrameChanged      += OnNewFrame;      
+     // trackLocation.FrameChanged      += OnNewFrame;      
     }
 
     private void OnNewFrame(object sender, ref Bitmap bitmap)
@@ -48,7 +53,7 @@ namespace BioModule.ViewModels
       if (bitmap == null || ImageView == null)
         return;
 
-      ImageView.UpdateOneImage(ref bitmap);
+      //ImageView.UpdateOneImage(ref bitmap);
     }
    
     private void OnLocationStatusChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -67,7 +72,7 @@ namespace BioModule.ViewModels
     public void OnDataContextChanged()
     {
       if (ImageView != null)
-        ImageView = new ImageViewModel(_locator);
+        ImageView = new ImageViewModel();
     } 
     private void Initialize(IProcessorLocator locator)
     {
@@ -92,7 +97,8 @@ namespace BioModule.ViewModels
         if (CurrentLocation == null)
           return ResourceLoader.ErrorIconSource;
         else
-          return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
+          return ResourceLoader.ErrorIconSource;
+         // return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
       }
     }
     public BitmapSource VerificationIconSource
@@ -121,7 +127,11 @@ namespace BioModule.ViewModels
     private ImageViewModel _imageView;
     public ImageViewModel ImageView
     {
-      get { return _imageView; }
+      get {
+        if (_imageView == null)
+          _imageView = new ImageViewModel();
+        return _imageView;
+      }
       set
       {
         if (_imageView != value)

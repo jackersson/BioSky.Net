@@ -18,9 +18,9 @@ namespace BioModule.Views
   /// <summary>
   /// Interaction logic for EnrollmentBarView.xaml
   /// </summary>
-  public partial class EnrollmentBarView : UserControl
+  public partial class FaceEnrollmentBarView : UserControl
   {
-    public EnrollmentBarView()
+    public FaceEnrollmentBarView()
     {
       InitializeComponent();
     }

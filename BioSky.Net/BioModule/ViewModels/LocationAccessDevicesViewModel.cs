@@ -39,14 +39,14 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      _bioEngine.AccessDeviceEngine().GetAccessDevicesNames().CollectionChanged += AccessDevicesNames_CollectionChanged;
+      _bioEngine.AccessDeviceEngine().GetDevicesNames().CollectionChanged += AccessDevicesNames_CollectionChanged;
       RefreshData();
       base.OnActivate();
     }
 
     protected override void OnDeactivate(bool close)
     {
-      _bioEngine.AccessDeviceEngine().GetAccessDevicesNames().CollectionChanged -= AccessDevicesNames_CollectionChanged;
+      _bioEngine.AccessDeviceEngine().GetDevicesNames().CollectionChanged -= AccessDevicesNames_CollectionChanged;
       base.OnDeactivate(close);
     }
 
@@ -61,7 +61,7 @@ namespace BioModule.ViewModels
     }
     public void RefreshConnectedDevices()
     {
-      AsyncObservableCollection<string> temp = _bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
+      AsyncObservableCollection<string> temp = _bioEngine.AccessDeviceEngine().GetDevicesNames();
       foreach (string deviceName in temp)
       {
         if (!AccessDevicesNames.Contains(deviceName))

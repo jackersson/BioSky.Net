@@ -26,7 +26,9 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      base.OnActivate();      
+      base.OnActivate();
+
+      _imageViewer.ChangeBioImageModel(PageEnum);
     }
 
     protected override void OnDeactivate(bool close)

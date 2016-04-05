@@ -43,19 +43,21 @@ namespace BioModule.ViewModels
       _database   = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier   = _locator.GetProcessor<INotifier>();
 
-      CurrentPhotoImageView = new PhotoImageViewModel(_locator);
-      UserPhotoView         = new UserPhotoViewModel (CurrentPhotoImageView, _locator);
+      CurrentPhotoImageView = new BioImageViewModel(_locator);
 
+      CurrentPhotoImageView.BioImageModelChanged += OnBioImageModelChanged;
+
+      UserPhotoView = new UserPhotoViewModel (CurrentPhotoImageView, _locator);
       
       _bioUtils = new BioContracts.Common.BioImageUtils();
 
-      UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator);
+      UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator, CurrentPhotoImageView);
 
       uinfoModel.PropertyChanged        += UserDataChanged;
       uinfoModel.ValidationStateChanged += UinfoModel_ValidationStateChanged;
 
       Items.Add(uinfoModel);
-      Items.Add(new UserContactlessCardViewModel(_locator));
+      Items.Add(new UserContactlessCardViewModel(_locator, CurrentPhotoImageView));
       Items.Add(UserPhotoView);
       Items.Add(new UserFingerViewModel(CurrentPhotoImageView));
       Items.Add(new UserIrisViewModel(CurrentPhotoImageView));
@@ -98,6 +100,21 @@ namespace BioModule.ViewModels
     }   
 
     #region Update
+
+    private void OnBioImageModelChanged(PhotoViewEnum bioImageModel)
+    {
+
+      foreach(IScreen item in Items)
+      {
+        if(item is IUserBioItemsController)
+        {
+          IUserBioItemsController item2 = item as IUserBioItemsController;
+          if (item2.PageEnum == bioImageModel)
+            ActivateItem(item);
+        }
+
+      }
+    }
     private bool ContainRequiredFields(Person user)
     {
       if (user == null)
@@ -265,8 +282,8 @@ namespace BioModule.ViewModels
       ActiveItem.Activate();
     }
 
-    private PhotoImageViewModel _currentPhotoImageView;
-    public PhotoImageViewModel CurrentPhotoImageView
+    private BioImageViewModel _currentPhotoImageView;
+    public BioImageViewModel CurrentPhotoImageView
     {
       get { return _currentPhotoImageView; }
       private set

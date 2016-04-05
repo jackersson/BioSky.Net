@@ -44,7 +44,7 @@ namespace BioModule.ViewModels
 
       IsDeleteButtonEnabled = false;
 
-      RefreshData();
+      //RefreshData();
     } 
         
     #region Database
@@ -70,19 +70,7 @@ namespace BioModule.ViewModels
     {
       if (!IsActive)
         return;
-
-      // for test
-      try
-      {
-        Visitors.Add(new Visitor());
-        throw new Exception();
-      }
-      catch (Exception ex)
-      {
-        _notifier.Notify(ex);        
-      }
-      // for test
-
+      
       Visitors = null;
       Visitors = _database.Visitors.Data;
 
@@ -157,7 +145,7 @@ namespace BioModule.ViewModels
     {
       if (PhotoImage == null)
       {
-        PhotoImage = new PhotoImageViewModel(_locator);
+        PhotoImage = new BioImageViewModel(_locator);
         PhotoImage.SetVisibility(true, false, false);
       }
 
@@ -261,8 +249,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private PhotoImageViewModel _photoImage;
-    public PhotoImageViewModel PhotoImage
+    private BioImageViewModel _photoImage;
+    public BioImageViewModel PhotoImage
     {
       get { return _photoImage; }
       set

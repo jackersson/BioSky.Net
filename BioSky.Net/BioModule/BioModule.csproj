@@ -12,7 +12,8 @@
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>87f1b9b9</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -102,15 +103,15 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ChromeTabs, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WPFChromeTabsMVVM.1.1.0\lib\net40\ChromeTabs.dll</HintPath>
+    <Reference Include="ChromeTabs, Version=1.2.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WPFChromeTabsMVVM.1.2.7\lib\net40\ChromeTabs.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Dragablz, Version=0.0.2.147, Culture=neutral, processorArchitecture=MSIL">
@@ -125,20 +126,20 @@
       <HintPath>..\packages\GrayscaleEffect.1.0.1\lib\GrayscaleEffect.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Grpc.Core, Version=0.12.0.0, Culture=neutral, PublicKeyToken=d754f35622e28bad, processorArchitecture=MSIL">
-      <HintPath>..\packages\Grpc.Core.0.12.0\lib\net45\Grpc.Core.dll</HintPath>
+    <Reference Include="Grpc.Core, Version=0.13.1.0, Culture=neutral, PublicKeyToken=d754f35622e28bad, processorArchitecture=MSIL">
+      <HintPath>..\packages\Grpc.Core.0.13.1\lib\net45\Grpc.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.1.3.236, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.1.3-ALPHA236\lib\net45\MahApps.Metro.dll</HintPath>
+    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MaterialDesignColors, Version=1.0.0.14576, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignColors.1.1.1\lib\net45\MaterialDesignColors.dll</HintPath>
+    <Reference Include="MaterialDesignColors, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignColors.1.1.2\lib\net45\MaterialDesignColors.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MaterialDesignThemes.Wpf, Version=1.2.0.339, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignThemes.1.2.0.339\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=1.5.0.523, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.1.5.0.523\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -148,7 +149,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ix-Async.1.2.3\lib\net45\System.Interactive.Async.dll</HintPath>
+      <HintPath>..\packages\Ix-Async.1.2.5\lib\net45\System.Interactive.Async.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows.Forms" />
@@ -170,32 +171,32 @@
       <HintPath>..\packages\WpfLocalizeExtension.2.3.2\lib\net35\WPFLocalizeExtension.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="XAMLMarkupExtensions, Version=1.2.1.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\XAMLMarkupExtensions.1.2.1.3\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+    <Reference Include="XAMLMarkupExtensions, Version=1.2.1.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\XAMLMarkupExtensions.1.2.1.4\lib\net40\XAMLMarkupExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xceed.Wpf.DataGrid, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=2.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.5\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.6.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.6\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -215,11 +216,12 @@
     <Compile Include="ViewModels\AuthenticationPageViewModel.cs" />
     <Compile Include="ViewModels\CardEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
-    <Compile Include="ViewModels\EnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\ErrorViewerDialogViewModel.cs" />
+    <Compile Include="ViewModels\FaceEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\FingerBarViewModel.cs" />
     <Compile Include="ViewModels\FingerInformationViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\ImageItemViewModel.cs" />
     <Compile Include="ViewModels\IrisInformationViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
@@ -260,7 +262,7 @@
     <Compile Include="ViewModels\MainMenuViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\PeriodTimePickerViewModel.cs" />
-    <Compile Include="ViewModels\PhotoImageViewModel.cs" />
+    <Compile Include="ViewModels\BioImageViewModel.cs" />
     <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
     <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
@@ -300,11 +302,11 @@
     <Compile Include="Views\DevicesListView.xaml.cs">
       <DependentUpon>DevicesListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\EnrollmentBarView.xaml.cs">
-      <DependentUpon>EnrollmentBarView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\ErrorViewerView.xaml.cs">
       <DependentUpon>ErrorViewerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FaceEnrollmentBarView.xaml.cs">
+      <DependentUpon>FaceEnrollmentBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FingerBarView.xaml.cs">
       <DependentUpon>FingerBarView.xaml</DependentUpon>
@@ -318,8 +320,11 @@
     <Compile Include="Views\HomePageView.xaml.cs">
       <DependentUpon>HomePageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Image\Video.xaml.cs">
-      <DependentUpon>Video.xaml</DependentUpon>
+    <Compile Include="Views\ImageItemView.xaml.cs">
+      <DependentUpon>ImageItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ImageView.xaml.cs">
+      <DependentUpon>ImageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\IrisInformationView.xaml.cs">
       <DependentUpon>IrisInformationView.xaml</DependentUpon>
@@ -351,8 +356,8 @@
     <Compile Include="Views\PeriodTimePickerView.xaml.cs">
       <DependentUpon>PeriodTimePickerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PhotoImageView.xaml.cs">
-      <DependentUpon>PhotoImageView.xaml</DependentUpon>
+    <Compile Include="Views\BioImageView.xaml.cs">
+      <DependentUpon>BioImageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PhotoInfoExpanderView.xaml.cs">
       <DependentUpon>PhotoInfoExpanderView.xaml</DependentUpon>
@@ -457,21 +462,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\EnrollmentBarView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\ErrorViewerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\FaceEnrollmentBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FingerBarView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FingerInformationView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FlyoutControlView.xaml">
       <SubType>Designer</SubType>
@@ -481,13 +486,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Image\Video.xaml">
+    <Page Include="Views\ImageItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\IrisInformationView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\LoaderView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -525,7 +534,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PhotoImageView.xaml">
+    <Page Include="Views\BioImageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -566,16 +575,16 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserFingerView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UserInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserIrisView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\UserPageView.xaml">
       <SubType>Designer</SubType>
@@ -681,16 +690,7 @@
     <None Include="Resources\contact_card.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\facial_scan.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\fingerprint_scan.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\iris_scan.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\card_in_use.png" />
@@ -708,7 +708,13 @@
     <None Include="Resources\verified.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\warning.png" />
+    <None Include="Resources\face_scan_color.png" />
+    <None Include="Resources\facial_scan.png" />
+    <None Include="Resources\fingerprint_scan_color.png" />
+    <None Include="Resources\fingerprint_scan.png" />
+    <None Include="Resources\iris_scan_color.png" />
+    <None Include="Resources\iris_scan.png" />
+    <Content Include="Resources\warning.png" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />
     <None Include="Resources\left_arrow.png" />
@@ -716,8 +722,8 @@
     <None Include="Resources\help_dialog.png" />
     <None Include="Resources\info_dialog.png" />
     <None Include="Resources\home.png" />
-    <None Include="Resources\finger_scan.png" />
-    <None Include="Resources\iris_scan_image.png" />
+    <Content Include="Resources\finger_scan.png" />
+    <Content Include="Resources\iris_scan_image.png" />
     <Content Include="Resources\loader.PNG" />
     <None Include="Resources\loadphotos.png" />
     <None Include="Resources\screenshot.png" />
@@ -750,7 +756,9 @@
   <ItemGroup>
     <None Include="Resources\logo.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Image\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -759,12 +767,12 @@
     <Error Condition="!Exists('..\packages\Accord.3.0.2\build\Accord.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Accord.3.0.2\build\Accord.targets'))" />
     <Error Condition="!Exists('..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets'))" />
     <Error Condition="!Exists('..\packages\grpc.dependencies.openssl.redist.1.0.204.1\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.openssl.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\grpc.dependencies.openssl.redist.1.0.204.1\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.openssl.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\grpc.native.csharp.0.12.0\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\grpc.native.csharp.0.12.0\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets'))" />
+    <Error Condition="!Exists('..\packages\grpc.native.csharp.0.13.1\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\grpc.native.csharp.0.13.1\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets'))" />
   </Target>
   <Import Project="..\packages\Accord.3.0.2\build\Accord.targets" Condition="Exists('..\packages\Accord.3.0.2\build\Accord.targets')" />
   <Import Project="..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets" Condition="Exists('..\packages\grpc.dependencies.zlib.redist.1.2.8.10\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.zlib.redist.targets')" />
   <Import Project="..\packages\grpc.dependencies.openssl.redist.1.0.204.1\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.openssl.redist.targets" Condition="Exists('..\packages\grpc.dependencies.openssl.redist.1.0.204.1\build\portable-net45+netcore45+wpa81+wp8\grpc.dependencies.openssl.redist.targets')" />
-  <Import Project="..\packages\grpc.native.csharp.0.12.0\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets" Condition="Exists('..\packages\grpc.native.csharp.0.12.0\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets')" />
+  <Import Project="..\packages\grpc.native.csharp.0.13.1\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets" Condition="Exists('..\packages\grpc.native.csharp.0.13.1\build\portable-net45+netcore45+wpa81+wp8\grpc.native.csharp.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

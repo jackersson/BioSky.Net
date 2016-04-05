@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BioContracts
+﻿namespace BioContracts
 {
   public enum AccessDeviceCommands
   {
@@ -15,6 +9,7 @@ namespace BioContracts
    , CommandReady
   }
 
+  /*
   public class AccessDeviceActivity
   {
     public AccessDeviceCommands CommandID
@@ -39,4 +34,5 @@ namespace BioContracts
     private AccessDeviceCommands _commandID;
     private byte[] _data;
   }
+  */
 }

@@ -31,18 +31,25 @@ namespace BioModule.ViewModels
 
 
       TrackTabControlView = new TrackTabControlViewModel(_locator);
-
-      _visitorsView = new VisitorsViewModel(locator);
+      _visitorsView       = new VisitorsViewModel(locator);
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
-      _bioEngine.TrackLocationEngine().LocationsChanged += OnLocationsChanged;
-      CheckOnLocations();
+      _bioEngine.TrackLocationEngine().LocationsChanged += RefreshData;
+  
     }
 
     #region Update
-    public void OnLocationsChanged()
+    public void RefreshData()
     {
+      if (!IsActive)
+        return;
+
+      NotifyOfPropertyChange(() => AnyLocationExists);
+
+      if (!AnyLocationExists)
+        return;
+
       foreach (TrackLocation location in TrackControlItems)
       {
         if (location.ScreenViewModel == null)
@@ -53,9 +60,10 @@ namespace BioModule.ViewModels
         TrackTabControlView.Update(TrackControlItems[0]);
 
       TrackTabControlView.Update(SelectedTrackLocation);
-      CheckOnLocations();
+     // CheckOnLocations();
     }
 
+    /*
     public void CheckOnLocations()
     {
       NormalLocationGrid = true;
@@ -65,6 +73,7 @@ namespace BioModule.ViewModels
         NormalLocationGrid = false;
       }
     }
+    */
 
     #endregion
 
@@ -100,7 +109,9 @@ namespace BioModule.ViewModels
     {
       if (_visitorsView != null)
         ActivateItem(_visitorsView);
-      base.OnActivate();    
+      base.OnActivate();
+
+      RefreshData();
     }
     public void OnMouseRightButtonDown(TrackLocation trackLocation)
     {
@@ -204,34 +215,12 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private bool _zeroLocationGrid;
-    public bool ZeroLocationGrid
-    {
-      get { return _zeroLocationGrid; }
-      set
-      {
-        if (_zeroLocationGrid != value)
-        {
-          _zeroLocationGrid = value;
-          NotifyOfPropertyChange(() => ZeroLocationGrid);
-        }
-      }
+    
+    public bool AnyLocationExists {
+      get { return !(TrackControlItems == null || TrackControlItems.Count < 1) ; }     
     }
 
-    private bool _normalLocationGrid;
-    public bool NormalLocationGrid
-    {
-      get { return _normalLocationGrid; }
-      set
-      {
-        if (_normalLocationGrid != value)
-        {
-          _normalLocationGrid = value;
-          NotifyOfPropertyChange(() => NormalLocationGrid);
-        }
-      }
-    }
+  
     #endregion
 
     #region Global Vatiables

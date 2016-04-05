@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BioModule.Views.Image
+namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for Video.xaml
+  /// Interaction logic for PhotoImageView.xaml
   /// </summary>
-  public partial class Video : UserControl
+  public partial class BioImageView : UserControl
   {
-    public Video()
+    public BioImageView()
     {
       InitializeComponent();
     }

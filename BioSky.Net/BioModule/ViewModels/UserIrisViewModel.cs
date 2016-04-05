@@ -34,6 +34,17 @@ namespace BioModule.ViewModels
 
       _user = user;
     }
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+
+      _imageViewer.ChangeBioImageModel(PageEnum);
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      base.OnDeactivate(close);
+    }
 
     public void OnMouseRightButtonDown(BitmapSource photo)
     {

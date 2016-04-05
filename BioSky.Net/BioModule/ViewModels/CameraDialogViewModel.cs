@@ -22,7 +22,7 @@ namespace BioModule.ViewModels
 
       ICaptureDeviceEngine captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
    
-      CaptureDevicesNames = captureDeviceEngine.GetCaptureDevicesNames();
+      CaptureDevicesNames = captureDeviceEngine.GetDevicesNames();
       
       Update(title);
     }

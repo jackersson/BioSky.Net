@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using BioContracts;
 
 using BioAccessDevice.Abstract;
 using BioAccessDevice.Interfaces;
-using BioAccessDevice.Commands;
 using System.Threading;
 using System.IO.Ports;
 using BioContracts.Abstract;
-using System.Diagnostics;
+using BioContracts.Common;
 
 namespace BioAccessDevice
-{
-  public class AccessDeviceListener : Threadable, IObservable<AccessDeviceActivity>
+{    
+
+  public class AccessDeviceListener : Threadable, IBioObservable<IAccessDeviceObserver>
   {  
     public AccessDeviceListener( string portName ) : base()
     {
@@ -31,23 +27,55 @@ namespace BioAccessDevice
       _commandFactory = new AccessDeviceCommandFactory(); 
       _commands       = new ConcurrentQueue<ICommand> ();
 
-      _observers      = new List<IObserver<AccessDeviceActivity>>();     
-    }   
-       
-    public void Enqueque( ICommand command )
+      _observer       = new BioObserver<IAccessDeviceObserver>();     
+    }
+
+    public void Subscribe(IAccessDeviceObserver observer)
+    {
+      _observer.Subscribe(observer);
+    }
+
+    public void Unsubscribe(IAccessDeviceObserver observer)
+    {
+      _observer.Unsubscribe(observer);
+    }
+
+    public void UnsubscribeAll()
+    {
+      _observer.UnsubscribeAll();
+    }
+
+    public bool HasObserver(IAccessDeviceObserver observer)
+    {
+      return _observer.HasObserver(observer);
+    }
+
+    public override void Stop()
+    {
+      Clear();
+      Execute(AccessDeviceCommands.CommandReset);
+      base.Stop();
+    }
+
+    public void Execute(AccessDeviceCommands commandName)
+    {
+      Execute((AccessDeviceCommand)_commandFactory.GetCommand(commandName));
+    }
+
+    public bool IsActive()
+    {
+      return _serialPort.IsOpen && Active;
+    }
+
+    private void Execute( ICommand command )
     {
       if (command == null)
         return;
       lock (_commands)      
         _commands.Enqueue(command);      
-    }
+    }    
 
-    public void Enqueque(AccessDeviceCommands commandName)
-    {        
-      Enqueque((AccessDeviceCommand)_commandFactory.GetCommand(commandName));      
-    }
-
-    public void Clear()
+    private void Clear()
     {
       lock (_commands)
       {
@@ -58,15 +86,9 @@ namespace BioAccessDevice
         }
       }
     }
-
-    public bool IsActive()
+      
+    private bool Open()
     {
-      return _serialPort.IsOpen && Active;
-    }
-
-    public bool Open()
-    {
-
       if (_serialPort.IsOpen)
         return true;
 
@@ -74,32 +96,21 @@ namespace BioAccessDevice
       {
         _serialPort.Open();
 
-        Enqueque(AccessDeviceCommands.CommandReset    );
-        Enqueque(AccessDeviceCommands.CommandReady    );
+        Execute(AccessDeviceCommands.CommandReset    );
+        Execute(AccessDeviceCommands.CommandReady    );
 
-        AccessDeviceActivity notification = new AccessDeviceActivity();
-        Notify(new AccessDeviceActivity() { CommandID = AccessDeviceCommands.CommandReady });
-
-
-
+        OnReady(true);        
         return true;
       }
       catch (Exception exeption)
       {
-        Notify(exeption);
+        OnError(exeption);
         return false;      
       }
 
-    }
+    }    
 
-    public override void Stop()
-    {
-      Clear();
-      Enqueque(AccessDeviceCommands.CommandReset);    
-      base.Stop();
-    }
-
-    public override void Run()
+    protected override void Run()
     {
       Open();
       Active = true; 
@@ -118,27 +129,22 @@ namespace BioAccessDevice
             AccessDeviceCommands commandID;
             Enum.TryParse(command.GetType().Name, out commandID);
 
-            AccessDeviceActivity notification = new AccessDeviceActivity();          
-            Notify(new AccessDeviceActivity() { CommandID = commandID, Data = command.Message() });          
+            if (commandID == AccessDeviceCommands.CommandDallasKey)
+              OnCardDetected(command.Message());         
           }
           else
           {
             Exception errorMesage = command.ErrorMessage();
             if ( !IsActive() )
             {
-              Notify(errorMesage);
+              OnError(errorMesage);
               Thread.Sleep(1000);
               Open();
             }     
-            else if (errorMesage != null)
-            {
-              Notify(errorMesage);
-            }  
-            else
-            {
-              AccessDeviceActivity notification = new AccessDeviceActivity();
-              Notify(new AccessDeviceActivity() { CommandID = AccessDeviceCommands.CommandReady });
-            } 
+            else if (errorMesage != null)            
+              OnError(errorMesage);            
+            else            
+              OnReady(true);       
 
           }
         }  
@@ -152,6 +158,7 @@ namespace BioAccessDevice
 
 
     }
+        
 
     private bool Dequeue( out ICommand command )
     {
@@ -160,87 +167,50 @@ namespace BioAccessDevice
         while (_commands.IsEmpty)
         {
           Thread.Sleep(100);
-          Enqueque(AccessDeviceCommands.CommandDallasKey);          
+          Execute(AccessDeviceCommands.CommandDallasKey);          
         }     
         
         return _commands.TryDequeue(out command);
       }
     }
-
-    private void Notify(AccessDeviceActivity notification)
+         
+    private void OnCardDetected(byte[] data)
     {
-      if (notification == null)
+      if (data == null)
         return;
 
-      foreach (var observer in _observers)
-      {
-        if (notification != null)        
-          observer.OnNext(notification);       
-      }
+      string cardNumber = "";
+
+      for (int i = 0; i < data.Length; ++i)
+        cardNumber += data[i];
+
+      foreach (IAccessDeviceObserver observer in _observer.Observers)
+        observer.OnCardDetected(cardNumber);
     }
 
-    private void Notify( Exception exception )
+    private void OnError(Exception exception)
     {
       if (exception == null)
         return;
 
-      foreach (var observer in _observers)
-      {
-        if (exception != null)
-          observer.OnError(exception);     
-      }
+      foreach (IAccessDeviceObserver observer in _observer.Observers)
+        observer.OnError(exception);
     }
 
-
-    //Method required by IObservable interface
-    public IDisposable Subscribe(IObserver<AccessDeviceActivity> observer)
+    private void OnReady(bool isOk)
     {
-      if (!HasObserver(observer))
-        _observers.Add(observer);
-
-      return new Unsubscriber(_observers, observer);
+      foreach (IAccessDeviceObserver observer in _observer.Observers)
+        observer.OnReady(isOk);
     }
 
-   
-    public IDisposable Unsubscribe(IObserver<AccessDeviceActivity> observer)
-    {
-      if (HasObserver(observer))
-        _observers.Remove(observer);
+    private ICommandFactory _commandFactory;
+    private SerialPort      _serialPort    ;
 
-      return new Unsubscriber(_observers, observer);
-    }
+    private ConcurrentQueue<ICommand> _commands;
 
-    public bool HasObserver(IObserver<AccessDeviceActivity> observer)
-    {
-      return _observers.Contains(observer);
-    }
+    private BioObserver<IAccessDeviceObserver> _observer;
 
-    private ICommandFactory           _commandFactory;
-    private SerialPort                _serialPort    ;   
-    private ConcurrentQueue<ICommand> _commands      ;  
-      
-
-    private const int ACCESS_DEVICE_BAUD_RATE = 4800;
-
-    //************************** For Observable Functions ***********************************
-    private List<IObserver<AccessDeviceActivity>> _observers;
-    private class Unsubscriber : IDisposable
-    {
-      private List<IObserver<AccessDeviceActivity>> _observers;
-      private IObserver<AccessDeviceActivity> _observer;
-
-      public Unsubscriber(List<IObserver<AccessDeviceActivity>> observers, IObserver<AccessDeviceActivity> observer)
-      {
-        this._observers = observers;
-        this._observer = observer;
-      }
-
-      public void Dispose()
-      {        
-        if (_observer != null && _observers.Contains(_observer))
-          _observers.Remove(_observer);
-      }
-    }
+    private const int ACCESS_DEVICE_BAUD_RATE = 4800;  
 
   }
 }

@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="BioModule.Views.ImageItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
+             xmlns:local="clr-namespace:BioModule.Views"
+             mc:Ignorable="d" 
+             Width= "{Binding ControlWidth}"
+             Height="{Binding ControlHeight}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>      
+    </UserControl.Resources>
+    
+    <Grid>        
+       
+            <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding ImageSource}" >
+                <Image.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding ImageSourceScale}" ScaleY="{Binding ImageSourceScale}"/>
+                </Image.LayoutTransform>
+            </Image>           
+      
+    </Grid>
+</UserControl>

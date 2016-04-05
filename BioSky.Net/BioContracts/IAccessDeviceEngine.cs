@@ -1,33 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-
-namespace BioContracts
+﻿namespace BioContracts
 {
   public interface IAccessDeviceEngine
   {   
-    void Add(string portName);
+    void Add(string deviceName);
 
-    void Remove(string portName);
+    void Remove(string deviceName);
+    
+    AsyncObservableCollection<string> GetDevicesNames();
 
-    string[] GetPortNames();
+    bool IsDeviceActive(string deviceName);
 
-    AsyncObservableCollection<string> GetAccessDevicesNames();
+    bool HasObserver(IAccessDeviceObserver observer, string deviceName);
 
-    bool AccessDeviceActive(string portName);
+    void Execute(AccessDeviceCommands command, string deviceName);
 
-    bool HasObserver(IObserver<AccessDeviceActivity> observer, string portName);
+    void Subscribe(IAccessDeviceObserver observer, string deviceName);
 
-    void Execute(AccessDeviceCommands command, string portName);
-
-    void Subscribe(System.IObserver<AccessDeviceActivity> observer, string portName);
-
-    void Unsubscribe(System.IObserver<AccessDeviceActivity> observer, string portName);
+    void Unsubscribe(IAccessDeviceObserver observer);
     void Stop();
   }
 }

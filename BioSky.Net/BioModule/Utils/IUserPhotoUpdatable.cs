@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BioService;
+using BioModule.ViewModels;
 
 namespace BioModule.Utils
 {
@@ -12,6 +13,7 @@ namespace BioModule.Utils
   {
     void UpdateBioItemsController(IUserBioItemsController controller);
     void UpdateFromPhoto(Photo photo);
+    void ChangeBioImageModel(PhotoViewEnum state);
     void Clear();
 
     Photo CurrentPhoto { get; }

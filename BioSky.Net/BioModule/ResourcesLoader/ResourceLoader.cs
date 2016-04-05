@@ -128,8 +128,37 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _warningIconSource;
     private static BitmapSource _fingerScanIconSource;
     private static BitmapSource _IrisScanImageIconSource;
+    private static BitmapSource _faceScanColorIconSource;
+    private static BitmapSource _fingerScanColorIconSource;
+    private static BitmapSource _irisScanColorIconSource;
 
-
+    public static BitmapSource IrisScanColorIconSource
+    {
+      get
+      {
+        if (_irisScanColorIconSource == null)
+          _irisScanColorIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.iris_scan_color);
+        return _irisScanColorIconSource;
+      }
+    }
+    public static BitmapSource FingerScanColorIconSource
+    {
+      get
+      {
+        if (_fingerScanColorIconSource == null)
+          _fingerScanColorIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.fingerprint_scan_color);
+        return _fingerScanColorIconSource;
+      }
+    }
+    public static BitmapSource FaceScanColorIconSource
+    {
+      get
+      {
+        if (_faceScanColorIconSource == null)
+          _faceScanColorIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.face_scan_color);
+        return _faceScanColorIconSource;
+      }
+    }
     public static BitmapSource IrisScanImageIconSource
     {
       get
