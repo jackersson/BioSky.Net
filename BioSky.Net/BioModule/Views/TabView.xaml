@@ -41,7 +41,9 @@
                     <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary50}"/>
                     <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary50Foreground}"/>-->
 
+
                     <Color x:Key="MyWhiteColor">#FFF1F1F1</Color>
+
                     <SolidColorBrush x:Key="MaterialDesignBackground" Color="#FF000000"/>
                     <SolidColorBrush x:Key="MaterialDesignPaper" Color="#FF37474f"/>
                     <SolidColorBrush x:Key="MaterialDesignBody" Color="#DDFFFFFF"/>
@@ -134,13 +136,14 @@
                     <local:ErrorViewerView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:ErrorViewerView>
                 </DataTemplate>
             </dragablz:TabablzControl.Resources>
-            <dragablz:TabablzControl.CustomHeaderItemTemplate>
+           <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
                         <!--<lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False"/>-->
                         <!--<TextBlock Text="{Binding Result, ElementName=Proxy}" TextAlignment="Center" TextTrimming="WordEllipsis" />-->
 
-                        <TextBlock Text="{Binding DisplayName}" TextAlignment="Center" TextTrimming="WordEllipsis" FontSize="11" Foreground="#FFF1F1F1" />
+            <TextBlock Text="{Binding DisplayName}" TextAlignment="Center" TextTrimming="WordEllipsis" FontSize="11" 
+                       Foreground="#FFF1F1F1" />
                     </Grid>
                 </DataTemplate>
             </dragablz:TabablzControl.CustomHeaderItemTemplate>

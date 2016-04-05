@@ -35,6 +35,8 @@ namespace BioModule
         if (!AssemblySource.Instance.Contains(assembly))
           AssemblySource.Instance.Add(assembly);
 
+       
+
         return true;
       }
       catch (Exception)

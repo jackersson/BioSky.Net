@@ -29,10 +29,11 @@ namespace BioModule.ViewModels
   public class UserInformationViewModel : Screen, IUpdatable, IDataErrorInfo
   {
     public event ValidationStateEventHandler ValidationStateChanged;
-    public UserInformationViewModel(IProcessorLocator locator)
+    public UserInformationViewModel(IProcessorLocator locator , IUserBioItemsUpdatable imageViewer)
     {
-      _locator = locator;
-      _database = _locator.GetProcessor<IBioSkyNetRepository>();
+      _locator     = locator;
+      _database    = _locator.GetProcessor<IBioSkyNetRepository>();
+      _imageViewer = imageViewer;
 
       _validator = new BioValidator();
 
@@ -48,6 +49,18 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Interface
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+
+      _imageViewer.ChangeBioImageModel(PhotoViewEnum.Faces);
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      base.OnDeactivate(close);
+    }
+
     public void Apply() { }
 
     #endregion
@@ -242,8 +255,9 @@ namespace BioModule.ViewModels
       get { return _database.BioCultureSources.GenderSources; }
     }
     #endregion
-    private readonly IValidator           _validator;
-    private readonly IProcessorLocator    _locator;
-    private readonly IBioSkyNetRepository _database;
+    private readonly IValidator             _validator  ;
+    private readonly IProcessorLocator      _locator    ;
+    private readonly IBioSkyNetRepository   _database   ;
+    private          IUserBioItemsUpdatable _imageViewer;
   }
 }

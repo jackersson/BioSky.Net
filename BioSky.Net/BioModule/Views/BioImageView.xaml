@@ -1,10 +1,11 @@
-﻿<UserControl x:Class="BioModule.Views.PhotoImageView"
+﻿<UserControl x:Class="BioModule.Views.BioImageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"             
              xmlns:vm="clr-namespace:BioModule.ViewModels" 
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"   
              xmlns:local="clr-namespace:BioModule.Views"               
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
@@ -14,15 +15,67 @@
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              xmlns:utils="clr-namespace:BioModule.Utils"     
-             d:DataContext="{d:DesignInstance vm:PhotoImageViewModel, IsDesignTimeCreatable=False}"
+             
              mc:Ignorable="d"                          
              d:DesignHeight="300" d:DesignWidth="300">
-
+    <!-- d:DataContext="{d:DesignInstance vm:BioImageViewModel, IsDesignTimeCreatable=False}"-->
     <UserControl.Resources>
-        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-        <utils:BooleanToCollapsedVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <utils:BooleanToCollapsedVisibilityConverter x:Key="BooleanToCollapsedVisibilityConverter"/>
+
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="MyStandardButton" TargetType="Button">
+                <Setter Property="Background" Value="#00000000" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrushNormal}" />
+                <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0"
+                            SnapsToDevicePixels="True">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHighlighted}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundSelected}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSelected}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid Name="GridLayout">
@@ -38,7 +91,9 @@
         <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" 
                 Grid.Column="0" Grid.Row="0"
                 Grid.ColumnSpan="5" Grid.RowSpan="3">
-            <local:ImageView DataContext="{Binding Mode=OneWay}"/>
+            <local:ImageView DataContext="{Binding Mode=OneWay}">
+                
+            </local:ImageView>            
         </Border>
 
         <TextBlock Grid.ColumnSpan="2"
@@ -57,8 +112,8 @@
             VerticalAlignment="Bottom"
             Background="#FFFFFFFF" BorderBrush="{x:Null}"
             Visibility="{Binding EnrollExpanderVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
-            
-            <ContentControl Content="{Binding ExpanderBarModel}">
+
+            <ContentControl Content="{Binding CurrentBioImage.ExpanderBarModel}">
                 <ContentControl.Resources>
                     <DataTemplate DataType="{x:Type vm:FaceEnrollmentBarViewModel}">
                         <local:FaceEnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
@@ -96,12 +151,11 @@
                             <ToggleButton x:Name="ExpanderButton" Background="{x:Null}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                           BorderThickness="1" BorderBrush="#7F3587BD"   Grid.Column="2"                           
                                           IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                          Visibility="{Binding LiveEnrollmentVisibility, Converter={StaticResource BooleanToVisibilityConverter} }"
                                           Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="Enrollment Settings"
                                           Padding="1.5,0">
-                                <Image Width="16" Height="16" Name="ArrowImage" IsHitTestVisible="False"  
+                                <Image Width="16" Height="16" Name="ArrowImage" IsHitTestVisible="False" Opacity="0.5" 
                                        VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
-                                       Source="{Binding SettingsToogleButtonBitmap}">
+                                       Source="{Binding CurrentBioImage.SettingsToogleButtonBitmap}">
                                     <Image.RenderTransform>
                                         <RotateTransform Angle="0" />
                                     </Image.RenderTransform>
@@ -116,7 +170,7 @@
                                         BorderThickness="1" Grid.Column="1" BorderBrush="#7F3587BD"
                                         ToolTip="{lex:Loc EnrollFromPhoto}" >
                                 <Image Width="16" Height="16" Opacity="0.5"
-                                           Source="{Binding LoadFromFileButtonBitmap}"  />
+                                           Source="{Binding Source={StaticResource ResourceLoader}, Path=UploadIconSource}"  />
                             </Button>
 
                             <Button cal:Message.Attach="[Event Click] = [Action Add]"                                     
@@ -126,7 +180,7 @@
                                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                     BorderThickness="1" Grid.Column="0" BorderBrush="#7F3587BD"
                                      >
-                                <Image Width="32" Height="32"
+                                <Image Width="32" Height="32" Opacity="0.5"
                                            Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}"  />
                             </Button>
                         </Grid>
@@ -149,95 +203,56 @@
         <!--*****************************************EnrollmentExpanderView**************************************************-->
 
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="4"
-               Visibility="{Binding BioImageDetailsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"             
-              >
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">
             <ContentControl>
-                <local:PhotoInfoExpanderView DataContext="{Binding PhotoDetails}" ></local:PhotoInfoExpanderView>
+                <local:PhotoInfoExpanderView DataContext="{Binding BioImageDetails}"></local:PhotoInfoExpanderView>
             </ContentControl>
         </Grid>
 
         
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
-      <!--  <Grid Grid.Row="2" Grid.ColumnSpan ="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="48"/>
-            </Grid.RowDefinitions>
-            <Grid.Style>
-                <Style TargetType="{x:Type Grid}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ControllPanelVisibility}"
-                                 Value="True">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding ControllPanelVisibility}" 
-                                 Value="False">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Grid.Style>
 
-            <Slider x:Name="Slider" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                cal:Message.Attach="[Event ValueChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, ImageControl.ActualWidth, ImageControl.ActualHeight)]"
-                    Minimum="30"
-                    Maximum="200"
-                    Value="{Binding ZoomRate, Mode=TwoWay}"
-                    LargeChange="20"
-                    SmallChange="10" Margin="0,15"                   
-                    />
 
-            <RadioButton x:Name="Switch" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"
-                         cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight, ImageControl.ActualWidth, ImageControl.ActualHeight)]"                               
-                         IsChecked="{Binding ZoomToFitState, Mode=TwoWay}" ToolTip="{lex:Loc ZoomToFit}"/>
+        <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
+                     Orientation="Vertical" HorizontalAlignment="Left" Width="40">
+            <Button  Width="40" Height="40" Style ="{StaticResource MyStandardButton}"  
+                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0">
 
-        </Grid> -->
+                <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
 
-        <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2"
-                    Visibility="{Binding BioImageSelectorVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"             
-                    Orientation="Vertical" HorizontalAlignment="Left" Width="40">
-            <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="40" Height="40" 
-                    ToolTip="Faces"   BorderBrush="#7F3587BD" Content="1">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="OnChangeViewClick">
+                        <cal:ActionMessage MethodName="ChangeBioImageModel">
                             <cal:Parameter Value="{x:Static vm:PhotoViewEnum.Faces}" />
-                            <cal:Parameter Value="{Binding ElementName=CurrentImageScrollViewer, Path=ActualWidth}"/>
-                            <cal:Parameter Value="{Binding ElementName=CurrentImageScrollViewer, Path=ActualHeight}"/>
-                            <cal:Parameter Value="{Binding ElementName=ImageControl, Path=ActualWidth}"/>
-                            <cal:Parameter Value="{Binding ElementName=ImageControl, Path=ActualHeight}"/>
                         </cal:ActionMessage>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="40" Height="40" 
-                    ToolTip="Fingers" BorderBrush="#7F3587BD" Content="2">
+            <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
+                    ToolTip="Fingers" BorderBrush="#7F3587BD">
+
+                <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=FingerScanColorIconSource}"  />
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="OnChangeViewClick">
+                        <cal:ActionMessage MethodName="ChangeBioImageModel">
                             <cal:Parameter Value="{x:Static vm:PhotoViewEnum.Fingers}" />
-                            <cal:Parameter Value="{Binding ActualWidth, ElementName=CurrentImageScrollViewer}"/>
-                            <cal:Parameter Value="{Binding ActualHeight, ElementName=CurrentImageScrollViewer}"/>
-                            <cal:Parameter Value="{Binding ActualWidth, ElementName=ImageControl}"/>
-                            <cal:Parameter Value="{Binding ActualHeight, ElementName=ImageControl}"/>
                         </cal:ActionMessage>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button Style="{DynamicResource MetroCircleButtonStyle}" Width="40" Height="40" 
-                    ToolTip="Irises"  BorderBrush="#7F3587BD" Content="3">
+            <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
+                    ToolTip="Irises"  BorderBrush="#7F3587BD">
+
+                <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=IrisScanColorIconSource}"  />
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="OnChangeViewClick">
+                        <cal:ActionMessage MethodName="ChangeBioImageModel">
                             <cal:Parameter Value="{x:Static vm:PhotoViewEnum.Irises}" />
-                            <cal:Parameter Value="{Binding ElementName=CurrentImageScrollViewer, Path=ActualWidth}"/>
-                            <cal:Parameter Value="{Binding ElementName=CurrentImageScrollViewer, Path=ActualHeight}"/>
-                            <cal:Parameter Value="{Binding ElementName=ImageControl, Path=ActualWidth}"/>
-                            <cal:Parameter Value="{Binding ElementName=ImageControl, Path=ActualHeight}"/>
                         </cal:ActionMessage>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>

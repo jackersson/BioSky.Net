@@ -34,8 +34,6 @@ namespace BioModule.ViewModels
       logFileFormat = _database.LocalStorage.LogFileFormat;
     }
 
-    private string logFileFormat;
-
     protected override void OnActivate()
     {
       foreach (TimeFilter filter in Filters)
@@ -291,6 +289,7 @@ namespace BioModule.ViewModels
     #endregion
 
     #region GlobalVariables
+    private string               logFileFormat         ;
     private SortDescription      _sortDescriptionByTime;
     private BioFileUtils         _bioFileUtils         ;
     private DialogsHolder        _dialogsHolder        ;

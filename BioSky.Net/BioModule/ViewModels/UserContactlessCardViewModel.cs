@@ -20,16 +20,16 @@ namespace BioModule.ViewModels
 {
   public class UserContactlessCardViewModel : Conductor<IScreen>.Collection.OneActive, IUpdatable, IAccessDeviceObserver
   {
-    public UserContactlessCardViewModel(IProcessorLocator locator)
+    public UserContactlessCardViewModel(IProcessorLocator locator, IUserBioItemsUpdatable imageViewer)
     {
       DisplayName = "Cards";
       CardState   = "Card number";
 
-      _locator    = locator;    
-
-      _bioService = _locator.GetProcessor<IServiceManager>().DatabaseService;
-      _database   = _locator.GetProcessor<IBioSkyNetRepository>();
-      _dialogs    = _locator.GetProcessor<DialogsHolder>();
+      _locator     = locator;
+      _imageViewer = imageViewer;
+      _bioService  = _locator.GetProcessor<IServiceManager>().DatabaseService;
+      _database    = _locator.GetProcessor<IBioSkyNetRepository>();
+      _dialogs     = _locator.GetProcessor<DialogsHolder>();
       
       //TODO put in locator
       CardEnrollment = new CardEnrollmentBarViewModel(locator);
@@ -52,6 +52,7 @@ namespace BioModule.ViewModels
       base.OnActivate();
       RefreshData();
       CardEnrollment.Subscribe(this);
+      _imageViewer.ChangeBioImageModel( PhotoViewEnum.Faces);
     }
 
     protected override void OnDeactivate(bool close)
@@ -276,13 +277,14 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Global Variables
-    private readonly DialogsHolder        _dialogs      ;
-    private          Person               _user         ;
-    private readonly IProcessorLocator    _locator      ; 
-    private readonly IDatabaseService     _bioService   ;
-    private readonly INotifier            _notifier     ;
-    private readonly IBioSkyNetRepository _database     ;
+    private readonly DialogsHolder          _dialogs      ;
+    private          Person                 _user         ;
+    private readonly IProcessorLocator      _locator      ; 
+    private readonly IDatabaseService       _bioService   ;
+    private readonly INotifier              _notifier     ;
+    private readonly IBioSkyNetRepository   _database     ;
+    private          IUserBioItemsUpdatable _imageViewer  ;
 
-    #endregion   
+    #endregion
   }
 }

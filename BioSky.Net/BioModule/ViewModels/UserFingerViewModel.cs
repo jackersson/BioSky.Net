@@ -26,12 +26,24 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      base.OnActivate();      
+      base.OnActivate();
+
+      _imageViewer.ChangeBioImageModel(PageEnum);
     }
 
     protected override void OnDeactivate(bool close)
     {
       base.OnDeactivate(close);
+    }
+
+    public void OnFingerCheck(int finger)
+    {
+      Console.WriteLine(finger);
+    }
+
+    public bool IsFingerExist
+    {
+      get { return true; }
     }
 
     public void Add(Photo photo)
@@ -72,7 +84,7 @@ namespace BioModule.ViewModels
     public PhotoViewEnum PageEnum { get { return PhotoViewEnum.Fingers; }}
     public Person User { get { return _user; }}
 
-    private Person _user;
+    private Person                 _user       ;
     private IUserBioItemsUpdatable _imageViewer;
   }
 }

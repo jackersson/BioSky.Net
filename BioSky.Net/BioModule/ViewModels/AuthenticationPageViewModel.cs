@@ -20,8 +20,8 @@ namespace BioModule.ViewModels
       _viewModelSelector = _locator.GetProcessor<ViewModelSelector>();
       _bioEngine         = _locator.GetProcessor<IBioEngine>();
       
-      PhotoImage = new PhotoImageViewModel(_locator);
-     /// PhotoImage.SetVisibility(false, false, true, false, false);
+      PhotoImage = new BioImageViewModel(_locator);
+      PhotoImage.SetVisibility(false, false, true, false, false);
     }
     public void Show()
     {
@@ -60,8 +60,8 @@ namespace BioModule.ViewModels
     }
 
 
-    private PhotoImageViewModel _photoImage;
-    public PhotoImageViewModel PhotoImage
+    private BioImageViewModel _photoImage;
+    public BioImageViewModel PhotoImage
     {
       get { return _photoImage; }
       set

@@ -145,8 +145,8 @@ namespace BioModule.ViewModels
     {
       if (PhotoImage == null)
       {
-        PhotoImage = new PhotoImageViewModel(_locator);
-        //PhotoImage.SetVisibility(true, false, false);
+        PhotoImage = new BioImageViewModel(_locator);
+        PhotoImage.SetVisibility(true, false, false);
       }
 
       if(VisitorsFilterMenu == null)
@@ -249,8 +249,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private PhotoImageViewModel _photoImage;
-    public PhotoImageViewModel PhotoImage
+    private BioImageViewModel _photoImage;
+    public BioImageViewModel PhotoImage
     {
       get { return _photoImage; }
       set

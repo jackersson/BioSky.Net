@@ -18,9 +18,9 @@ namespace BioModule.Views
   /// <summary>
   /// Interaction logic for PhotoImageView.xaml
   /// </summary>
-  public partial class PhotoImageView : UserControl
+  public partial class BioImageView : UserControl
   {
-    public PhotoImageView()
+    public BioImageView()
     {
       InitializeComponent();
     }
