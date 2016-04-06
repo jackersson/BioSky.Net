@@ -253,10 +253,10 @@ namespace BioModule.Utils
       {
         Person person = _personHolder.GetValue((long)value);
         
-        if(person != null)
+        if(person != null && person.Photos != null)
         {
 
-          Photo photo = person.Photos.FirstOrDefault();//.GetValue(person.Thumbnailid);
+          Photo photo = person.Photos.Where(x => x.Id == person.Photoid).FirstOrDefault(); //.GetValue(person.Thumbnailid);
 
           if (photo != null)
           {

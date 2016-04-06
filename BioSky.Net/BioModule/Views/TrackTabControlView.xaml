@@ -16,6 +16,8 @@
              d:DataContext="{d:DesignInstance vm:TrackTabControlViewModel, IsDesignTimeCreatable=False}"
              >
     <Grid>
+        
+        
         <TabControl HorizontalAlignment="Stretch"                    
                     VerticalAlignment="Stretch" 
                     ItemsSource="{Binding Items}"               

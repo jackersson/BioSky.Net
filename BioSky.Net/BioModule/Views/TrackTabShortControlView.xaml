@@ -7,14 +7,35 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              xmlns:utils ="clr-namespace:BioModule.Utils"
-             xmlns:vm="clr-namespace:BioModule.ViewModels"     
+             xmlns:vm="clr-namespace:BioModule.ViewModels"    
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style x:Key="DataGridSelectionStyle"  TargetType="{x:Type DataGridCell}">
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#FFD7DBDE" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
     <Grid>
-        <DataGrid BorderBrush="#FF3E3E42" BorderThickness="1"  
+        <Grid.RowDefinitions>          
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+      
+        <DataGrid
+            CellStyle="{DynamicResource DataGridSelectionStyle}"
+              
+
+                   BorderBrush="#FF3E3E42" BorderThickness="1"  
                   ItemsSource="{Binding TrackControlItems}"            
                   SelectedItem="{Binding SelectedTrackLocation}"           
                   SelectionMode="Single" HeadersVisibility="None" AutoGenerateColumns="False"           
@@ -31,6 +52,7 @@
                        <ContentControl cal:View.Context="Shorted" cal:View.Model="{Binding}">
                        </ContentControl>
                    </DataTemplate>
+                   
                </DataGrid.Resources>
            
                <DataGrid.Columns>

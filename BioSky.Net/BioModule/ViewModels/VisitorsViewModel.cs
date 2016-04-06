@@ -90,6 +90,9 @@ namespace BioModule.ViewModels
     {
       LastVisitor = null;     
       LastVisitor = Visitors.LastOrDefault();
+
+      //if (LastVisitor == null)
+        //LastVisitor = DefaultVisitor;
     }
 
     #endregion
@@ -149,8 +152,8 @@ namespace BioModule.ViewModels
        // PhotoImage.SetVisibility(true, false, false);
       }
 
-      if(VisitorsFilterMenu == null)
-        VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator);
+     // if(VisitorsFilterMenu == null)
+       // VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator);
     }
 
     protected override void OnActivate()
@@ -216,6 +219,11 @@ namespace BioModule.ViewModels
       PageController.UpdateMove();     
     }
 
+    public void ApplyQuery(QueryVisitors query)
+    {
+
+    }
+
     public void OnMouseRightButtonDown(Visitor visitor)
     {
       MenuOpenStatus = (visitor != null);
@@ -263,10 +271,26 @@ namespace BioModule.ViewModels
       }
     }
 
-    private VisitorsFilterMenuViewModel _visitorsFilterMenu;
+    private static Visitor _defaultVisitor;
+    private Visitor DefaultVisitor
+    {
+      get {
+        if (_defaultVisitor == null)
+          _defaultVisitor = new Visitor() { Id = 0, Personid = 0 };
+
+        return _defaultVisitor;
+      }
+    }
+
+
+    private static VisitorsFilterMenuViewModel _visitorsFilterMenu;
     public VisitorsFilterMenuViewModel VisitorsFilterMenu
     {
-      get { return _visitorsFilterMenu; }
+      get {
+        if (_visitorsFilterMenu == null)
+          _visitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator);
+
+        return _visitorsFilterMenu; }
       set
       {
         if (_visitorsFilterMenu != value)
@@ -314,7 +338,11 @@ namespace BioModule.ViewModels
     private Visitor _lastVisitor;
     public Visitor LastVisitor
     {
-      get { return _lastVisitor; }
+      get {
+
+        if (_lastVisitor == null)
+          return DefaultVisitor;
+        return _lastVisitor; }
       set
       {
         if (_lastVisitor != value)

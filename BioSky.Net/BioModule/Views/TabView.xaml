@@ -102,15 +102,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-
-
-
         <dragablz:TabablzControl x:Name="MyTabview" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
-                                 SelectedItem="{Binding ActiveItem}"      
+                                SelectedItem="{Binding ActiveItem}"
                                  ItemsSource="{Binding Items}" Background="#FF3E3E42"
                                  AllowDrop="True" ShowDefaultCloseButton="True"
-                                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged()]"                                 
+                                               
                                  >
+            
             <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">
                     <local:UsersView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}">
@@ -138,9 +136,7 @@
             </dragablz:TabablzControl.Resources>
            <dragablz:TabablzControl.CustomHeaderItemTemplate>
                 <DataTemplate>
-                    <Grid Background="Transparent">
-                        <!--<lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False"/>-->
-                        <!--<TextBlock Text="{Binding Result, ElementName=Proxy}" TextAlignment="Center" TextTrimming="WordEllipsis" />-->
+                    <Grid Background="Transparent">               
 
             <TextBlock Text="{Binding DisplayName}" TextAlignment="Center" TextTrimming="WordEllipsis" FontSize="11" 
                        Foreground="#FFF1F1F1" />
@@ -151,9 +147,9 @@
                 <DataTemplate>
                     <ContentControl Margin="2,2,2,2" Content="{Binding}"></ContentControl>
                 </DataTemplate>
-            </dragablz:TabablzControl.ContentTemplate>
-           
-        </dragablz:TabablzControl>
+            </dragablz:TabablzControl.ContentTemplate>           
+        </dragablz:TabablzControl> 
+
 
     </Grid>
 </UserControl>

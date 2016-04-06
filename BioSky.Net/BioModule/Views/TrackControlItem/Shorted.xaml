@@ -60,7 +60,7 @@
 
             <Image HorizontalAlignment="Left"  Height="24" Grid.Column="0"
                VerticalAlignment="Top" Width="24" 
-                   Source="{Binding OkIconSource}"
+                   Source="{Binding LocationStateIcon}"
                >
             </Image>
 

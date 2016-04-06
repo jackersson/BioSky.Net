@@ -76,12 +76,18 @@ namespace BioEngine.CaptureDevices
 
     public FilterInfo CaptureDeviceConnected(string deviceName)
     {
-      ActualCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-      foreach (FilterInfo fi in ActualCaptureDevices)
+      try
       {
-        if (fi.Name == deviceName)
-          return fi;
-      }      
+        ActualCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+        foreach (FilterInfo fi in ActualCaptureDevices)
+        {
+          if (fi.Name == deviceName)
+            return fi;
+        }
+      }
+      catch (Exception e)  {
+        Console.WriteLine(e);
+      }    
       return null;
     }
 

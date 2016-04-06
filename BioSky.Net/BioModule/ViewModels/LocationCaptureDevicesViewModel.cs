@@ -39,12 +39,19 @@ namespace BioModule.ViewModels
     {
       if (!IsActive)
         return;
- 
 
-      foreach (CaptureDevice cd in _database.Locations.CaptureDevices)
+      try
       {
-        if (!CaptureDevicesNames.Contains(cd.Devicename))
-        CaptureDevicesNames.Add(cd.Devicename);
+
+        foreach (CaptureDevice cd in _database.Locations.CaptureDevices)
+        {
+          if (!CaptureDevicesNames.Contains(cd.Devicename))
+            CaptureDevicesNames.Add(cd.Devicename);
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
       }
 
       RefreshConnectedDevices();      

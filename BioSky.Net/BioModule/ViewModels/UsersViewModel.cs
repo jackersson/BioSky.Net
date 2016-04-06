@@ -49,6 +49,7 @@ namespace BioModule.ViewModels
       _database.Persons.DataChanged      += RefreshData;      
       //_database.PhotoHolder.DataChanged  += RefreshData;
 
+
       IsDeleteButtonEnabled = false;   
     }
     #region Database
@@ -80,8 +81,7 @@ namespace BioModule.ViewModels
       if (result == false)
         return;
 
-      try
-      {
+      try {
         await _bioService.PersonDataClient.Remove(SelectedPersons);
       }
       catch (Exception e)

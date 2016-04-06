@@ -20,6 +20,7 @@ namespace BioModule.ViewModels
     bool CanRevert { get; }    
   }
 
+  #region locationFilter
   public class LocationFilter : PropertyChangedBase, IFilterable
   {
     private readonly IProcessorLocator    _locator ;
@@ -131,7 +132,9 @@ namespace BioModule.ViewModels
 
     public bool CanRevert  {  get { return SelectedLocations.Count > 0; } }   
   }
+  #endregion
 
+  #region countryFilter
   public class CountryFilter : PropertyChangedBase, IFilterable
   {
     private readonly IProcessorLocator _locator;
@@ -180,7 +183,9 @@ namespace BioModule.ViewModels
     public void Reset() { SelectedCountry = null; }
     public bool CanRevert { get { return SelectedCountry != null; } }
   }
+  #endregion
 
+  #region timeFilterItem
   public class TimeFilterItem : PropertyChangedBase
   {
     public TimeFilterItem(string name, DateInterval interval, TimeEnum enumState)
@@ -254,7 +259,9 @@ namespace BioModule.ViewModels
       }
     }
   }
+  #endregion
 
+#region dateinterval
   public class DateInterval
   {
     public DateInterval(int year, int month, int day, int hour, int minutes, int seconds)
@@ -275,6 +282,10 @@ namespace BioModule.ViewModels
 
   }
 
+  #endregion
+
+
+  #region datetimePeriod
   public class DateTimePeriod
   {
     public void Reset()
@@ -291,7 +302,9 @@ namespace BioModule.ViewModels
     public DateTime DateTimeTo   { get; set; }
 
   }
+  #endregion
 
+  #region timefilter
   public class TimeFilter : PropertyChangedBase, IFilterable
   {
     private readonly IProcessorLocator    _locator      ;
@@ -445,7 +458,7 @@ namespace BioModule.ViewModels
     } 
 
   }
-
+  #endregion 
   public class VisitorsFilterMenuViewModel : Screen
   {
     private ObservableCollection<IFilterable> _filters;

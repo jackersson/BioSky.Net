@@ -173,13 +173,13 @@
                     ToolTip="{lex:Loc Delete}" Tag="{x:Static bioContracts:Activity.VisitorRemove}"
                     cal:Message.Attach="[Event Click] = [Action Select]"
                 >
-                <Button.IsEnabled>
+       <!--          <Button.IsEnabled>
                     <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
                         <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
                         <Binding Path="IsDeleteButtonEnabled"/>
                         <Binding ElementName="DeleteButton" Path="Tag"/>                        
                     </MultiBinding>
-                </Button.IsEnabled>
+                </Button.IsEnabled> -->
                 <!-- IsEnabled="{Binding IsDeleteButtonEnabled}" cal:Message.Attach="[Event Click] = [Action OnDeleteVisitors]"  -->
                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" 
                        Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />

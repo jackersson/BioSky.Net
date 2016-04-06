@@ -29,10 +29,16 @@ namespace BioModule.ViewModels
 {
   public enum UserPageMode
   {
-     NewUser
+    NewUser
    , ExistingUser
   }
-  public class UserPageViewModel : Conductor<IScreen>.Collection.OneActive
+
+  public interface IUserUpdatable
+  {
+    void Update(Person user);
+  }
+
+  public class UserPageViewModel : Conductor<IScreen>.Collection.OneActive, IUserUpdatable
   {   
     public UserPageViewModel(IProcessorLocator locator) : base()
     {
@@ -70,6 +76,17 @@ namespace BioModule.ViewModels
       DisplayName = "AddNewUser";
 
       _database.Persons.DataChanged += Persons_DataChanged;
+    }
+
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+      Update(_user);
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      base.OnDeactivate(close);
     }
 
     private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -127,7 +144,7 @@ namespace BioModule.ViewModels
     {
       if (user == null)
         return null;
-
+      
       user.Firstname   = "";
       user.Lastname    = "";
       //user.Thumbnailid = user.Thumbnailid <= 0 ? 0 : user.Thumbnailid;
@@ -137,15 +154,15 @@ namespace BioModule.ViewModels
       _userPageMode = UserPageMode.NewUser;
       //_user         = null;
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:AddNewUser");
-
+      
       return user;  
     }
 
     public void Update(Person user)
-    {      
+    {     
       if (user != null )
       {
-        _user = user.Clone();
+        _user = user.Clone();       
         if (ContainRequiredFields(user))
         {
           _revertUser = user.Clone();
@@ -155,7 +172,7 @@ namespace BioModule.ViewModels
         else        
           _user = ResetUser(user);                   
       }
-      else      
+      else          
         _user = ResetUser(new Person());
 
       NotifyOfPropertyChange(() => CanDelete);
@@ -168,9 +185,7 @@ namespace BioModule.ViewModels
 
     #endregion
 
-    #region Interface
-        
-    
+    #region Interface            
     public async void Apply()
     {
 
@@ -234,11 +249,12 @@ namespace BioModule.ViewModels
 
     #region UI
 
+    
     public override int GetHashCode()
     {   
-      return _user != null ?_user.Id.GetHashCode() : 0;
+      return _user != null ?_user.Id.GetHashCode() : DisplayName.GetHashCode();
     }
-
+    
     public UserPageMode GetUserPageMode()
     {
       return _userPageMode;
@@ -258,7 +274,7 @@ namespace BioModule.ViewModels
 
     public bool CanDelete
     {
-      get { return IsActive &&  _user.Id > 0; }
+      get { return IsActive && _user != null && _user.Id > 0; }
     }
 
     private bool _isValid;
