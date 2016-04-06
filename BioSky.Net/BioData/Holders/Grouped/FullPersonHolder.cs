@@ -18,19 +18,29 @@ namespace BioData.Holders.Grouped
       Data            = new AsyncObservableCollection<Person>();
 
       _ioUtils = ioutils;
+
+     
     }
 
     public void Init(RepeatedField<Person> data)
     {
-      Data = new AsyncObservableCollection<Person>(data);
-
-      foreach (Person person in data)
+      try
       {
-        _dataSet.Add(person.Id, person);
-        CheckPersonPhotosIfFileExisted(person);
+        Data = new AsyncObservableCollection<Person>(data);
+
+        foreach (Person person in data)
+        {
+          _dataSet.Add(person.Id, person);
+          CheckPersonPhotosIfFileExisted(person);
+        }
+        Console.WriteLine(PhotosIndexesWithoutExistingFile.Count);
+        OnDataChanged();
       }
-      Console.WriteLine(PhotosIndexesWithoutExistingFile.Count);
-      OnDataChanged();
+      catch(Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
+
     }
 
     public void Add(Person requested, Person responded)

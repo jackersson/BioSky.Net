@@ -3,6 +3,8 @@
 using Caliburn.Micro;
 using BioContracts;
 using BioModule.Utils;
+using BioService;
+using System.Windows.Controls;
 
 namespace BioModule.ViewModels
 {
@@ -13,7 +15,25 @@ namespace BioModule.ViewModels
       _locator = locator;
 
       _methodInvoker = new FastMethodInvoker();
-    }      
+
+      this.PropertyChanged += TabViewModel_PropertyChanged;
+    }
+
+    private void TabViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+      Console.WriteLine(ActiveItem);
+
+      
+      if (ActiveItem != null)
+      {
+        if (!ActiveItem.IsActive)
+        {
+          ActivateItem(ActiveItem);
+          ActiveItem.Activate();
+        }
+      }
+      
+    }
 
     public void ShowContent(Type tabType, object[] args = null)
     {
@@ -23,60 +43,55 @@ namespace BioModule.ViewModels
 
       IScreen currentScreen = (IScreen)scr;
 
+      int currentHashCode = currentScreen.GetHashCode();
+/*
+      if (args != null)
+      {
+        foreach (object item in args)
+        {
+          if (item is Person)
+            currentHashCode = (item as Person).Id.GetHashCode();
+        }
+      }
+
       foreach(IScreen screen in Items)
       {
-
-        /*
-        Type t = typeof(UserPageViewModel);
-        currentScreen.GetType();
-
-        if (currentScreen.GetType() == t && screen.GetType() == t && screen.DisplayName != currentScreen.DisplayName)
+        Console.WriteLine(screen.GetHashCode() + " " + currentHashCode);
+        if (screen.GetHashCode() == currentHashCode)
         {
-          UserPageViewModel screen1 = currentScreen as UserPageViewModel;
-          UserPageViewModel screen2 = screen        as UserPageViewModel;
-
-          UserPageMode mode1 = screen1.GetUserPageMode();
-          UserPageMode mode2 = screen2.GetUserPageMode();
-
-          if (mode1 == mode2 && mode2 == UserPageMode.NewUser)
-          {
-            ActiveItem = screen;
-            screen.Activate();
-            return;
-          }
-        }
-          
-
-        if (screen.DisplayName == currentScreen.DisplayName)
-        {
-          ActiveItem = screen;
-          screen.Activate();
-          return;
-        }*/
-        //Console.WriteLine(screen.GetHashCode() + " " + currentScreen.GetHashCode());
-        if (screen.GetHashCode() == currentScreen.GetHashCode())
-        {
-          ActiveItem = screen;
+          //ActiveItem = screen;
           screen.Activate();
           return;
         }
       }
-
+      */
       Items.Add(currentScreen);
 
+      //this.
 
-
-      ActiveItem = currentScreen;
+      //ActiveItem = currentScreen;
+      ActivateItem(currentScreen);
       currentScreen.Activate();
-
       _methodInvoker.InvokeMethod(tabType, "Update", ActiveItem, args);      
     }
 
-    public void OnSelectionChanged()
+    
+    public void OnSelectionChanged(object activeItem)
     {
+      /*
+      //ChangeActiveItem()
       if (ActiveItem != null)
-        ActiveItem.Activate();
+      {
+        if (!ActiveItem.IsActive)
+        {
+          ActivateItem(ActiveItem);
+          ActiveItem.Activate();
+        }
+      }
+      */
     }
+    
+  
 
     private FastMethodInvoker _methodInvoker;
     private IProcessorLocator _locator ;

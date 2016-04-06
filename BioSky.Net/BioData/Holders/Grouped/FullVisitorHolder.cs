@@ -18,12 +18,21 @@ namespace BioData.Holders.Grouped
 
     public void Init(Google.Protobuf.Collections.RepeatedField<Visitor> list)
     {
-     ;
+      try
+      {
 
-      //foreach (Visitor visitor in data)      
-       // _visitors.Add(visitor, visitor.Id);      
 
-      OnDataChanged();
+        ;
+
+        //foreach (Visitor visitor in data)      
+        // _visitors.Add(visitor, visitor.Id);      
+
+        OnDataChanged();
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
     }
 
     public void Update( Google.Protobuf.Collections.RepeatedField<Visitor> updated

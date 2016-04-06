@@ -156,11 +156,19 @@ namespace BioModule.ViewModels
       if (CurrentLocation.Id > 0)
         location.Id = CurrentLocation.Id;
 
-      if (CurrentLocation.Description != _revertLocation.Description)
-        location.Description  = CurrentLocation.Description;
+      if(_revertLocation != null)
+      {
+        if (CurrentLocation.Description != _revertLocation.Description)
+          location.Description = CurrentLocation.Description;
 
-      if (CurrentLocation.LocationName != _revertLocation.LocationName)
+        if (CurrentLocation.LocationName != _revertLocation.LocationName)
+          location.LocationName = CurrentLocation.LocationName;
+      }
+      else
+      {
+        location.Description  = CurrentLocation.Description;
         location.LocationName = CurrentLocation.LocationName;
+      }
 
       AccessDevice  accessDevice  = LocationDevicesListViewModel.AccessDevices .GetDevice();
       CaptureDevice captureDevice = LocationDevicesListViewModel.CaptureDevices.GetDevice();
@@ -246,11 +254,13 @@ namespace BioModule.ViewModels
 
     public bool CanRevert
     {
-      get {
+      get
+      {
         return IsActive && _revertLocation != null
-                        && _currentLocation != null 
-                        && _locationPermissionViewModel.IsAccessChanged;
-                         
+                        && _currentLocation != null
+                        && (  _locationPermissionViewModel.IsAccessChanged
+                           || _locationDevicesListViewModel.DeviceChanged
+                           || _currentLocation.GetHashCode() != _revertLocation.GetHashCode());
       }
     }
 
@@ -258,7 +268,6 @@ namespace BioModule.ViewModels
     {
       get { return IsActive && _currentLocation != null && _currentLocation.Id > 0; }
     }
-
 
     private Location _currentLocation;
     public Location CurrentLocation
@@ -275,8 +284,7 @@ namespace BioModule.ViewModels
 
           NotifyOfPropertyChange(() => CanApply);
           NotifyOfPropertyChange(() => CanRevert);
-          NotifyOfPropertyChange(() => CanDelete);
-
+          NotifyOfPropertyChange(() => CanDelete);          
         }
       }
     }
@@ -290,11 +298,12 @@ namespace BioModule.ViewModels
       {
         _currentLocation.LocationName = value;
         NotifyOfPropertyChange(() => LocationName);
+        Refresh();     
       }
     }
 
     [Required(ErrorMessage = "You must enter a Location Description.")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The Description must only contain letters (a-z, A-Z).")]
+    [RegularExpression(@"^[a-zA-Zа-яА-яїі `\-]+$", ErrorMessage = "The Description must only contain letters (a-z, A-Z, а-я, А-я).")]
     public string Description
     {
       get { return (_currentLocation != null) ? _currentLocation.Description : string.Empty; }
@@ -302,6 +311,7 @@ namespace BioModule.ViewModels
       {
         _currentLocation.Description = value;
         NotifyOfPropertyChange(() => Description);
+        Refresh();
       }
     }
 
@@ -315,6 +325,7 @@ namespace BioModule.ViewModels
         {
           _locationDevicesListViewModel = value;
           NotifyOfPropertyChange(() => LocationDevicesListViewModel);
+          Refresh();
         }
       }
     }

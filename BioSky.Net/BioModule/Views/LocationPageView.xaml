@@ -115,15 +115,19 @@
         </TabControl>
 
 
-        <Button Grid.Row="4" Grid.Column="1" 
+        <Button Grid.Row="4" Grid.Column="1" Name="ApplyButton"
                 HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Apply}"
                 Style="{DynamicResource MetroCircleButtonStyle}"
                 cal:Message.Attach="[Event Click]=[Action Apply]"
-                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
-                           , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
-                           , ConverterParameter={x:Static bioContracts:Activity.LocationRemove}}"
-                >
+                Tag="{x:Static bioContracts:Activity.LocationAdd}">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
+                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                    <Binding Path="CanApply"/>
+                    <Binding ElementName="ApplyButton" Path="Tag"/>
+                </MultiBinding>
+            </Button.IsEnabled>
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
@@ -131,22 +135,23 @@
                  VerticalAlignment="Stretch" ToolTip="{lex:Loc RevertChanges}"
                  Style="{DynamicResource MetroCircleButtonStyle}"
                  cal:Message.Attach="[Event Click]=[Action Revert]"
-                 IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
-                            , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
-                            , ConverterParameter={x:Static bioContracts:Activity.LocationAdd}}"
-                 >
+                 IsEnabled="{Binding CanRevert}">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" 
                    Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" 
+        <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" Name="DeleteButton"
                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Delete}"
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click]=[Action Delete]"
-                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
-                           , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
-                           , ConverterParameter={x:Static bioContracts:Activity.LocationRemove}}"
-                >
+                Tag="{x:Static bioContracts:Activity.LocationRemove}">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
+                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                    <Binding Path="CanDelete"/>
+                    <Binding ElementName="DeleteButton" Path="Tag"/>
+                </MultiBinding>
+            </Button.IsEnabled>
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" 
                    Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
         </Button>

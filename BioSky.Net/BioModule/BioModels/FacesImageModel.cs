@@ -20,12 +20,39 @@ namespace BioModule.BioModels
   {
     public FacesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
-      PhotoInformation = new PhotoInformationViewModel();
-      ExpanderBarModel = new FaceEnrollmentBarViewModel(locator);
-      _marker = new MarkerUtils();
-      _faceFinder = new FaceFinder();
+      Information         = new PhotoInformationViewModel();
+      ExpanderBarModel    = new FaceEnrollmentBarViewModel(locator);
+      _marker             = new MarkerUtils();
+      _faceFinder         = new FaceFinder();
+      _markerBitmapHolder = new MarkerBitmapSourceHolder();
 
       _imageView = imageView;
+            
+      CurrentPhoto = GetTestPhoto();
+    }
+
+    //test
+    public Photo GetTestPhoto()
+    {
+      Photo ph = new Photo();
+      ph.Width = 640;
+      ph.Height = 480;
+
+      ph.SizeType = PhotoSizeType.Croped;
+      ph.OriginType = PhotoOriginType.Enrolled;
+
+      ph.PortraitCharacteristic = new PortraitCharacteristic()
+      {
+        Age = 24
+                                                               ,
+        FacesCount = 1
+      };
+
+      BiometricLocation bl = new BiometricLocation() { Confidence = 1.0f, Xpos = 100.0f, Ypos = 100.0f };
+      ph.PortraitCharacteristic.Faces.Add(new FaceCharacteristic() { Location = bl, Width = 100 });
+
+      return ph;
+
     }
 
     public void Activate()
@@ -36,7 +63,10 @@ namespace BioModule.BioModels
       //if (EnrollmentViewModel.DeviceObserver.DeviceName != null)
       //  EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
       // else
-      _imageView.SetSingleImage(PhotoImageSource);
+      if(_markerBitmapHolder.Unmarked == null)
+        _imageView.SetSingleImage(ResourceLoader.UserDefaultImageIconSource);
+      else
+        _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);
     }
 
     public void Deactivate()
@@ -49,36 +79,37 @@ namespace BioModule.BioModels
       //  EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
       //  EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
     }
-    /*
-    public void UpdateFromImage(ref Bitmap img)
-    {
-      if (img == null)
-        return;
-
-      Bitmap processedFrame = DrawFaces(ref img);
-
-     // _imageView.UpdateOneImage(ref processedFrame); 
-    }
-    */
     public Bitmap DrawFaces(ref Bitmap img)
     {
       return _marker.DrawRectangles(_faceFinder.GetFaces(ref img), ref img);
     }
-    /*
-    private void OnNewFrame(object sender, ref Bitmap bitmap)
+
+    public void ShowDetails(bool state)
     {
-      UpdateFromImage(ref bitmap);
+      if (state)      
+        DrawPortraitCharacteristics();      
+      else   
+        _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);
     }
-    */
 
-    public void Reset()
+    public void DrawPortraitCharacteristics()
     {
+      if (CurrentPhoto == null)
+        return;
 
+      _markerBitmapHolder.Unmarked = _imageView.GetImageByIndex(0);
+
+      Bitmap detailedBitmap = _marker.DrawPortraitCharacteristics(CurrentPhoto.PortraitCharacteristic
+                                     , BitmapConversion.BitmapSourceToBitmap(_markerBitmapHolder.Unmarked));
+
+      _markerBitmapHolder.Marked = BitmapConversion.BitmapToBitmapSource(detailedBitmap);
+
+      _imageView.SetSingleImage(_markerBitmapHolder.Marked);
     }
 
     public void UploadPhoto(Photo photo)
     {
-
+      //CurrentPhoto = photo;      
     }
 
     public void UpdateController(IUserBioItemsController controller)
@@ -87,10 +118,6 @@ namespace BioModule.BioModels
         Controller = controller;
     }
 
-    public object GetInformation()
-    {
-      return PhotoInformation;
-    }
     public void OnFrame(ref Bitmap frame)
     {
       if (frame == null)
@@ -111,44 +138,45 @@ namespace BioModule.BioModels
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
 
-    public PhotoViewEnum EnumState
+
+    #region UI
+    public BioImageModelEnum EnumState
     {
-      get { return PhotoViewEnum.Faces; }
+      get { return BioImageModelEnum.Faces; }
     }
     public BitmapSource SettingsToogleButtonBitmap
     {
       get { return ResourceLoader.UserFacesIconSource; }
     }
 
-    private BitmapSource _photoImageSource;
-    public BitmapSource PhotoImageSource
+    private Photo _currentPhoto;
+    public Photo CurrentPhoto
     {
       get
       {
-        if (_photoImageSource == null)
-          _photoImageSource = ResourceLoader.UserDefaultImageIconSource;
-        return _photoImageSource;
+        return _currentPhoto;
       }
       set
       {
-        if (_photoImageSource != value)
+        if (_currentPhoto != value)
         {
-          _photoImageSource = value;
-          NotifyOfPropertyChange(() => PhotoImageSource);
-        }
+          _currentPhoto = value;
+          Information.Update(_currentPhoto);
+        }        
+                 
       }
     }
 
-    private PhotoInformationViewModel _photoInformation;
-    public PhotoInformationViewModel PhotoInformation
+    private PhotoInformationViewModel _information;
+    public PhotoInformationViewModel Information
     {
-      get { return _photoInformation; }
+      get { return _information; }
       set
       {
-        if (_photoInformation != value)
+        if (_information != value)
         {
-          _photoInformation = value;
-          NotifyOfPropertyChange(() => PhotoInformation);
+          _information = value;
+          NotifyOfPropertyChange(() => Information);
         }
       }
     }
@@ -182,9 +210,23 @@ namespace BioModule.BioModels
     }
 
 
-    private MarkerUtils _marker;
-    private FaceFinder _faceFinder;
-    private IImageViewUpdate _imageView;
+    #endregion
+
+    #region GlobalVariables
+
+    private MarkerUtils              _marker            ;
+    private FaceFinder               _faceFinder        ;
+    private IImageViewUpdate         _imageView         ;
+    private MarkerBitmapSourceHolder _markerBitmapHolder;
+
+
+    #endregion
+  }
+
+  public class MarkerBitmapSourceHolder
+  {
+    public BitmapSource Unmarked;
+    public BitmapSource Marked;
   }
 
 }

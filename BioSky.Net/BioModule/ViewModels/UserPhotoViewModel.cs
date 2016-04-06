@@ -283,7 +283,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    public PhotoViewEnum PageEnum { get { return PhotoViewEnum.Faces; } }
+    public BioImageModelEnum PageEnum { get { return BioImageModelEnum.Faces; } }
     #endregion
 
     #region Global Variables

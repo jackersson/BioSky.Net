@@ -5,6 +5,7 @@ using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,24 +17,52 @@ namespace BioModule.BioModels
   {
     public FingersImageModel(IImageViewUpdate imageView)
     {
-      FingerInformation = new FingerInformationViewModel();
-      ExpanderBarModel = new FingerBarViewModel();
+      Information         = new FingerInformationViewModel();
+      ExpanderBarModel    = new FingerBarViewModel();
+      _marker             = new MarkerUtils();
+      _markerBitmapHolder = new MarkerBitmapSourceHolder();
 
       _imageView = imageView;
     }
-    public void Reset()
+
+    public void Activate()
+    {
+      if(_markerBitmapHolder.Unmarked == null)
+        _imageView.SetSingleImage(ResourceLoader.FingerScanIconSource);
+      else
+        _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);
+    }
+
+    public void Deactivate()
     {
 
+    }
+
+    public void ShowDetails(bool state)
+    {
+      if (state)
+        DrawFingerCharacteristics();
+      else
+        _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);
+    }
+
+    public void DrawFingerCharacteristics()
+    {
+     // if (CurrentPhoto == null)
+      //  return;
+
+      _markerBitmapHolder.Unmarked = _imageView.GetImageByIndex(0);
+
+      Bitmap detailedBitmap = _marker.DrawFingerCharacteristics(BitmapConversion.BitmapSourceToBitmap(_markerBitmapHolder.Unmarked));
+
+      _markerBitmapHolder.Marked = BitmapConversion.BitmapToBitmapSource(detailedBitmap);
+
+      _imageView.SetSingleImage(_markerBitmapHolder.Marked);
     }
 
     public void UploadPhoto(Photo photo)
     {
       throw new NotImplementedException();
-    }
-
-    public object GetInformation()
-    {
-      return FingerInformation;
     }
 
     public void UpdateController(IUserBioItemsController controller)
@@ -42,34 +71,15 @@ namespace BioModule.BioModels
         Controller = controller;
     }
 
-    public void Activate()
-    {
-      _imageView.SetSingleImage(FingerImageSource);
-    }
+    #region UI
 
-    public void Deactivate()
+    public BioImageModelEnum EnumState
     {
-
-    }
-
-    public PhotoViewEnum EnumState
-    {
-      get { return PhotoViewEnum.Fingers; }
+      get { return BioImageModelEnum.Fingers; }
     }
     public BitmapSource SettingsToogleButtonBitmap
     {
       get { return ResourceLoader.UserFingerprintIconSource; }
-    }
-
-    private BitmapSource _fingerImageSource;
-    public BitmapSource FingerImageSource
-    {
-      get
-      {
-        if (_fingerImageSource == null)
-          _fingerImageSource = ResourceLoader.FingerScanIconSource;
-        return _fingerImageSource;
-      }
     }
 
     private FingerBarViewModel _expanderBarModel;
@@ -86,16 +96,33 @@ namespace BioModule.BioModels
       }
     }
 
-    private FingerInformationViewModel _fingerInformation;
-    public FingerInformationViewModel FingerInformation
+    private FingerInformationViewModel _information;
+    public FingerInformationViewModel Information
     {
-      get { return _fingerInformation; }
+      get { return _information; }
       set
       {
-        if (_fingerInformation != value)
+        if (_information != value)
         {
-          _fingerInformation = value;
-          NotifyOfPropertyChange(() => FingerInformation);
+          _information = value;
+          NotifyOfPropertyChange(() => Information);
+        }
+      }
+    }
+
+    private Photo _currentPhoto;
+    public Photo CurrentPhoto
+    {
+      get
+      {
+        return _currentPhoto;
+      }
+      set
+      {
+        if (_currentPhoto != value)
+        {
+          _currentPhoto = value;
+          Information.Update(_currentPhoto);
         }
       }
     }
@@ -113,7 +140,13 @@ namespace BioModule.BioModels
         }
       }
     }
+    #endregion
 
+
+    #region Global Variables
     private IImageViewUpdate _imageView;
+    private MarkerBitmapSourceHolder _markerBitmapHolder;
+    private MarkerUtils _marker;
+    #endregion
   }
 }

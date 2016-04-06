@@ -46,16 +46,16 @@ namespace BioModule.ViewModels
       _selectedPersons = new ObservableCollection<Person>();
       PageController   = new PageControllerViewModel();
 
-      _database.Persons.DataChanged      += RefreshData;      
+      _database.Persons.DataChanged      += RefreshData;
       //_database.PhotoHolder.DataChanged  += RefreshData;
-
+      RefreshData();
       IsDeleteButtonEnabled = false;   
     }
     #region Database
     private void RefreshData()
     {
-      if (!IsActive)
-        return;
+      //if (!IsActive)
+       // return;
 
       Users = null;
       Users = _database.Persons.Data;

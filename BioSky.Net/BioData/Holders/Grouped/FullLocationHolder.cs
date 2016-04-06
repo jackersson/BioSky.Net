@@ -20,16 +20,23 @@ namespace BioData.Holders.Grouped
 
     public void Init(Google.Protobuf.Collections.RepeatedField<Location> data)
     {
-      Data = new AsyncObservableCollection<Location>(data);
-
-      foreach (Location location in data)
+      try
       {
-        _dataSet.Add(location.Id, location);
-        AccessDevices .Add(location.AccessDevice);
-        CaptureDevices.Add(location.CaptureDevice);
-      }     
-      
-      OnDataChanged();    
+        Data = new AsyncObservableCollection<Location>(data);
+
+        foreach (Location location in data)
+        {
+          _dataSet.Add(location.Id, location);
+          AccessDevices.Add(location.AccessDevice);
+          CaptureDevices.Add(location.CaptureDevice);
+        }
+
+        OnDataChanged();
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
     }
 
     public void Add(Location requested, Location responded)

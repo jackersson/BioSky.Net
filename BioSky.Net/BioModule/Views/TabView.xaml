@@ -34,12 +34,12 @@
                             include three hues from the primary palette (and the associated forecolours).
                             Do not rename, keep in sequence; light to dark.
                         -->
-                   <!-- <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="{StaticResource Primary50}"/>
-                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Primary50}"/>
-                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="{StaticResource Primary50Foreground}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="{StaticResource Primary50}"/>
-                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="{StaticResource Primary50Foreground}"/>-->
+                    <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="Transparent"/>
+                    <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="White"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="Transparent"/>
+                    <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="White"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="Transparent"/>
+                    <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="White"/>
 
 
                     <Color x:Key="MyWhiteColor">#FFF1F1F1</Color>
@@ -54,15 +54,11 @@
 
                     <SolidColorBrush x:Key="MaterialDesignCheckBoxOff" Color="#89FFFFFF" />
                     <SolidColorBrush x:Key="MaterialDesignCheckBoxDisabled" Color="#FF647076" />
-
                     <SolidColorBrush x:Key="MaterialDesignTextBoxBorder" Color="#89FFFFFF" />
-
                     <SolidColorBrush x:Key="MaterialDesignDivider" Color="#616161" />
                     <SolidColorBrush x:Key="MaterialDesignSelection" Color="#757575" />
-
                     <SolidColorBrush x:Key="MaterialDesignFlatButtonClick" Color="#757575" />
                     <SolidColorBrush x:Key="MaterialDesignFlatButtonRipple" Color="#FFB6B6B6" />
-
                     <SolidColorBrush x:Key="MaterialDesignToolTipBackground" Color="#eeeeee" />
                     
                     <SolidColorBrush x:Key="TextBrush"                                   Color="{StaticResource MyWhiteColor}"/>
@@ -106,10 +102,10 @@
 
 
         <dragablz:TabablzControl x:Name="MyTabview" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
-                                 SelectedItem="{Binding ActiveItem}"      
+                                 SelectedItem="{Binding ActiveItem, Mode=TwoWay}"      
                                  ItemsSource="{Binding Items}" Background="#FF3E3E42"
                                  AllowDrop="True" ShowDefaultCloseButton="True"
-                                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged()]"                                 
+                                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($mouseselecteditem)]"                                 
                                  >
             <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">

@@ -1,5 +1,6 @@
 ﻿using Accord.Imaging.Filters;
 using BioModule.ResourcesLoader;
+using BioModule.ViewModels;
 using BioService;
 using System;
 using System.Collections.Generic;
@@ -54,11 +55,34 @@ namespace BioModule.Utils
           }
         }       
       }   
-     
-      Bitmap result = DrawPoints(_points, DrawRectangles(_rectangles, data));
+
+      Bitmap result = DrawPoints(_points, DrawRectangles(_rectangles, data, System.Drawing.Color.DeepSkyBlue));
 
       return result;
     }
+
+    public Bitmap DrawFingerCharacteristics(Bitmap data)
+    {
+      _points.Clear();
+
+      _rectangles.Add(new Rectangle() { X = 0, Y = 0, Width = 100, Height = 100 });
+
+      Bitmap result = DrawRectangles(_rectangles, data, System.Drawing.Color.Green);
+
+      return result;
+    }
+
+    public Bitmap DrawIrisCharacteristics(Bitmap data)
+    {
+      _points.Clear();
+
+      _rectangles.Add(new Rectangle() { X = 0, Y = 0, Width = 100, Height = 100 });
+
+      Bitmap result = DrawRectangles(_rectangles, data, System.Drawing.Color.Yellow);
+
+      return result;
+    }
+
 
     public Bitmap DrawRectangles(Rectangle[] rectangles, ref Bitmap data)
     {      
@@ -68,11 +92,13 @@ namespace BioModule.Utils
       return rectanglesMarked;
     }    
 
-    public Bitmap DrawRectangles( List<Rectangle> rectangles, Bitmap data )
+    public Bitmap DrawRectangles( List<Rectangle> rectangles, Bitmap data, System.Drawing.Color color)
     {  
       _rectanglesMarker.Rectangles = rectangles;
-      Bitmap rectanglesMarked = _rectanglesMarker.Apply(data);
+      _rectanglesMarker.MarkerColor = color;
 
+      Bitmap rectanglesMarked = _rectanglesMarker.Apply(data);
+      
       return rectanglesMarked;
     }
 
@@ -89,5 +115,9 @@ namespace BioModule.Utils
 
     private RectanglesMarker _rectanglesMarker;
     private PointsMarker     _pointsMarker    ;
+
+    private RectanglesMarker _rectanglesMarkerFinger;
+    private RectanglesMarker _rectanglesMarkerEye   ;
+
   }
 }

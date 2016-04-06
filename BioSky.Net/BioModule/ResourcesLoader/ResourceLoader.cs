@@ -36,16 +36,19 @@ namespace BioModule.ResourcesLoader
       var newSource = new FormatConvertedBitmap();
       newSource.BeginInit();
       newSource.Source = source;
-      newSource.DestinationFormat = PixelFormats.Bgr24;
+      newSource.DestinationFormat = source.Format;
       newSource.EndInit();      
 
       Bitmap bitmap = new Bitmap( newSource.PixelWidth
                                 , newSource.PixelHeight
-                                , System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+                                , System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                                
       var data = bitmap.LockBits(new Rectangle(System.Drawing.Point.Empty, bitmap.Size)
-                                , System.Drawing.Imaging.ImageLockMode.WriteOnly
-                                , System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-      try {
+                                , System.Drawing.Imaging.ImageLockMode.WriteOnly                               
+                                , System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+      try
+      {
         newSource.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
       }
       catch ( Exception e) {

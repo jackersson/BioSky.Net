@@ -13,7 +13,7 @@ namespace BioShell.Utils
       _bioLogger    = new BioLogger();
     }
     public void Notify(_Exception exception)
-    {
+    {      
       if (exception == null)
         return;
 

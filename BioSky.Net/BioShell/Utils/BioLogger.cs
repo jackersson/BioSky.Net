@@ -48,10 +48,17 @@ namespace BioShell.Utils
     
     private void SaveLogFile(LogRecord record)
     {
-      string filePath = GetFilePath();
+      try
+      {
+        string filePath = GetFilePath();
 
-      using (FileStream fs = new FileStream(filePath, FileMode.Append, FileAccess.Write))      
-        record.WriteDelimitedTo(fs);      
+        using (FileStream fs = new FileStream(filePath, FileMode.Append, FileAccess.Write))
+          record.WriteDelimitedTo(fs);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
 
     private long FILE_SIZE = 5242880; // 5Mb
@@ -75,6 +82,11 @@ namespace BioShell.Utils
       Directory.CreateDirectory(directoryPath);
 
       string[] filePaths = Directory.GetFiles(directoryPath);
+
+      if (filePaths.Length <= 0)            
+        return directoryPath + string.Format("{0}{1}", DateTime.Now.Ticks, fileFormat);
+      
+
       foreach (string filePath in filePaths)
       {
         DateTime creationTime = File.GetCreationTime(filePath);
@@ -85,20 +97,15 @@ namespace BioShell.Utils
           higherfile = creationTime;
         }          
       }
-          
+
       FileInfo file = new FileInfo(currentFilePath);
 
-      if (file.Length > FILE_SIZE)
-      {
-        string fileDate = string.Format("{0}-{1}-{2}", now.Year, month, now.Day);
-
-        string fileName = string.Format("log {0}-{1}{2}", fileDate, DateTime.Now.Ticks,fileFormat);
-
-        return directoryPath + fileName;
-      }
+      if (file.Length > FILE_SIZE)       
+        return directoryPath + string.Format("{0}{1}", DateTime.Now.Ticks, fileFormat);      
       else
         return currentFilePath;
-    }    
+    }  
+    
 
     public void LogMessage(string message)
     {

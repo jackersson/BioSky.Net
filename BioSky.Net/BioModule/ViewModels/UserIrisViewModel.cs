@@ -67,7 +67,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    public PhotoViewEnum PageEnum { get { return PhotoViewEnum.Irises; }}
+    public BioImageModelEnum PageEnum { get { return BioImageModelEnum.Irises; }}
 
     public Person User { get{ return _user; }}
 

@@ -72,6 +72,18 @@ namespace BioModule.ViewModels
       _database.Persons.DataChanged += Persons_DataChanged;
     }
 
+    protected override void OnActivate()
+    {
+      //if (!IsActive)
+      //  return;
+
+      base.OnActivate();      
+    }
+    protected override void OnDeactivate(bool close)
+    {
+      base.OnDeactivate(close);
+    }
+
     private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {  
       NotifyOfPropertyChange(() => CanApply );  
@@ -101,7 +113,7 @@ namespace BioModule.ViewModels
 
     #region Update
 
-    private void OnBioImageModelChanged(PhotoViewEnum bioImageModel)
+    private void OnBioImageModelChanged(BioImageModelEnum bioImageModel)
     {
 
       foreach(IScreen item in Items)
