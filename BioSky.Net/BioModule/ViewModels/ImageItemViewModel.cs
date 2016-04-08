@@ -31,8 +31,15 @@ namespace BioModule.ViewModels
       if (source == null)
         return;
 
-      source.Freeze();
-      ImageSource = source;
+      try
+      {
+        source.Freeze();
+        ImageSource = source;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
 
 

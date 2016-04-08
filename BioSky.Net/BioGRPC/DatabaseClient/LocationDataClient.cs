@@ -28,14 +28,19 @@ namespace BioGRPC.DatabaseClient
         return;
 
       try {
-        Location call = await _client.UpdateLocationAsync(item);
-        Console.WriteLine(call);
-        _database.Locations.Update(item, call);
+        Location call = await  _client.UpdateLocationAsync(item);
+        //Console.WriteLine(call);
+       // _database.Locations.Update(item, call);
       }
       catch (RpcException e) {
         _notifier.Notify(e);
       }
-      
+      //return new Task(Test);
+    }
+
+    public void Test()
+    {
+
     }
 
     public async Task Select(QueryLocations command)
@@ -43,7 +48,10 @@ namespace BioGRPC.DatabaseClient
       try
       {
         LocationList call = await _client.SelectLocationsAsync (command);
-        _database.Locations.Init(call.Locations);        
+
+        Task task = new Task(() => _database.Locations.Init(call.Locations));
+        task.Start();
+        // _database.Locations.Init(call.Locations);        
       }
       catch (RpcException e)
       {

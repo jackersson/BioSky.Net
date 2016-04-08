@@ -33,7 +33,8 @@ namespace BioContracts.Common
       return _observers.Contains(observer);
     }
 
-    private List<T> _observers;
+    
+        private List<T> _observers;
     public List<T> Observers { get { return _observers; } }
   }
 }

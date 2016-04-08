@@ -6,6 +6,7 @@ using System;
 using WPFLocalizeExtension.Engine;
 using System.Globalization;
 using BioContracts.Services;
+using System.Threading.Tasks;
 
 namespace BioEngine
 {
@@ -29,7 +30,8 @@ namespace BioEngine
       
       _serviceManager.Start(configuration);
       
-      RequestData();
+      Task ta = new Task(RequestData);
+      ta.Start();
       Setlanguage();
       try
       {
@@ -53,20 +55,24 @@ namespace BioEngine
       _bioEngine.Stop();
     } 
 
-    public async void RequestData()
+    public void RequestData()
     {
       try
       {
+       // return;
         IDatabaseService service = _serviceManager.DatabaseService;
         BioService.QueryPersons commandPerson = new BioService.QueryPersons();
-        await service.PersonDataClient.Select(commandPerson);
-        
-        //BioService.QueryVisitors commandVisitor = new BioService.QueryVisitors();
-        //await service.VisitorDataClient.Select(commandVisitor);
+        service.PersonDataClient.Select(commandPerson);
 
-        BioService.QueryLocations commandLocation = new BioService.QueryLocations();
-        await service.LocationDataClient.Select(commandLocation);
-        
+        //BioService.QueryPersons commandPerson2 = new BioService.QueryPersons();
+        //service.PersonDataClient.Select(commandPerson2);
+        //return;
+       // BioService.QueryVisitors commandVisitor = new BioService.QueryVisitors();
+       // service.VisitorDataClient.Select(commandVisitor);
+
+         BioService.QueryLocations commandLocation = new BioService.QueryLocations();
+         service.LocationDataClient.Select(commandLocation);
+
         /* not here
         BioService.CommandPhoto commandPhoto = new BioService.CommandPhoto();
         await service.PhotoDataClient.Select(commandPhoto);

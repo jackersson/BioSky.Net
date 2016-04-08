@@ -219,6 +219,7 @@
     <Compile Include="Utils\BioLogger.cs" />
     <Compile Include="Utils\BioNotifier.cs" />
     <Compile Include="ViewModels\BioShellViewModel.cs" />
+    <Compile Include="ViewModels\TestViewModel.cs" />
     <Compile Include="Views\BioShellView.xaml.cs">
       <DependentUpon>BioShellView.xaml</DependentUpon>
     </Compile>
@@ -230,7 +231,14 @@
     <Compile Include="BioShellBootstrapper.cs" />
     <Compile Include="BioShellImpl.cs" />
     <Compile Include="BioShellInstaller.cs" />
+    <Compile Include="Views\TestView.xaml.cs">
+      <DependentUpon>TestView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Views\BioShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -262,6 +270,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BioAccessDevice\BioAccessDevice.csproj">
+      <Project>{09df37b6-4105-4c3a-8f1c-8bc4ec95dc05}</Project>
+      <Name>BioAccessDevice</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BioContracts\BioContracts.csproj">
       <Project>{fedd6c6d-6cd4-4d74-a19c-f2715b0d1f5b}</Project>
       <Name>BioContracts</Name>

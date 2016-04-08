@@ -13,6 +13,7 @@ using BioService;
 using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
+using System.Windows.Threading;
 
 namespace BioModule.ViewModels
 {
@@ -136,7 +137,7 @@ namespace BioModule.ViewModels
 
       TrackItemsShort = new TrackItemsShortViewModel(locator);
       TrackTabControl = new TrackTabControlViewModel(locator);
-      
+      currentDispatcher = _locator.GetProcessor<Dispatcher>();
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
@@ -145,7 +146,14 @@ namespace BioModule.ViewModels
     }
 
     #region Update
+
     public void RefreshData()
+    {
+     
+      currentDispatcher.Invoke(ApplyChanged);
+    }
+
+    public void ApplyChanged()
     {
       if (!IsActive)
         return;
@@ -296,7 +304,7 @@ namespace BioModule.ViewModels
     private readonly INotifier            _notifier     ;
     private readonly DialogsHolder        _dialogsHolder;
 
-   
+    Dispatcher currentDispatcher;
     #endregion
 
   }

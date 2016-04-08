@@ -28,8 +28,15 @@ namespace BioContracts.Abstract
 
 
     public void Start()
-    {     
-      ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadProcedure), this);
+    {
+      //Task task = new Task(ThreadProcedure, this);
+      //task.Start();
+      //ParameterizedThreadStart st = new ParameterizedThreadStart(ThreadProcedure);
+     // st.
+
+      Thread th = new Thread((() => ThreadProcedure(this)));
+      th.Start();
+      //ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadProcedure), this);
     }
 
     public virtual void Stop()
@@ -45,7 +52,7 @@ namespace BioContracts.Abstract
       get { return _cancelationToken; }
     }
 
-    protected void ThreadProcedure(Object threadContext)
+    protected void ThreadProcedure(object threadContext)
     {
       Threadable threadable = (Threadable)threadContext;
 

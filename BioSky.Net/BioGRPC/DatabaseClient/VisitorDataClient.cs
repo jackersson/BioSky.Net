@@ -41,7 +41,7 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-        //VisitorList call = await _client.VisitorSelectAsync(command);
+        VisitorList call = await _client.SelectVisitorsAsync(command);
         //_database.Visitors.Init(call);        
       }
       catch (RpcException e)

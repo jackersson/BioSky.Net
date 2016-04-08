@@ -8,11 +8,17 @@ using WPFLocalizeExtension.Extensions;
 using System;
 using BioContracts.Common;
 using AForge.Video.DirectShow;
+using System.Threading.Tasks;
+using System.IO;
 
 namespace BioModule.ViewModels
 {
+  public delegate void TestEventHandler(bool state);
   public class TrackControlItemViewModel : Conductor<IScreen>.Collection.AllActive, IAccessDeviceObserver, ICaptureDeviceObserver
-  {    
+  {
+
+    public event TestEventHandler Testsss;
+
     public TrackControlItemViewModel(IProcessorLocator locator) {      
       Initialize(locator);
     }
@@ -23,6 +29,12 @@ namespace BioModule.ViewModels
 
       if ( location != null )
        Update(location);
+    }
+
+    public void OnTestss(bool state)
+    {
+     // if (Testsss != null)
+       // Testsss(state);
     }
 
     #region Update
@@ -73,49 +85,118 @@ namespace BioModule.ViewModels
 
       Items.Add(_visitorsView);
 
+      LocationStateIcon = ResourceLoader.WarningIconSource;
+
+      this.Testsss += TrackControlItemViewModel_Testsss;
+
+    }
+
+    private void TrackControlItemViewModel_Testsss(bool state)
+    {
+      UpdateLocationState(state ? ResourceLoader.OkIconSource : ResourceLoader.WarningIconSource);
     }
 
     public void OnCardDetected(string cardNumber){
-      LocationStateIcon = ResourceLoader.UserContactlessCardsIconSource;
+      //UpdateLocationState(ResourceLoader.UserContactlessCardsIconSource);
     }
 
     public void OnError(Exception ex) {
-      LocationStateIcon = ResourceLoader.WarningIconSource;
+      //UpdateLocationState( ResourceLoader.WarningIconSource );
+      // UpdateLocStatus(false);
+      // BitmapImage img = new BitmapImage(new Uri(@"F:\Biometric Software\C#\BioSky.Net\BioSky.Net\BioSky.Net\BioModule\Resources\stop.png"));
+      // UpdateLocationState(img);
+
+      OnTestss(false);
     }
 
     public void OnReady(bool isReady) {
-      LocationStateIcon = ResourceLoader.OkIconSource;
+      // UpdateLocationState(ResourceLoader.OkIconSource);
+      OnTestss(true);
+      //UpdateLocStatus(true);
     }
 
     public void OnFrame(ref Bitmap frame) {
       BitmapSource convertedFrame = BitmapConversion.BitmapToBitmapSource(frame);
+      convertedFrame.Freeze();
       ImageView.SetSingleImage(convertedFrame);
     }
 
     public void OnStop(bool stopped, string message) {
-      LocationStateIcon = ResourceLoader.StopIconSource;
+     // UpdateLocationState(ResourceLoader.StopIconSource);
+  
     }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {
-      LocationStateIcon = ResourceLoader.OkIconSource;
+    //  UpdateLocationState(ResourceLoader.OkIconSource);
+     
+    }
+
+    public void UpdateLocationState( BitmapSource source )
+    {
+      try
+      {
+
+        //using (var ms = new MemoryStream(source.))
+       // LocationStateIcon.StreamSource = ms
+        source.Freeze();
+       // LocationStateIcon.Freeze();
+        System.Action action = delegate { LocationStateIcon = source; };
+       // if (LocationStateIcon != null &&  LocationStateIcon.Dispatcher != null )
+        LocationStateIcon.Dispatcher.Invoke(action);
+      //  LocationStateIcon.
+       // LocationStateIcon = source;
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
     #endregion
 
     #region UI
 
-    /*
-    public BitmapSource OkIconSource
+    public void UpdateLocStatus(bool state)
+    {
+      DeviceIsOk = state;
+      //NotifyOfPropertyChange(() => LocationStateIcon);
+    }
+
+
+    private bool DeviceIsOk;
+    private BitmapSource _locationStateIcon;
+    public BitmapSource LocationStateIcon
     {
       get
       {
-        if (CurrentLocation == null)
-          return ResourceLoader.ErrorIconSource;
+        return _locationStateIcon;
+        /*
+        if (_locationStateIcon == null)
+          return ResourceLoader.WarningIconSource;
+        return _locationStateIcon;
+        if (DeviceIsOk)
+          return ResourceLoader.OkIconSource;
         else
           return ResourceLoader.ErrorIconSource;
-         // return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
+          */
+        // return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
+      }
+      set
+      {
+        try
+        {
+          if (_locationStateIcon != value)
+          {
+            _locationStateIcon = value;
+            NotifyOfPropertyChange(() => LocationStateIcon);
+          }
+        }
+        catch (TaskCanceledException ex)
+        {
+          Console.WriteLine(ex.Message);
+        }
       }
     }
-    */
+    
     public BitmapSource VerificationIconSource
     {
       get {
@@ -217,7 +298,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
+    /*
     private BitmapSource _locationStateIcon;
     public BitmapSource LocationStateIcon
     {
@@ -232,7 +313,7 @@ namespace BioModule.ViewModels
       }
     }
     
-
+  */
     private TrackLocation _currentLocation;
     public TrackLocation CurrentLocation
     {

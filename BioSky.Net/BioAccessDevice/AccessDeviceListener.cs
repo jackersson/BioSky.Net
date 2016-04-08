@@ -117,7 +117,10 @@ namespace BioAccessDevice
 
       while (Active)
       {
-        ICommand command;       
+        ICommand command;
+        Thread.Sleep(1000);
+        Open();
+        /*
         if (Dequeue(out command))
         {
          
@@ -137,17 +140,18 @@ namespace BioAccessDevice
             Exception errorMesage = command.ErrorMessage();
             if ( !IsActive() )
             {
-              OnError(errorMesage);
+              //OnError(null);
               Thread.Sleep(1000);
               Open();
             }     
             else if (errorMesage != null)            
-              OnError(errorMesage);            
+              OnError(null);            
             else            
               OnReady(true);       
 
           }
-        }  
+          
+        }  */
         
         if ( CancellationTokenResult.IsCancellationRequested)
           break;                    

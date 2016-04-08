@@ -43,7 +43,7 @@ namespace BioModule
             .Register(Component.For<VisitorsViewModel>())
             .Register(Component.For<LocationPageViewModel>())
             .Register(Component.For<GeneralSettingsPageViewModel>())
-            .Register(Component.For<TrackControlViewModel>())
+            .Register(Component.For<TrackControlViewModel>().LifeStyle.Singleton)
             .Register(Component.For<UserPageViewModel>().LifestyleTransient())
             .Register(Component.For<DialogsHolder>())
             .Register(Component.For<AuthenticationPageViewModel>())

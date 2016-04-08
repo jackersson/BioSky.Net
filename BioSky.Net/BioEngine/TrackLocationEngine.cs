@@ -2,19 +2,28 @@
 
 using BioContracts;
 using BioService;
+using System.Windows.Threading;
 
 namespace BioEngine
 {
   public class TrackLocationEngine : ITrackLocationEngine
   {
+    Dispatcher currentDispatcher;
     public TrackLocationEngine(  IProcessorLocator locator )      
     {     
       _locator = locator;
       _trackLocationsSet = new Dictionary<long, TrackLocation>();
       _trackLocations    = new AsyncObservableCollection<TrackLocation>();
 
-      _locator.GetProcessor<IBioSkyNetRepository>().Locations.DataChanged += RefreshData;        
+      currentDispatcher = _locator.GetProcessor<Dispatcher>();
+      _locator.GetProcessor<IBioSkyNetRepository>().Locations.DataChanged += Refresh;        
     }  
+
+    public void Refresh()
+    {
+      //currentDispatcher = _locator.GetProcessor<Dispatcher>();
+      currentDispatcher.Invoke(RefreshData);
+    }
 
     public void RefreshData()
     {
