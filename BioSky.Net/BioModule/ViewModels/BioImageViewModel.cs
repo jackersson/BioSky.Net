@@ -21,6 +21,8 @@ namespace BioModule.ViewModels
     void Deactivate();
     void Reset();
     void UpdateController(IUserBioItemsController controller);
+
+    void UpdateFrame( Bitmap frame);
     void UploadPhoto(Photo photo);
     object GetInformation();   
     PhotoViewEnum EnumState                 { get; }
@@ -48,7 +50,7 @@ namespace BioModule.ViewModels
   public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable
   {
 
-    public BioImageViewModel(IProcessorLocator locator, long style = MIN_BIO_IMAGE_STYLE)
+    public BioImageViewModel(IProcessorLocator locator, long style = MAX_BIO_IMAGE_STYLE) 
     {
       _notifier = locator.GetProcessor<INotifier>();
       _database = locator.GetProcessor<IBioSkyNetRepository>();
@@ -85,6 +87,12 @@ namespace BioModule.ViewModels
         else
           view.Deactivate();
       }
+    }
+
+    public void UpdateFrame ( Bitmap frame )
+    {
+      if (CurrentBioImage != null)
+        CurrentBioImage.UpdateFrame( frame);
     }
 
     public void OnLoadFromFile()
@@ -401,8 +409,8 @@ namespace BioModule.ViewModels
           _currentPhoto = value;
           Message = "";
 
-          if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
-            Message = "Can't upload photo";
+         // if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
+           // Message = "Can't upload photo";
 
           NotifyOfPropertyChange(() => CurrentPhoto);
           NotifyOfPropertyChange(() => CanAddPhoto );

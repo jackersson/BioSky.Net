@@ -1,17 +1,18 @@
-﻿using Caliburn.Micro;
+﻿using BioContracts;
+using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace BioModule.ViewModels
 {
   public class ImageItemViewModel : PropertyChangedBase
   {
-
-
+    
     public void Zoom(double newControlWidth, double newControlHeight )
     {
       if (ControlHeight == newControlHeight && newControlWidth == ControlWidth )
@@ -31,8 +32,14 @@ namespace BioModule.ViewModels
       if (source == null)
         return;
 
-      source.Freeze();
-      ImageSource = source;
+      try
+      {        
+        source.Freeze();
+        ImageSource = source;
+      }
+      catch (Exception ex) {
+        //_notifier.Notify(ex);
+      }
     }
 
 
@@ -95,6 +102,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    
     private const float ZOOM_RATIO = 0.9f;
   }
 }

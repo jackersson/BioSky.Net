@@ -34,7 +34,7 @@ namespace BioModule.ViewModels
       _locator     = locator;
       _database    = _locator.GetProcessor<IBioSkyNetRepository>();
       _imageViewer = imageViewer;
-
+      _notifier    = _locator.GetProcessor<INotifier>();
       _validator = new BioValidator();
 
       DisplayName = "Information";
@@ -223,7 +223,7 @@ namespace BioModule.ViewModels
       }
       catch (Exception ex)
       {
-        Console.WriteLine(ex.Message);
+        _notifier.Notify(ex);
       }
     }
 
@@ -259,5 +259,6 @@ namespace BioModule.ViewModels
     private readonly IProcessorLocator      _locator    ;
     private readonly IBioSkyNetRepository   _database   ;
     private          IUserBioItemsUpdatable _imageViewer;
+    private readonly INotifier              _notifier   ;
   }
 }

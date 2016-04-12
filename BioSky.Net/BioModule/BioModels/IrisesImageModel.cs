@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using BioService;
+using System.Drawing;
 
 namespace BioModule.BioModels
 {
@@ -49,6 +50,12 @@ namespace BioModule.BioModels
     {
 
     }
+
+    public void UpdateFrame( Bitmap frame)
+    {
+      throw new NotImplementedException();
+    }
+
     public PhotoViewEnum EnumState
     {
       get { return PhotoViewEnum.Irises; }

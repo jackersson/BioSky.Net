@@ -1,17 +1,9 @@
-﻿using BioService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Collections.ObjectModel;
-using Google.Protobuf;
-
+﻿using BioContracts.Common;
 using BioContracts.Holders;
+using BioService;
 
 namespace BioContracts
-{  
+{
   public interface IBioSkyNetRepository
   {
     ILocalStorage LocalStorage  { get; }

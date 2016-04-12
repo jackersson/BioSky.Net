@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BioContracts
+﻿namespace BioContracts.Locations
 {
   public delegate void LocationsChangedEventHandler();
 

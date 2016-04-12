@@ -1,5 +1,6 @@
 ﻿using AForge.Video.DirectShow;
 using BioContracts;
+using BioContracts.CaptureDevices;
 using BioContracts.Common;
 using BioModule.ResourcesLoader;
 using BioModule.Utils;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace BioModule.BioModels
 {
@@ -24,7 +26,7 @@ namespace BioModule.BioModels
       ExpanderBarModel = new FaceEnrollmentBarViewModel(locator);
       _marker = new MarkerUtils();
       _faceFinder = new FaceFinder();
-
+      _uiDispatcher = locator.GetProcessor<Dispatcher>();
       _imageView = imageView;
     }
 
@@ -91,7 +93,19 @@ namespace BioModule.BioModels
     {
       return PhotoInformation;
     }
+    
     public void OnFrame(ref Bitmap frame)
+    {
+     /// Bitmap temp = frame;
+     UpdateFrame(frame);
+       //  _uiDispatcher.Invoke(() => UpdateFrame(temp));
+    }
+    
+    public void OnStop(bool stopped, string message) { _imageView.SetSingleImage(null); }
+
+    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
+
+    public void UpdateFrame( Bitmap frame)
     {
       if (frame == null)
       {
@@ -100,16 +114,13 @@ namespace BioModule.BioModels
       }
 
       Bitmap processedFrame = DrawFaces(ref frame);
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);   
 
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
-      newFrame.Freeze();
+     // Console.WriteLine(_uiDispatcher.GetHashCode());
+      //Console.WriteLine(Dispatcher.CurrentDispatcher.GetHashCode());
 
       _imageView.SetSingleImage(newFrame);
     }
-
-    public void OnStop(bool stopped, string message) { _imageView.SetSingleImage(null); }
-
-    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
 
     public PhotoViewEnum EnumState
     {
@@ -180,7 +191,7 @@ namespace BioModule.BioModels
         }
       }
     }
-
+    private readonly Dispatcher _uiDispatcher;
 
     private MarkerUtils _marker;
     private FaceFinder _faceFinder;

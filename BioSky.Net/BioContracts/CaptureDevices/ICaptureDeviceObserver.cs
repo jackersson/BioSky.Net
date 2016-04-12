@@ -1,7 +1,7 @@
 ﻿using AForge.Video.DirectShow;
 using System.Drawing;
 
-namespace BioContracts.Common
+namespace BioContracts.CaptureDevices
 {
   public interface ICaptureDeviceObserver
   {

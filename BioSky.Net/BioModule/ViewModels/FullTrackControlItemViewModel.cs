@@ -9,67 +9,88 @@ using System.Threading.Tasks;
 using AForge.Video.DirectShow;
 using System.Drawing;
 using WPFLocalizeExtension.Extensions;
+using System.Windows.Media.Imaging;
+using BioModule.ResourcesLoader;
+using System.Windows.Threading;
+using BioService;
+using BioContracts.Locations;
 
 namespace BioModule.ViewModels
 {
-  public class FullTrackControlItemViewModel : Screen, ICaptureDeviceObserver, IAccessDeviceObserver
+  public class FullTrackControlItemViewModel : Screen, IFullLocationObserver
   {
     public FullTrackControlItemViewModel(IProcessorLocator locator)
     {
-
+      //_uiDispatcher = locator.GetProcessor<Dispatcher>();
       _bioEngine = locator.GetProcessor<IBioEngine>();
 
       BioImageView = new BioImageViewModel(locator);
 
-      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");      
     }
 
     public void Update(TrackLocation location)
     {
+       if (CurrentLocation != null)
+       CurrentLocation.Unsubscribe(this);
+
+      //  Console.WriteLine(_uiDispatcher.GetHashCode());
+      // Console.WriteLine(Dispatcher.CurrentDispatcher.GetHashCode());
+      BioImageView.SetSingleImage(null);
+      if (location == null)
+        return;
+
       CurrentLocation = location;
+      location.Subscribe(this);      
+    }
+   
 
-      _bioEngine.AccessDeviceEngine() .Unsubscribe(this);
-      _bioEngine.CaptureDeviceEngine().Unsubscribe(this);
-
-      if (BioImageView.CurrentBioImage is ICaptureDeviceObserver)
-        _bioEngine.CaptureDeviceEngine().Unsubscribe(BioImageView.CurrentBioImage as ICaptureDeviceObserver);
+    public void OnOk(bool ok)
+    {
+      //throw new NotImplementedException();
     }
 
-    public void OnFrame(ref Bitmap frame)
+    public void OnStartVerificationByCard(string cardNumber)
     {
-      //CurrentLocation.Sub
+      //throw new NotImplementedException();
     }
 
-    public void OnStop(bool stopped, string message)
+    public void OnVerificationFailed(string message)
     {
-      throw new NotImplementedException();
+      //throw new NotImplementedException();
     }
 
-    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)
+    public void OnCaptureDeviceFrameChanged(ref Bitmap frame)
     {
-      throw new NotImplementedException();
-    }
-
-    public void OnCardDetected(string cardNumber)
-    {
-      throw new NotImplementedException();
+      //BitmapSource convertedFrame = BitmapConversion.BitmapToBitmapSource(frame);
+      BioImageView.UpdateFrame(frame);
     }
 
     public void OnError(Exception ex)
     {
-      throw new NotImplementedException();
+      //throw new NotImplementedException();
     }
 
-    public void OnReady(bool isReady)
+    public void OnVerificationFailure(Exception ex)
     {
-      throw new NotImplementedException();
+      //throw new NotImplementedException();
+    }
+
+    public void OnVerificationSuccess(bool state)
+    {
+     // throw new NotImplementedException();
+    }
+
+    public void OnVerificationProgress(int progress)
+    {
+     // throw new NotImplementedException();
     }
 
     private TrackLocation _currentLocation;
     public TrackLocation CurrentLocation
     {
       get { return _currentLocation; }
-      set
+      private set
       {
         if (_currentLocation != value)
         {
@@ -83,7 +104,7 @@ namespace BioModule.ViewModels
     public BioImageViewModel BioImageView
     {
       get {  return _bioImageView; }
-      set
+      private set
       {
         if (_bioImageView != value)
         {
@@ -93,6 +114,7 @@ namespace BioModule.ViewModels
       }
     }
 
+    //private readonly Dispatcher _uiDispatcher;
     private readonly IBioEngine _bioEngine;
   }
 }

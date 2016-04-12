@@ -81,73 +81,75 @@ namespace BioService {
             "b3J0cmFpdF9jaGFyYWN0ZXJpc3RpYxgKIAEoCzIiLkJpb1NlcnZpY2UuUG9y", 
             "dHJhaXRDaGFyYWN0ZXJpc3RpYxItCgxlbnRpdHlfc3RhdGUYCyABKA4yFy5C", 
             "aW9TZXJ2aWNlLkVudGl0eVN0YXRlEiQKCGRicmVzdWx0GAwgASgOMhIuQmlv", 
-            "U2VydmljZS5SZXN1bHQi4QEKB1Zpc2l0b3ISCgoCaWQYASABKAMSEAoIcGVy", 
+            "U2VydmljZS5SZXN1bHQihwIKB1Zpc2l0b3ISCgoCaWQYASABKAMSEAoIcGVy", 
             "c29uaWQYAiABKAMSDwoHcGhvdG9pZBgDIAEoAxISCgpsb2NhdGlvbmlkGAQg", 
             "ASgDEgwKBHRpbWUYBSABKAMSEwoLY2FyZF9udW1iZXIYBiABKAkSIgoGc3Rh", 
             "dHVzGAcgASgOMhIuQmlvU2VydmljZS5SZXN1bHQSJAoJZnVsbHBob3RvGAgg", 
             "ASgLMhEuQmlvU2VydmljZS5QaG90bxImCgtjcm9wZWRwaG90bxgJIAEoCzIR", 
-            "LkJpb1NlcnZpY2UuUGhvdG8iNAoLVmlzaXRvckxpc3QSJQoIdmlzaXRvcnMY", 
-            "ASADKAsyEy5CaW9TZXJ2aWNlLlZpc2l0b3IiNwoMTG9jYXRpb25MaXN0EicK", 
-            "CWxvY2F0aW9ucxgBIAMoCzIULkJpb1NlcnZpY2UuTG9jYXRpb24iMQoKUGVy", 
-            "c29uTGlzdBIjCgdwZXJzb25zGAEgAygLMhIuQmlvU2VydmljZS5QZXJzb24i", 
-            "LgoJUGhvdG9MaXN0EiEKBnBob3RvcxgBIAMoCzIRLkJpb1NlcnZpY2UuUGhv", 
-            "dG8iLAoIUmVzcG9uc2USIAoEZ29vZBgBIAEoDjISLkJpb1NlcnZpY2UuUmVz", 
-            "dWx0Il8KEklkZW50aWZpY2F0aW9uRGF0YRIhCgZpbWFnZXMYASADKAsyES5C", 
-            "aW9TZXJ2aWNlLlBob3RvEiYKCnBvcHVsYXRpb24YAiADKAsyEi5CaW9TZXJ2", 
-            "aWNlLlBlcnNvbiJZChBWZXJpZmljYXRpb25EYXRhEiEKBmltYWdlcxgBIAMo", 
-            "CzIRLkJpb1NlcnZpY2UuUGhvdG8SIgoGcGVyc29uGAIgASgLMhIuQmlvU2Vy", 
-            "dmljZS5QZXJzb24iRQoORW5yb2xsbWVudERhdGESIQoGaW1hZ2VzGAEgAygL", 
-            "MhEuQmlvU2VydmljZS5QaG90bxIQCghwZXJzb25pZBgCIAEoAyJsChJFbnJv", 
-            "bGxtZW50RmVlZGJhY2sSEAoIcHJvZ3Jlc3MYASABKA8SEQoJZXllc2ZvdW5k", 
-            "GAIgASgIEg8KB3N1Y2Nlc3MYAyABKAgSIAoFcGhvdG8YBCABKAsyES5CaW9T", 
-            "ZXJ2aWNlLlBob3RvImIKFFZlcmlmaWNhdGlvbkZlZWRiYWNrEjsKE2Vucm9s", 
-            "bG1lbnRfZmVlZGJhY2sYASABKAsyHi5CaW9TZXJ2aWNlLkVucm9sbG1lbnRG", 
-            "ZWVkYmFjaxINCgVtYXRjaBgCIAEoAiKXAQoKUXVlcnlQaG90bxIOCgZmaWVs", 
-            "ZHMYASABKAMSDwoHcGVyc29ucxgCIAMoAxIOCgZwaG90b3MYAyADKAMSFgoO", 
-            "aXRlbXNfcGVyX3BhZ2UYBCABKAMiQAoRVGFyZ2V0UGhvdG9GaWVsZHMSBwoD", 
-            "QWxsEAASCQoFT3RoZXIQARIOCgpCeXRlc3RyaW5nEAISBwoDRmlyEAQiHQoM", 
-            "UXVlcnlQZXJzb25zEg0KBWNvdW50GAEgASgDIh8KDlF1ZXJ5TG9jYXRpb25z", 
-            "Eg0KBWNvdW50GAEgASgDIooBCg1RdWVyeVZpc2l0b3JzEhEKCWNvdW50cmll", 
-            "cxgCIAMoCRIRCglsb2NhdGlvbnMYAyADKAMSDwoHcGVyc29ucxgEIAMoAxIV", 
-            "Cg1kYXRldGltZV9mcm9tGAUgASgDEhMKC2RhdGV0aW1lX3RvGAYgASgDEhYK", 
-            "Dml0ZW1zX3Blcl9wYWdlGAcgASgDIiYKE1NvY2tldENvbmZpZ3VyYXRpb24S", 
-            "DwoHYWRkcmVzcxgBIAEoCSpCCgtFbnRpdHlTdGF0ZRINCglVbmNoYW5nZWQQ", 
-            "ABIJCgVBZGRlZBABEgwKCE1vZGlmaWVkEAISCwoHRGVsZXRlZBADKiEKBlJl", 
-            "c3VsdBILCgdTdWNjZXNzEAASCgoGRmFpbGVkEAEqNgoLTWVzc2FnZVR5cGUS", 
-            "DwoLSW5mb3JtYXRpb24QABIJCgVFcnJvchABEgsKB1dhcm5pbmcQAiolCg1Q", 
-            "aG90b1NpemVUeXBlEggKBEZ1bGwQABIKCgZDcm9wZWQQASo8Cg9QaG90b09y", 
-            "aWdpblR5cGUSDAoIRW5yb2xsZWQQABIMCghWZXJpZmllZBABEg0KCVRodW1i", 
-            "bmFpbBACMv0BChVCaW9tZXRyaWNGYWNpYWxTZXZpY2USRAoJQWRkU29ja2V0", 
-            "Eh8uQmlvU2VydmljZS5Tb2NrZXRDb25maWd1cmF0aW9uGhQuQmlvU2Vydmlj", 
-            "ZS5SZXNwb25zZSIAEkwKCkVucm9sbEZhY2USGi5CaW9TZXJ2aWNlLkVucm9s", 
-            "bG1lbnREYXRhGh4uQmlvU2VydmljZS5FbnJvbGxtZW50RmVlZGJhY2siADAB", 
-            "ElAKClZlcmlmeUZhY2USHC5CaW9TZXJ2aWNlLlZlcmlmaWNhdGlvbkRhdGEa", 
-            "IC5CaW9TZXJ2aWNlLlZlcmlmaWNhdGlvbkZlZWRiYWNrIgAwATLLCAoXQmlv", 
-            "bWV0cmljRGF0YWJhc2VTZXZpY2USQgoMUGVyc29uU2VsZWN0EhguQmlvU2Vy", 
-            "dmljZS5RdWVyeVBlcnNvbnMaFi5CaW9TZXJ2aWNlLlBlcnNvbkxpc3QiABI1", 
-            "CglBZGRQZXJzb24SEi5CaW9TZXJ2aWNlLlBlcnNvbhoSLkJpb1NlcnZpY2Uu", 
-            "UGVyc29uIgASOAoMVXBkYXRlUGVyc29uEhIuQmlvU2VydmljZS5QZXJzb24a", 
-            "Ei5CaW9TZXJ2aWNlLlBlcnNvbiIAEjgKDFJlbW92ZVBlcnNvbhISLkJpb1Nl", 
-            "cnZpY2UuUGVyc29uGhIuQmlvU2VydmljZS5QZXJzb24iABI5CgxTZXRUaHVt", 
-            "Ym5haWwSES5CaW9TZXJ2aWNlLlBob3RvGhQuQmlvU2VydmljZS5SZXNwb25z", 
-            "ZSIAEi8KB0FkZENhcmQSEC5CaW9TZXJ2aWNlLkNhcmQaEC5CaW9TZXJ2aWNl", 
-            "LkNhcmQiABI/CgtSZW1vdmVDYXJkcxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhl", 
-            "cxoWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcyIAEj8KDFNlbGVjdFBob3RvcxIW", 
-            "LkJpb1NlcnZpY2UuUXVlcnlQaG90bxoVLkJpb1NlcnZpY2UuUGhvdG9MaXN0", 
-            "IgASMgoIQWRkUGhvdG8SES5CaW9TZXJ2aWNlLlBob3RvGhEuQmlvU2Vydmlj", 
-            "ZS5QaG90byIAEkAKDFJlbW92ZVBob3RvcxIWLkJpb1NlcnZpY2UuUmF3SW5k", 
-            "ZXhlcxoWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcyIAEkYKDlNlbGVjdFZpc2l0", 
-            "b3JzEhkuQmlvU2VydmljZS5RdWVyeVZpc2l0b3JzGhcuQmlvU2VydmljZS5W", 
-            "aXNpdG9yTGlzdCIAEkQKFUF0dGFjaFZpc2l0b3JUb1BlcnNvbhITLkJpb1Nl", 
-            "cnZpY2UuVmlzaXRvchoULkJpb1NlcnZpY2UuUmVzcG9uc2UiABJCCg5SZW1v", 
-            "dmVWaXNpdG9ycxIWLkJpb1NlcnZpY2UuUmF3SW5kZXhlcxoWLkJpb1NlcnZp", 
-            "Y2UuUmF3SW5kZXhlcyIAEkkKD1NlbGVjdExvY2F0aW9ucxIaLkJpb1NlcnZp", 
-            "Y2UuUXVlcnlMb2NhdGlvbnMaGC5CaW9TZXJ2aWNlLkxvY2F0aW9uTGlzdCIA", 
-            "EjsKC0FkZExvY2F0aW9uEhQuQmlvU2VydmljZS5Mb2NhdGlvbhoULkJpb1Nl", 
-            "cnZpY2UuTG9jYXRpb24iABI+Cg5VcGRhdGVMb2NhdGlvbhIULkJpb1NlcnZp", 
-            "Y2UuTG9jYXRpb24aFC5CaW9TZXJ2aWNlLkxvY2F0aW9uIgASQwoPUmVtb3Zl", 
-            "TG9jYXRpb25zEhYuQmlvU2VydmljZS5SYXdJbmRleGVzGhYuQmlvU2Vydmlj", 
-            "ZS5SYXdJbmRleGVzIgBCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
+            "LkJpb1NlcnZpY2UuUGhvdG8SJAoIZGJyZXN1bHQYCiABKA4yEi5CaW9TZXJ2", 
+            "aWNlLlJlc3VsdCI0CgtWaXNpdG9yTGlzdBIlCgh2aXNpdG9ycxgBIAMoCzIT", 
+            "LkJpb1NlcnZpY2UuVmlzaXRvciI3CgxMb2NhdGlvbkxpc3QSJwoJbG9jYXRp", 
+            "b25zGAEgAygLMhQuQmlvU2VydmljZS5Mb2NhdGlvbiIxCgpQZXJzb25MaXN0", 
+            "EiMKB3BlcnNvbnMYASADKAsyEi5CaW9TZXJ2aWNlLlBlcnNvbiIuCglQaG90", 
+            "b0xpc3QSIQoGcGhvdG9zGAEgAygLMhEuQmlvU2VydmljZS5QaG90byIsCghS", 
+            "ZXNwb25zZRIgCgRnb29kGAEgASgOMhIuQmlvU2VydmljZS5SZXN1bHQiXwoS", 
+            "SWRlbnRpZmljYXRpb25EYXRhEiEKBmltYWdlcxgBIAMoCzIRLkJpb1NlcnZp", 
+            "Y2UuUGhvdG8SJgoKcG9wdWxhdGlvbhgCIAMoCzISLkJpb1NlcnZpY2UuUGVy", 
+            "c29uIlkKEFZlcmlmaWNhdGlvbkRhdGESIQoGaW1hZ2VzGAEgAygLMhEuQmlv", 
+            "U2VydmljZS5QaG90bxIiCgZwZXJzb24YAiABKAsyEi5CaW9TZXJ2aWNlLlBl", 
+            "cnNvbiJFCg5FbnJvbGxtZW50RGF0YRIhCgZpbWFnZXMYASADKAsyES5CaW9T", 
+            "ZXJ2aWNlLlBob3RvEhAKCHBlcnNvbmlkGAIgASgDImwKEkVucm9sbG1lbnRG", 
+            "ZWVkYmFjaxIQCghwcm9ncmVzcxgBIAEoDxIRCglleWVzZm91bmQYAiABKAgS", 
+            "DwoHc3VjY2VzcxgDIAEoCBIgCgVwaG90bxgEIAEoCzIRLkJpb1NlcnZpY2Uu", 
+            "UGhvdG8iYgoUVmVyaWZpY2F0aW9uRmVlZGJhY2sSOwoTZW5yb2xsbWVudF9m", 
+            "ZWVkYmFjaxgBIAEoCzIeLkJpb1NlcnZpY2UuRW5yb2xsbWVudEZlZWRiYWNr", 
+            "Eg0KBW1hdGNoGAIgASgCIpcBCgpRdWVyeVBob3RvEg4KBmZpZWxkcxgBIAEo", 
+            "AxIPCgdwZXJzb25zGAIgAygDEg4KBnBob3RvcxgDIAMoAxIWCg5pdGVtc19w", 
+            "ZXJfcGFnZRgEIAEoAyJAChFUYXJnZXRQaG90b0ZpZWxkcxIHCgNBbGwQABIJ", 
+            "CgVPdGhlchABEg4KCkJ5dGVzdHJpbmcQAhIHCgNGaXIQBCIdCgxRdWVyeVBl", 
+            "cnNvbnMSDQoFY291bnQYASABKAMiHwoOUXVlcnlMb2NhdGlvbnMSDQoFY291", 
+            "bnQYASABKAMiigEKDVF1ZXJ5VmlzaXRvcnMSEQoJY291bnRyaWVzGAIgAygJ", 
+            "EhEKCWxvY2F0aW9ucxgDIAMoAxIPCgdwZXJzb25zGAQgAygDEhUKDWRhdGV0", 
+            "aW1lX2Zyb20YBSABKAMSEwoLZGF0ZXRpbWVfdG8YBiABKAMSFgoOaXRlbXNf", 
+            "cGVyX3BhZ2UYByABKAMiJgoTU29ja2V0Q29uZmlndXJhdGlvbhIPCgdhZGRy", 
+            "ZXNzGAEgASgJKkIKC0VudGl0eVN0YXRlEg0KCVVuY2hhbmdlZBAAEgkKBUFk", 
+            "ZGVkEAESDAoITW9kaWZpZWQQAhILCgdEZWxldGVkEAMqIQoGUmVzdWx0EgsK", 
+            "B1N1Y2Nlc3MQABIKCgZGYWlsZWQQASo2CgtNZXNzYWdlVHlwZRIPCgtJbmZv", 
+            "cm1hdGlvbhAAEgkKBUVycm9yEAESCwoHV2FybmluZxACKiUKDVBob3RvU2l6", 
+            "ZVR5cGUSCAoERnVsbBAAEgoKBkNyb3BlZBABKjwKD1Bob3RvT3JpZ2luVHlw", 
+            "ZRIMCghFbnJvbGxlZBAAEgwKCFZlcmlmaWVkEAESDQoJVGh1bWJuYWlsEAIy", 
+            "/QEKFUJpb21ldHJpY0ZhY2lhbFNldmljZRJECglBZGRTb2NrZXQSHy5CaW9T", 
+            "ZXJ2aWNlLlNvY2tldENvbmZpZ3VyYXRpb24aFC5CaW9TZXJ2aWNlLlJlc3Bv", 
+            "bnNlIgASTAoKRW5yb2xsRmFjZRIaLkJpb1NlcnZpY2UuRW5yb2xsbWVudERh", 
+            "dGEaHi5CaW9TZXJ2aWNlLkVucm9sbG1lbnRGZWVkYmFjayIAMAESUAoKVmVy", 
+            "aWZ5RmFjZRIcLkJpb1NlcnZpY2UuVmVyaWZpY2F0aW9uRGF0YRogLkJpb1Nl", 
+            "cnZpY2UuVmVyaWZpY2F0aW9uRmVlZGJhY2siADABMoUJChdCaW9tZXRyaWNE", 
+            "YXRhYmFzZVNldmljZRJCCgxQZXJzb25TZWxlY3QSGC5CaW9TZXJ2aWNlLlF1", 
+            "ZXJ5UGVyc29ucxoWLkJpb1NlcnZpY2UuUGVyc29uTGlzdCIAEjUKCUFkZFBl", 
+            "cnNvbhISLkJpb1NlcnZpY2UuUGVyc29uGhIuQmlvU2VydmljZS5QZXJzb24i", 
+            "ABI4CgxVcGRhdGVQZXJzb24SEi5CaW9TZXJ2aWNlLlBlcnNvbhoSLkJpb1Nl", 
+            "cnZpY2UuUGVyc29uIgASOAoMUmVtb3ZlUGVyc29uEhIuQmlvU2VydmljZS5Q", 
+            "ZXJzb24aEi5CaW9TZXJ2aWNlLlBlcnNvbiIAEjkKDFNldFRodW1ibmFpbBIR", 
+            "LkJpb1NlcnZpY2UuUGhvdG8aFC5CaW9TZXJ2aWNlLlJlc3BvbnNlIgASLwoH", 
+            "QWRkQ2FyZBIQLkJpb1NlcnZpY2UuQ2FyZBoQLkJpb1NlcnZpY2UuQ2FyZCIA", 
+            "Ej8KC1JlbW92ZUNhcmRzEhYuQmlvU2VydmljZS5SYXdJbmRleGVzGhYuQmlv", 
+            "U2VydmljZS5SYXdJbmRleGVzIgASPwoMU2VsZWN0UGhvdG9zEhYuQmlvU2Vy", 
+            "dmljZS5RdWVyeVBob3RvGhUuQmlvU2VydmljZS5QaG90b0xpc3QiABIyCghB", 
+            "ZGRQaG90bxIRLkJpb1NlcnZpY2UuUGhvdG8aES5CaW9TZXJ2aWNlLlBob3Rv", 
+            "IgASQAoMUmVtb3ZlUGhvdG9zEhYuQmlvU2VydmljZS5SYXdJbmRleGVzGhYu", 
+            "QmlvU2VydmljZS5SYXdJbmRleGVzIgASRgoOU2VsZWN0VmlzaXRvcnMSGS5C", 
+            "aW9TZXJ2aWNlLlF1ZXJ5VmlzaXRvcnMaFy5CaW9TZXJ2aWNlLlZpc2l0b3JM", 
+            "aXN0IgASRAoVQXR0YWNoVmlzaXRvclRvUGVyc29uEhMuQmlvU2VydmljZS5W", 
+            "aXNpdG9yGhQuQmlvU2VydmljZS5SZXNwb25zZSIAEkIKDlJlbW92ZVZpc2l0", 
+            "b3JzEhYuQmlvU2VydmljZS5SYXdJbmRleGVzGhYuQmlvU2VydmljZS5SYXdJ", 
+            "bmRleGVzIgASOAoKQWRkVmlzaXRvchITLkJpb1NlcnZpY2UuVmlzaXRvchoT", 
+            "LkJpb1NlcnZpY2UuVmlzaXRvciIAEkkKD1NlbGVjdExvY2F0aW9ucxIaLkJp", 
+            "b1NlcnZpY2UuUXVlcnlMb2NhdGlvbnMaGC5CaW9TZXJ2aWNlLkxvY2F0aW9u", 
+            "TGlzdCIAEjsKC0FkZExvY2F0aW9uEhQuQmlvU2VydmljZS5Mb2NhdGlvbhoU", 
+            "LkJpb1NlcnZpY2UuTG9jYXRpb24iABI+Cg5VcGRhdGVMb2NhdGlvbhIULkJp", 
+            "b1NlcnZpY2UuTG9jYXRpb24aFC5CaW9TZXJ2aWNlLkxvY2F0aW9uIgASQwoP", 
+            "UmVtb3ZlTG9jYXRpb25zEhYuQmlvU2VydmljZS5SYXdJbmRleGVzGhYuQmlv", 
+            "U2VydmljZS5SYXdJbmRleGVzIgBCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(new[] {typeof(global::BioService.EntityState), typeof(global::BioService.Result), typeof(global::BioService.MessageType), typeof(global::BioService.PhotoSizeType), typeof(global::BioService.PhotoOriginType), }, new pbr::GeneratedCodeInfo[] {
@@ -164,7 +166,7 @@ namespace BioService {
             new pbr::GeneratedCodeInfo(typeof(global::BioService.FaceCharacteristic), new[]{ "Width", "Location", "Eyes" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.PortraitCharacteristic), new[]{ "Age", "FacesCount", "FirUrl", "FirBytestring", "Faces" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.Photo), new[]{ "Id", "Personid", "SizeType", "Datetime", "PhotoUrl", "Bytestring", "OriginType", "Width", "Height", "PortraitCharacteristic", "EntityState", "Dbresult" }, null, null, null),
-            new pbr::GeneratedCodeInfo(typeof(global::BioService.Visitor), new[]{ "Id", "Personid", "Photoid", "Locationid", "Time", "CardNumber", "Status", "Fullphoto", "Cropedphoto" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::BioService.Visitor), new[]{ "Id", "Personid", "Photoid", "Locationid", "Time", "CardNumber", "Status", "Fullphoto", "Cropedphoto", "Dbresult" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.VisitorList), new[]{ "Visitors" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.LocationList), new[]{ "Locations" }, null, null, null),
             new pbr::GeneratedCodeInfo(typeof(global::BioService.PersonList), new[]{ "Persons" }, null, null, null),
@@ -3321,6 +3323,7 @@ namespace BioService {
       status_ = other.status_;
       Fullphoto = other.fullphoto_ != null ? other.Fullphoto.Clone() : null;
       Cropedphoto = other.cropedphoto_ != null ? other.Cropedphoto.Clone() : null;
+      dbresult_ = other.dbresult_;
     }
 
     public Visitor Clone() {
@@ -3408,6 +3411,15 @@ namespace BioService {
       }
     }
 
+    public const int DbresultFieldNumber = 10;
+    private global::BioService.Result dbresult_ = global::BioService.Result.Success;
+    public global::BioService.Result Dbresult {
+      get { return dbresult_; }
+      set {
+        dbresult_ = value;
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Visitor);
     }
@@ -3428,6 +3440,7 @@ namespace BioService {
       if (Status != other.Status) return false;
       if (!object.Equals(Fullphoto, other.Fullphoto)) return false;
       if (!object.Equals(Cropedphoto, other.Cropedphoto)) return false;
+      if (Dbresult != other.Dbresult) return false;
       return true;
     }
 
@@ -3442,6 +3455,7 @@ namespace BioService {
       if (Status != global::BioService.Result.Success) hash ^= Status.GetHashCode();
       if (fullphoto_ != null) hash ^= Fullphoto.GetHashCode();
       if (cropedphoto_ != null) hash ^= Cropedphoto.GetHashCode();
+      if (Dbresult != global::BioService.Result.Success) hash ^= Dbresult.GetHashCode();
       return hash;
     }
 
@@ -3486,6 +3500,10 @@ namespace BioService {
         output.WriteRawTag(74);
         output.WriteMessage(Cropedphoto);
       }
+      if (Dbresult != global::BioService.Result.Success) {
+        output.WriteRawTag(80);
+        output.WriteEnum((int) Dbresult);
+      }
     }
 
     public int CalculateSize() {
@@ -3516,6 +3534,9 @@ namespace BioService {
       }
       if (cropedphoto_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Cropedphoto);
+      }
+      if (Dbresult != global::BioService.Result.Success) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Dbresult);
       }
       return size;
     }
@@ -3556,6 +3577,9 @@ namespace BioService {
           cropedphoto_ = new global::BioService.Photo();
         }
         Cropedphoto.MergeFrom(other.Cropedphoto);
+      }
+      if (other.Dbresult != global::BioService.Result.Success) {
+        Dbresult = other.Dbresult;
       }
     }
 
@@ -3606,6 +3630,10 @@ namespace BioService {
               cropedphoto_ = new global::BioService.Photo();
             }
             input.ReadMessage(cropedphoto_);
+            break;
+          }
+          case 80: {
+            dbresult_ = (global::BioService.Result) input.ReadEnum();
             break;
           }
         }

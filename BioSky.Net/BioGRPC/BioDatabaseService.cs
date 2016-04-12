@@ -38,14 +38,7 @@ namespace BioGRPC
     public IDataClient<Visitor, QueryVisitors> VisitorDataClient
     {
       get { return _visitorDataClient; }     
-    }
-
-    /*
-    private IDataClient<Photo, QueryPhoto> _photoDataClient;
-    public IDataClient<Photo, QueryPhoto> PhotoDataClient
-    {
-      get { return _photoDataClient; }
-    */
+    }    
 
     private PersonDataClient _personDataClient;
     public IDataClient<Person, QueryPersons> PersonDataClient

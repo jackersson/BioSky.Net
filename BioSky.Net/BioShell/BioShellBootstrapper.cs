@@ -44,7 +44,8 @@ namespace BioShell
     {
       try
       {
-       
+        _container.Register( Castle.MicroKernel.Registration.Component.For<System.Windows.Threading.Dispatcher>()
+                           .Instance(Application.Current.Dispatcher));
 
         var loader     = _container.Resolve<BioModuleLoader>();
         var dataloader = _container.Resolve<BioDataLoader>();
@@ -54,6 +55,7 @@ namespace BioShell
       
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
+        dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioCaptureDevices.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioEngine.dll"));
        

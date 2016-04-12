@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using BioAccessDevice.Abstract;
+﻿using BioAccessDevice.Abstract;
 
 namespace BioAccessDevice.Commands
-{ 
+{
   public class CommandReset : AccessDeviceCommand
   {
     public CommandReset() : base()

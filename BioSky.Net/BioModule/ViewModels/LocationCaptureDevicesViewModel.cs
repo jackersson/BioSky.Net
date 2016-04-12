@@ -20,7 +20,7 @@ namespace BioModule.ViewModels
 
       _bioEngine = _locator.GetProcessor<IBioEngine>();
       _database  = _locator.GetProcessor<IBioSkyNetRepository>();
-
+      _notifier  = _locator.GetProcessor<INotifier>();
       CaptureDevicesNames = new AsyncObservableCollection<string>();
     }
 
@@ -45,13 +45,13 @@ namespace BioModule.ViewModels
 
         foreach (CaptureDevice cd in _database.Locations.CaptureDevices)
         {
-          if (!CaptureDevicesNames.Contains(cd.Devicename))
+          if (cd != null && !CaptureDevicesNames.Contains(cd.Devicename))
             CaptureDevicesNames.Add(cd.Devicename);
         }
       }
       catch (Exception ex)
       {
-        Console.WriteLine(ex.Message);
+        _notifier.Notify(ex);
       }
 
       RefreshConnectedDevices();      
@@ -219,10 +219,10 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Global Variables    
-    private readonly IProcessorLocator _locator  ;
-    private readonly IBioEngine        _bioEngine;
-    private readonly IBioSkyNetRepository _database;
-
+    private readonly IProcessorLocator    _locator  ;
+    private readonly IBioEngine           _bioEngine;
+    private readonly IBioSkyNetRepository _database ;
+    private readonly INotifier            _notifier ;
     public event EventHandler DeviceChanged;
     #endregion
   }

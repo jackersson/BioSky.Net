@@ -59,7 +59,7 @@ namespace BioModule.ViewModels
     {
       OnClear();
 
-      string directoryPath = _database.LocalStorage.LogDirectoryPath;
+      string directoryPath = _database.LocalStorage.GetParametr(ConfigurationParametrs.LogsFilePathway);
 
       if (CurrentDateTimePeriod.IsEmpty())
       {
@@ -98,7 +98,7 @@ namespace BioModule.ViewModels
 
     public void UploadFromDirectory()
     {
-      string directoryPath = _database.LocalStorage.LogDirectoryPath;
+      string directoryPath = _database.LocalStorage.GetParametr(ConfigurationParametrs.LogsFilePathway);
 
       var dialog = _bioFileUtils.OpenFileDialogWithMultiselect(directoryPath);
       if (dialog.ShowDialog() == true)

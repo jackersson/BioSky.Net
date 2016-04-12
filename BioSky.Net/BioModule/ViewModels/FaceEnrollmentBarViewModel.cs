@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Drawing;
+using BioContracts.CaptureDevices;
 
 namespace BioModule.ViewModels
 {
@@ -78,15 +79,15 @@ namespace BioModule.ViewModels
     }
 
     public void OnFrame(ref Bitmap frame) {
-      foreach (ICaptureDeviceObserver observer in _observer.Observers)
-        observer.OnFrame(ref frame);
+    //  foreach (ICaptureDeviceObserver observer in _observer.Observers)
+     //   observer.OnFrame(ref frame);
     }
 
     public void OnStop(bool stopped, string message) {
 
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
-      foreach (ICaptureDeviceObserver observer in _observer.Observers)
-        observer.OnStop(stopped, message);
+     // foreach (ICaptureDeviceObserver observer in _observer.Observers)
+      //  observer.OnStop(stopped, message);
     }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)

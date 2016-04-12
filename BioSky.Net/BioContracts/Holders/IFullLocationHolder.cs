@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BioContracts
+namespace BioContracts.Holders
 {
   public interface IFullLocationHolder : IFullHolder<Location>
   {

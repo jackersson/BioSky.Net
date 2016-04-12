@@ -6,18 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf.Collections;
 using BioData.Holders.Utils;
+using BioContracts.Holders;
 
 namespace BioData.Holders.Grouped
 {
   public class FullPersonHolder : PropertyChangedBase, IFullPersonHolder
   {
-    public FullPersonHolder(IOUtils ioutils)
+    public FullPersonHolder(IOUtils ioutils, PhotoHolder photoHolder)
     {
       DataSet         = new Dictionary<long, Person>();
-      CardsDataSet    = new Dictionary<string, Person>();
+      CardsDataSet    = new Dictionary<string, long>();
       Data            = new AsyncObservableCollection<Person>();
 
-      _ioUtils = ioutils;
+      _photoHolder = photoHolder;
+      _ioUtils     = ioutils;
     }
 
     public void Init(RepeatedField<Person> data)
@@ -26,10 +28,15 @@ namespace BioData.Holders.Grouped
 
       foreach (Person person in data)
       {
+        long personId = person.Id; 
         _dataSet.Add(person.Id, person);
-        CheckPersonPhotosIfFileExisted(person);
+
+        foreach (Card card in person.Cards)
+          _cardsDataSet.Add(card.UniqueNumber, personId);
+
+        _photoHolder.CheckPhotosIfFileExisted(person);
       }
-      Console.WriteLine(PhotosIndexesWithoutExistingFile.Count);
+     
       OnDataChanged();
     }
 
@@ -127,8 +134,8 @@ namespace BioData.Holders.Grouped
       }
     }
 
-    private Dictionary<string, Person> _cardsDataSet;
-    public Dictionary<string, Person> CardsDataSet
+    private Dictionary<string, long> _cardsDataSet;
+    public Dictionary<string, long> CardsDataSet
     {
       get { return _cardsDataSet; }
       private set
@@ -140,8 +147,11 @@ namespace BioData.Holders.Grouped
     
     public Person GetPersonByCardNumber(string cardNumber)
     {
+      long personid;
+      CardsDataSet.TryGetValue(cardNumber, out personid);
+
       Person person = null;
-      CardsDataSet.TryGetValue(cardNumber, out person);
+      DataSet.TryGetValue(personid, out person);
 
       return person;
     }
@@ -219,16 +229,7 @@ namespace BioData.Holders.Grouped
         if (refresh)
           OnDataChanged();
       }
-    }
-
-    private void CheckPersonPhotosIfFileExisted( Person person )
-    {
-      foreach ( Photo photo in person.Photos )
-      {
-        if (!_ioUtils.FileExists(photo.PhotoUrl))
-          PhotosIndexesWithoutExistingFile.Add(photo.Id);
-      }
-    }
+    }   
 
     public void RemovePhotos(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
     {
@@ -242,25 +243,11 @@ namespace BioData.Holders.Grouped
       OnDataChanged();
     }
     
-    private HashSet<long> _photosIndexesWithoutExistingFile;
-    public HashSet<long> PhotosIndexesWithoutExistingFile
-    {
-      get {
-        if (_photosIndexesWithoutExistingFile == null)
-          _photosIndexesWithoutExistingFile = new HashSet<long>();
-        return _photosIndexesWithoutExistingFile;
-      }
-      private set
-      {
-        if (_photosIndexesWithoutExistingFile != value)
-          _photosIndexesWithoutExistingFile = value;
-      }
-    }
-
     public event DataChangedHandler             DataChanged;
     public event DataUpdatedHandler<RepeatedField<Person>> DataUpdated;
 
-    public readonly IOUtils _ioUtils;
+    public readonly PhotoHolder _photoHolder;
+    public readonly IOUtils     _ioUtils    ;
     
   }
 }

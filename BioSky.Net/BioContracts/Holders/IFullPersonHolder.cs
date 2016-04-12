@@ -2,7 +2,7 @@
 using Google.Protobuf.Collections;
 using System.Collections.Generic;
 
-namespace BioContracts
+namespace BioContracts.Holders
 {
   public interface IFullPersonHolder : IFullHolder<Person>
   {
@@ -30,6 +30,6 @@ namespace BioContracts
 
     Person GetValue(Person person);
 
-    HashSet<long> PhotosIndexesWithoutExistingFile { get; }
+    //HashSet<long> PhotosIndexesWithoutExistingFile { get; }
   }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BioEngine.CaptureDevices
+namespace BioCaptureDevices
 {
   public interface ICaptureDeviceConnectivity
   {

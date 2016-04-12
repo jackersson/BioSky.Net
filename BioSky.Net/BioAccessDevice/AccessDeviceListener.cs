@@ -9,10 +9,10 @@ using System.Threading;
 using System.IO.Ports;
 using BioContracts.Abstract;
 using BioContracts.Common;
+using System.Collections.Generic;
 
 namespace BioAccessDevice
-{    
-
+{  
   public class AccessDeviceListener : Threadable, IBioObservable<IAccessDeviceObserver>
   {  
     public AccessDeviceListener( string portName ) : base()
@@ -21,8 +21,8 @@ namespace BioAccessDevice
       _serialPort.PortName = portName;
       _serialPort.BaudRate = ACCESS_DEVICE_BAUD_RATE;
 
-      _serialPort.ReadTimeout  = 1000;
-      _serialPort.WriteTimeout = 1000;
+      _serialPort.ReadTimeout  = READ_WRITE_TIMEOUT;
+      _serialPort.WriteTimeout = READ_WRITE_TIMEOUT;
 
       _commandFactory = new AccessDeviceCommandFactory(); 
       _commands       = new ConcurrentQueue<ICommand> ();
@@ -30,26 +30,23 @@ namespace BioAccessDevice
       _observer       = new BioObserver<IAccessDeviceObserver>();     
     }
 
-    public void Subscribe(IAccessDeviceObserver observer)
-    {
+    #region observer
+    public void Subscribe(IAccessDeviceObserver observer) {
       _observer.Subscribe(observer);
     }
 
-    public void Unsubscribe(IAccessDeviceObserver observer)
-    {
+    public void Unsubscribe(IAccessDeviceObserver observer) {
       _observer.Unsubscribe(observer);
     }
 
-    public void UnsubscribeAll()
-    {
+    public void UnsubscribeAll()  {
       _observer.UnsubscribeAll();
     }
 
-    public bool HasObserver(IAccessDeviceObserver observer)
-    {
+    public bool HasObserver(IAccessDeviceObserver observer) {
       return _observer.HasObserver(observer);
     }
-
+    #endregion
     public override void Stop()
     {
       Clear();
@@ -119,10 +116,8 @@ namespace BioAccessDevice
       {
         ICommand command;       
         if (Dequeue(out command))
-        {
-         
-          Thread.Sleep(200);
-
+        {         
+          Thread.Sleep(DELAY_BETWEEN_COMMANDS);
          
           if ( command.Execute(ref _serialPort) )
           {            
@@ -138,7 +133,7 @@ namespace BioAccessDevice
             if ( !IsActive() )
             {
               OnError(errorMesage);
-              Thread.Sleep(1000);
+              Thread.Sleep(DELAY_BETWEEN_CONNECTION);
               Open();
             }     
             else if (errorMesage != null)            
@@ -184,8 +179,8 @@ namespace BioAccessDevice
       for (int i = 0; i < data.Length; ++i)
         cardNumber += data[i];
 
-      foreach (IAccessDeviceObserver observer in _observer.Observers)
-        observer.OnCardDetected(cardNumber);
+      foreach (KeyValuePair<int, IAccessDeviceObserver> observer in _observer.Observers)
+        observer.Value.OnCardDetected(cardNumber);
     }
 
     private void OnError(Exception exception)
@@ -193,14 +188,14 @@ namespace BioAccessDevice
       if (exception == null)
         return;
 
-      foreach (IAccessDeviceObserver observer in _observer.Observers)
-        observer.OnError(exception);
+      foreach (KeyValuePair<int, IAccessDeviceObserver> observer in _observer.Observers)
+        observer.Value.OnError(exception);
     }
 
     private void OnReady(bool isOk)
     {
-      foreach (IAccessDeviceObserver observer in _observer.Observers)
-        observer.OnReady(isOk);
+      foreach (KeyValuePair<int, IAccessDeviceObserver> observer in _observer.Observers)
+        observer.Value.OnReady(isOk);
     }
 
     private ICommandFactory _commandFactory;
@@ -210,7 +205,11 @@ namespace BioAccessDevice
 
     private BioObserver<IAccessDeviceObserver> _observer;
 
-    private const int ACCESS_DEVICE_BAUD_RATE = 4800;  
+    private const int ACCESS_DEVICE_BAUD_RATE  = 4800;
+    private const int DELAY_BETWEEN_COMMANDS   = 200 ;
+    private const int DELAY_BETWEEN_CONNECTION = 1000;
+    private const int DELAY_BETWEEN_ASK_DEVICE = 100 ;
+    private const int READ_WRITE_TIMEOUT       = 1000;
 
   }
 }

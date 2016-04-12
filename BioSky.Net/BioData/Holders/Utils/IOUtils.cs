@@ -1,10 +1,6 @@
 ﻿using BioContracts;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioData.Holders.Utils
 {
@@ -17,16 +13,17 @@ namespace BioData.Holders.Utils
 
     public bool FileExists( string localPath)
     {
-      return File.Exists( _localStorage.LocalStoragePath + localPath );
+      return File.Exists(_localStorage.GetParametr(ConfigurationParametrs.MediaPathway) + localPath );
     }
 
     public void SaveFile( string localPath, byte[] bytes )
     {
       try {
-        string destinationPath = _localStorage.LocalStoragePath + localPath;
 
-        if (FileExists(destinationPath))
+        if (FileExists(localPath))
           return;
+
+        string destinationPath = _localStorage.GetParametr(ConfigurationParametrs.MediaPathway) + localPath;
 
         Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
 

@@ -7,6 +7,8 @@ using BioService;
 using BioContracts.Services;
 using BioContracts.Common;
 using WPFLocalizeExtension.Extensions;
+using BioContracts.BioTasks;
+using BioContracts.BioTasks.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -288,13 +290,13 @@ namespace BioModule.ViewModels
 
     #region Global Variables
 
-    private readonly Enroller                 _enroller           ;
+    private readonly FaceEnroller             _enroller           ;
     private readonly IProcessorLocator        _locator            ;   
-    private readonly IUserBioItemsUpdatable          _imageViewer        ;
+    private readonly IUserBioItemsUpdatable   _imageViewer        ;
     private readonly IDatabaseService         _bioService         ;    
     private readonly IBioSkyNetRepository     _database           ;
     private readonly INotifier                _notifier           ;
-    private BioContracts.Common.BioImageUtils _bioUtils           ;
+    private          BioImageUtils            _bioUtils           ;
     private readonly DialogsHolder            _dialogsHolder      ;
 
 

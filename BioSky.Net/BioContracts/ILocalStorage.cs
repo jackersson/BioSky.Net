@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BioContracts
+﻿namespace BioContracts
 {
+  public enum ConfigurationParametrs
+  {
+      MediaPathway
+     , FaceServiceAddress
+     , DatabaseServiceAddress
+     , Language
+     , LogsFilePathway
+  }
+
   public interface ILocalStorage
   {
-    string LocalStoragePath { get; }
+    string GetParametr(ConfigurationParametrs parametr);
 
-    string FaceServiceStoragePath { get; }
-
-    string DatabaseServiceStoragePath { get; }
-
-    string Language { get; }
-
-    string LogDirectoryPath { get;}
+    void UpdateParametr(ConfigurationParametrs parametr, string value);
 
     string LogFileFormat { get; }
-
-    void SaveGeneralSettings(string local, string face, string service, string language);
   }
 }

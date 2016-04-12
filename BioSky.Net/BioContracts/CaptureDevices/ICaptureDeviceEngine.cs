@@ -1,7 +1,8 @@
-﻿using BioContracts.Common;
+﻿using BioContracts.CaptureDevices;
+using BioContracts.Common;
 using System;
 
-namespace BioContracts
+namespace BioContracts.CaptureDevices
 {
   public interface ICaptureDeviceEngine
   {

@@ -1,8 +1,9 @@
 ﻿using BioContracts;
 using System.Collections.Generic;
 using BioContracts.Common;
+using BioContracts.CaptureDevices;
 
-namespace BioEngine.CaptureDevices
+namespace BioCaptureDevices
 {
   public class CaptureDeviceEngine : ICaptureDeviceEngine
   {

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using System.Drawing;
 
 namespace BioModule.BioModels
 {
@@ -50,6 +51,11 @@ namespace BioModule.BioModels
     public void Deactivate()
     {
 
+    }
+
+    public void UpdateFrame( Bitmap frame)
+    {
+      throw new NotImplementedException();
     }
 
     public PhotoViewEnum EnumState

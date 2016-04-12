@@ -1,6 +1,7 @@
 ﻿using BioContracts;
 using BioContracts.Services;
 using BioService;
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace BioGRPC.DatabaseClient
 
       try {
         Location call = await _client.UpdateLocationAsync(item);
+
+
         Console.WriteLine(call);
         _database.Locations.Update(item, call);
       }
@@ -42,8 +45,10 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-        LocationList call = await _client.SelectLocationsAsync (command);
-        _database.Locations.Init(call.Locations);        
+        LocationList call = await _client.SelectLocationsAsync(command);
+        _database.Locations.Init(call.Locations);
+       // Task task = new Task(() => _database.Locations.Init(call.Locations));
+        //task.Start();
       }
       catch (RpcException e)
       {

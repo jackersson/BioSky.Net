@@ -24,6 +24,7 @@ using WPFLocalizeExtension.Providers;
 using XAMLMarkupExtensions.Base;
 using BioContracts.Services;
 using System.ComponentModel;
+using BioContracts.BioTasks.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -55,7 +56,7 @@ namespace BioModule.ViewModels
 
       UserPhotoView = new UserPhotoViewModel (CurrentPhotoImageView, _locator);
       
-      _bioUtils = new BioContracts.Common.BioImageUtils();
+      _bioUtils = new BioImageUtils();
 
       UserInformationViewModel uinfoModel = new UserInformationViewModel(_locator, CurrentPhotoImageView);
 
@@ -333,7 +334,7 @@ namespace BioModule.ViewModels
     private Person                            _revertUser   ;
     private Person                            _user         ;
     private readonly DialogsHolder            _dialogs      ;
-    private BioContracts.Common.BioImageUtils _bioUtils     ;
+    private          BioImageUtils            _bioUtils     ;
     private readonly FastMethodInvoker        _methodInvoker;
     private readonly IProcessorLocator        _locator      ;
     private readonly INotifier                _notifier     ;

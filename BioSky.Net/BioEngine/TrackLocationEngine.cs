@@ -1,25 +1,26 @@
 ﻿using System.Collections.Generic;
-
 using BioContracts;
 using BioService;
+using BioContracts.Locations;
 
 namespace BioEngine
 {
   public class TrackLocationEngine : ITrackLocationEngine
-  {
+  { 
     public TrackLocationEngine(  IProcessorLocator locator )      
     {     
       _locator = locator;
       _trackLocationsSet = new Dictionary<long, TrackLocation>();
-      _trackLocations    = new AsyncObservableCollection<TrackLocation>();
-
+      _trackLocations    = new AsyncObservableCollection<TrackLocation>();   
+    
       _locator.GetProcessor<IBioSkyNetRepository>().Locations.DataChanged += RefreshData;        
-    }  
-
-    public void RefreshData()
-    {
+    }
+           
+    private void RefreshData()
+    {      
       IBioSkyNetRepository database            = _locator.GetProcessor<IBioSkyNetRepository>();
       AsyncObservableCollection<Location> data = database.Locations.Data;
+      
       foreach (Location location in data)
       {
         TrackLocation currentLocation = null;
@@ -30,9 +31,9 @@ namespace BioEngine
         }
           
          TrackLocation trackLocation = new TrackLocation(_locator, location);
-        _trackLocationsSet.Add(location.Id, trackLocation);
+         _trackLocationsSet.Add(location.Id, trackLocation);       
       }
-
+      
       _trackLocations.Clear();
       Dictionary<long, Location> dict = database.Locations.DataSet;
       foreach ( long locationID in _trackLocationsSet.Keys)
@@ -45,7 +46,7 @@ namespace BioEngine
         else        
           _trackLocations.Add(_trackLocationsSet[locationID]);        
       }
-
+            
       OnLocationsChanged();
     }
 
@@ -54,7 +55,7 @@ namespace BioEngine
     {
      get { return _trackLocationsSet; }
     }
-
+    
     private AsyncObservableCollection<TrackLocation> _trackLocations;
     public AsyncObservableCollection<TrackLocation> TrackLocations
     {
@@ -67,7 +68,7 @@ namespace BioEngine
         LocationsChanged();
     }
 
-    public event LocationsChangedEventHandler LocationsChanged;
+    public event     LocationsChangedEventHandler LocationsChanged;   
     private readonly IProcessorLocator _locator;  
   }
 }

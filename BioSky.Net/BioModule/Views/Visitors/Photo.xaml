@@ -63,7 +63,7 @@
         <!--******************************************** Search Menu ***************************************-->
 
         <ListBox 
-            DataContext="{Binding VisitorsView}"
+          
             BorderThickness="1" 
                   Grid.Row="1" HorizontalAlignment="Stretch" 
             Grid.ColumnSpan="5"
@@ -94,18 +94,24 @@
                               />
                             </ContextMenu>
                         </StackPanel.ContextMenu>
+                        <!--
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Style.Triggers>
+                                    
                                     <DataTrigger Binding="{Binding Status}" Value="Success">
-                                        <Setter Property="Background" Value="#7FEAFFEA"/>
-                                    </DataTrigger>
+                                        <Setter Property="Background">
+                                            <Setter.Value>
+                                                <SolidColorBrush Color="#FF252525"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger> 
                                     <DataTrigger Binding="{Binding Status}" Value="Failed">
-                                        <Setter Property="Background" Value="#33FFECEC"/>
+                                        <Setter Property="Background" Value="#FF252525"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </StackPanel.Style>
+                        </StackPanel.Style> -->
                         <Grid Margin="5,5,5,5" >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>

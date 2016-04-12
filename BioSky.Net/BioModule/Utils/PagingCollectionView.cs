@@ -99,9 +99,7 @@ namespace BioModule.Utils
         return base.GetItemAt(targetIndex);
       }
       catch ( Exception e)
-      {
-        Console.WriteLine(InternalList.Count);
-        Console.WriteLine(e.Message);
+      {      
         return null;
       }
       

@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using BioContracts.Holders;
 
 namespace BioData.Holders.Grouped
 {
@@ -19,15 +20,16 @@ namespace BioData.Holders.Grouped
     }
 
     public void Init(Google.Protobuf.Collections.RepeatedField<Location> data)
-    {
+    {      
       Data = new AsyncObservableCollection<Location>(data);
-
+      
       foreach (Location location in data)
       {
         _dataSet.Add(location.Id, location);
         AccessDevices .Add(location.AccessDevice);
         CaptureDevices.Add(location.CaptureDevice);
       }     
+      
       
       OnDataChanged();    
     }

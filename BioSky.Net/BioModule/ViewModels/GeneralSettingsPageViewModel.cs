@@ -27,28 +27,26 @@ namespace BioModule.ViewModels
        _locator       = locator;
 
        _database      = _locator.GetProcessor<IBioSkyNetRepository>();
-      _dialogsHolder  = _locator.GetProcessor<DialogsHolder>();
+       _dialogsHolder  = _locator.GetProcessor<DialogsHolder>();
 
-      _languages = new ObservableCollection<string>();
+       _languages = new ObservableCollection<string>();
        _languages.Add("en");
        _languages.Add("ru-RU");
-       _languages.Add("uk-UA");
-
-         
+       _languages.Add("uk-UA");         
      }
 
     #region Update
 
     public void RefreshData()
-     {
-       SelectedLanguage        = _database.LocalStorage.Language                  ;
-       LocalStoragePath        = _database.LocalStorage.LocalStoragePath          ;
-       string faceService      = _database.LocalStorage.FaceServiceStoragePath    ;
-       string databaseService  = _database.LocalStorage.DatabaseServiceStoragePath;
+    {
+       SelectedLanguage        = _database.LocalStorage.GetParametr(ConfigurationParametrs.Language)              ;
+       LocalStoragePath        = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway)          ;
+       string faceService      = _database.LocalStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress)    ;
+       string databaseService  = _database.LocalStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress);
 
        SeparateIpPort(faceService    , out _faceServiceIP    , out _faceServicePort    );
        SeparateIpPort(databaseService, out _databaseServiceIP, out _databaseServicePort);
-     }
+    }
 
      public void SeparateIpPort(string full, out string ip, out string port)
      {
@@ -79,6 +77,7 @@ namespace BioModule.ViewModels
       LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(SelectedLanguage);
     }
 
+
     protected override void OnActivate()
     {
       base.OnActivate();
@@ -91,13 +90,19 @@ namespace BioModule.ViewModels
       var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 
       if (result == true)
-         _database.LocalStorage.SaveGeneralSettings( LocalStoragePath
-                                                   , FaceServiceIP + ":" + FaceServicePort
-                                                   , DatabaseServiceIP + ":" + DatabaseServicePort
-                                                   , SelectedLanguage); 
-     }
+        Save();
+    }
 
-     public void Revert()
+    private void Save()
+    {
+      ILocalStorage storage = _database.LocalStorage;
+      storage.UpdateParametr(ConfigurationParametrs.MediaPathway, LocalStoragePath);
+      storage.UpdateParametr(ConfigurationParametrs.FaceServiceAddress, FaceServiceIP + ":" + FaceServicePort);
+      storage.UpdateParametr(ConfigurationParametrs.DatabaseServiceAddress, DatabaseServiceIP + ":" + DatabaseServicePort);
+      storage.UpdateParametr(ConfigurationParametrs.Language, SelectedLanguage);
+    }
+
+    public void Revert()
      {
       _dialogsHolder.AreYouSureDialog.Show();
       var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
