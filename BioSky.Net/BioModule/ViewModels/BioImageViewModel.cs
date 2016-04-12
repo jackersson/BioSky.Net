@@ -47,7 +47,7 @@ namespace BioModule.ViewModels
   public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable
   {
 
-    public BioImageViewModel(IProcessorLocator locator, long style = MIN_BIO_IMAGE_STYLE)
+    public BioImageViewModel(IProcessorLocator locator, long style = MAX_BIO_IMAGE_STYLE)
     {
       _notifier = locator.GetProcessor<INotifier>();
       _database = locator.GetProcessor<IBioSkyNetRepository>();
@@ -180,7 +180,7 @@ namespace BioModule.ViewModels
 
       if (bmp == null)
       {
-        Clear();
+        base.Clear();
         return;
       }
 
@@ -198,14 +198,16 @@ namespace BioModule.ViewModels
 
     public void UpdateFromPhoto(Photo photo)
     {
-      /*if (photo == null)
+      if (photo == null)
       {
-        Clear();
+        base.Clear();
+        if(CurrentBioImage != null)
+          CurrentBioImage.UploadPhoto(photo);
         return;
       }
-      */
-      //string filename = _database.LocalStorage.LocalStoragePath + "\\" + photo.PhotoUrl;
-      //base.UpdateFromFile(filename);
+      
+      string filename = _database.LocalStorage.LocalStoragePath + "\\" + photo.PhotoUrl;
+      base.UpdateFromFile(filename);
 
       CurrentPhoto = photo;
       
@@ -216,6 +218,12 @@ namespace BioModule.ViewModels
     {
       if (BioImageModelChanged != null)
         BioImageModelChanged(bioImageModel);
+    }
+
+    private void OnPhotoChanged()
+    {
+      if (PhotoChanged != null)
+        PhotoChanged();
     }
 
     #endregion
@@ -419,6 +427,8 @@ namespace BioModule.ViewModels
           if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
             Message = "Can't upload photo";
 
+          OnPhotoChanged();
+
           NotifyOfPropertyChange(() => CurrentPhoto);
           NotifyOfPropertyChange(() => CanAddPhoto );
           
@@ -442,6 +452,10 @@ namespace BioModule.ViewModels
     public delegate void BioImageChangedEventHandler(BioImageModelEnum bioImageModel);
 
     public event BioImageChangedEventHandler BioImageModelChanged;
+
+    public delegate void PhotoChangedEventHandler();
+
+    public event PhotoChangedEventHandler PhotoChanged;
 
     #endregion
   }

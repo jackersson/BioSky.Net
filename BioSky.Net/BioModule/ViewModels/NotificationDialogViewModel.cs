@@ -2,25 +2,24 @@
 using BioService;
 using System.Linq;
 using System.Collections.Generic;
+using BioContracts;
 
 namespace BioModule.ViewModels
 {
-  public class NotificationDialogViewModel : Screen
+  public class NotificationDialogViewModel : Screen, INotificationDialog
   {
-    public NotificationDialogViewModel(IWindowManager windowManager
-                                     , List<TreeItem> list                                     
-                                     , string title = "LocationNotificationDialog")
+    public NotificationDialogViewModel(IProcessorLocator locator
+                                     , string title = "NotificationDialog")
     {
-      _windowManager = windowManager;
-      TreeItems = new List<TreeItem>();
+      _locator       = locator;
+      _windowManager = _locator.GetProcessor<IWindowManager>();
 
-       Update(list, title);
+      TreeItems = new List<TreeItem>();
     }
 
     public void Update(List<TreeItem> list                     
-                      , string title = "LocationNotificationDialog")
+                      , string title = "NotificationDialog")
     {
-
       DisplayName = title;
 
       if (list == null)
@@ -116,21 +115,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private IWindowManager _windowManager;
+    private IWindowManager    _windowManager;
+    private IProcessorLocator _locator      ;
   }
-
-  public class TreeItem
-  {
-    public TreeItem()
-    {
-      this.Members = new List<TreeItem>();
-    }
-
-    public string Name { get; set; }
-
-    public bool IsSuccess { get; set; }
-
-    public List<TreeItem> Members { get; set; }
-  }
-
 }

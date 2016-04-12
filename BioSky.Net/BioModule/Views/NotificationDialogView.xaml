@@ -7,6 +7,7 @@
                    xmlns:vm="clr-namespace:BioModule.ViewModels"                   
                    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                    xmlns:cal="http://www.caliburnproject.org" 
+                   xmlns:contracts="clr-namespace:BioContracts;assembly=BioContracts"                   
                    xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
                    xmlns:utils="clr-namespace:BioModule.Utils"                    
                    xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"                   
@@ -49,7 +50,7 @@
                   Grid.Row="1" Grid.ColumnSpan="3" Margin="2"                    
                   MaxHeight="200" >
             <TreeView.Resources >
-                <HierarchicalDataTemplate DataType="{x:Type vm:TreeItem}" ItemsSource="{Binding Members}">
+                <HierarchicalDataTemplate DataType="{x:Type contracts:TreeItem}" ItemsSource="{Binding Members}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{Binding IsSuccess, Converter={StaticResource convertStateToImage}, UpdateSourceTrigger=PropertyChanged}" 
                                        Stretch="Fill" Width="18" Height="18">

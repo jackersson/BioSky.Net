@@ -16,6 +16,111 @@ using BioContracts.Services;
 
 namespace BioModule.ViewModels
 {
+  public class SimpleScreenController : Conductor<IScreen>.Collection.OneActive
+  {
+
+  }
+
+  public delegate void LocationEventHandler(TrackLocation location);
+  public class TrackItemsShortViewModel : Screen
+  {
+    public event LocationEventHandler SelectedLocationChanged;
+    public TrackItemsShortViewModel(IProcessorLocator locator)
+    {
+      _bioEngine = locator.GetProcessor<IBioEngine>();
+      _selector = locator.GetProcessor<ViewModelSelector>();
+    }
+
+    private void OnSelectedLocationChanged(TrackLocation location)
+    {
+      if (SelectedLocationChanged != null)
+        SelectedLocationChanged(location);
+    }
+
+    public void SelectDefault()
+    {
+      if (SelectedTrackLocation == null)
+        SelectedTrackLocation = TrackControlItems.FirstOrDefault();
+    }
+        
+    private TrackLocation _selectedTrackLocation;
+    public TrackLocation SelectedTrackLocation
+    {
+      get { return _selectedTrackLocation; }
+      set
+      {
+        if (_selectedTrackLocation == value)
+          return;
+        _selectedTrackLocation = value;
+        OnSelectedLocationChanged(_selectedTrackLocation);
+        //FullTrackTabContro.Update(_selectedTrackLocation);
+        NotifyOfPropertyChange(() => SelectedTrackLocation);
+      }
+    }
+
+    public void OnMouseRightButtonDown(TrackLocation trackLocation)
+    {
+      CanOpenSettings = (trackLocation != null);
+      SelectedTrackLocation = trackLocation;
+    }
+
+    public void OnSelectionChanged(SelectionChangedEventArgs e)  {
+      IsDeleteButtonEnabled = SelectedTrackLocation != null ? true : false;    
+    }
+
+    public void OpenTabAddNewLocation()
+    {
+      _selector.ShowContent(ShowableContentControl.FlyoutControlContent
+                           , ViewModelsID.LocationSettings
+                           , new object[] { null });
+    }
+
+    public void ShowLocationFlyout()
+    {
+      if (SelectedTrackLocation == null)
+        return;
+
+      _selector.ShowContent(ShowableContentControl.FlyoutControlContent
+                           , ViewModelsID.LocationSettings
+                           , new object[] { SelectedTrackLocation.CurrentLocation });
+    }
+
+    public AsyncObservableCollection<TrackLocation> TrackControlItems {
+      get { return _bioEngine.TrackLocationEngine().TrackLocations; }
+    }
+
+    private bool _canOpenSettings;
+    public bool CanOpenSettings
+    {
+      get { return _canOpenSettings; }
+      set
+      {
+        if (_canOpenSettings != value)
+        {
+          _canOpenSettings = value;
+          NotifyOfPropertyChange(() => CanOpenSettings);
+        }
+      }
+    }
+
+    private bool _isDeleteButtonEnabled;
+    public bool IsDeleteButtonEnabled
+    {
+      get { return _isDeleteButtonEnabled; }
+      set
+      {
+        if (_isDeleteButtonEnabled != value)
+        {
+          _isDeleteButtonEnabled = value;
+          NotifyOfPropertyChange(() => IsDeleteButtonEnabled);
+        }
+      }
+    }
+
+    private readonly ViewModelSelector _selector ;
+    private readonly IBioEngine        _bioEngine;
+  } 
+
   public class TrackControlViewModel : Conductor<IScreen>.Collection.AllActive
   {
     public TrackControlViewModel(IProcessorLocator locator)
@@ -29,9 +134,9 @@ namespace BioModule.ViewModels
       _notifier      = _locator.GetProcessor<INotifier>();
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
 
-
-      TrackTabControlView = new TrackTabControlViewModel(_locator);
-      _visitorsView       = new VisitorsViewModel(locator);
+      TrackItemsShort = new TrackItemsShortViewModel(locator);
+      TrackTabControl = new TrackTabControlViewModel(locator);
+      
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
@@ -50,53 +155,21 @@ namespace BioModule.ViewModels
       if (!AnyLocationExists)
         return;
 
-      foreach (TrackLocation location in TrackControlItems)
+      AsyncObservableCollection<TrackLocation> locations = TrackItemsShort.TrackControlItems; 
+      foreach (TrackLocation location in locations)
       {
         if (location.ScreenViewModel == null)
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
       }
 
-      if (SelectedTrackLocation == null)
-        TrackTabControlView.Update(TrackControlItems[0]);
-
-      TrackTabControlView.Update(SelectedTrackLocation);
-     // CheckOnLocations();
+      TrackItemsShort.SelectDefault();   
     }
 
-    /*
-    public void CheckOnLocations()
-    {
-      NormalLocationGrid = true;
-      if(TrackControlItems == null || TrackControlItems.Count < 1)
-      {
-        ZeroLocationGrid   = true;
-        NormalLocationGrid = false;
-      }
-    }
-    */
+ 
 
     #endregion
 
     #region Interface
-
-    public async void OnDeleteLocation()
-    {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
-
-      if (!result)
-        return;
-     
-      try
-      {
-        //await _bioService.LocationDataClient.Delete(SelectedTrackLocation.CurrentLocation);
-      }
-      catch (Exception e)
-      {
-        _notifier.Notify(e);
-      }
-      
-    }
 
     public void OnAddNewLocation()
     {
@@ -107,119 +180,108 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      if (_visitorsView != null)
-        ActivateItem(_visitorsView);
+      TrackItemsShort.SelectedLocationChanged += TrackItemsShort_SelectedLocationChanged;
       base.OnActivate();
-
+      ShowLocations();
       RefreshData();
     }
-    public void OnMouseRightButtonDown(TrackLocation trackLocation)
+
+    protected override void OnDeactivate(bool close)
     {
-      CanOpenSettings = (trackLocation != null);
-      SelectedTrackLocation = trackLocation;
+      TrackItemsShort.SelectedLocationChanged -= TrackItemsShort_SelectedLocationChanged;
+      base.OnDeactivate(close);
     }
 
-    public void OnSelectionChanged(SelectionChangedEventArgs e)
+    private void TrackItemsShort_SelectedLocationChanged(TrackLocation location)
     {
-      if (SelectedTrackLocation != null)
-      {
-        TrackTabControlView.Update(SelectedTrackLocation);
-        IsDeleteButtonEnabled = true;
-      }
-      else
-        IsDeleteButtonEnabled = false;
+      TrackTabControl.Update(location);
+      //VisitorsView update by location
     }
 
-    public void OpenTabAddNewLocation()
-    {
-      _selector.ShowContent( ShowableContentControl.FlyoutControlContent
-                           , ViewModelsID.LocationSettings
-                           , new object[] { null });
-    }
 
-    public void ShowLocationFlyout()
-    {
-      if (SelectedTrackLocation == null)
-        return;
 
-      _selector.ShowContent(ShowableContentControl.FlyoutControlContent
-                           , ViewModelsID.LocationSettings
-                           , new object[] { SelectedTrackLocation.CurrentLocation });
-    }
+
     #endregion
 
     #region UI
 
-    private bool _isDeleteButtonEnabled;
-    public bool IsDeleteButtonEnabled
+    public bool CanShowLocations {
+      get { return !TrackItemsShort.IsActive; }
+    }
+
+    public bool CanShowVisitors {
+      get { return !VisitorsView.IsActive; }
+    }
+
+    private void RefreshUI()
     {
-      get { return _isDeleteButtonEnabled; }
+      NotifyOfPropertyChange(() => CanShowLocations);
+      NotifyOfPropertyChange(() => CanShowVisitors );
+    }
+
+    public void ShowLocations()
+    {
+      Object = TrackItemsShort;
+      RefreshUI();
+    }
+
+    public void ShowVisitors()
+    {
+      Object = VisitorsView;
+      RefreshUI();
+    }
+
+    private object _object;
+    public object Object
+    {
+      get { return _object; }
       set
       {
-        if (_isDeleteButtonEnabled != value)
+        if( _object != value)
         {
-          _isDeleteButtonEnabled = value;
-          NotifyOfPropertyChange(() => IsDeleteButtonEnabled);
+          _object = value;
+          NotifyOfPropertyChange(() => Object);
         }
       }
-    }
-    public AsyncObservableCollection<TrackLocation> TrackControlItems
-    {
-      get { return _bioEngine.TrackLocationEngine().TrackLocations; }
-    }
-
-    private TrackLocation _selectedTrackLocation;
-    public TrackLocation SelectedTrackLocation
-    {
-      get { return _selectedTrackLocation; }
-      set
-      {
-        if (_selectedTrackLocation == value)
-          return;
-        _selectedTrackLocation = value;
-        TrackTabControlView.Update(_selectedTrackLocation);
-        NotifyOfPropertyChange(() => SelectedTrackLocation);
-      }
-    }
-
-    private readonly VisitorsViewModel _visitorsView;
-    public VisitorsViewModel VisitorsView
-    {
-      get { return _visitorsView; }
-    }
-
-    private TrackTabControlViewModel _trackTabControlView;
-    public TrackTabControlViewModel TrackTabControlView
-    {
-      get { return _trackTabControlView; }
-      set
-      {
-        if (_trackTabControlView != value)
-        {
-          _trackTabControlView = value;
-          NotifyOfPropertyChange(() => TrackTabControlView);
-        }
-      }
-    }
-
-    private bool _canOpenSettings;
-    public bool CanOpenSettings
-    {
-      get { return _canOpenSettings; }
-      set
-      {
-        if (_canOpenSettings != value)
-        {
-          _canOpenSettings = value;
-          NotifyOfPropertyChange(() => CanOpenSettings);
-        }
-      }
+    } 
+    
+    public VisitorsViewModel VisitorsView {
+      get { return TrackTabControl.VisitorsView; }
     }
     
-    public bool AnyLocationExists {
-      get { return !(TrackControlItems == null || TrackControlItems.Count < 1) ; }     
+
+    private TrackTabControlViewModel _trackTabControl;
+    public TrackTabControlViewModel TrackTabControl
+    {
+      get { return _trackTabControl; }
+      set
+      {
+        if (_trackTabControl != value)
+        {
+          _trackTabControl = value;
+          NotifyOfPropertyChange(() => TrackTabControl);
+          NotifyOfPropertyChange(() => VisitorsView   );
+        }
+      }
     }
 
+    private TrackItemsShortViewModel _trackItemsShort;
+    public TrackItemsShortViewModel TrackItemsShort
+    {
+      get { return _trackItemsShort; }
+      private set
+      {
+        if ( _trackItemsShort != value )
+        {
+          _trackItemsShort = value;
+          NotifyOfPropertyChange(() => TrackItemsShort);
+        }
+      }
+    }
+        
+    public bool AnyLocationExists {
+      get { return !(TrackItemsShort.TrackControlItems == null || TrackItemsShort.TrackControlItems.Count < 1) ; }     
+    }
   
     #endregion
 
@@ -234,7 +296,7 @@ namespace BioModule.ViewModels
     private readonly INotifier            _notifier     ;
     private readonly DialogsHolder        _dialogsHolder;
 
-
+   
     #endregion
 
   }

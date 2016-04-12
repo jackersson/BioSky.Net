@@ -89,13 +89,25 @@ namespace BioModule.ViewModels
       SelectedItem = photo;
     }
 
+    public void OnDeletePhoto()
+    {
+      if (SelectedItem == null)
+        return;
+
+      Remove(SelectedItem);
+    }
+
     public async void OnSetThumbnail()
     {
-      try  {
-        Photo requested = null;
-        if (_imageViewer.CurrentPhoto.Id > 0)
+      try {
+        Photo currentPhoto = _imageViewer.CurrentPhoto;
+
+        if (currentPhoto == null)
+          return;
+
+        if (currentPhoto.Id > 0)
         {
-          requested = new Photo() { Id = _imageViewer.CurrentPhoto.Id };
+          Photo requested = new Photo() { Id = currentPhoto.Id };
           await _bioService.ThumbnailDataClient.SetThumbnail(User, requested);
         }
       }
@@ -237,9 +249,12 @@ namespace BioModule.ViewModels
         {
           _selectedItem = value;
 
-          _imageViewer.UpdateFromPhoto(value);
+          if(_selectedItem != null)
+          {
+            _imageViewer.UpdateFromPhoto(value);
 
-          CurrentPhotoIndex = UserImages.IndexOf(_imageViewer.CurrentPhoto);          
+            CurrentPhotoIndex = UserImages.IndexOf(_imageViewer.CurrentPhoto);
+          }       
 
           NotifyOfPropertyChange(() => SelectedItem );
           NotifyOfPropertyChange(() => CanDeleteItem);

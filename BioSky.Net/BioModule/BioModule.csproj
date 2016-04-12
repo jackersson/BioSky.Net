@@ -208,11 +208,13 @@
     <Compile Include="BioModuleImpl.cs" />
     <Compile Include="BioModuleInstaller.cs" />
     <Compile Include="Utils\BitmapUtils.cs" />
+    <Compile Include="Utils\ComboBoxItemTemplateSelector.cs" />
     <Compile Include="Utils\DeviceItemBase.cs" />
     <Compile Include="Utils\DialogsHolder.cs" />
     <Compile Include="Utils\FaceFinder.cs" />
     <Compile Include="Utils\IUserPhotoController.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
+    <Compile Include="Utils\SimpleTabController.cs" />
     <Compile Include="Validation\Error.cs" />
     <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Validation\Validator.cs" />

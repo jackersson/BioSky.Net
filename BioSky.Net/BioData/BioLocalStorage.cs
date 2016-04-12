@@ -34,7 +34,7 @@ namespace BioData
       Language = language;
 
       //if (mediaPath == null)      
-        LocalStoragePath = "F:\\Biometric Software\\Client\\";
+        LocalStoragePath = "D:\\Spark\\Client\\";
 
      // if (faceServicePath == null)
         FaceServiceStoragePath = "192.168.1.178:50052";

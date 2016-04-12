@@ -37,17 +37,18 @@ namespace BioModule.ViewModels
     {
       if (CurrentLocation != null)
       {
-     //   CurrentLocation.FrameChanged    -= OnNewFrame;
-       // CurrentLocation.PropertyChanged -= OnLocationStatusChanged;
+        _bioEngine.CaptureDeviceEngine().Unsubscribe(this);
+        _bioEngine.AccessDeviceEngine() .Unsubscribe(this);
       }
 
       if (location == null)
         return;
 
       CurrentLocation = location;
-
-    //  CurrentLocation.PropertyChanged += OnLocationStatusChanged;    
-     // trackLocation.FrameChanged      += OnNewFrame;      
+      
+      _bioEngine.CaptureDeviceEngine().Subscribe(this, CurrentLocation.GetCaptureDeviceName );
+      _bioEngine.AccessDeviceEngine ().Subscribe(this, CurrentLocation.GetAccessDeviceName  );
+     
     }
     #endregion
 
@@ -61,8 +62,8 @@ namespace BioModule.ViewModels
 
     private void Initialize(IProcessorLocator locator)
     {
-      _locator = locator;
-
+      _locator   = locator;
+      _bioEngine = locator.GetProcessor<IBioEngine>();
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
 
       UserVerified = true;
@@ -102,6 +103,7 @@ namespace BioModule.ViewModels
 
     #region UI
 
+    /*
     public BitmapSource OkIconSource
     {
       get
@@ -113,10 +115,10 @@ namespace BioModule.ViewModels
          // return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
       }
     }
+    */
     public BitmapSource VerificationIconSource
     {
-      get
-      {
+      get {
         return UserVerified ? ResourceLoader.VerificationIconSource
                             : ResourceLoader.VerificationFailedIconSource;
       }
@@ -156,7 +158,7 @@ namespace BioModule.ViewModels
     }
     
 
-
+    /*
     private bool _accessDeviceOK;
     public bool AccessDeviceOK
     {
@@ -167,11 +169,12 @@ namespace BioModule.ViewModels
         {
           _accessDeviceOK = value;
 
-          NotifyOfPropertyChange(() => OkIconSource);
+         // NotifyOfPropertyChange(() => OkIconSource);
         }
       }
 
     }
+    */
 
     private bool _userVerified;
     public bool UserVerified
@@ -247,7 +250,8 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Global Variables
-    private IProcessorLocator    _locator;
+    private IBioEngine           _bioEngine;
+    private IProcessorLocator    _locator  ;
     #endregion
      
   }  

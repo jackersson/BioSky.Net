@@ -183,9 +183,11 @@ namespace BioModule.ViewModels
         location.AccessType = _locationPermissionViewModel.SelectedState;
 
       RepeatedField<Person> persons = _locationPermissionViewModel.GetResult();
-      if (persons.Count > 0)
-        location.Persons.Add(persons);    
-     
+      if(persons != null)
+      {
+        if (persons.Count > 0)
+          location.Persons.Add(persons);
+      }    
 
       return location;
     }

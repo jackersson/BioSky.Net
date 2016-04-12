@@ -3,7 +3,6 @@
 using Caliburn.Micro;
 using BioContracts;
 using BioModule.Utils;
-using BioService;
 using System.Windows.Controls;
 
 namespace BioModule.ViewModels
@@ -21,18 +20,11 @@ namespace BioModule.ViewModels
 
     private void TabViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-      Console.WriteLine(ActiveItem);
-
-      
-      if (ActiveItem != null)
+      if (ActiveItem != null && !ActiveItem.IsActive)
       {
-        if (!ActiveItem.IsActive)
-        {
-          ActivateItem(ActiveItem);
-          ActiveItem.Activate();
-        }
-      }
-      
+         ActivateItem(ActiveItem);
+         ActiveItem.Activate();
+      }     
     }
 
     public void ShowContent(Type tabType, object[] args = null)
@@ -41,57 +33,31 @@ namespace BioModule.ViewModels
       if (!(scr is IScreen))
         return;
 
-      IScreen currentScreen = (IScreen)scr;
-
-      int currentHashCode = currentScreen.GetHashCode();
-/*
-      if (args != null)
+      /*IScreen currentScreen = (IScreen)scr;
+      _methodInvoker.InvokeMethod(tabType, "Update", currentScreen, args);
+      foreach (IScreen screen in Items)
       {
-        foreach (object item in args)
+        if (screen.GetHashCode() == currentScreen.GetHashCode( ))
         {
-          if (item is Person)
-            currentHashCode = (item as Person).Id.GetHashCode();
-        }
-      }
-
-      foreach(IScreen screen in Items)
-      {
-        Console.WriteLine(screen.GetHashCode() + " " + currentHashCode);
-        if (screen.GetHashCode() == currentHashCode)
-        {
-          //ActiveItem = screen;
+          ActivateItem(screen);
           screen.Activate();
           return;
-        }
-      }
-      */
-      Items.Add(currentScreen);
-
-      //this.
-
-      //ActiveItem = currentScreen;
+        }        
+      }     
+      
       ActivateItem(currentScreen);
-      currentScreen.Activate();
-      _methodInvoker.InvokeMethod(tabType, "Update", ActiveItem, args);      
+      currentScreen.Activate();   */
+
+      IScreen screen = scr as IScreen;
+
+
+      Items.Add(screen);
+      ActivateItem(screen);
+      screen.Activate();
+
+      _methodInvoker.InvokeMethod(tabType, "Update", screen, args);
     }
 
-    
-    public void OnSelectionChanged(object activeItem)
-    {
-      /*
-      //ChangeActiveItem()
-      if (ActiveItem != null)
-      {
-        if (!ActiveItem.IsActive)
-        {
-          ActivateItem(ActiveItem);
-          ActiveItem.Activate();
-        }
-      }
-      */
-    }
-    
-  
 
     private FastMethodInvoker _methodInvoker;
     private IProcessorLocator _locator ;

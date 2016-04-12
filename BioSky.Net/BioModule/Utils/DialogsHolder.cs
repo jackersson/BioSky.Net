@@ -4,12 +4,23 @@ using BioContracts;
 
 namespace BioModule.Utils
 {  
-  public class DialogsHolder
+  public class DialogsHolder : IDialogsHolder
   { 
-    public DialogsHolder(IProcessorLocator locator)
+    public DialogsHolder(IProcessorLocator locator) 
     { 
       _locator = locator; 
       _windowManager = _locator.GetProcessor<IWindowManager>(); 
+    }
+
+    private INotificationDialog _notificationDialog;
+    public INotificationDialog NotificationDialog
+    {
+      get
+      {
+        if (_notificationDialog == null)
+          return _notificationDialog = new NotificationDialogViewModel(_locator);
+        return _notificationDialog;
+      }
     }
 
     private PeriodTimePickerViewModel _periodTimePicker;

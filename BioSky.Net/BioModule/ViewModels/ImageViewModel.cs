@@ -48,7 +48,7 @@ namespace BioModule.ViewModels
 
     public BitmapSource GetImageByIndex(int index)
     {
-      if (ImageItems.Count >= index)
+      if (ImageItems.Count >= index && ImageItems.Count != 0)
         return ImageItems[index].ImageSource;
 
       return null;

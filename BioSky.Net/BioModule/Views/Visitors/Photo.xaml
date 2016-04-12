@@ -45,13 +45,27 @@
 
     <Grid x:Name="GridLayout">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>   
+        </Grid.ColumnDefinitions>
+        <!--******************************************** Search Menu ***************************************-->
+        <Expander Background="#FF1E1E1E" BorderBrush="{x:Null}" Panel.ZIndex="100"
+                      Grid.Row="0" Margin="2,0,0,0" >
+            <Expander.Header>
+                <TextBlock Text="Search options"></TextBlock>
+            </Expander.Header>
+            <StackPanel>
+                <local:VisitorsFilterMenuView Grid.Row="1" Grid.ColumnSpan="5"  DataContext="{Binding VisitorsFilterMenu}"></local:VisitorsFilterMenuView>
+            </StackPanel>
+        </Expander>
+        <!--******************************************** Search Menu ***************************************-->
 
         <ListBox 
+            DataContext="{Binding VisitorsView}"
             BorderThickness="1" 
-                  Grid.Column="0" HorizontalAlignment="Stretch" 
+                  Grid.Row="1" HorizontalAlignment="Stretch" 
             Grid.ColumnSpan="5"
                   Margin="2,1,0,0" VerticalAlignment="Stretch"            
                   ItemsSource="{Binding Source={StaticResource SortedVisitors}}" 

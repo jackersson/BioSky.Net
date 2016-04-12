@@ -77,7 +77,7 @@
                  Margin="2,1,0,0" Grid.Row="2"  Grid.RowSpan="3" VerticalAlignment="Stretch"            
                  ItemsSource="{Binding UsersCollectionView}"                   
                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
-                 SelectionMode="Extended"
+                 SelectionMode="Single"
                  ScrollViewer.HorizontalScrollBarVisibility ="Disabled"
                  cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
                                      [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)];
@@ -134,15 +134,7 @@
                             , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">                 
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" 
                    Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
-        </Button>
-
-        <Button Style="{DynamicResource MetroCircleButtonStyle}"  Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
-                IsEnabled="{Binding IsDeleteButtonEnabled}"
-                ToolTip="{lex:Loc Delete}"
-                cal:Message.Attach="[Event Click] = [Action OnDeleteUsers()]"
-                >
-            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Width="32" Height="32"  />
-        </Button>       
+        </Button>      
 
         <TextBox x:Name="SearchBox" Margin="2, 5, 0, 5"  Grid.Column="0"  Grid.Row="0" Grid.ColumnSpan="2"  
                          Controls:TextBoxHelper.Watermark="{lex:Loc Search}"

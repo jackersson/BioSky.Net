@@ -1,32 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
-using System.Windows.Media;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using System.IO;
 using System.Windows.Controls;
-using System.Drawing;
-using System.Reflection;
-
-using BioModule.ResourcesLoader;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
-
-using BioData;
-using System.Windows.Input;
-using System.Windows.Data;
 
 using BioModule.Utils;
 using BioService;
 using BioContracts;
-using Google.Protobuf.Collections;
-using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
 
@@ -46,16 +27,17 @@ namespace BioModule.ViewModels
       _selectedPersons = new ObservableCollection<Person>();
       PageController   = new PageControllerViewModel();
 
-      _database.Persons.DataChanged      += RefreshData;
+      _database.Persons.DataChanged      += RefreshData;      
       //_database.PhotoHolder.DataChanged  += RefreshData;
-      RefreshData();
+
+
       IsDeleteButtonEnabled = false;   
     }
     #region Database
     private void RefreshData()
     {
-      //if (!IsActive)
-       // return;
+      if (!IsActive)
+        return;
 
       Users = null;
       Users = _database.Persons.Data;
@@ -80,8 +62,7 @@ namespace BioModule.ViewModels
       if (result == false)
         return;
 
-      try
-      {
+      try {
         await _bioService.PersonDataClient.Remove(SelectedPersons);
       }
       catch (Exception e)

@@ -11,15 +11,15 @@ namespace BioData.Holders.Grouped
 {
   public class FullPersonHolder : PropertyChangedBase, IFullPersonHolder
   {
-    public FullPersonHolder(IOUtils ioutils)
+    public FullPersonHolder(IOUtils ioutils, IProcessorLocator locator)
     {
       DataSet         = new Dictionary<long, Person>();
       CardsDataSet    = new Dictionary<string, Person>();
       Data            = new AsyncObservableCollection<Person>();
-
+      
       _ioUtils = ioutils;
 
-     
+      _dialogsHolder = locator.GetProcessor<IDialogsHolder>();
     }
 
     public void Init(RepeatedField<Person> data)
@@ -53,15 +53,15 @@ namespace BioData.Holders.Grouped
 
         if (responded.Thumbnail != null)
         {
-          requested.Thumbnail.Id       = responded.Thumbnail.Id;        
-          responded.Thumbnail.Dbresult = Result.Success       ;
+          requested.Thumbnail.Id = responded.Thumbnail.Id;
+          responded.Thumbnail.Dbresult = Result.Success;
 
           AddPhoto(requested, requested.Thumbnail, responded.Thumbnail, false);
           SetThumbnail(requested, requested.Thumbnail, new Response() { Good = Result.Success }, false);
         }
-
         OnDataChanged();
-      }      
+      }  
+      ShowPersonResult(requested, responded);
     }
 
     public void Update( Person requested
@@ -73,7 +73,10 @@ namespace BioData.Holders.Grouped
 
         if (oldItem != null)         
           CopyFrom(responded, oldItem);              
-      }     
+      }
+      OnDataChanged();
+
+      ShowPersonResult(requested, responded);
     }
 
     private void CopyFrom(Person from, Person to)
@@ -83,6 +86,31 @@ namespace BioData.Holders.Grouped
 
       if (from.Lastname != "")
         to.Lastname = from.Lastname;
+
+      if (from.Dateofbirth != 0)      
+        to.Dateofbirth = (from.Dateofbirth != -1) ? from.Dateofbirth : 0;     
+
+      if (from.Country != "")
+        to.Country = (from.Country != "(Deleted)") ? from.Country : "";
+
+      if (from.City != "")
+        to.City = (from.City != "(Deleted)") ? from.City : "";
+
+      if (from.Email != "")
+        to.Email = (from.Email != "(Deleted)") ? from.Email : "";
+
+      if (from.Comments != "")
+        to.Comments = (from.Comments != "(Deleted)") ? from.Comments : "";
+
+
+      if (from.Gender != to.Gender)
+        to.Gender = from.Gender;
+
+      if (from.Rights != to.Rights)
+        to.Rights = from.Rights;
+
+      if(from.Photoid != to.Photoid && from.Photoid != 0)      
+        to.Photoid = from.Photoid;
 
       Console.WriteLine(_dataSet);
     }
@@ -98,6 +126,53 @@ namespace BioData.Holders.Grouped
           Data.Remove(item);
         
       }
+      OnDataChanged();
+
+      ShowPersonResult(requested, responded);
+    }
+
+    private void ShowPersonResult(Person requested, Person responded)
+    {
+      PersonItems.Clear();
+
+      TreeItem personitem = new TreeItem()
+      {
+          Name = string.Format("User: {0} {1}", requested.Firstname, requested.Lastname)
+        , IsSuccess = (responded.Dbresult == Result.Success) ? true : false
+      };
+
+      if(responded.Thumbnail != null)
+      {
+        Photo photo = responded.Thumbnail;
+        personitem.Members.Add(new TreeItem
+        {
+            Name = "Thumbnail: " + photo.Id.ToString()
+          , IsSuccess = (photo.Dbresult == Result.Success) ? true : false
+        });
+      }
+
+      foreach (Photo photo in responded.Photos)
+      {
+        personitem.Members.Add(new TreeItem
+        {
+            Name = "Photo: " + photo.Id.ToString()
+          , IsSuccess = (photo.Dbresult == Result.Success) ? true : false
+        });
+      }      
+
+      foreach (Card card in responded.Cards)
+      {
+        personitem.Members.Add(new TreeItem
+        {
+            Name = "Card: " + card.Id.ToString()
+          , IsSuccess = (card.Dbresult == Result.Success) ? true : false
+        });
+      }      
+
+      PersonItems.Add(personitem);
+
+      _dialogsHolder.NotificationDialog.Update(PersonItems, "PersonNotificationDialog");
+      _dialogsHolder.NotificationDialog.Show();
     }
     
     private void OnDataChanged()
@@ -267,10 +342,22 @@ namespace BioData.Holders.Grouped
       }
     }
 
+    private List<TreeItem> _personItems;
+    public List<TreeItem> PersonItems
+    {
+      get { return (_personItems == null)? _personItems = new List<TreeItem>() 
+                                         : _personItems; }
+      set
+      {
+        if (_personItems != value)        
+          _personItems = value;        
+      }
+    }
+
     public event DataChangedHandler             DataChanged;
     public event DataUpdatedHandler<RepeatedField<Person>> DataUpdated;
 
-    public readonly IOUtils _ioUtils;
-    
+    public readonly IOUtils        _ioUtils      ;
+    private         IDialogsHolder _dialogsHolder;
   }
 }

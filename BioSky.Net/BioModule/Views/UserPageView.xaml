@@ -7,6 +7,8 @@
              xmlns:local="clr-namespace:BioModule.Views"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:utils="clr-namespace:BioModule.Utils"
+             xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect" 
              xmlns:bioEngine ="clr-namespace:BioEngine;assembly=BioEngine"
@@ -21,6 +23,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
@@ -105,14 +108,21 @@
             
         </TabControl>
 
-       
-        <Button  Grid.Row="5" Grid.Column="2" 
+
+        <Button  Grid.Row="5" Grid.Column="2" Name="ApplyButton"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
-                 ToolTip="{lex:Loc Save}" 
-                 IsEnabled="{Binding CanApply}"
+                 ToolTip="{lex:Loc Save}"                  
                  cal:Message.Attach="[Event Click]=[Action Apply]"
-                 Style="{DynamicResource MetroCircleButtonStyle}" >
+                 Style="{DynamicResource MetroCircleButtonStyle}" 
+                 Tag="{x:Static bioContracts:Activity.UserAdd}">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
+                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                    <Binding Path="CanApply"/>
+                    <Binding ElementName="ApplyButton" Path="Tag"/>
+                </MultiBinding>
+            </Button.IsEnabled>
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
@@ -122,13 +132,21 @@
                 VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click] = [Action Revert]"
                 >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" Style="{StaticResource GreyScaleImage}" />
+            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
-        <Button ToolTip="{lex:Loc DeleteUser}" Grid.Row="5" Grid.Column="4" 
-                cal:Message.Attach="[Event Click]=[Action Remove]"
-                IsEnabled="{Binding CanDelete}"
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" >
+        <Button ToolTip="{lex:Loc DeleteUser}" Grid.Row="5" Grid.Column="4" Name="DeleteButton"
+                cal:Message.Attach="[Event Click]=[Action Remove]"                
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  
+                Style="{DynamicResource MetroCircleButtonStyle}" 
+                Tag="{x:Static bioContracts:Activity.UserRemove}">
+            <Button.IsEnabled>
+                <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
+                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                    <Binding Path="CanDelete"/>
+                    <Binding ElementName="DeleteButton" Path="Tag"/>
+                </MultiBinding>
+            </Button.IsEnabled>
             <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 

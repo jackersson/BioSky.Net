@@ -79,7 +79,10 @@ namespace BioModule.ViewModels
         return new AccessDevice() { Id = CurrentLocation.AccessDevice.Id, EntityState = EntityState.Deleted };
 
       if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName == string.Empty)
-        return new AccessDevice() { EntityState = EntityState.Added };
+        return new AccessDevice() { EntityState = EntityState.Added , Portname = DesiredCaptureDeviceName};
+
+      if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName != string.Empty)
+        return new AccessDevice() { EntityState = EntityState.Added, Portname = DesiredCaptureDeviceName };
 
       return result;
     }

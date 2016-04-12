@@ -150,6 +150,7 @@
     <Compile Include="IBioSkyNetRepository.cs" />
     <Compile Include="IBioStarter.cs" />
     <Compile Include="ICaptureDeviceEngine.cs" />
+    <Compile Include="IDialogsHolder.cs" />
     <Compile Include="IEntityFrameworkConnectionBuilder.cs" />
     <Compile Include="IFullHolder.cs" />
     <Compile Include="IFullLocationHolder.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="ILocalStorage.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="ILoginInformation.cs" />
+    <Compile Include="INotificationDialog.cs" />
     <Compile Include="INotifier.cs" />
     <Compile Include="IProcessorLocator.cs" />
     <Compile Include="IServiceManager.cs" />

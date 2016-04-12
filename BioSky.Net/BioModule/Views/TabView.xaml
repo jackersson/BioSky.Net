@@ -104,8 +104,7 @@
         <dragablz:TabablzControl x:Name="MyTabview" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
                                  SelectedItem="{Binding ActiveItem, Mode=TwoWay}"      
                                  ItemsSource="{Binding Items}" Background="#FF3E3E42"
-                                 AllowDrop="True" ShowDefaultCloseButton="True"
-                                 cal:Message.Attach="[Event SelectionChanged] = [Action OnSelectionChanged($mouseselecteditem)]"                                 
+                                 AllowDrop="True" ShowDefaultCloseButton="True"                                
                                  >
             <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">

@@ -13,6 +13,7 @@
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              xmlns:utils ="clr-namespace:BioModule.Utils"
+             xmlns:visitors="clr-namespace:BioModule.Views.Visitors"
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -29,6 +30,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -38,7 +40,7 @@
     <Grid>
         <Grid >
             <Grid.RowDefinitions>
-                <RowDefinition Height="24"/>
+                <RowDefinition Height="48"/>             
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
@@ -47,74 +49,48 @@
                 <ColumnDefinition Width="220"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock
-                Grid.Column="1"
-                      Text="{lex:Loc Locations}"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Bottom"
-                       ></TextBlock>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="0" >
+                <Button Margin="2" Style="{StaticResource SquareButtonStyle}"
+                        cal:Message.Attach="[Event Click]=[Action ShowLocations]"
+                        IsEnabled="{Binding CanShowLocations}"
+                        >
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=WarningIconSource}"
+                         Height="18" Width="18"></Image>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Locations</TextBlock>
+                    </StackPanel>
+                </Button>
 
-            <!--
-            <DataGrid BorderBrush="#FF3E3E42" BorderThickness="1"  ItemsSource="{Binding TrackControlItems}" 
-                 SelectedItem="{Binding SelectedTrackLocation}"
-                 SelectionMode="Single" HeadersVisibility="None" AutoGenerateColumns="False" 
-                 CanUserAddRows="False" CanUserDeleteRows="False"
-                 ColumnWidth="600"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ScrollViewer.CanContentScroll="False"
-                 DataContext="{Binding Mode=OneWay}"
-                 Grid.Column="1"  Grid.Row="1" Margin="2"
-                 cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];
-                                     [Event SelectionChanged]     = [Action OnSelectionChanged($eventArgs)]"                                     
-                 >
+                <Button Margin="2" Style="{StaticResource SquareButtonStyle}"
+                        cal:Message.Attach="[Event Click]=[Action ShowVisitors]"
+                        IsEnabled="{Binding CanShowVisitors}"
+                        >
+                    <StackPanel Orientation="Vertical">                     
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Visitors (10)</TextBlock>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Selected Location</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
 
-                <DataGrid.Resources>
-                    <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
-                        <ContentControl cal:View.Context="Shorted" cal:View.Model="{Binding}">
-                        </ContentControl>
-                    </DataTemplate>
-                </DataGrid.Resources>
-
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ContentControl Width="210"  Content="{Binding ScreenViewModel}" Margin="2, 2, 2, 2" 
-                                                 HorizontalAlignment="Left"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-
-                <DataGrid.ContextMenu >
-                    <ContextMenu IsEnabled="True" >
-                        <MenuItem Header="{lex:Loc OpenSettings}"  
-                              IsEnabled="{Binding CanOpenSettings, Mode=TwoWay}"
-                              cal:Message.Attach="[Event Click] = [Action ShowLocationFlyout()]"
-                              />
-                    </ContextMenu>
-                </DataGrid.ContextMenu>
-
-            </DataGrid>-->
-
-            <ContentControl Content="{Binding ExpanderBarModel}">
+            <ContentControl Grid.Column="1"  Grid.Row="2" Content="{Binding Object}">
                 <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type vm:TrackControlViewModel}">
-                        <local:TrackTabShortControlView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                    <DataTemplate DataType="{x:Type vm:TrackItemsShortViewModel}">
+                        <local:TrackTabShortControlView x:Name="Object" DataContext="{Binding Mode=OneWay}">
                         </local:TrackTabShortControlView>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:TrackControlItemViewModel}">
-                        <local:TrackTabShortControlView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
-                        </local:TrackTabShortControlView>
+                    <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
+                        <visitors:Photo x:Name="Object" DataContext="{Binding Mode=OneWay}">
+                        </visitors:Photo>
                     </DataTemplate>
-                </ContentControl.Resources>
+                </ContentControl.Resources> 
             </ContentControl>
-
+<!--
             <local:TrackTabShortControlView Grid.Column="1"  Grid.Row="1" 
-                                            DataContext="{Binding Mode=OneWay}"></local:TrackTabShortControlView>
+                                            DataContext="{Binding Mode=OneWay}"></local:TrackTabShortControlView>-->
 
-            <local:TrackTabControlView Margin="2" DataContext="{Binding TrackTabControlView}" Grid.Row="1" Grid.Column="0">
-            </local:TrackTabControlView>
+            <local:TrackTabControlView Margin="2" DataContext="{Binding TrackTabControl}" 
+                                       Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
+            </local:TrackTabControlView> 
         </Grid>
 
 <!--

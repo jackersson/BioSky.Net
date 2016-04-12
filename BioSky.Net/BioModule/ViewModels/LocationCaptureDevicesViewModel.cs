@@ -39,12 +39,19 @@ namespace BioModule.ViewModels
     {
       if (!IsActive)
         return;
- 
 
-      foreach (CaptureDevice cd in _database.Locations.CaptureDevices)
+      try
       {
-        if (!CaptureDevicesNames.Contains(cd.Devicename))
-        CaptureDevicesNames.Add(cd.Devicename);
+
+        foreach (CaptureDevice cd in _database.Locations.CaptureDevices)
+        {
+          if (!CaptureDevicesNames.Contains(cd.Devicename))
+            CaptureDevicesNames.Add(cd.Devicename);
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
       }
 
       RefreshConnectedDevices();      
@@ -105,7 +112,10 @@ namespace BioModule.ViewModels
         return new CaptureDevice() { Id = CurrentLocation.CaptureDevice.Id, EntityState = EntityState.Deleted };
       
       if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName == string.Empty)
-        return new CaptureDevice() { EntityState = EntityState.Added };
+        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredCaptureDeviceName };
+
+      if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName != string.Empty)
+        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredCaptureDeviceName };
 
       return result;
     }

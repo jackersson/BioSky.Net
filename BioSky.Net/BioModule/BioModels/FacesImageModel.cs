@@ -109,7 +109,13 @@ namespace BioModule.BioModels
 
     public void UploadPhoto(Photo photo)
     {
-      //CurrentPhoto = photo;      
+      if(photo == null)
+      {
+        _imageView.SetSingleImage(ResourceLoader.UserDefaultImageIconSource);
+        return;
+      }
+      CurrentPhoto = photo;
+      _markerBitmapHolder.Unmarked = _imageView.GetImageByIndex(0);
     }
 
     public void UpdateController(IUserBioItemsController controller)

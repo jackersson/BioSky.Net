@@ -6,19 +6,17 @@ using System.Threading.Tasks;
 using Caliburn.Micro;
 using BioContracts;
 
-
 namespace BioModule.ViewModels
 {
   public class TrackTabControlViewModel : Conductor<IScreen>.Collection.OneActive
   {
     public TrackTabControlViewModel(IProcessorLocator locator)
     {
-      _locator       = locator      ;
-     
-      _visitorsView    = new VisitorsViewModel(_locator);
-      FullTrackControl = new FullTrackControlItemViewModel(_locator);
-      Items.Add(FullTrackControl);
-      Items.Add(_visitorsView);
+      VisitorsView      = new VisitorsViewModel            (locator);
+      FullTrackLocation = new FullTrackControlItemViewModel(locator);
+
+      Items.Add(FullTrackLocation);
+      Items.Add(VisitorsView     );
 
       ActiveItem = Items[0];
       OpenTab();
@@ -34,9 +32,8 @@ namespace BioModule.ViewModels
       if (location == null)
         return;
 
-     // FullTrackControl.Update((TrackControlItemViewModel)location.ScreenViewModel);
-
-      //Items[0] = location.ScreenViewModel;      
+      FullTrackLocation.Update(location);
+     
       ActiveItem = Items[0];
       OpenTab();
     }
@@ -56,7 +53,7 @@ namespace BioModule.ViewModels
     }
 
     private FullTrackControlItemViewModel _fullTrackControl;
-    public FullTrackControlItemViewModel FullTrackControl
+    public FullTrackControlItemViewModel FullTrackLocation
     {
       get { return _fullTrackControl; }
       set
@@ -64,11 +61,9 @@ namespace BioModule.ViewModels
         if (_fullTrackControl != value)
         {
           _fullTrackControl = value;
-          NotifyOfPropertyChange(() => FullTrackControl);
+          NotifyOfPropertyChange(() => FullTrackLocation);
         }
       }
-    }
-
-    private readonly IProcessorLocator _locator      ;
+    }    
   }
 }

@@ -18,15 +18,17 @@ namespace BioData
 
 
     IOUtils _ioUtils;
+    private IProcessorLocator _locator;
 
-    public BioSkyNetRepository()
+    public BioSkyNetRepository(IProcessorLocator locator)
     {
       _localStorage = new BioLocalStorage();
       _ioUtils = new IOUtils(_localStorage);
+      _locator = locator;
 
 
-      _fullLocations     = new FullLocationHolder();
-      _fullPersons       = new FullPersonHolder  (_ioUtils);
+      _fullLocations     = new FullLocationHolder(locator);
+      _fullPersons       = new FullPersonHolder  (_ioUtils, _locator);
       _fullVisitors      = new FullVisitorHolder ();
       _bioCultureSources = new BioCultureSources ();
     }
