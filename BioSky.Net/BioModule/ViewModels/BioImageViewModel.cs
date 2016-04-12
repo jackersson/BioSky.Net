@@ -57,8 +57,8 @@ namespace BioModule.ViewModels
 
       BioImageModels = new ObservableCollection<IBioImageModel>();
 
-      BioImageModels.Add(new FacesImageModel(locator, this));
-      BioImageModels.Add(new FingersImageModel(this));
+      BioImageModels.Add(new FacesImageModel  (locator, this));
+      BioImageModels.Add(new FingersImageModel(locator, this));
       BioImageModels.Add(new IrisesImageModel(this));
 
       BioImageDetails = new PhotoInfoExpanderViewModel();

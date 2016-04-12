@@ -10,18 +10,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Drawing;
+using BioContracts.FingerprintDevices;
+using BioContracts;
+using BioContracts.Common;
 
 namespace BioModule.BioModels
 {
-  public class FingersImageModel : PropertyChangedBase, IBioImageModel
+  public class FingersImageModel : PropertyChangedBase, IBioImageModel, IFingerprintDeviceObserver
   {
-    public FingersImageModel(IImageViewUpdate imageView)
+    public FingersImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       FingerInformation = new FingerInformationViewModel();
-      ExpanderBarModel = new FingerBarViewModel();
+      ExpanderBarModel = new FingerprintEnrollmentBarViewModel(locator);
 
       _imageView = imageView;
     }
+
+    public void Activate()
+    {
+      ExpanderBarModel.Subscribe(this);
+      _imageView.SetSingleImage(FingerImageSource);
+    }
+
+    public void Deactivate()
+    {
+      //EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
+      //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+    }
+
     public void Reset()
     {
 
@@ -42,24 +58,31 @@ namespace BioModule.BioModels
       if (controller != null)
         Controller = controller;
     }
-
-    public void Activate()
-    {
-      _imageView.SetSingleImage(FingerImageSource);
-    }
-
-    public void Deactivate()
-    {
-
-    }
-
+    
     public void UpdateFrame( Bitmap frame)
     {
-      throw new NotImplementedException();
+      if (frame == null)
+      {
+        _imageView.SetSingleImage(null);
+        return;
+      }
+      
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(frame);
+      _imageView.SetSingleImage(newFrame);
     }
 
-    public PhotoViewEnum EnumState
+    public void OnFrame(ref Bitmap frame)
     {
+      UpdateFrame(frame);
+    }
+
+    public void OnError(Exception ex) { }
+
+    public void OnMessage(string message) {}
+
+    public void OnReady(bool isReady) { }
+
+    public PhotoViewEnum EnumState {
       get { return PhotoViewEnum.Fingers; }
     }
     public BitmapSource SettingsToogleButtonBitmap
@@ -78,15 +101,15 @@ namespace BioModule.BioModels
       }
     }
 
-    private FingerBarViewModel _expanderBarModel;
-    public FingerBarViewModel ExpanderBarModel
+    private FingerprintEnrollmentBarViewModel _enrollmentBar;
+    public FingerprintEnrollmentBarViewModel ExpanderBarModel
     {
-      get { return _expanderBarModel; }
+      get { return _enrollmentBar; }
       set
       {
-        if (_expanderBarModel != value)
+        if (_enrollmentBar != value)
         {
-          _expanderBarModel = value;
+          _enrollmentBar = value;
           NotifyOfPropertyChange(() => ExpanderBarModel);
         }
       }
@@ -119,7 +142,7 @@ namespace BioModule.BioModels
         }
       }
     }
-
+   
     private IImageViewUpdate _imageView;
   }
 }

@@ -1,6 +1,7 @@
 ﻿using BioContracts;
 using BioContracts.AccessDevices;
 using BioContracts.CaptureDevices;
+using BioContracts.FingerprintDevices;
 using BioContracts.Locations;
 using BioService;
 
@@ -39,6 +40,11 @@ namespace BioEngine
       return _captureDeviceEngine;
     }
 
+    public IFingerprintDeviceEngine FingerprintDeviceEngine()
+    {
+      return _fingerprintDeviceEngine;
+    }
+
     public void Stop()
     {
       _captureDeviceEngine.Stop();
@@ -66,10 +72,11 @@ namespace BioEngine
       }
     }
 
-    private readonly IBioSkyNetRepository _data               ;
-    private readonly ICaptureDeviceEngine _captureDeviceEngine;
-    private readonly IAccessDeviceEngine  _accessDeviceEngine ;
-    private readonly ITrackLocationEngine _trackLocationEngine;
-    private          ILoginInformation    _loginInformation   ;
+    private readonly IBioSkyNetRepository     _data                   ;
+    private readonly ICaptureDeviceEngine     _captureDeviceEngine    ;
+    private readonly IAccessDeviceEngine      _accessDeviceEngine     ;
+    private readonly IFingerprintDeviceEngine _fingerprintDeviceEngine;
+    private readonly ITrackLocationEngine     _trackLocationEngine    ;
+    private          ILoginInformation        _loginInformation       ;
   }
 }

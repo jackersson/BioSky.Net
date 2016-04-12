@@ -143,6 +143,11 @@
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\BioObserver.cs" />
     <Compile Include="CaptureDevices\ICaptureDeviceObserver.cs" />
+    <Compile Include="Common\GrayScaleBitmap.cs" />
+    <Compile Include="FingerprintDevices\FingerprintDeviceInfo.cs" />
+    <Compile Include="FingerprintDevices\IFingerprintDeviceEngine.cs" />
+    <Compile Include="FingerprintDevices\IFingerprintDeviceObserver.cs" />
+    <Compile Include="IDeviceConnectivity.cs" />
     <Compile Include="Locations\BioTasks\TrackLocationVerification.cs" />
     <Compile Include="Locations\IFullLocationObserver.cs" />
     <Compile Include="Locations\ILocationDeviceObserver.cs" />

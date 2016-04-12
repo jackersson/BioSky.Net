@@ -225,6 +225,7 @@
     <Compile Include="ViewModels\FaceEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\FingerBarViewModel.cs" />
     <Compile Include="ViewModels\FingerInformationViewModel.cs" />
+    <Compile Include="ViewModels\FingerprintEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\FullTrackControlItemViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\ImageItemViewModel.cs" />
@@ -319,6 +320,9 @@
     </Compile>
     <Compile Include="Views\FingerInformationView.xaml.cs">
       <DependentUpon>FingerInformationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FingerprintEnrollmentBarView.xaml.cs">
+      <DependentUpon>FingerprintEnrollmentBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FlyoutControlView.xaml.cs">
       <DependentUpon>FlyoutControlView.xaml</DependentUpon>
@@ -486,6 +490,10 @@
     <Page Include="Views\FingerInformationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\FingerprintEnrollmentBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\FlyoutControlView.xaml">
       <SubType>Designer</SubType>
@@ -682,6 +690,10 @@
     <ProjectReference Include="..\BioEngine\BioEngine.csproj">
       <Project>{0e18d66b-a62b-4074-9217-bbf30d2c9322}</Project>
       <Name>BioEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BioFingerprintDevices\BioFingerprintDevices.csproj">
+      <Project>{818da764-ca28-460c-9bf8-9250b7275aa0}</Project>
+      <Name>BioFingerprintDevices</Name>
     </ProjectReference>
     <ProjectReference Include="..\BioGRPC\BioGRPC.csproj">
       <Project>{cd53527f-3158-4898-8e39-12c3531cf05c}</Project>

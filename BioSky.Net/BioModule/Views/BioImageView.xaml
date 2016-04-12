@@ -119,9 +119,9 @@
                         <local:FaceEnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
                         </local:FaceEnrollmentBarView>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:FingerBarViewModel}">
-                        <local:FingerBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
-                        </local:FingerBarView>
+                    <DataTemplate DataType="{x:Type vm:FingerprintEnrollmentBarViewModel}">
+                        <local:FingerprintEnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                        </local:FingerprintEnrollmentBarView>
                     </DataTemplate>
                 </ContentControl.Resources>                
             </ContentControl>

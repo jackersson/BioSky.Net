@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace BioCaptureDevices
 {
   
-  public class CaptureDeviceEnumerator : Threadable, ICaptureDeviceConnectivity
+  public class CaptureDeviceEnumerator : Threadable, IDeviceConnectivity<FilterInfo>
   {
      public CaptureDeviceEnumerator() : base()
     {
@@ -88,6 +88,28 @@ namespace BioCaptureDevices
       catch (Exception e)  {
         Console.WriteLine(e);
       }    
+      return null;
+    }
+
+    public bool IsDeviceConnected(string name) { return ( GetDeviceInfoPerformer(name) != null ) ? true : false;  }
+
+    public FilterInfo GetDeviceInfo(string deviceName) { return GetDeviceInfoPerformer(deviceName); }
+
+    private FilterInfo GetDeviceInfoPerformer(string deviceName)
+    {
+      try
+      {
+        ActualCaptureDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+        foreach (FilterInfo fi in ActualCaptureDevices)
+        {
+          if (fi.Name == deviceName)
+            return fi;
+        }
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e);
+      }
       return null;
     }
 

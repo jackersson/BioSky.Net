@@ -72,7 +72,6 @@
     <Compile Include="BioCaptureDevicesInstaller.cs" />
     <Compile Include="CaptureDeviceEngine.cs" />
     <Compile Include="CaptureDeviceEnumerator.cs" />
-    <Compile Include="ICaptureDeviceConnectivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="СaptureDeviceListener.cs" />
   </ItemGroup>

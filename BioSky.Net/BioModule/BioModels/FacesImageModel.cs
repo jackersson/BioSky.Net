@@ -43,6 +43,7 @@ namespace BioModule.BioModels
 
     public void Deactivate()
     {
+     
       //EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
       //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
     }

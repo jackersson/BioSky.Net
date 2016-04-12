@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BioShell.Views
+namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for TestView.xaml
+  /// Interaction logic for FingerprintEnrollmentBarView.xaml
   /// </summary>
-  public partial class TestView : UserControl
+  public partial class FingerprintEnrollmentBarView : UserControl
   {
-    public TestView()
+    public FingerprintEnrollmentBarView()
     {
       InitializeComponent();
     }

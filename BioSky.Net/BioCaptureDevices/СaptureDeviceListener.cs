@@ -23,7 +23,7 @@ namespace BioCaptureDevices
       , Start
     }   
 
-    public СaptureDeviceListener( string cameraName, ICaptureDeviceConnectivity capDevConnectivity)
+    public СaptureDeviceListener( string cameraName, IDeviceConnectivity<FilterInfo> capDevConnectivity)
     {
       _cameraName         = cameraName;
       _capDevConnectivity = capDevConnectivity;
@@ -165,7 +165,7 @@ namespace BioCaptureDevices
 
             case CaptureDeviceCommands.Connect:
               {
-                FilterInfo fi = _capDevConnectivity.CaptureDeviceConnected(_cameraName);
+                FilterInfo fi = _capDevConnectivity.GetDeviceInfo(_cameraName);
                 if (fi != null)                
                   Connect(fi);   
                 else
@@ -237,7 +237,7 @@ namespace BioCaptureDevices
 
     private BioObserver<ICaptureDeviceObserver> _observer;
     private VideoCaptureDevice _videoSource;    
-    private readonly ICaptureDeviceConnectivity _capDevConnectivity;
+    private readonly IDeviceConnectivity<FilterInfo> _capDevConnectivity;
     private readonly string _cameraName;
     private ConcurrentQueue<CaptureDeviceCommands> _commands;
     

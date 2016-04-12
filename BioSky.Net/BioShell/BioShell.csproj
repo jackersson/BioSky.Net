@@ -219,7 +219,6 @@
     <Compile Include="Utils\BioLogger.cs" />
     <Compile Include="Utils\BioNotifier.cs" />
     <Compile Include="ViewModels\BioShellViewModel.cs" />
-    <Compile Include="ViewModels\TestViewModel.cs" />
     <Compile Include="Views\BioShellView.xaml.cs">
       <DependentUpon>BioShellView.xaml</DependentUpon>
     </Compile>
@@ -231,14 +230,7 @@
     <Compile Include="BioShellBootstrapper.cs" />
     <Compile Include="BioShellImpl.cs" />
     <Compile Include="BioShellInstaller.cs" />
-    <Compile Include="Views\TestView.xaml.cs">
-      <DependentUpon>TestView.xaml</DependentUpon>
-    </Compile>
     <Page Include="Views\BioShellView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TestView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

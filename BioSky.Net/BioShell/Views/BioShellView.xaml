@@ -34,17 +34,8 @@
             <RowDefinition Height="44"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
-<!--
-            <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding Teset}"  Grid.ColumnSpan="2">
-                <ContentControl.Resources>
-                    <DataTemplate  DataType="{x:Type localvm:TestViewModel}">
-                        <local:TestView x:Name="Teset" ></local:TestView>
-                    </DataTemplate>
-                </ContentControl.Resources>
-            </ContentControl>
 
-            <ContentControl Grid.Row="1" Grid.Column="0" x:Name="ToolBar"  />
-       -->
+        <ContentControl Grid.Row="1" Grid.Column="0" x:Name="ToolBar"  />
         
         <ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Panel.ZIndex="100" x:Name="FlyoutControl"  />
 

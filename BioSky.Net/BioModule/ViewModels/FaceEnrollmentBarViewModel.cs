@@ -79,8 +79,8 @@ namespace BioModule.ViewModels
     }
 
     public void OnFrame(ref Bitmap frame) {
-    //  foreach (ICaptureDeviceObserver observer in _observer.Observers)
-     //   observer.OnFrame(ref frame);
+     foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)
+        observer.Value.OnFrame(ref frame);
     }
 
     public void OnStop(bool stopped, string message) {
