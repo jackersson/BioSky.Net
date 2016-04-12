@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace BioContracts
+namespace BioContracts.Holders
 {
+  public delegate void DataUpdatedHandler<T>(T list); 
+  public delegate void DataChangedHandler();
+
   public interface IFullHolder<TValue>
   {
     void Init(Google.Protobuf.Collections.RepeatedField<TValue> list);

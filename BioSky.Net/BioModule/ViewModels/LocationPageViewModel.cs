@@ -65,7 +65,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    private void Refresh()
+    private void RefreshUI()
     {
       
       NotifyOfPropertyChange(() => CanApply);
@@ -75,18 +75,18 @@ namespace BioModule.ViewModels
 
     protected override void OnActivate()
     {
-      Refresh();
+      RefreshUI();
       base.OnActivate();
     }
     
     private void _locationPermissionViewModel_PermissionsChanged(object sender, EventArgs e)
     {
-      Refresh();
+      RefreshUI();
     }
 
     private void DevicesPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-      Refresh();
+      RefreshUI();
     }
 
     #region Update
@@ -110,7 +110,7 @@ namespace BioModule.ViewModels
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { CurrentLocation });
 
-      Refresh();
+      RefreshUI();
     }
 
     #endregion

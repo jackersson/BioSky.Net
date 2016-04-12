@@ -1,4 +1,4 @@
-﻿namespace BioContracts
+﻿namespace BioContracts.AccessDevices
 {
   public interface IAccessDeviceEngine
   {   

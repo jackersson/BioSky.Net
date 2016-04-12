@@ -42,7 +42,7 @@ namespace BioModule.ViewModels
     public VisitorsViewModel VisitorsView
     {
       get { return _visitorsView; }
-      set
+      private set
       {
         if (_visitorsView != value)
         {
@@ -56,7 +56,7 @@ namespace BioModule.ViewModels
     public FullTrackControlItemViewModel FullTrackLocation
     {
       get { return _fullTrackControl; }
-      set
+      private set
       {
         if (_fullTrackControl != value)
         {

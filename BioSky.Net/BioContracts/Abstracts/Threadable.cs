@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 
 namespace BioContracts.Abstract
 {
@@ -25,27 +20,21 @@ namespace BioContracts.Abstract
       }
     }
 
-
-
-    public void Start()
-    {     
+    public void Start(){      
       ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadProcedure), this);
     }
 
-    public virtual void Stop()
-    {
+    public virtual void Stop()  {
       _cancelationToken.Cancel();
-
     }
 
     protected abstract void Run();
 
-    protected CancellationTokenSource CancellationTokenResult
-    {
+    protected CancellationTokenSource CancellationTokenResult  {
       get { return _cancelationToken; }
     }
 
-    protected void ThreadProcedure(Object threadContext)
+    protected void ThreadProcedure(object threadContext)
     {
       Threadable threadable = (Threadable)threadContext;
 

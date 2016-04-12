@@ -42,7 +42,7 @@ namespace BioEngine
       long _operatorRole   = 0;  
       long _superviserRole = 0;
 
-      _managerRole = AddToMAnagerRole(_managerRole);
+      _managerRole = GenerateManagerRole(_managerRole);
 
       roleDictionary.Add(Rights.Operator  , _operatorRole  );
       roleDictionary.Add(Rights.Supervisor, _superviserRole);
@@ -50,7 +50,7 @@ namespace BioEngine
       roleDictionary.Add(Rights.Custom    , _customRole    );
     }
 
-    private long AddToMAnagerRole(long _managerRole)
+    private long GenerateManagerRole(long _managerRole)
     {
       _managerRole = SetFlag(_managerRole, Activity.UserAdd       );
       _managerRole = SetFlag(_managerRole, Activity.UserUpdate    );

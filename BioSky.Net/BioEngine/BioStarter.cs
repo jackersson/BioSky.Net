@@ -7,13 +7,15 @@ using WPFLocalizeExtension.Engine;
 using System.Globalization;
 using BioContracts.Services;
 
+
 namespace BioEngine
 {
   public class BioStarter : IBioStarter
   {
     public BioStarter(IProcessorLocator locator)
     {
-      _bioEngine      = locator.GetProcessor<IBioEngine>();
+      _locator = locator;
+       _bioEngine      = locator.GetProcessor<IBioEngine>();
       _notifier       = locator.GetProcessor<INotifier>();
       _serviceManager = locator.GetProcessor<IServiceManager>();
 
@@ -24,13 +26,14 @@ namespace BioEngine
     {
       ServiceConfiguration configuration = new ServiceConfiguration();
 
-      configuration.FacialService   = _localStorage.FaceServiceStoragePath;
-      configuration.DatabaseService = _localStorage.DatabaseServiceStoragePath;
+      configuration.FacialService   = _localStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress);
+      configuration.DatabaseService = _localStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress);
       
       _serviceManager.Start(configuration);
       
       RequestData();
       Setlanguage();
+      /*
       try
       {
         await _serviceManager.FaceService.Configurate(configuration);
@@ -39,12 +42,13 @@ namespace BioEngine
       {
         _notifier.Notify(e);
       }
+      */
     }
 
     public void Setlanguage()
     {
       LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
-      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(_localStorage.Language);
+      LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(_localStorage.GetParametr(ConfigurationParametrs.Language));
     }
 
     public void Stop()
@@ -57,12 +61,14 @@ namespace BioEngine
     {
       try
       {
+   
+
         IDatabaseService service = _serviceManager.DatabaseService;
         BioService.QueryPersons commandPerson = new BioService.QueryPersons();
         await service.PersonDataClient.Select(commandPerson);
         
-        //BioService.QueryVisitors commandVisitor = new BioService.QueryVisitors();
-        //await service.VisitorDataClient.Select(commandVisitor);
+        BioService.QueryVisitors commandVisitor = new BioService.QueryVisitors();
+        await service.VisitorDataClient.Select(commandVisitor);
 
        BioService.QueryLocations commandLocation = new BioService.QueryLocations();
        await service.LocationDataClient.Select(commandLocation);
@@ -81,7 +87,7 @@ namespace BioEngine
     private IServiceManager _serviceManager;
     private IBioEngine      _bioEngine     ;
     private ILocalStorage   _localStorage  ;
-
+    private readonly IProcessorLocator _locator;
     private readonly INotifier _notifier;
   }
 }

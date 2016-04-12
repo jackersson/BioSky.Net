@@ -14,6 +14,7 @@ using System.Threading;
 using System.Globalization;
 using BioContracts;
 using BioShell.Utils;
+using System.Windows.Threading;
 
 namespace BioShell
 {
@@ -42,18 +43,21 @@ namespace BioShell
     
     protected override void OnStartup(object sender, StartupEventArgs e)
     {
+      
       try
       {
-       
+        _container.Register( Castle.MicroKernel.Registration.Component.For<System.Windows.Threading.Dispatcher>()
+                           .Instance(Application.Current.Dispatcher));
 
         var loader     = _container.Resolve<BioModuleLoader>();
         var dataloader = _container.Resolve<BioDataLoader>();
 
         var exeDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        _container.Register(Castle.MicroKernel.Registration.Component.For<Dispatcher>().Instance(Application.Current.Dispatcher));
 
-      
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioData.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
+        dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioCaptureDevices.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioEngine.dll"));
        
@@ -69,9 +73,10 @@ namespace BioShell
       catch (Exception ex) {
         Notifier.Notify(ex);
       }      
-
+      
       DisplayRootViewFor<BioShellViewModel>();
       _container.Register(Castle.MicroKernel.Registration.Component.For<Window>().Instance(Application.Current.MainWindow));
+     
     }
 
     protected override void Configure()

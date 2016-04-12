@@ -39,18 +39,15 @@ namespace BioModule.ViewModels
 
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
       
-     // _database.PhotoHolder.DataChanged   += RefreshData;
       _database.Visitors.DataChanged      += RefreshData;
 
       IsDeleteButtonEnabled = false;
-
-      //RefreshData();
+      
     } 
         
     #region Database
 
-
-    public async void Select()
+     public async void Select()
     {
       QueryVisitors query = GetQuery();      
       try
@@ -58,7 +55,7 @@ namespace BioModule.ViewModels
         //await _bioService.VisitorDataClient.Select(query);
       }
       catch (RpcException ex) {
-        Console.WriteLine(ex.Message);
+        _notifier.Notify(ex);
       }
     }
     public QueryVisitors GetQuery()
@@ -89,10 +86,7 @@ namespace BioModule.ViewModels
     private void GetLastVisitor()
     {
       LastVisitor = null;     
-      LastVisitor = Visitors.LastOrDefault();
-
-      //if (LastVisitor == null)
-        //LastVisitor = DefaultVisitor;
+      LastVisitor = Visitors.LastOrDefault();      
     }
 
     #endregion
@@ -189,6 +183,26 @@ namespace BioModule.ViewModels
       }
     }
 
+    private bool ApplyTextFilter(Visitor item, string SearchText, Dictionary<long, Person> dictionary)
+    {
+
+      if (String.IsNullOrEmpty(SearchText))
+        return true;
+
+      if (item != null)
+      {
+        Person person = null;
+        if (dictionary.TryGetValue(item.Personid, out person))
+        {
+          if (person.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
+              person.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
+            return true;
+        }
+      }
+
+      return false;
+    }
+
     public void OnSearchTextChanged(string SearchText)
     {        
       Dictionary<long, Person> dictionary = _database.Persons.DataSet;
@@ -198,22 +212,8 @@ namespace BioModule.ViewModels
 
       VisitorsCollectionView.Filtering = item =>
       {
-        if (String.IsNullOrEmpty(SearchText))
-          return true;
 
-        Visitor vitem = item as Visitor;  
-        if (vitem != null)
-        {
-          Person person = null;
-          if (dictionary.TryGetValue(vitem.Personid, out person))
-          {
-            if (person.Firstname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                person.Lastname.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)            
-              return true;            
-          }
-        }      
-
-        return false;
+        return ApplyTextFilter(item as Visitor, SearchText, dictionary);
       };
 
       PageController.UpdateMove();     
@@ -221,7 +221,21 @@ namespace BioModule.ViewModels
 
     public void ApplyQuery(QueryVisitors query)
     {
+      if (VisitorsCollectionView == null)
+        return;
 
+      VisitorsCollectionView.Filtering = item =>
+      {
+        return ApplyQuery(item as Visitor, query);
+      };
+    }
+
+    private bool ApplyQuery(Visitor item, QueryVisitors query)    {
+
+      if (item != null && query.Locations.Contains(item.Locationid))
+        return true;
+
+      return false;
     }
 
     public void OnMouseRightButtonDown(Visitor visitor)

@@ -1,107 +1,52 @@
-﻿using BioData.Holders.Base;
+﻿using BioData.Holders.Utils;
 using BioService;
 using System.Collections.Generic;
-using System.Linq;
-
-using BioContracts.Holders;
-using BioData.Holders.Utils;
 
 namespace BioData.Holders
 {
-  public class PhotoHolder : HolderBase<Photo, long>, IPhotoHolder
+  public class PhotoHolder 
   {
     public PhotoHolder(IOUtils ioUtils) : base() 
-    {    
-      _noDescriptionPhotos = new PhotoList();
-      _checkedPhotos       = new HashSet<long>();
+    {
       _ioUtils = ioUtils;
     }
-       
-    protected override void UpdateDataSet(IList<Photo> list)
+    public void CheckPhotosIfFileExisted(Person person)
     {
-      foreach (Photo photo in list)
-      {
-        Update(photo, photo.Id);
-        SavePhoto(photo);
-        PhotoExists(photo);
-      }
-
-      OnDataChanged();
-      CheckPhotos();
+      foreach (Photo photo in person.Photos)      
+        CheckPhotosIfFileExisted(photo);      
     }
 
-    public override void UpdateItem(Photo obj, long key, EntityState state, Result result)
+    public void CheckPhotosIfFileExisted(Visitor visitor)
     {
-      if (result != Result.Success)
+      CheckPhotosIfFileExisted(visitor.Fullphoto  );
+      CheckPhotosIfFileExisted(visitor.Cropedphoto);      
+    }
+
+    public void CheckPhotosIfFileExisted(Photo photo)
+    {
+      if (photo == null)
         return;
-      base.UpdateItem(obj, key, state, result);
-      SavePhoto  (obj);
-      PhotoExists(obj);
-      
+
+      if (!_ioUtils.FileExists(photo.PhotoUrl))
+        PhotosIndexesWithoutExistingFile.Add(photo.Id);
     }
 
-
-    private void SavePhoto ( Photo obj )
-    {            
-      
-      if (obj.Bytestring != null && obj.Bytestring.Length > 0)
-      {
-        byte[] bytes = obj.Bytestring.ToByteArray();
-        _ioUtils.SaveFile(obj.PhotoUrl, bytes);
-      }     
-      
-    }
-
-    private bool PhotoExists( Photo obj )
+    private HashSet<long> _photosIndexesWithoutExistingFile;
+    public HashSet<long> PhotosIndexesWithoutExistingFile
     {
-      if (_ioUtils.FileExists(obj.PhotoUrl) )
-        return true;
-
-      if (!_checkedPhotos.Contains(obj.Id))
+      get
       {
-        _noDescriptionPhotos.Photos.Add(obj);
-        _checkedPhotos.Add(obj.Id);
+        if (_photosIndexesWithoutExistingFile == null)
+          _photosIndexesWithoutExistingFile = new HashSet<long>();
+        return _photosIndexesWithoutExistingFile;
       }
-      
-      return false;
-    }
-
-    protected override void CopyFrom(Photo from, Photo to)
-    {
-      to.MergeFrom(from);
-    }
-
-    public override void Remove(long key)
-    {
-      base.Remove(key);
-      var item = Data.Where(x => x.Id == key).FirstOrDefault();
-      if (item != null)
+      private set
       {
-        Data.Remove(item);
+        if (_photosIndexesWithoutExistingFile != value)
+          _photosIndexesWithoutExistingFile = value;
       }
     }
 
-    public void CheckPhotos()
-    {
-      if (_noDescriptionPhotos.Photos.Count > 0)
-      {
-        OnFullPhotoRequested(_noDescriptionPhotos);
-        _noDescriptionPhotos.Photos.Clear();
-      }
-    } 
-
-    private void OnFullPhotoRequested( PhotoList list)
-    {
-      if ( FullPhotoRequested != null )
-        FullPhotoRequested(list);
-    }
-
-    PhotoList _noDescriptionPhotos;
-
-    HashSet<long> _checkedPhotos;
-
-    private readonly IOUtils _ioUtils;
-
-    public event FullPhotoRequest FullPhotoRequested;
+    public readonly IOUtils _ioUtils;
   }
 }

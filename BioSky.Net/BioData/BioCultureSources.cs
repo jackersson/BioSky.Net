@@ -1,16 +1,13 @@
-﻿using BioContracts;
+﻿using BioContracts.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioData
 {
   public class BioCultureSources : IBioCultureSources
   {
-    public BioCultureSources()
-    {
+    public BioCultureSources(){
       CountriesNames = GetCountryNames();
     }
 

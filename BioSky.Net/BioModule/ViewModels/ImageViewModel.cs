@@ -21,8 +21,9 @@ namespace BioModule.ViewModels
 
   public class ImageViewModel : Screen, IImageViewUpdate
   {
-    public ImageViewModel()
-    {    
+    public ImageViewModel( )
+    {
+      
       _bitmapUtils   = new BitmapUtils();
       _bioFileUtils  = new BioFileUtils();     
       
@@ -62,8 +63,13 @@ namespace BioModule.ViewModels
         NotifyOfPropertyChange(() => ImageItems);
       }
 
-      ImageItems[index].UpdateImageSource(img);
-      ImageItems[index].Zoom(_scrollFieldWidth, _scrollFieldHeight);
+      if (index < ImageItems.Count)
+      {
+        ImageItemViewModel item = ImageItems[index];
+        item.UpdateImageSource(img);
+        item.Zoom(_scrollFieldWidth, _scrollFieldHeight);
+      }
+ 
     } 
    
     public string Upload()
@@ -179,7 +185,7 @@ namespace BioModule.ViewModels
     private const double ZOOM_TO_FIT_RATE = 99;   
 
     private   BitmapUtils  _bitmapUtils  ;
-    private   BioFileUtils _bioFileUtils ;     
+    private   BioFileUtils _bioFileUtils ;  
     #endregion
   }
 }

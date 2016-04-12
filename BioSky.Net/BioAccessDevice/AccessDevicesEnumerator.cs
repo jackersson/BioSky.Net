@@ -8,9 +8,7 @@ namespace BioAccessDevice
 {
   public class AccessDevicesEnumerator : Threadable
   {
-
-    public AccessDevicesEnumerator() : base()
-    {
+    public AccessDevicesEnumerator() : base() {
       _accessDevicesNames = new AsyncObservableCollection<string>();
     }
 
@@ -23,7 +21,7 @@ namespace BioAccessDevice
         string[] serialPortNames = SerialPort.GetPortNames();
         SerialPortNames = serialPortNames;
 
-        Thread.Sleep(1000);
+        Thread.Sleep(DEVICE_ENUMERATION_DELAY);
       }      
     }
 
@@ -60,8 +58,7 @@ namespace BioAccessDevice
     }
 
 
-    public bool AccessDeviceConnected(string portName)
-    {
+    public bool AccessDeviceConnected(string portName) {
       return _accessDevicesNames.Contains(portName);
     }
 
@@ -71,13 +68,12 @@ namespace BioAccessDevice
       get { return _accessDevicesNames; }
       set
       {
-        if (_accessDevicesNames != value)
-        {
-          _accessDevicesNames = value;
-
-        }
+        if (_accessDevicesNames != value)        
+          _accessDevicesNames = value;        
       }
     }
+
+    private const int DEVICE_ENUMERATION_DELAY = 1000;
 
   }
 }

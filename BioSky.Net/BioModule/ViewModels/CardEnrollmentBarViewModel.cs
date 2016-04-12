@@ -1,4 +1,5 @@
 ﻿using BioContracts;
+using BioContracts.AccessDevices;
 using BioContracts.Common;
 using BioModule.ResourcesLoader;
 using Caliburn.Micro;

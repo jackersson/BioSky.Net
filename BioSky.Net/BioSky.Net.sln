@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioGRPC", "BioGRPC\BioGRPC.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioEngine", "BioEngine\BioEngine.csproj", "{0E18D66B-A62B-4074-9217-BBF30D2C9322}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioCaptureDevices", "BioCaptureDevices\BioCaptureDevices.csproj", "{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,14 @@ Global
 		{0E18D66B-A62B-4074-9217-BBF30D2C9322}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E18D66B-A62B-4074-9217-BBF30D2C9322}.Release|x86.ActiveCfg = Release|x86
 		{0E18D66B-A62B-4074-9217-BBF30D2C9322}.Release|x86.Build.0 = Release|x86
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Debug|x86.Build.0 = Debug|Any CPU
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{6F2AD37F-D888-4CE9-9891-B685F1F0E4A9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

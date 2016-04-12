@@ -659,6 +659,10 @@
       <Project>{09df37b6-4105-4c3a-8f1c-8bc4ec95dc05}</Project>
       <Name>BioAccessDevice</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BioCaptureDevices\BioCaptureDevices.csproj">
+      <Project>{6f2ad37f-d888-4ce9-9891-b685f1f0e4a9}</Project>
+      <Name>BioCaptureDevices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BioContracts\BioContracts.csproj">
       <Project>{fedd6c6d-6cd4-4d74-a19c-f2715b0d1f5b}</Project>
       <Name>BioContracts</Name>

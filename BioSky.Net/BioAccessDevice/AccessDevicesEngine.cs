@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using BioContracts;
-
+using BioContracts.AccessDevices;
 
 namespace BioAccessDevice
 {
@@ -108,8 +108,7 @@ namespace BioAccessDevice
       return false;
     }
     
-    public AsyncObservableCollection<string> GetDevicesNames()
-    {
+    public AsyncObservableCollection<string> GetDevicesNames() {
       return _deviceEnumerator.DevicesNames;
     }
 

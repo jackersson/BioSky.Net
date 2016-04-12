@@ -1,39 +1,48 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BioContracts.Common
 {
   public class BioObserver<T> : IBioObservable<T>
   {
-    public BioObserver()
-    {
-      _observers = new List<T>();
+    public BioObserver()  {
+      _observers = new ConcurrentDictionary<int, T>();
     }
 
     public void Subscribe(T observer)
     {
-      _observers.Add(observer);
+      Task tsk = Task.Run(() => {
+        _observers.TryAdd(observer.GetHashCode(), observer);
+      });
     }
 
     public void Unsubscribe(T observer)
     {
-      _observers.Remove(observer);
+      Task tsk = Task.Run(() => {
+        T removed;
+        _observers.TryRemove(observer.GetHashCode(), out removed);
+      });
     }
 
     public void UnsubscribeAll()
     {
-      _observers.RemoveAll(x => true);
+      Task tsk = Task.Run(() =>
+      {
+        foreach (KeyValuePair<int, T> observer in _observers)
+        {
+          T removed;
+          _observers.TryRemove(observer.Value.GetHashCode(), out removed);
+        }
+      });
+      Task.WaitAll(tsk);
     }
 
-    public bool HasObserver(T observer)
-    {
-      return _observers.Contains(observer);
+    public bool HasObserver(T observer) {
+      return _observers.ContainsKey(observer.GetHashCode());
     }
 
-    private List<T> _observers;
-    public List<T> Observers { get { return _observers; } }
+    private ConcurrentDictionary<int, T> _observers;    
+    public ConcurrentDictionary<int, T> Observers { get { return _observers; } }
   }
 }

@@ -1,4 +1,7 @@
-﻿using BioService;
+﻿using BioContracts.AccessDevices;
+using BioContracts.CaptureDevices;
+using BioContracts.Locations;
+using BioService;
 
 
 namespace BioContracts

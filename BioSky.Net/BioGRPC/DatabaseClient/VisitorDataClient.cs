@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace BioGRPC.DatabaseClient
 { 
@@ -20,7 +21,7 @@ namespace BioGRPC.DatabaseClient
 
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier = _locator.GetProcessor<INotifier>();
-
+      _uiDispatcher = _locator.GetProcessor<Dispatcher>();
       _list = new VisitorList();
     }
 
@@ -28,7 +29,7 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-       // VisitorList call = await _client.VisitorUpdateAsync(list);
+        //VisitorList call = await _client.VisitorUpdateAsync(list);
         //_database.Visitors.Update(list, call);       
       }
       catch (RpcException e)
@@ -41,8 +42,8 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-        //VisitorList call = await _client.VisitorSelectAsync(command);
-        //_database.Visitors.Init(call);        
+         VisitorList call = await _client.SelectVisitorsAsync(command);
+        _database.Visitors.Init(call.Visitors);        
       }
       catch (RpcException e)
       {
@@ -55,21 +56,15 @@ namespace BioGRPC.DatabaseClient
       if (item == null)
         return;
 
-      _list.Visitors.Clear();
-
-      //TODO ResultStatus None 
-      //item.Dbresult    = ResultStatus.Failed;
-      //item.EntityState = EntityState.Added  ;
-      _list.Visitors.Add(item);    
-
       try
       {
-        await Update(_list);
+        Visitor newVisitor = await _client.AddVisitorAsync(item);
+        Console.WriteLine(newVisitor);
+        _uiDispatcher.Invoke( () => _database.Visitors.Add(item, newVisitor) );
       }
-      catch (RpcException e)
-      {
+      catch (RpcException e) {
         _notifier.Notify(e);
-      }
+      }      
     }
 
     public async Task Update(Visitor item)
@@ -93,8 +88,6 @@ namespace BioGRPC.DatabaseClient
         _notifier.Notify(e);
       }
     }
-
-
 
     public async Task Remove( IList<Visitor> targetItems)
     {
@@ -161,6 +154,7 @@ private void UpdateData(VisitorList list)
 
     private VisitorList _list;
 
+    private readonly Dispatcher           _uiDispatcher;
     private readonly IProcessorLocator    _locator   ;
     private readonly IBioSkyNetRepository _database  ;    
     private readonly INotifier            _notifier  ;

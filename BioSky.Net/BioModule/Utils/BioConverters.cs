@@ -16,6 +16,7 @@ using System.Windows;
 using BioContracts;
 using BioService;
 using static BioService.Location.Types;
+using BioContracts.Holders;
 
 namespace BioModule.Utils
 {
@@ -260,7 +261,7 @@ namespace BioModule.Utils
 
           if (photo != null)
           {
-            string fullFilePathway = _database.LocalStorage.LocalStoragePath + photo.PhotoUrl;
+            string fullFilePathway = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway) + photo.PhotoUrl;
             if (File.Exists(fullFilePathway))
             {
               BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));
@@ -277,7 +278,7 @@ namespace BioModule.Utils
       throw new NotImplementedException();
     }
     private readonly IBioSkyNetRepository  _database    ;
-    private readonly IHolder<Photo, long>  _photoHolder ;
+  
     private readonly IFullPersonHolder _personHolder;
   }
   #endregion
@@ -294,7 +295,7 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
-        string fullFilePathway = _database.LocalStorage.LocalStoragePath + "\\" + value;
+        string fullFilePathway = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway) + "\\" + value;
 
         if (File.Exists(fullFilePathway))
         {

@@ -8,11 +8,22 @@ using WPFLocalizeExtension.Extensions;
 using System;
 using BioContracts.Common;
 using AForge.Video.DirectShow;
+using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Threading;
+using BioContracts.Locations;
 
 namespace BioModule.ViewModels
-{
-  public class TrackControlItemViewModel : Conductor<IScreen>.Collection.AllActive, IAccessDeviceObserver, ICaptureDeviceObserver
-  {    
+{ 
+  enum VerificationStatus
+  {
+        Start
+      , Success
+      , Failed
+  }
+
+  public class TrackControlItemViewModel : Conductor<IScreen>.Collection.AllActive, IFullLocationObserver
+  {
     public TrackControlItemViewModel(IProcessorLocator locator) {      
       Initialize(locator);
     }
@@ -24,103 +35,163 @@ namespace BioModule.ViewModels
       if ( location != null )
        Update(location);
     }
-
+    
     #region Update
-
-    public void OnBioImageViewLoaded()
-    {
-      if (ImageView == null)
-        ImageView = new BioImageViewModel(_locator);
-    }
-
     public void Update(TrackLocation location)
-    {
-      if (CurrentLocation != null)
-      {
-        _bioEngine.CaptureDeviceEngine().Unsubscribe(this);
-        _bioEngine.AccessDeviceEngine() .Unsubscribe(this);
-      }
+    {      
+      location.Unsubscribe(this);      
 
       if (location == null)
         return;
 
       CurrentLocation = location;
-      
-      _bioEngine.CaptureDeviceEngine().Subscribe(this, CurrentLocation.GetCaptureDeviceName );
-      _bioEngine.AccessDeviceEngine ().Subscribe(this, CurrentLocation.GetAccessDeviceName  );
-     
+      location.Subscribe(this);
     }
-    #endregion
-
-    #region Interface
     protected override void OnActivate()
     {
       if (_visitorsView != null)
         ActivateItem(_visitorsView);
       base.OnActivate();
     }
+    private void UpdateLocationState(bool state = false)
+    {
+      try
+      {
+        BitmapSource target = state ? ResourceLoader.OkIconSource : ResourceLoader.WarningIconSource;
+        target.Freeze();
+        LocationStateIcon = target;
+      }
+      catch (Exception ex)
+      {
+        _notifier.Notify(ex);
+      }
+    }
 
+    private void UpdateVerificationState(VerificationStatus state = VerificationStatus.Start, bool visible = false)
+    {
+      try
+      {
+        UserVerificationIconVisible = visible;
+        if (!visible)
+          return;
+
+        BitmapSource target;
+        switch (state)
+        {
+          case VerificationStatus.Start:
+            target = ResourceLoader.CardIconSource;
+            break;
+          case VerificationStatus.Success:
+            target = ResourceLoader.VerificationIconSource;
+            _timer.Start();
+            break;
+          case VerificationStatus.Failed:
+            target = ResourceLoader.VerificationFailedIconSource;
+            _timer.Start();
+            break;
+
+          default:
+            target = ResourceLoader.VerificationFailedIconSource;
+            break;
+        }
+
+        target.Freeze();
+        VerificationStateIcon = target;
+      }
+      catch (Exception ex)
+      {
+        _notifier.Notify(ex);
+      }
+    }
+
+    public void OnError(Exception ex) { UpdateLocationState(false); }
+    public void OnOk(bool ok) { UpdateLocationState(ok); }
+      
+    public void OnVerificationFailure(Exception ex)
+    {
+      UpdateVerificationState(VerificationStatus.Failed, true);
+    }
+
+    public void OnVerificationSuccess(bool state)
+    {
+      UpdateVerificationState(VerificationStatus.Success, true);
+    }
+
+    public void OnVerificationProgress(int progress)
+    {
+      if ( progress < 100)
+        UpdateVerificationState(VerificationStatus.Start, true);
+      else
+        UpdateVerificationState(VerificationStatus.Start, false);
+    }
+
+    private void _timer_Tick(object sender, EventArgs e)
+    {
+      _timer.Stop();
+      UpdateVerificationState(VerificationStatus.Start, false);
+    }
+
+    public void OnCaptureDeviceFrameChanged(ref Bitmap frame) { }
+
+    #endregion
+
+    #region Interface
     private void Initialize(IProcessorLocator locator)
     {
       _locator   = locator;
-      _bioEngine = locator.GetProcessor<IBioEngine>();
+      _bioEngine = locator.GetProcessor<IBioEngine>();    
+      _notifier  = locator.GetProcessor<INotifier> ();
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
 
-      UserVerified = true;
-      UserVerificationIconVisible = CardDetectedIconVisible = false;     
-
       _visitorsView = new VisitorsViewModel(locator);
+      _timer = new DispatcherTimer();
+      _timer.Interval = new TimeSpan(1000);
+      _timer.Tick += _timer_Tick;
+      UpdateVerificationState();
+      UpdateLocationState();
 
       Items.Add(_visitorsView);
-
-    }
-
-    public void OnCardDetected(string cardNumber){
-      LocationStateIcon = ResourceLoader.UserContactlessCardsIconSource;
-    }
-
-    public void OnError(Exception ex) {
-      LocationStateIcon = ResourceLoader.WarningIconSource;
-    }
-
-    public void OnReady(bool isReady) {
-      LocationStateIcon = ResourceLoader.OkIconSource;
-    }
-
-    public void OnFrame(ref Bitmap frame) {
-      BitmapSource convertedFrame = BitmapConversion.BitmapToBitmapSource(frame);
-      ImageView.SetSingleImage(convertedFrame);
-    }
-
-    public void OnStop(bool stopped, string message) {
-      LocationStateIcon = ResourceLoader.StopIconSource;
-    }
-
-    public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {
-      LocationStateIcon = ResourceLoader.OkIconSource;
-    }
+    }    
     #endregion
 
     #region UI
-
-    /*
-    public BitmapSource OkIconSource
+    private BitmapSource _locationStateIcon;
+    public BitmapSource LocationStateIcon
     {
-      get
+      get {  return _locationStateIcon; }
+      private set
       {
-        if (CurrentLocation == null)
-          return ResourceLoader.ErrorIconSource;
-        else
-          return ResourceLoader.ErrorIconSource;
-         // return CurrentLocation.AccessDevicesStatus ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource;
+        try
+        {
+          if (_locationStateIcon != value)
+          {
+            _locationStateIcon = value;
+            NotifyOfPropertyChange(() => LocationStateIcon);
+          }
+        }
+        catch (TaskCanceledException ex)     {
+          _notifier.Notify(ex);
+        }
       }
     }
-    */
-    public BitmapSource VerificationIconSource
+
+    private BitmapSource _verificationStateIcon;
+    public BitmapSource VerificationStateIcon
     {
-      get {
-        return UserVerified ? ResourceLoader.VerificationIconSource
-                            : ResourceLoader.VerificationFailedIconSource;
+      get { return _verificationStateIcon; }
+      private set
+      {
+        try
+        {
+          if (_verificationStateIcon != value)
+          {
+            _verificationStateIcon = value;
+            NotifyOfPropertyChange(() => VerificationStateIcon);
+          }
+        }
+        catch (TaskCanceledException ex) {
+          _notifier.Notify(ex);
+        }
       }
     } 
     
@@ -128,7 +199,7 @@ namespace BioModule.ViewModels
     public VisitorsViewModel VisitorsView
     {
       get { return _visitorsView; }
-      set
+      private set
       {
         if (_visitorsView != value)
         {
@@ -138,101 +209,21 @@ namespace BioModule.ViewModels
       }
     }
 
-    
-    private BioImageViewModel _imageView;
-    public BioImageViewModel ImageView
-    {
-      get {
-        if (_imageView == null)
-          _imageView = new BioImageViewModel(_locator);
-        return _imageView;
-      }
-      set
-      {
-        if (_imageView != value)
-        {
-          _imageView = value;
-          NotifyOfPropertyChange(() => ImageView);
-        }
-      }
-    }
-    
-
-    /*
-    private bool _accessDeviceOK;
-    public bool AccessDeviceOK
-    {
-      get { return _accessDeviceOK; }
-      set
-      {
-        if (_accessDeviceOK != value)
-        {
-          _accessDeviceOK = value;
-
-         // NotifyOfPropertyChange(() => OkIconSource);
-        }
-      }
-
-    }
-    */
-
-    private bool _userVerified;
-    public bool UserVerified
-    {
-      get { return _userVerified; }
-      set
-      {
-        if (_userVerified != value)
-        {
-          _userVerified = value;
-          NotifyOfPropertyChange(() => VerificationIconSource);
-        }
-      }
-    }
-
-    private bool _userVerificationIconVisible;
+   
+    private bool _userVerificationVisible;
     public bool UserVerificationIconVisible
     {
-      get { return _userVerificationIconVisible; }
+      get { return _userVerificationVisible; }
       set
       {
-        if (_userVerificationIconVisible != value)
+        if (_userVerificationVisible != value)
         {
-          _userVerificationIconVisible = value;
+          _userVerificationVisible = value;
           NotifyOfPropertyChange(() => UserVerificationIconVisible);
         }
       }
     }
-
-    private bool _cardDetectedIconVisible;
-    public bool CardDetectedIconVisible
-    {
-      get { return _cardDetectedIconVisible; }
-      set
-      {
-        if (_cardDetectedIconVisible != value)
-        {
-          _cardDetectedIconVisible = value;
-          NotifyOfPropertyChange(() => CardDetectedIconVisible);
-        }
-      }
-    }
-
-    private BitmapSource _locationStateIcon;
-    public BitmapSource LocationStateIcon
-    {
-      get { return _locationStateIcon; }
-      set
-      {
-        if (_locationStateIcon != value)
-        {
-          _locationStateIcon = value;
-          NotifyOfPropertyChange(() => LocationStateIcon);
-        }
-      }
-    }
-    
-
+  
     private TrackLocation _currentLocation;
     public TrackLocation CurrentLocation
     {
@@ -250,9 +241,11 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Global Variables
+    private DispatcherTimer      _timer;
     private IBioEngine           _bioEngine;
-    private IProcessorLocator    _locator  ;
+    private IProcessorLocator    _locator  ;   
+    private INotifier            _notifier ;
     #endregion
-     
+
   }  
 }

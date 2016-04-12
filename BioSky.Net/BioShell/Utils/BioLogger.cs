@@ -67,9 +67,9 @@ namespace BioShell.Utils
     public string GetFilePath()
     {
       string currentFilePath = "";
-      DateTime higherfile    = new DateTime();
-      string fileFormat      = ".txt";
-      DateTime now           = DateTime.Now;
+      DateTime higherfile = new DateTime();
+      string fileFormat = ".txt";
+      DateTime now = DateTime.Now;
 
       string month = (now.Month < 10) ? "0" + now.Month : now.Month.ToString();
 
@@ -83,9 +83,9 @@ namespace BioShell.Utils
 
       string[] filePaths = Directory.GetFiles(directoryPath);
 
-      if (filePaths.Length <= 0)            
+      if (filePaths.Length <= 0)
         return directoryPath + string.Format("{0}{1}", DateTime.Now.Ticks, fileFormat);
-      
+
 
       foreach (string filePath in filePaths)
       {
@@ -95,17 +95,16 @@ namespace BioShell.Utils
         {
           currentFilePath = filePath;
           higherfile = creationTime;
-        }          
+        }
       }
 
       FileInfo file = new FileInfo(currentFilePath);
 
-      if (file.Length > FILE_SIZE)       
-        return directoryPath + string.Format("{0}{1}", DateTime.Now.Ticks, fileFormat);      
+      if (file.Length > FILE_SIZE)
+        return directoryPath + string.Format("{0}{1}", DateTime.Now.Ticks, fileFormat);
       else
         return currentFilePath;
-    }  
-    
+    }    
 
     public void LogMessage(string message)
     {

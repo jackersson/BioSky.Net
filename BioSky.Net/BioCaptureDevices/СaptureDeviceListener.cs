@@ -2,14 +2,16 @@
 using AForge.Video.DirectShow;
 using BioContracts;
 using BioContracts.Abstract;
+using BioContracts.CaptureDevices;
 using BioContracts.Common;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
 
-namespace BioEngine.CaptureDevices
+namespace BioCaptureDevices
 {
   public class СaptureDeviceListener : Threadable, IBioObservable<ICaptureDeviceObserver>
   {
@@ -216,20 +218,20 @@ namespace BioEngine.CaptureDevices
 
     private void OnFrame(ref Bitmap frame)
     {
-      foreach (ICaptureDeviceObserver observer in _observer.Observers)
-        observer.OnFrame(ref frame);
+      foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)      
+        observer.Value.OnFrame(ref frame);
     }
 
     private void OnStop(bool stopped, string message)
     {
-      foreach (ICaptureDeviceObserver observer in _observer.Observers)
-        observer.OnStop(true, message);
+      foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)       
+        observer.Value.OnStop(true, message);
     }
 
     private void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)
     {
-      foreach (ICaptureDeviceObserver observer in _observer.Observers)
-        observer.OnStart(started, active, all);
+      foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)
+        observer.Value.OnStart(started, active, all);
     }
     
 

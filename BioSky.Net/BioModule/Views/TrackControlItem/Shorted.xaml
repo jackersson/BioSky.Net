@@ -52,10 +52,10 @@
 -->
 
 
-                <Image HorizontalAlignment="Left"  Height="24" Grid.Column="2"
+            <Image HorizontalAlignment="Left"  Height="24" Grid.Column="2"
                VerticalAlignment="Top" Width="24" 
-               Source="{Binding Source={StaticResource ResourceLoader}, Path=CardIconSource}" 
-               Visibility="{Binding CardDetectedIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
+               Source="{Binding VerificationStateIcon}" 
+               Visibility="{Binding VerificationStateVisible, Converter={StaticResource BooleanToVisibilityConverter}}" >
             </Image>
 
             <Image HorizontalAlignment="Left"  Height="24" Grid.Column="0"

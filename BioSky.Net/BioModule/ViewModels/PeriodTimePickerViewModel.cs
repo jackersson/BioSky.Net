@@ -17,9 +17,8 @@ namespace BioModule.ViewModels
     {
       _locator = locator;
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
-      _windowManager = _locator.GetProcessor<IWindowManager>();
+      _windowManager = _locator.GetProcessor<IWindowManager>(); 
       _notifier      = _locator.GetProcessor<INotifier>();
-
       DisplayName = "Period";
       //DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:PeriodTimePicker");  
       
@@ -105,7 +104,7 @@ namespace BioModule.ViewModels
       {
         _notifier.Notify(ex);
       }
-      return new DateTime();
+      return DateTime.Now;
     }
     public void OnDateFromChanged(string date)
     {
@@ -178,8 +177,9 @@ namespace BioModule.ViewModels
 
     private readonly IWindowManager    _windowManager;
     private readonly IProcessorLocator _locator      ;
+    private readonly INotifier         _notifier     ;
     private readonly DialogsHolder     _dialogsHolder;
-    private          INotifier         _notifier     ;
+
   }
 
   public enum PeriodTimePickerState

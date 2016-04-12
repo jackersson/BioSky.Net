@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-
-using BioAccessDevice.Interfaces;
-
-using Castle.Facilities.TypedFactory;
-
 using BioContracts;
+using BioContracts.AccessDevices;
 
 namespace BioAccessDevice
 {
@@ -20,12 +11,10 @@ namespace BioAccessDevice
   {
     public void Install(IWindsorContainer container, IConfigurationStore store)
     {
-      try
-      {
+      try {
         container.Register(Component.For<IAccessDeviceEngine>().ImplementedBy<AccessDevicesEngine>());
       }
-      catch (Exception ex)
-      {
+      catch (Exception ex) {
         Console.WriteLine("BioAccessDevice.dll" + ex.Message);
       }
     }

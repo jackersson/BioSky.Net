@@ -13,6 +13,7 @@ using BioService;
 using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
+using System.Windows.Threading;
 
 namespace BioModule.ViewModels
 {
@@ -22,7 +23,7 @@ namespace BioModule.ViewModels
   }
 
   public delegate void LocationEventHandler(TrackLocation location);
-  public class TrackItemsShortViewModel : Screen
+  public class TrackItemsShortViewModel : Conductor<IScreen>.Collection.OneActive
   {
     public event LocationEventHandler SelectedLocationChanged;
     public TrackItemsShortViewModel(IProcessorLocator locator)
@@ -52,6 +53,7 @@ namespace BioModule.ViewModels
         if (_selectedTrackLocation == value)
           return;
         _selectedTrackLocation = value;
+        _selectedTrackLocation.ScreenViewModel.Activate();
         OnSelectedLocationChanged(_selectedTrackLocation);
         //FullTrackTabContro.Update(_selectedTrackLocation);
         NotifyOfPropertyChange(() => SelectedTrackLocation);
@@ -85,7 +87,7 @@ namespace BioModule.ViewModels
                            , new object[] { SelectedTrackLocation.CurrentLocation });
     }
 
-    public AsyncObservableCollection<TrackLocation> TrackControlItems {
+    public ObservableCollection<TrackLocation> TrackControlItems {
       get { return _bioEngine.TrackLocationEngine().TrackLocations; }
     }
 
@@ -134,6 +136,8 @@ namespace BioModule.ViewModels
       _notifier      = _locator.GetProcessor<INotifier>();
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
 
+     
+
       TrackItemsShort = new TrackItemsShortViewModel(locator);
       TrackTabControl = new TrackTabControlViewModel(locator);
       
@@ -141,7 +145,7 @@ namespace BioModule.ViewModels
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
       _bioEngine.TrackLocationEngine().LocationsChanged += RefreshData;
-  
+      _uiDispatcher = _locator.GetProcessor<Dispatcher>();
     }
 
     #region Update
@@ -150,19 +154,24 @@ namespace BioModule.ViewModels
       if (!IsActive)
         return;
 
-      NotifyOfPropertyChange(() => AnyLocationExists);
-      
-      if (!AnyLocationExists)
-        return;
+      //Console.WriteLine(_uiDispatcher.GetHashCode());
+     // Console.WriteLine(Dispatcher.CurrentDispatcher.GetHashCode());
 
-      AsyncObservableCollection<TrackLocation> locations = TrackItemsShort.TrackControlItems; 
+       NotifyOfPropertyChange(() => AnyLocationExists);
+
+       if (!AnyLocationExists)
+          return;
+      //TrackTabControl.Update(null);
+    //  return;
+      ObservableCollection<TrackLocation> locations = TrackItemsShort.TrackControlItems; 
       foreach (TrackLocation location in locations)
       {
         if (location.ScreenViewModel == null)
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
       }
 
-      TrackItemsShort.SelectDefault();   
+      TrackItemsShort.SelectDefault();
+      NotifyOfPropertyChange(() => TrackItemsShort);
     }
 
  
@@ -228,6 +237,7 @@ namespace BioModule.ViewModels
     public void ShowVisitors()
     {
       Object = VisitorsView;
+      ActivateItem(VisitorsView);
       RefreshUI();
     }
 
@@ -295,8 +305,8 @@ namespace BioModule.ViewModels
     private readonly IDatabaseService     _bioService   ;
     private readonly INotifier            _notifier     ;
     private readonly DialogsHolder        _dialogsHolder;
+    private readonly System.Windows.Threading.Dispatcher _uiDispatcher;
 
-   
     #endregion
 
   }

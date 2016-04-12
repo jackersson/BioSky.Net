@@ -1,60 +1,54 @@
 ﻿using BioContracts;
-
 using BioService;
 using Caliburn.Micro;
 using BioData.Holders.Grouped;
 using BioData.Holders.Utils;
+using BioData.Holders;
+using BioContracts.Holders;
+using BioContracts.Common;
 
 namespace BioData
 {
   public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
   {
-    FullLocationHolder _fullLocations;
-    FullPersonHolder   _fullPersons  ;
-    FullVisitorHolder  _fullVisitors ;
-
-    ILocalStorage       _localStorage;
-    IBioCultureSources  _bioCultureSources;
-
-
-    IOUtils _ioUtils;
-    private IProcessorLocator _locator;
-
-    public BioSkyNetRepository(IProcessorLocator locator)
+    public BioSkyNetRepository()
     {
       _localStorage = new BioLocalStorage();
-      _ioUtils = new IOUtils(_localStorage);
-      _locator = locator;
+      _ioUtils      = new IOUtils(_localStorage);
 
-
-      _fullLocations     = new FullLocationHolder(locator);
-      _fullPersons       = new FullPersonHolder  (_ioUtils, _locator);
-      _fullVisitors      = new FullVisitorHolder ();
+      _photoHolder       = new PhotoHolder(_ioUtils);
+      _fullLocations     = new FullLocationHolder();
+      _fullPersons       = new FullPersonHolder  (_ioUtils, _photoHolder);
+      _fullVisitors      = new FullVisitorHolder (_photoHolder);
       _bioCultureSources = new BioCultureSources ();
     }
 
-    public IFullLocationHolder Locations
-    {
+    private FullLocationHolder _fullLocations;
+    public IFullLocationHolder Locations {
       get { return _fullLocations; }
     }
 
-    public IFullPersonHolder Persons
-    {
+    private FullPersonHolder _fullPersons;
+    public IFullPersonHolder Persons {
       get { return _fullPersons; }
     }
 
-    public IFullHolder<Visitor> Visitors
-    {
+    private FullVisitorHolder _fullVisitors;
+    public IFullHolder<Visitor> Visitors {
       get { return _fullVisitors; }
     }
-      
-    public ILocalStorage LocalStorage
-    {
+
+    private ILocalStorage _localStorage;
+    public ILocalStorage LocalStorage  {
       get { return _localStorage;  }
     }
-    public IBioCultureSources BioCultureSources
-    {
+
+    private IBioCultureSources _bioCultureSources;
+    public IBioCultureSources BioCultureSources {
       get { return _bioCultureSources; }
     }
+
+    private PhotoHolder _photoHolder;   
+    private IOUtils     _ioUtils    ;
   }
 }

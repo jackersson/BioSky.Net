@@ -12,7 +12,7 @@
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"           
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>

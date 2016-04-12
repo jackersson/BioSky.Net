@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
 using BioAccessDevice.Interfaces;
 using BioAccessDevice.Commands;
-using BioAccessDevice.Abstract;
 using BioContracts;
 
 namespace BioAccessDevice
@@ -22,17 +16,16 @@ namespace BioAccessDevice
       _commands.Add(AccessDeviceCommands.CommandDallasKey, new CommandDallasKey());
      // _commands.Add(AccessDeviceCommands.CommandLight    , new CommandLight());
     }
-
+    /*
     T ICommandFactory.GetCommand<T>() 
     {
       return new T();
     }
-
+    */
     public object GetCommand(AccessDeviceCommands commandID)
     {
       ICommand command;
-      _commands.TryGetValue(commandID, out command);
-      //object command = Activator.CreateInstance(Type.GetType(commandName));
+      _commands.TryGetValue(commandID, out command);     
       return command;
     }
 

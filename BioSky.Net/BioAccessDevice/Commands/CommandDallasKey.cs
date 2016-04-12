@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using BioAccessDevice.Abstract;
+﻿using BioAccessDevice.Abstract;
 using System.Diagnostics;
 
 namespace BioAccessDevice.Commands
@@ -36,9 +30,7 @@ namespace BioAccessDevice.Commands
         _response = dallasKey;
 
         timer.Reset();
-        timer.Start();
-        
-        Console.WriteLine(_response != null ? _response.ToString() : "");
+        timer.Start();        
       }
 
       if (timer.ElapsedMilliseconds > DALLASKEY_COMMAND_DELAY)
@@ -62,9 +54,8 @@ namespace BioAccessDevice.Commands
 
     private byte[] _noCardDetectedResponse;
 
-    private const short DALLASKEY_COMMAND_RESPONSE_BYTES_COUNT = 17;
-
-    private const int DALLASKEY_COMMAND_DELAY = 3000;
+    private const short DALLASKEY_COMMAND_RESPONSE_BYTES_COUNT = 17  ;
+    private const int   DALLASKEY_COMMAND_DELAY                = 3000;
 
     private Stopwatch timer = new Stopwatch();
   }

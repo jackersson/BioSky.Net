@@ -1,13 +1,9 @@
 ﻿using BioContracts;
-using BioEngine.CaptureDevices;
+using BioContracts.Locations;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace BioEngine
@@ -18,9 +14,7 @@ namespace BioEngine
     {
       try
       {
-
-        container.Register(Component.For<ICaptureDeviceEngine>().ImplementedBy<CaptureDeviceEngine>())
-                 .Register(Component.For<ITrackLocationEngine>().ImplementedBy<TrackLocationEngine>())
+        container.Register(Component.For<ITrackLocationEngine>().ImplementedBy<TrackLocationEngine>())
                  .Register(Component.For<IBioEngine>().ImplementedBy<BioSkyEngine>())
                  .Register(Component.For<IBioStarter>().ImplementedBy<BioStarter>());
 

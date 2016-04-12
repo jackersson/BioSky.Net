@@ -10,6 +10,7 @@ using BioModule.ResourcesLoader;
 using BioContracts;
 using System.Drawing;
 using System.Reflection;
+using BioContracts.CaptureDevices;
 
 namespace BioModule.ViewModels
 { 

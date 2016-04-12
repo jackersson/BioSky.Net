@@ -4,6 +4,8 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System;
 using System.Windows.Interop;
+using BioContracts;
+using BioAccessDevice;
 
 namespace BioShell.ViewModels
 {
@@ -11,8 +13,30 @@ namespace BioShell.ViewModels
   {
     public BioShellViewModel()
     {
-      DisplayName = "BioSkyNet";     
-    }  
+      DisplayName = "BioSkyNet";
+
+     // IAccessDeviceEngine ad = new AccessDevicesEngine();
+     // ad.Add("COM3");
+
+      //Teset = new TestViewModel();
+      //ad.Subscribe(Teset, "COM3");
+    }
+
+    /*
+    private TestViewModel _test;
+    public TestViewModel Teset
+    {
+      get { return _test; }
+      set
+      {
+        if (_test != value)
+        {
+          _test = value;
+          NotifyOfPropertyChange(() => Teset);
+        }
+      }
+    }
+    */
 
     private object _mainMenu;
     public object MainMenu

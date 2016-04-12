@@ -4,37 +4,38 @@ using Caliburn.Micro;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using BioContracts.Holders;
 
 namespace BioData.Holders.Grouped
 {
   public class FullVisitorHolder : PropertyChangedBase, IFullHolder<Visitor>
   {
-    public FullVisitorHolder(  )
+    public FullVisitorHolder(PhotoHolder photoHolder )
     {
       DataSet = new Dictionary<long, Visitor>();
-      Data = new AsyncObservableCollection<Visitor>();
+      Data    = new AsyncObservableCollection<Visitor>();
+
+      _photoHolder = photoHolder;
     }
 
 
-    public void Init(Google.Protobuf.Collections.RepeatedField<Visitor> list)
+    public void Init(Google.Protobuf.Collections.RepeatedField<Visitor> data)
     {
-      try
+      Data = new AsyncObservableCollection<Visitor>(data);
+
+      foreach (Visitor visitor in data)
       {
-
-
-        ;
-
-        //foreach (Visitor visitor in data)      
-        // _visitors.Add(visitor, visitor.Id);      
-
-        OnDataChanged();
+        if (visitor != null)
+        {
+          _dataSet.Add(visitor.Id, visitor);
+          _photoHolder.CheckPhotosIfFileExisted(visitor);
+        }
       }
-      catch (Exception ex)
-      {
-        Console.WriteLine(ex);
-      }
+     
+      OnDataChanged();
     }
 
+    /*
     public void Update( Google.Protobuf.Collections.RepeatedField<Visitor> updated
                       , Google.Protobuf.Collections.RepeatedField<Visitor> results)
     {
@@ -67,22 +68,18 @@ namespace BioData.Holders.Grouped
         else 
         {         
           _photos.Remove(resultedVisitor.Photoid);          
-        }
-
-        
+        }        
         _visitors.UpdateItem(updatedVisitor, updatedVisitor.Id, updatedVisitor.EntityState, updatedVisitor.Dbresult);
         visitor.EntityState = EntityState.Unchanged;
         visitor.Dbresult = ResultStatus.Success;
-        success = visitor.Dbresult == ResultStatus.Success;
-        */
+        success = visitor.Dbresult == ResultStatus.Success;       
       }
 
       if (success)
         OnDataUpdated(results);
 
-
       OnDataChanged();
-    }
+    }*/
 
     public Visitor GetValue(long Id)
     {
@@ -105,12 +102,32 @@ namespace BioData.Holders.Grouped
 
     public void Add(Visitor requested, Visitor responded)
     {
-      throw new NotImplementedException();
+      if (responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
+      {
+        requested.Id = responded.Id;
+
+        Data.Add(requested);
+        _dataSet.Add(requested.Id, requested);
+      
+        OnDataChanged();
+      }
     }
 
     public void Update(Visitor requested, Visitor responded)
     {
-      throw new NotImplementedException();
+      return;
+      if (responded.Dbresult == Result.Success)
+      {
+        Visitor oldItem = GetValue(requested.Id);
+
+        if (oldItem != null)
+          CopyFrom(responded, oldItem);
+      }
+    }
+
+    private void CopyFrom(Visitor from, Visitor to)
+    {     
+      Console.WriteLine(_dataSet);
     }
 
     public void Remove(Visitor requested, Visitor responded)
@@ -145,6 +162,8 @@ namespace BioData.Holders.Grouped
 
     public event DataChangedHandler DataChanged;
     public event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<Visitor>> DataUpdated;
+
+    private readonly PhotoHolder _photoHolder;
     
     
   }
