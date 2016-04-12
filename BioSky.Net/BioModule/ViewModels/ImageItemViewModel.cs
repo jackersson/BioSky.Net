@@ -30,7 +30,10 @@ namespace BioModule.ViewModels
     public void UpdateImageSource( BitmapSource source )
     {
       if (source == null)
+      {
+        ImageSource = source;
         return;
+      }
 
       try
       {        

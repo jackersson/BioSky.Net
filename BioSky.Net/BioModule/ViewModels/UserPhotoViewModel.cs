@@ -139,6 +139,9 @@ namespace BioModule.ViewModels
 
     public async void Remove(Photo photo)
     {
+      if (photo == null)
+        return;
+
       _dialogsHolder.AreYouSureDialog.Show();
       var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
 

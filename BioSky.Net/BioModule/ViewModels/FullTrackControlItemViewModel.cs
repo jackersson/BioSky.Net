@@ -68,7 +68,7 @@ namespace BioModule.ViewModels
 
     public void OnError(Exception ex)
     {
-      //throw new NotImplementedException();
+      BioImageView.UpdateFrame(null);
     }
 
     public void OnVerificationFailure(Exception ex)

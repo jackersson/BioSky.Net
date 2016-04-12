@@ -11,14 +11,14 @@ namespace BioData
 {
   public class BioSkyNetRepository : PropertyChangedBase, IBioSkyNetRepository
   {
-    public BioSkyNetRepository()
+    public BioSkyNetRepository(IProcessorLocator locator)
     {
       _localStorage = new BioLocalStorage();
       _ioUtils      = new IOUtils(_localStorage);
 
       _photoHolder       = new PhotoHolder(_ioUtils);
-      _fullLocations     = new FullLocationHolder();
-      _fullPersons       = new FullPersonHolder  (_ioUtils, _photoHolder);
+      _fullLocations     = new FullLocationHolder(locator);
+      _fullPersons       = new FullPersonHolder  (locator, _ioUtils, _photoHolder);
       _fullVisitors      = new FullVisitorHolder (_photoHolder);
       _bioCultureSources = new BioCultureSources ();
     }

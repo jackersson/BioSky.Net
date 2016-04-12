@@ -1,4 +1,5 @@
-﻿using BioContracts.CaptureDevices;
+﻿
+using BioContracts.CaptureDevices;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;

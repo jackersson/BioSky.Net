@@ -78,6 +78,11 @@ namespace BioModule.BioModels
       _imageView.SetDoubleImage(_images.Item1.Marked, _images.Item2.Marked);
     }
 
+    public void UpdateFrame(Bitmap frame)
+    {
+      throw new NotImplementedException();
+    }
+
     #region UI
 
     public BioImageModelEnum EnumState

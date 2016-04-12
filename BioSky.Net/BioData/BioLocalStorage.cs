@@ -43,7 +43,7 @@ namespace BioData
 
     private void LoadConfiguration()
     {
-      if (File.Exists(ConfigurationFilePath))
+      if (!File.Exists(ConfigurationFilePath))
       {
         GenerateDefault();
         return;

@@ -141,6 +141,7 @@ namespace BioContracts
     {
       foreach (KeyValuePair<LocationDevice, ILocationDeviceObserver> pair in _devices)
         pair.Value.Stop();
+      OnError(new Exception());
     }
 
     public void OnVerificationFailure(Exception ex)

@@ -361,7 +361,7 @@
         </StackPanel>
 
 
-        <Button cal:Message.Attach="[Event Click] = [Action Clear()]"  
+        <Button cal:Message.Attach="[Event Click] = [Action OnClearClick()]"  
                 Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 ToolTip="{lex:Loc Cancel}" Width="32" Height="32"   

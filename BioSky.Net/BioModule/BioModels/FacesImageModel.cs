@@ -1,5 +1,6 @@
 ﻿using AForge.Video.DirectShow;
 using BioContracts;
+using BioContracts.CaptureDevices;
 using BioContracts.Common;
 using BioModule.ResourcesLoader;
 using BioModule.Utils;
@@ -125,26 +126,35 @@ namespace BioModule.BioModels
     }
 
     public void OnFrame(ref Bitmap frame)
+    {   
+      UpdateFrame(frame);
+    }
+
+    public void UpdateFrame(Bitmap frame)
     {
       if (frame == null)
       {
-        _imageView.SetSingleImage(null);
+        _imageView.SetSingleImage(ResourceLoader.UserDefaultImageIconSource);
         return;
       }
 
       Bitmap processedFrame = DrawFaces(ref frame);
-
       BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
-      newFrame.Freeze();
+
+      // Console.WriteLine(_uiDispatcher.GetHashCode());
+      //Console.WriteLine(Dispatcher.CurrentDispatcher.GetHashCode());
 
       _imageView.SetSingleImage(newFrame);
     }
 
-    public void OnStop(bool stopped, string message) { _imageView.SetSingleImage(null); }
+
+    public void OnStop(bool stopped, string message)
+    {
+      _imageView.SetSingleImage(null);
+    }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
-
-
+    
     #region UI
     public BioImageModelEnum EnumState
     {

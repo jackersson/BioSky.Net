@@ -201,8 +201,10 @@ namespace BioCaptureDevices
         _videoSource.WaitForStop();      
 
         if (_videoSource.IsRunning)
-          _videoSource.Stop();         
-         
+          _videoSource.Stop();
+
+        OnStop(true, string.Empty);
+
       }
       catch (Exception ex) {
         Console.WriteLine(ex.Message);

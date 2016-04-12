@@ -53,7 +53,10 @@ namespace BioModule.ViewModels
         if (_selectedTrackLocation == value)
           return;
         _selectedTrackLocation = value;
-        _selectedTrackLocation.ScreenViewModel.Activate();
+
+        if(_selectedTrackLocation != null)        
+          _selectedTrackLocation.ScreenViewModel.Activate();       
+        
         OnSelectedLocationChanged(_selectedTrackLocation);
         //FullTrackTabContro.Update(_selectedTrackLocation);
         NotifyOfPropertyChange(() => SelectedTrackLocation);

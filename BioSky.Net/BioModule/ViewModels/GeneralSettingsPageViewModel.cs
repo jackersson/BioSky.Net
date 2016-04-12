@@ -96,7 +96,7 @@ namespace BioModule.ViewModels
     private void Save()
     {
       ILocalStorage storage = _database.LocalStorage;
-      storage.UpdateParametr(ConfigurationParametrs.MediaPathway, LocalStoragePath);
+      storage.UpdateParametr(ConfigurationParametrs.MediaPathway, LocalStoragePath + "\\");
       storage.UpdateParametr(ConfigurationParametrs.FaceServiceAddress, FaceServiceIP + ":" + FaceServicePort);
       storage.UpdateParametr(ConfigurationParametrs.DatabaseServiceAddress, DatabaseServiceIP + ":" + DatabaseServicePort);
       storage.UpdateParametr(ConfigurationParametrs.Language, SelectedLanguage);

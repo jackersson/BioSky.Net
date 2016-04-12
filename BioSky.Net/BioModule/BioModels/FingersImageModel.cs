@@ -71,6 +71,11 @@ namespace BioModule.BioModels
         Controller = controller;
     }
 
+    public void UpdateFrame(Bitmap frame)
+    {
+      throw new NotImplementedException();
+    }
+
     #region UI
 
     public BioImageModelEnum EnumState

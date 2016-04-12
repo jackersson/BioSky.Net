@@ -2,6 +2,7 @@
 using BioContracts;
 using BioService;
 using BioContracts.Locations;
+using System.Collections.Concurrent;
 
 namespace BioEngine
 {
@@ -10,7 +11,7 @@ namespace BioEngine
     public TrackLocationEngine(  IProcessorLocator locator )      
     {     
       _locator = locator;
-      _trackLocationsSet = new Dictionary<long, TrackLocation>();
+      _trackLocationsSet = new ConcurrentDictionary<long, TrackLocation>();
       _trackLocations    = new AsyncObservableCollection<TrackLocation>();   
     
       _locator.GetProcessor<IBioSkyNetRepository>().Locations.DataChanged += RefreshData;        
@@ -31,7 +32,7 @@ namespace BioEngine
         }
           
          TrackLocation trackLocation = new TrackLocation(_locator, location);
-         _trackLocationsSet.Add(location.Id, trackLocation);       
+         _trackLocationsSet.TryAdd(location.Id, trackLocation);       
       }
       
       _trackLocations.Clear();
@@ -41,7 +42,8 @@ namespace BioEngine
         if (!dict.ContainsKey(locationID))
         {
           _trackLocationsSet[locationID].Stop();
-          _trackLocationsSet.Remove(locationID);
+          TrackLocation removed = null;
+          _trackLocationsSet.TryRemove(locationID, out removed);
         }
         else        
           _trackLocations.Add(_trackLocationsSet[locationID]);        
@@ -50,8 +52,8 @@ namespace BioEngine
       OnLocationsChanged();
     }
 
-    private Dictionary<long, TrackLocation> _trackLocationsSet;
-    private Dictionary<long, TrackLocation> TrackLocationsSet
+    private ConcurrentDictionary<long, TrackLocation> _trackLocationsSet;
+    private ConcurrentDictionary<long, TrackLocation> TrackLocationsSet
     {
      get { return _trackLocationsSet; }
     }

@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using BioContracts.Holders;
 
 namespace BioData.Holders.Grouped
 {
@@ -50,9 +51,6 @@ namespace BioData.Holders.Grouped
 
         AddAccessDevice (requested, responded.AccessDevice);
         AddCaptureDevice(requested, responded.CaptureDevice);
- 
-        if (requested.AccessType == Location.Types.AccessType.Custom)
-          requested.Persons.Add(responded.Persons);
 
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);        
@@ -106,18 +104,14 @@ namespace BioData.Holders.Grouped
       if (from.Description != "")
         to.Description = from.Description;
 
-      if (from.AccessType != to.AccessType)
-        to.AccessType = from.AccessType;
+      if(from.EntityState == EntityState.Modified)
+          to.AccessType = from.AccessType;
 
       if (from.AccessDevice != null)
         AddAccessDevice(to, from.AccessDevice);
 
-      if (from.CaptureDevice != null)
-      {
-        
+      if (from.CaptureDevice != null)       
         AddCaptureDevice(to, from.CaptureDevice);
-
-      }
 
       to.Persons.Clear();
       to.Persons.Add(from.Persons);

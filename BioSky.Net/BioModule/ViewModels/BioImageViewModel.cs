@@ -21,6 +21,7 @@ namespace BioModule.ViewModels
     void Deactivate();
     void UpdateController(IUserBioItemsController controller);
     void UploadPhoto(Photo photo);
+    void UpdateFrame(Bitmap frame);
     void ShowDetails(bool state);
     BioImageModelEnum EnumState                 { get; }
     IUserBioItemsController Controller      { get; }
@@ -91,13 +92,14 @@ namespace BioModule.ViewModels
       if(CurrentBioImage != null)
         CurrentBioImage.UploadPhoto(photo);            
     }
-    public override void Clear()
+
+    public void OnClearClick()
     {
       if (CanUsePhotoController)
         UserController.Remove(CurrentPhoto);
 
       base.Clear();
-    }
+    }  
 
     #region testPhoto
     /*
@@ -174,7 +176,14 @@ namespace BioModule.ViewModels
       return CurrentPhoto;
     }
 
-    public void UpdatePhotoFromFile(string filename = "")
+    public void UpdateFrame(Bitmap frame)
+    { 
+      if (CurrentBioImage != null) 
+        CurrentBioImage.UpdateFrame( frame); 
+    }
+
+
+  public void UpdatePhotoFromFile(string filename = "")
     {
       BitmapImage bmp = base.UpdateFromFile(filename);
 
@@ -200,18 +209,29 @@ namespace BioModule.ViewModels
     {
       if (photo == null)
       {
-        base.Clear();
-        if(CurrentBioImage != null)
-          CurrentBioImage.UploadPhoto(photo);
+        SetDefaultImage();
         return;
       }
       
-      string filename = _database.LocalStorage.LocalStoragePath + "\\" + photo.PhotoUrl;
-      base.UpdateFromFile(filename);
+      string filename = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway) + photo.PhotoUrl;
+      BitmapImage image = base.UpdateFromFile(filename);
+
+      if(image == null)
+      {
+        SetDefaultImage();
+        return;
+      }
 
       CurrentPhoto = photo;
       
       CurrentBioImage.UploadPhoto(CurrentPhoto);
+    }
+
+    private void SetDefaultImage()
+    {
+      base.Clear();
+      if (CurrentBioImage != null)
+        CurrentBioImage.UploadPhoto(null);
     }
 
     private void OnBioImageChanged(BioImageModelEnum bioImageModel)
@@ -424,8 +444,8 @@ namespace BioModule.ViewModels
           _currentPhoto = value;
           Message = "";
 
-          if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
-            Message = "Can't upload photo";
+          //if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
+           // Message = "Can't upload photo";
 
           OnPhotoChanged();
 

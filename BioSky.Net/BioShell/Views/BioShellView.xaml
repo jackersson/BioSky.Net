@@ -45,6 +45,7 @@
 
             <ContentControl Grid.Row="1" Grid.Column="0" x:Name="ToolBar"  />
        -->
+        <ContentControl Grid.Row="1" Grid.Column="0" x:Name="ToolBar"  />
         
         <ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Panel.ZIndex="100" x:Name="FlyoutControl"  />
 

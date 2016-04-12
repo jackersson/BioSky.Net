@@ -101,9 +101,9 @@ namespace BioModule.ViewModels
       }
       else
       {
-        Location temp = new Location() { LocationName = "", Description = "" };
-        //temp.CaptureDevices.Add(new CaptureDevice() { Devicename = "USB Camera" });
+        Location temp = new Location() { LocationName = "", Description = "" };       
         CurrentLocation = temp;
+        _revertLocation = null;
         _locationPageMode = LocationPageMode.New;
       }
 
@@ -153,6 +153,8 @@ namespace BioModule.ViewModels
     {
       Location location = new Location();
 
+      location.EntityState = EntityState.Unchanged;
+
       if (CurrentLocation.Id > 0)
         location.Id = CurrentLocation.Id;
 
@@ -179,8 +181,11 @@ namespace BioModule.ViewModels
       if (captureDevice != null)  
         location.CaptureDevice = captureDevice;      
 
-      if (CurrentLocation.AccessType != _locationPermissionViewModel.SelectedState)
+      if (_locationPermissionViewModel.IsAccessChanged)
+      {
         location.AccessType = _locationPermissionViewModel.SelectedState;
+        location.EntityState = EntityState.Modified;
+      }
 
       RepeatedField<Person> persons = _locationPermissionViewModel.GetResult();
       if(persons != null)
