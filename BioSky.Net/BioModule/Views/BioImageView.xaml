@@ -203,15 +203,14 @@
         <!--*****************************************EnrollmentExpanderView**************************************************-->
 
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.ColumnSpan="4">
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.ColumnSpan="4"
+              Visibility="{Binding BioImageDetailsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+              >
             <!--<ContentControl>
                 <local:PhotoInfoExpanderView DataContext="{Binding BioImageDetails}"></local:PhotoInfoExpanderView>
             </ContentControl>-->
             <Expander BorderBrush="#00119EDA" Background="#00119EDA"  
-                  ExpandDirection="Down" IsExpanded="{Binding IsDetailsExpanded, Mode=TwoWay}"
-                     
-
-                  
+                  ExpandDirection="Down" IsExpanded="{Binding IsDetailsExpanded, Mode=TwoWay}"                 
                   RenderTransformOrigin="0.5,0.5">
 
                 <ContentControl Content="{Binding CurrentBioImage.Information}">
@@ -230,10 +229,7 @@
                         </DataTemplate>
                     </ContentControl.Resources>
                 </ContentControl>
-
-
-
-
+                
                 <Expander.Template>
                     <ControlTemplate  TargetType="{x:Type Expander}">
                         <Grid>
@@ -322,13 +318,13 @@
                 <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
 
-                <i:Interaction.Triggers>
+                <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ChangeBioImageModel">
                             <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Faces}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                </i:Interaction.Triggers>-->
             </Button>
             <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
                     ToolTip="Fingers" BorderBrush="#7F3587BD">
@@ -336,13 +332,13 @@
                 <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FingerScanColorIconSource}"  />
 
-                <i:Interaction.Triggers>
+                <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ChangeBioImageModel">
                             <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Fingers}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                </i:Interaction.Triggers>-->
             </Button>
             <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
                     ToolTip="Irises"  BorderBrush="#7F3587BD">
@@ -350,13 +346,13 @@
                 <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=IrisScanColorIconSource}"  />
 
-                <i:Interaction.Triggers>
+               <!-- <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ChangeBioImageModel">
                             <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Irises}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                </i:Interaction.Triggers>-->
             </Button>
         </StackPanel>
 

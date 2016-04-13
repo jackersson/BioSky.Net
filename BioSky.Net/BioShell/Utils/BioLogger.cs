@@ -27,8 +27,8 @@ namespace BioShell.Utils
       var ex = exception.GetBaseException();
 
       StackTrace st    = new StackTrace(ex, true);
-      StackFrame frame = st.GetFrame(0);
-
+      StackFrame frame = st.GetFrame(st.FrameCount - 1);
+            
       string exFilename = frame.GetFileName();
       string className = "";
       if (exFilename != null)

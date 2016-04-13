@@ -460,6 +460,7 @@ namespace BioModule.ViewModels
 
     #region Global Variables    
 
+    public const long MY_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom);
     public const long MIN_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn);
     public const long MAX_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn
                                                    | BioImageStyle.Arrows | BioImageStyle.BioSelector

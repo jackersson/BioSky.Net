@@ -67,7 +67,7 @@ namespace BioModule.ViewModels
     {
       if (!IsActive)
         return;
-      
+            
       Visitors = null;
       Visitors = _database.Visitors.Data;
 

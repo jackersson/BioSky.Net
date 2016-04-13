@@ -26,6 +26,8 @@ namespace BioModule.ViewModels
   {
     public TrackControlItemViewModel(IProcessorLocator locator) {      
       Initialize(locator);
+
+
     }
 
     public TrackControlItemViewModel( IProcessorLocator locator, TrackLocation location )     
@@ -57,9 +59,13 @@ namespace BioModule.ViewModels
     {
       try
       {
-        BitmapSource target = state ? ResourceLoader.OkIconSource : ResourceLoader.WarningIconSource;
-        target.Freeze();
-        LocationStateIcon = target;
+        _dispatcher.Invoke( () =>
+          {
+            BitmapSource target = state ? ResourceLoader.OkIconSource : ResourceLoader.WarningIconSource;
+            target.Freeze();
+            LocationStateIcon = target;
+          }
+        );       
       }
       catch (Exception ex)
       {
@@ -141,7 +147,8 @@ namespace BioModule.ViewModels
       _locator   = locator;
       _bioEngine = locator.GetProcessor<IBioEngine>();    
       _notifier  = locator.GetProcessor<INotifier> ();
-      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
+      _dispatcher = locator.GetProcessor<Dispatcher>();
+       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
 
       _visitorsView = new VisitorsViewModel(locator);
       _timer = new DispatcherTimer();
@@ -242,6 +249,7 @@ namespace BioModule.ViewModels
 
     #region Global Variables
     private DispatcherTimer      _timer;
+    private Dispatcher           _dispatcher;
     private IBioEngine           _bioEngine;
     private IProcessorLocator    _locator  ;   
     private INotifier            _notifier ;
