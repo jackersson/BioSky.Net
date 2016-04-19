@@ -4,6 +4,7 @@ using BioContracts;
 using BioContracts.Abstract;
 using BioContracts.CaptureDevices;
 using BioContracts.Common;
+using BioContracts.Locations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -201,8 +202,10 @@ namespace BioCaptureDevices
         _videoSource.WaitForStop();      
 
         if (_videoSource.IsRunning)
-          _videoSource.Stop();         
-         
+          _videoSource.Stop();
+
+        OnStop(true, string.Empty);
+
       }
       catch (Exception ex) {
         Console.WriteLine(ex.Message);
@@ -225,7 +228,7 @@ namespace BioCaptureDevices
     private void OnStop(bool stopped, string message)
     {
       foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)       
-        observer.Value.OnStop(true, message);
+        observer.Value.OnStop(true, message, LocationDevice.CaptureDevice);
     }
 
     private void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)

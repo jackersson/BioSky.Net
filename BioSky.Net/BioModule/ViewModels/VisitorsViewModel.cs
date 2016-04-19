@@ -26,32 +26,56 @@ namespace BioModule.ViewModels
     {
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Visitors_");
 
-      _locator       = locator;
-         
+      _locator       =  locator;         
       _selector      = _locator.GetProcessor<ViewModelSelector>();
       _bioService    = _locator.GetProcessor<IServiceManager>().DatabaseService;
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier      = _locator.GetProcessor<INotifier>();
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
       
-      _selectedVisitors  = new ObservableCollection<Visitor>();
-      PageController     = new PageControllerViewModel();
-
+      _selectedVisitors      = new ObservableCollection<Visitor>();
+      PageController         = new PageControllerViewModel();
       _sortDescriptionByTime = new SortDescription("Time", ListSortDirection.Descending);
-      
-      _database.Visitors.DataChanged      += RefreshData;
 
-      IsDeleteButtonEnabled = false;
-      
-    } 
-        
+      int count = 0;
+      string s = _database.LocalStorage.GetParametr(ConfigurationParametrs.ItemsCountPerPage);
+      if (Int32.TryParse(s, out count))
+        PAGES_COUNT = count;
+
+      _database.Visitors.DataChanged+= RefreshData;
+
+      IsDeleteButtonEnabled = false;      
+    }
+
+    #region Update
+
+    public void UpdateLocation(Location location)
+    {
+      if (location == null)
+        return;
+
+      _location = location;
+
+      Query.Locations.Clear();
+      Query.Locations.Add(_location.Id);
+
+      UpdateFilterMenu();
+      RefreshData();
+    }
+
+    private void UpdateFilterMenu()
+    {
+      VisitorsFilterMenu.SetQuery(Query);
+    }
+    #endregion
+
     #region Database
 
-     public async void Select()
+    public async void Select()
     {
       QueryVisitors query = GetQuery();      
       try
-      {
+      {        
         //await _bioService.VisitorDataClient.Select(query);
       }
       catch (RpcException ex) {
@@ -67,27 +91,75 @@ namespace BioModule.ViewModels
     {
       if (!IsActive)
         return;
-      
-      Visitors = null;
-      Visitors = _database.Visitors.Data;
+
+      AsyncObservableCollection<Visitor> Visitors = _database.Visitors.Data;
 
       if (Visitors == null || Visitors.Count <= 0)
         return;
-           
+
+      UpdateFilterMenu();
+      VisitorsFiltering(Visitors);
       GetLastVisitor();
 
       VisitorsCollectionView = null;
-      VisitorsCollectionView = new PagingCollectionView(Visitors, PAGES_COUNT);
+      VisitorsCollectionView = new PagingCollectionView(FilteredVisitors, PAGES_COUNT);
       VisitorsCollectionView.Sort(SortDescriptionByTime);
 
       PageController.UpdateData(VisitorsCollectionView);     
     }
 
+    #region Filtering
+    public void VisitorsFiltering(AsyncObservableCollection<Visitor> visitors)
+    {
+      Query       = GetQuery();
+      _predicates = GetPredicates(Query);
+
+      FilteredVisitors.Clear();
+      foreach (Visitor vs in visitors)
+      {
+        if (CheckQueryRequirements(vs, _predicates))
+          FilteredVisitors.Add(vs);
+      }
+      FilteredVisitors = FilteredVisitors.OrderByDescending(x => x.Time).ToList();
+    }
+    private List<Predicate<Visitor>> GetPredicates(QueryVisitors query)
+    {
+      _predicates = new List<Predicate<Visitor>>();
+
+      if (query.Locations.Count > 0)
+        _predicates.Add(item => query.Locations.Contains(item.Locationid));
+
+      /*if (query.Countries.Count > 0)
+        predicates.Add(item => item.Person != null && query.Countries.Contains(item.Person.Country));*/
+
+      /*if (query.Persons.Count > 0)
+        predicates.Add(item => item.Person != null && query.Persons.Contains(item.Person.Id));*/
+
+      if (query.DatetimeFrom >= 0 && query.DatetimeTo != 0)
+      {
+        long to = (query.DatetimeTo == 0) ? DateTime.Now.Ticks : query.DatetimeTo;
+
+        _predicates.Add(item => item.Time >= query.DatetimeFrom
+                            && item.Time <= query.DatetimeTo);
+      }
+      return _predicates;
+    }
+    private bool CheckQueryRequirements(Visitor item, List<Predicate<Visitor>> predicates)
+    {
+      foreach (Predicate<Visitor> predicate in predicates)
+      {
+        if (!predicate(item))
+          return false;
+      }
+      return true;
+    }
+
     private void GetLastVisitor()
     {
-      LastVisitor = null;     
-      LastVisitor = Visitors.LastOrDefault();      
+      LastVisitor = null;
+      LastVisitor = FilteredVisitors.FirstOrDefault();
     }
+    #endregion
 
     #endregion
 
@@ -108,7 +180,6 @@ namespace BioModule.ViewModels
       {
         _notifier.Notify(e);
       }     
-      
     }
 
     public void OnMouseDoubleClick(Visitor visitor)
@@ -127,35 +198,32 @@ namespace BioModule.ViewModels
         return;
       
       Person person = _database.Persons.GetValue(visitor.Personid);
-      //if (person == null)
-        //person = new Person(){ Thumbnailid = visitor.Photoid };
-      
      
       _selector.ShowContent( ShowableContentControl.TabControlContent
                            , ViewModelsID.UserPage
-                           , new object[] { person });
-      
+                           , new object[] { person });      
     }
      
 
     public void OnDataContextChanged()
     {
-      if (PhotoImage == null)
-      {
-        PhotoImage = new BioImageViewModel(_locator);
-       // PhotoImage.SetVisibility(true, false, false);
-      }
-
-     // if(VisitorsFilterMenu == null)
-       // VisitorsFilterMenu = new VisitorsFilterMenuViewModel(_locator);
+      if (PhotoImage == null)      
+        PhotoImage = new BioImageViewModel(_locator);      
     }
 
     protected override void OnActivate()
     {
       base.OnActivate();
+      VisitorsFilterMenu.ActivateWith(this);
       RefreshData();
-    }   
-     
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      VisitorsFilterMenu.DeactivateWith(this);
+      base.OnDeactivate(close);
+    }
+
     public void OnSelectionChanged(SelectionChangedEventArgs e)
     {
       IList selectedRecords   = e.AddedItems   as IList;
@@ -185,7 +253,6 @@ namespace BioModule.ViewModels
 
     private bool ApplyTextFilter(Visitor item, string SearchText, Dictionary<long, Person> dictionary)
     {
-
       if (String.IsNullOrEmpty(SearchText))
         return true;
 
@@ -199,7 +266,6 @@ namespace BioModule.ViewModels
             return true;
         }
       }
-
       return false;
     }
 
@@ -212,7 +278,6 @@ namespace BioModule.ViewModels
 
       VisitorsCollectionView.Filtering = item =>
       {
-
         return ApplyTextFilter(item as Visitor, SearchText, dictionary);
       };
 
@@ -249,9 +314,6 @@ namespace BioModule.ViewModels
       foreach (Visitor visitor in SelectedVisitors)          
           ShowPerson(visitor);                
     }
-
-    //*********************************************Filters*************************************************
-
    
     #endregion
 
@@ -296,7 +358,6 @@ namespace BioModule.ViewModels
       }
     }
 
-
     private static VisitorsFilterMenuViewModel _visitorsFilterMenu;
     public VisitorsFilterMenuViewModel VisitorsFilterMenu
     {
@@ -335,16 +396,17 @@ namespace BioModule.ViewModels
       get { return _sortDescriptionByTime; }     
     }
 
-    private AsyncObservableCollection<Visitor> _visitors;
-    public AsyncObservableCollection<Visitor> Visitors
+    private List<Visitor> _filteredVisitors;
+    public List<Visitor> FilteredVisitors
     {
-      get { return _visitors; }
+      get { return (_filteredVisitors == null) ? _filteredVisitors = new List<Visitor>()
+                                               : _filteredVisitors; }
       set
       {
-        if (_visitors != value)
+        if (_filteredVisitors != value)
         {
-          _visitors = value;
-          NotifyOfPropertyChange(() => Visitors);
+          _filteredVisitors = value;
+          NotifyOfPropertyChange(() => FilteredVisitors);
         }
       }
     }
@@ -365,8 +427,7 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => LastVisitor);
         }
       }
-    }
-      
+    }      
 
     private Visitor _selectedItem;
     public Visitor SelectedItem
@@ -422,16 +483,29 @@ namespace BioModule.ViewModels
       }
     }
 
+    private QueryVisitors _query;
+    public QueryVisitors Query
+    {
+      get { return (_query == null) ? _query = new QueryVisitors() 
+                                    : _query; }
+      set
+      {
+        if (_query != value)        
+          _query = value;        
+      }
+    }
+
     #endregion
 
     #region Global Variables  
-    private readonly IProcessorLocator    _locator      ;
-    private readonly ViewModelSelector    _selector     ;
-    private readonly IDatabaseService     _bioService   ;
-    private readonly IBioSkyNetRepository _database     ;
-    private readonly INotifier            _notifier     ;
-    private readonly DialogsHolder        _dialogsHolder;
-
+    private readonly IProcessorLocator        _locator      ;
+    private readonly ViewModelSelector        _selector     ;
+    private readonly IDatabaseService         _bioService   ;
+    private readonly IBioSkyNetRepository     _database     ;
+    private readonly INotifier                _notifier     ;
+    private readonly DialogsHolder            _dialogsHolder;
+    private          Location                 _location     ;
+    private          List<Predicate<Visitor>> _predicates   ;
 
     private int PAGES_COUNT = 10;
     #endregion

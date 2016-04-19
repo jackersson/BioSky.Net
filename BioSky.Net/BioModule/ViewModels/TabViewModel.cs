@@ -33,7 +33,7 @@ namespace BioModule.ViewModels
       if (!(scr is IScreen))
         return;
 
-      IScreen currentScreen = (IScreen)scr;
+      /*IScreen currentScreen = (IScreen)scr;
       _methodInvoker.InvokeMethod(tabType, "Update", currentScreen, args);
       foreach (IScreen screen in Items)
       {
@@ -43,12 +43,21 @@ namespace BioModule.ViewModels
           screen.Activate();
           return;
         }        
-      }      
+      }     
       
       ActivateItem(currentScreen);
-      currentScreen.Activate();     
+      currentScreen.Activate();   */
+
+      IScreen screen = scr as IScreen;
+
+
+      Items.Add(screen);
+      ActivateItem(screen);
+      screen.Activate();
+
+      _methodInvoker.InvokeMethod(tabType, "Update", screen, args);
     }
-      
+
 
     private FastMethodInvoker _methodInvoker;
     private IProcessorLocator _locator ;

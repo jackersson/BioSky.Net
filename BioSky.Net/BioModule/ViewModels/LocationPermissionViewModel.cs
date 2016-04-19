@@ -67,6 +67,12 @@ namespace BioModule.ViewModels
     public void Update(Location location)
     {
       CurrentLocation = location;
+
+      AccessedPersons.Clear();
+      foreach (Person person in CurrentLocation.Persons)
+        AccessedPersons.Add(person.Id);
+
+      SelectedState = location.AccessType;
       RefreshData();
     }
 
@@ -100,6 +106,9 @@ namespace BioModule.ViewModels
 
       bool state = (SelectedState == AccessType.All) ? true : false;
 
+      if (Users == null)
+        Users = _database.Persons.Data;
+
       foreach (Person item in Users)
         ActiveDeactiveItem(item, state);
 
@@ -114,7 +123,7 @@ namespace BioModule.ViewModels
 
     public RepeatedField<Person> GetResult()
     {
-      if (SelectedState != Location.Types.AccessType.Custom)
+      if (SelectedState != AccessType.Custom)
         return null;
       
       RepeatedField<Person> persons = new RepeatedField<Person>();
@@ -246,8 +255,25 @@ namespace BioModule.ViewModels
     public bool IsAccessChanged
     {
       get {
-        RepeatedField<Person> p = GetResult();
-        return CurrentLocation.AccessType != SelectedState || ( p != null && p.Count > 0 ); }    
+        //RepeatedField<Person> p = GetResult();
+
+        bool flag = false;
+
+        int currentPersonsCount = CurrentLocation.Persons.Count;
+        if (currentPersonsCount == 0 && CurrentLocation.AccessType == AccessType.All)
+          currentPersonsCount = _database.Persons.Data.Count;
+
+        if (AccessedPersons.Count != currentPersonsCount)
+          flag = true;
+        else
+        {
+          foreach (Person person in CurrentLocation.Persons)
+            if (!AccessedPersons.Contains(person.Id))
+              flag = true;
+        }
+
+        return CurrentLocation.AccessType != SelectedState || flag;
+      }
     }
 
     private HashSet<long> _accessedPersons;
@@ -284,12 +310,12 @@ namespace BioModule.ViewModels
       get { return _selectedState; }
       set
       {
-        if (_selectedState != value)
-        {
+        //if (_selectedState != value)
+        //{
           _selectedState = value;
           SetPermissionState();
           NotifyOfPropertyChange(() => SelectedState);
-        }
+        //}
       }
     }
 

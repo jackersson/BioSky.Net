@@ -1,2 +1,0 @@
-# BioSky.Net
-BioSkyNet project 

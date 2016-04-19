@@ -68,7 +68,7 @@
                   Grid.Row="1" HorizontalAlignment="Stretch" 
             Grid.ColumnSpan="5"
                   Margin="2,1,0,0" VerticalAlignment="Stretch"            
-                  ItemsSource="{Binding Source={StaticResource SortedVisitors}}" 
+                  ItemsSource="{Binding VisitorsCollectionView}" 
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"           
                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"              
                   cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)];

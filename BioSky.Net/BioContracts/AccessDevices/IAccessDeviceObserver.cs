@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BioContracts.Locations;
+using System;
 
 namespace BioContracts
 {
@@ -6,7 +7,7 @@ namespace BioContracts
   {
     void OnCardDetected(string cardNumber);
 
-    void OnError(Exception ex);
+    void OnError(Exception ex, LocationDevice device);
 
     void OnReady(bool isReady);
   }

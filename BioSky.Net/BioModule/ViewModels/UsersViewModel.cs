@@ -1,32 +1,13 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
-using System.Windows.Media;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using System.IO;
 using System.Windows.Controls;
-using System.Drawing;
-using System.Reflection;
-
-using BioModule.ResourcesLoader;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
-
-using BioData;
-using System.Windows.Input;
-using System.Windows.Data;
 
 using BioModule.Utils;
 using BioService;
 using BioContracts;
-using Google.Protobuf.Collections;
-using Grpc.Core;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
 
@@ -45,6 +26,11 @@ namespace BioModule.ViewModels
       _selector = _locator.GetProcessor<ViewModelSelector>();
       _selectedPersons = new ObservableCollection<Person>();
       PageController   = new PageControllerViewModel();
+
+      int count = 0;
+      string s = _database.LocalStorage.GetParametr(ConfigurationParametrs.ItemsCountPerPage);
+      if (Int32.TryParse(s, out count))
+        PAGES_COUNT = count;
 
       _database.Persons.DataChanged      += RefreshData;      
       //_database.PhotoHolder.DataChanged  += RefreshData;

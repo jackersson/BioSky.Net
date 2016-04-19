@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BioContracts
 {
-  public class ShellLoginInformation
+  public interface IDialogsHolder
   {
-    public object ScreenViewModel { get; set; }
+    INotificationDialog NotificationDialog { get; }
   }
 }

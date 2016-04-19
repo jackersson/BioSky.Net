@@ -18,7 +18,7 @@ namespace BioGRPC.DatabaseClient
       _locator = locator;
   
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
-      _notifier = _locator.GetProcessor<INotifier>();
+      _notifier = _locator.GetProcessor<INotifier>();      
   
       _list = new PersonList();
     }   

@@ -16,6 +16,7 @@ namespace BioModule.ViewModels
   {
     void SetSingleImage(BitmapSource img);
     void SetDoubleImage(BitmapSource first, BitmapSource second);
+    BitmapSource GetImageByIndex(int index);
   }
 
   public class ImageViewModel : Screen, IImageViewUpdate
@@ -46,6 +47,14 @@ namespace BioModule.ViewModels
       ShowImage(second, 1);
     }
 
+    public BitmapSource GetImageByIndex(int index)
+    {
+      if (ImageItems.Count >= index && ImageItems.Count != 0)
+        return ImageItems[index].ImageSource;
+
+      return null;
+    }
+
     private void ShowImage(BitmapSource img, int index )
     {
       if (ImageItems.Count <= index)
@@ -59,8 +68,7 @@ namespace BioModule.ViewModels
         ImageItemViewModel item = ImageItems[index];
         item.UpdateImageSource(img);
         item.Zoom(_scrollFieldWidth, _scrollFieldHeight);
-      }
- 
+      } 
     } 
    
     public string Upload()
@@ -115,10 +123,11 @@ namespace BioModule.ViewModels
       foreach (ImageItemViewModel imageItem in ImageItems)
         imageItem.Zoom(_scrollFieldWidth * zR, _scrollFieldHeight * zR);
     }
+
     #endregion
 
     #region UI
-  
+
     private AsyncObservableCollection<ImageItemViewModel> _imageItems;
     public AsyncObservableCollection<ImageItemViewModel> ImageItems
     {

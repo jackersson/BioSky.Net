@@ -14,6 +14,7 @@ using BioModule.ResourcesLoader;
 using System.Windows.Threading;
 using BioService;
 using BioContracts.Locations;
+using BioModule.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -21,69 +22,106 @@ namespace BioModule.ViewModels
   {
     public FullTrackControlItemViewModel(IProcessorLocator locator)
     {
-      //_uiDispatcher = locator.GetProcessor<Dispatcher>();
+      _locator   = locator;
       _bioEngine = locator.GetProcessor<IBioEngine>();
 
-      BioImageView = new BioImageViewModel(locator);
+      BioImageView = new BioImageViewModel(locator, MIN_BIO_IMAGE_STYLE);
 
-      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");      
+      DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
+      
+    }
+
+    protected override void OnActivate()
+    {
+      base.OnActivate();
+      ActivateTimeDispatcher();
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      _dayTimer.Tick -= dayTimer_Tick;
+      base.OnDeactivate(close);
     }
 
     public void Update(TrackLocation location)
     {
-       if (CurrentLocation != null)
-       CurrentLocation.Unsubscribe(this);
+      if (CurrentLocation != null)
+        CurrentLocation.Unsubscribe(this);
 
-      //  Console.WriteLine(_uiDispatcher.GetHashCode());
-      // Console.WriteLine(Dispatcher.CurrentDispatcher.GetHashCode());
       BioImageView.SetSingleImage(null);
+      CurrentLocation = location;
+
       if (location == null)
         return;
 
-      CurrentLocation = location;
-      location.Subscribe(this);      
+      location.Subscribe(this);
     }
-   
+
+    private void ActivateTimeDispatcher()
+    {
+      if (!IsActive)
+        return;
+
+      if(_dayTimer == null)
+        _dayTimer = new DispatcherTimer();
+
+      _dayTimer.Interval = TimeSpan.FromMilliseconds(500);
+      _dayTimer.Tick += dayTimer_Tick;
+      _dayTimer.Start();
+    }
+
+    void dayTimer_Tick(object sender, EventArgs e)
+    {
+      _currentDatetime = DateTime.Now.ToString();
+      NotifyOfPropertyChange(() => CurrentDatetime);
+    }
+
 
     public void OnOk(bool ok)
     {
-      //throw new NotImplementedException();
+      CurrentTrackLocationUtils.UpdateLocationState(ok);
     }
 
     public void OnStartVerificationByCard(string cardNumber)
     {
       //throw new NotImplementedException();
     }
-
-    public void OnVerificationFailed(string message)
-    {
-      //throw new NotImplementedException();
-    }
-
+        
     public void OnCaptureDeviceFrameChanged(ref Bitmap frame)
     {
-      //BitmapSource convertedFrame = BitmapConversion.BitmapToBitmapSource(frame);
       BioImageView.UpdateFrame(frame);
     }
 
-    public void OnError(Exception ex)
+    public void OnError(Exception ex, LocationDevice device)
     {
-      //throw new NotImplementedException();
+      CurrentTrackLocationUtils.UpdateLocationState(false);
+      if (device == LocationDevice.CaptureDevice)
+        BioImageView.UpdateFrame(null);
     }
 
     public void OnVerificationFailure(Exception ex)
     {
-      //throw new NotImplementedException();
+      CurrentTrackLocationUtils.UpdateVerificationState(VerificationStatus.Failed, true);
     }
 
     public void OnVerificationSuccess(bool state)
     {
-     // throw new NotImplementedException();
+      CurrentTrackLocationUtils.UpdateVerificationState(VerificationStatus.Success, true);
     }
 
     public void OnVerificationProgress(int progress)
     {
-     // throw new NotImplementedException();
+      if (progress < 100)
+        CurrentTrackLocationUtils.UpdateVerificationState(VerificationStatus.Start, true);
+      else
+        CurrentTrackLocationUtils.UpdateVerificationState(VerificationStatus.Start, false);
+    }
+
+    public TrackLocationUtils _currentTrackLocationUtils;
+    public TrackLocationUtils CurrentTrackLocationUtils
+    {
+      get{ return (_currentTrackLocationUtils == null)? _currentTrackLocationUtils = new TrackLocationUtils(_locator) 
+                                                      : _currentTrackLocationUtils; }
     }
 
     private TrackLocation _currentLocation;
@@ -114,7 +152,16 @@ namespace BioModule.ViewModels
       }
     }
 
+    private string _currentDatetime;
+    public string CurrentDatetime
+    {
+      get { return _currentDatetime; }
+    }
+
     //private readonly Dispatcher _uiDispatcher;
     private readonly IBioEngine _bioEngine;
+    private long MIN_BIO_IMAGE_STYLE = 1;
+    private DispatcherTimer _dayTimer;
+    private readonly IProcessorLocator _locator;
   }
 }

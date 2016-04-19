@@ -109,10 +109,13 @@ namespace BioModule.ViewModels
         return result;
 
       if (DesiredCaptureDeviceName == string.Empty && ActiveCaptureDeviceName != string.Empty)
-        return new CaptureDevice() { Id = CurrentLocation.CaptureDevice.Id, EntityState = EntityState.Deleted };
+        return new CaptureDevice() { Devicename = CurrentLocation.CaptureDevice.Devicename, EntityState = EntityState.Deleted };
       
       if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName == string.Empty)
-        return new CaptureDevice() { EntityState = EntityState.Added };
+        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredCaptureDeviceName };
+
+      if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName != string.Empty)
+        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredCaptureDeviceName };
 
       return result;
     }

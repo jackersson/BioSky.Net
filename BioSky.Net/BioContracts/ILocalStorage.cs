@@ -2,11 +2,12 @@
 {
   public enum ConfigurationParametrs
   {
-      MediaPathway
+       MediaPathway
      , FaceServiceAddress
      , DatabaseServiceAddress
      , Language
      , LogsFilePathway
+     , ItemsCountPerPage
   }
 
   public interface ILocalStorage
@@ -16,5 +17,7 @@
     void UpdateParametr(ConfigurationParametrs parametr, string value);
 
     string LogFileFormat { get; }
+
+    void ReturnToDefault();
   }
 }

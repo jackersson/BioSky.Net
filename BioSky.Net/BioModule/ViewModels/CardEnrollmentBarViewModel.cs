@@ -1,6 +1,7 @@
 ﻿using BioContracts;
 using BioContracts.AccessDevices;
 using BioContracts.Common;
+using BioContracts.Locations;
 using BioModule.ResourcesLoader;
 using Caliburn.Micro;
 using System;
@@ -57,7 +58,7 @@ namespace BioModule.ViewModels
         observer.OnCardDetected(cardNumber);
     }
 
-    public void OnError(Exception ex)
+    public void OnError(Exception ex, LocationDevice device)
     {
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
     }

@@ -43,9 +43,12 @@ namespace BioContracts
     {
       if (location == null)
         return;
-      _previousLocation = _currentLocation;
+
+      //if (_devices.Count > 0)
+        //Stop();      
 
       _currentLocation  = location;
+
       Start();
     }
 
@@ -53,8 +56,8 @@ namespace BioContracts
     {
       Init();
 
-      foreach (KeyValuePair<LocationDevice, ILocationDeviceObserver> pair in _devices)
-        pair.Value.Start(_currentLocation); 
+      foreach (KeyValuePair<LocationDevice, ILocationDeviceObserver> pair in _devices)      
+        pair.Value.Start(_currentLocation);      
     }
 
     private void Init()
@@ -88,11 +91,12 @@ namespace BioContracts
     }
 
     public void Subscribe(IFullLocationObserver observer) {
-      _observer.Subscribe(observer);
+      _observer.Subscribe(observer);     
+      observer.OnOk(IsOk());
     }
 
     public void Unsubscribe(IFullLocationObserver observer){
-      _observer.Unsubscribe(observer);
+      _observer.Unsubscribe(observer);      
     }
 
     public void UnsubscribeAll() {
@@ -100,14 +104,14 @@ namespace BioContracts
     }
 
     public void OnFrame(ref Bitmap frame) {
-      foreach (KeyValuePair<int, IFullLocationObserver> observer in _observer.Observers)
-        observer.Value.OnCaptureDeviceFrameChanged(ref frame);
+      foreach (KeyValuePair<int, IFullLocationObserver> observer in _observer.Observers)      
+        observer.Value.OnCaptureDeviceFrameChanged(ref frame);      
     }
 
-    public void OnStop(bool stopped, string message) {
+    public void OnStop(bool stopped, string message, LocationDevice device) {
       if (_observer.Observers.Count <= 0)
         return;    
-      OnError(new Exception(message));
+      OnError(new Exception(message), device);
     }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {
@@ -120,9 +124,10 @@ namespace BioContracts
       //  observer.Value.OnStartVerificationByCard(cardNumber);    
     }
 
-    public void OnError(Exception ex){
+    public void OnError(Exception ex, LocationDevice device)
+    {
       foreach (KeyValuePair<int, IFullLocationObserver> observer in _observer.Observers)
-        observer.Value.OnError(ex);
+        observer.Value.OnError(ex, device);
     }
 
     public void OnReady(bool isReady){
@@ -140,7 +145,10 @@ namespace BioContracts
     public void Stop()
     {
       foreach (KeyValuePair<LocationDevice, ILocationDeviceObserver> pair in _devices)
-        pair.Value.Stop();
+      {
+        pair.Value.Stop();        
+        OnError(new Exception(), pair.Key);
+      }
     }
 
     public void OnVerificationFailure(Exception ex)
@@ -202,6 +210,7 @@ namespace BioContracts
       get { return _currentLocation; }
     }
 
+
     /*
     public void OnCardDetected(string cardNumber)
     {      
@@ -227,15 +236,16 @@ namespace BioContracts
      // _veryfier.Start(CurrentLocation.CaptureDevice.Devicename, person);     
     }  
     */
-   
+
     #region UI   
-   
+
     #endregion
 
     #region Global Variables  
-   // private Verifyer _veryfier;
+    // private Verifyer _veryfier;
     private Location _currentLocation ;
-    private Location _previousLocation;
+
+
     private BioObserver<IFullLocationObserver>    _observer;
     private TrackLocationVerification _verifyer;
     //private Visitor  _visitor  ;

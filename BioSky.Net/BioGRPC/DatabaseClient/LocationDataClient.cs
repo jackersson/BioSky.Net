@@ -20,7 +20,8 @@ namespace BioGRPC.DatabaseClient
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier = _locator.GetProcessor<INotifier>();
 
-      _list = new LocationList();
+      _list       = new LocationList();
+      _rawIndexes = new RawIndexes();
     }
 
     public async Task Update(Location item)
@@ -106,9 +107,30 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
-    public Task Remove(Location targetItem)
+    public async Task Remove(Location targetItem)
     {
-      throw new NotImplementedException();
+      if (targetItem == null)
+        return;
+
+      _rawIndexes.Indexes.Clear();
+
+      _rawIndexes.Indexes.Add(targetItem.Id);
+
+      try
+      {
+        RawIndexes result = await _client.RemoveLocationsAsync(_rawIndexes);
+        Console.WriteLine(result);
+
+        Location location = null;
+        foreach (long id in result.Indexes)
+          location = new Location() { Id = id , Dbresult = Result.Success};
+
+        _database.Locations.Remove(targetItem, location);
+      }
+      catch (RpcException e)
+      {
+        _notifier.Notify(e);
+      }
     }
 
 
@@ -188,7 +210,8 @@ namespace BioGRPC.DatabaseClient
      */
 
 
-    private LocationList _list;
+    private LocationList _list      ;
+    private RawIndexes   _rawIndexes;
 
     private readonly IProcessorLocator    _locator   ;
     private readonly IBioSkyNetRepository _database  ;    

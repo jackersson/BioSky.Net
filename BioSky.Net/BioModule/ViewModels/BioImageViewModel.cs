@@ -19,13 +19,11 @@ namespace BioModule.ViewModels
   {
     void Activate();
     void Deactivate();
-    void Reset();
     void UpdateController(IUserBioItemsController controller);
-
-    void UpdateFrame( Bitmap frame);
     void UploadPhoto(Photo photo);
-    object GetInformation();   
-    PhotoViewEnum EnumState                 { get; }
+    void UpdateFrame(Bitmap frame);
+    void ShowDetails(bool state);
+    BioImageModelEnum EnumState                 { get; }
     IUserBioItemsController Controller      { get; }
   }
 
@@ -40,7 +38,7 @@ namespace BioModule.ViewModels
   , CancelBtn          = 1 << 6
   }
 
-  public enum PhotoViewEnum
+  public enum BioImageModelEnum
   {
      Faces
    , Irises
@@ -50,7 +48,7 @@ namespace BioModule.ViewModels
   public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable
   {
 
-    public BioImageViewModel(IProcessorLocator locator, long style = MAX_BIO_IMAGE_STYLE) 
+    public BioImageViewModel(IProcessorLocator locator, long style = MAX_BIO_IMAGE_STYLE)
     {
       _notifier = locator.GetProcessor<INotifier>();
       _database = locator.GetProcessor<IBioSkyNetRepository>();
@@ -61,17 +59,15 @@ namespace BioModule.ViewModels
       BioImageModels.Add(new FingersImageModel(locator, this));
       BioImageModels.Add(new IrisesImageModel(this));
 
-      BioImageDetails = new PhotoInfoExpanderViewModel();
-
       SetStyle(style);
 
       // UpdateFromPhoto(GetTestPhoto());
 
-      ChangeBioImageModel(PhotoViewEnum.Faces);
+      ChangeBioImageModel(BioImageModelEnum.Faces);
 
     }
 
-    public void ChangeBioImageModel(PhotoViewEnum state)
+    public void ChangeBioImageModel(BioImageModelEnum state)
     {
       if (CurrentBioImage != null && CurrentBioImage.EnumState == state)
         return;
@@ -80,19 +76,13 @@ namespace BioModule.ViewModels
       {
         if (view.EnumState == state)
         {
-          CurrentBioImage = view;
-          BioImageDetails.Update(CurrentBioImage.GetInformation());          
-          CurrentBioImage.Activate();          
+          CurrentBioImage = view;         
+          CurrentBioImage.Activate();
+          CurrentBioImage.ShowDetails(_isDetailsExpanded);
         }
         else
           view.Deactivate();
       }
-    }
-
-    public void UpdateFrame ( Bitmap frame )
-    {
-      if (CurrentBioImage != null)
-        CurrentBioImage.UpdateFrame( frame);
     }
 
     public void OnLoadFromFile()
@@ -102,13 +92,14 @@ namespace BioModule.ViewModels
       if(CurrentBioImage != null)
         CurrentBioImage.UploadPhoto(photo);            
     }
-    public override void Clear()
+
+    public void OnClearClick()
     {
       if (CanUsePhotoController)
         UserController.Remove(CurrentPhoto);
 
       base.Clear();
-    }
+    }  
 
     #region testPhoto
     /*
@@ -185,13 +176,20 @@ namespace BioModule.ViewModels
       return CurrentPhoto;
     }
 
-    public void UpdatePhotoFromFile(string filename = "")
+    public void UpdateFrame(Bitmap frame)
+    { 
+      if (CurrentBioImage != null) 
+        CurrentBioImage.UpdateFrame( frame); 
+    }
+
+
+  public void UpdatePhotoFromFile(string filename = "")
     {
       BitmapImage bmp = base.UpdateFromFile(filename);
 
       if (bmp == null)
       {
-        Clear();
+        base.Clear();
         return;
       }
 
@@ -203,27 +201,49 @@ namespace BioModule.ViewModels
       CurrentPhoto.Width    = (long)bmp.Width   ;
       CurrentPhoto.Height   = (long)bmp.Height  ;
       CurrentPhoto.SizeType = PhotoSizeType.Full;
+
+     
     }
 
     public void UpdateFromPhoto(Photo photo)
     {
-      /*if (photo == null)
+      if (photo == null)
       {
-        Clear();
+        SetDefaultImage();
         return;
       }
       
-      string filename = _database.LocalStorage.LocalStoragePath + "\\" + photo.PhotoUrl;
-      base.UpdateFromFile(filename);*/
+      string filename = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway) + photo.PhotoUrl;
+      BitmapImage image = base.UpdateFromFile(filename);
+
+      if(image == null)
+      {
+        SetDefaultImage();
+        return;
+      }
 
       CurrentPhoto = photo;
-      BioImageDetails.Update(CurrentPhoto);
+      
+      CurrentBioImage.UploadPhoto(CurrentPhoto);
     }
 
-    private void OnBioImageChanged(PhotoViewEnum bioImageModel)
+    private void SetDefaultImage()
+    {
+      base.Clear();
+      if (CurrentBioImage != null)
+        CurrentBioImage.UploadPhoto(null);
+    }
+
+    private void OnBioImageChanged(BioImageModelEnum bioImageModel)
     {
       if (BioImageModelChanged != null)
         BioImageModelChanged(bioImageModel);
+    }
+
+    private void OnPhotoChanged()
+    {
+      if (PhotoChanged != null)
+        PhotoChanged();
     }
 
     #endregion
@@ -263,6 +283,21 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => CanUsePhotoController);
 
           OnBioImageChanged(CurrentBioImage.EnumState);
+        }
+      }
+    }
+
+    private bool _isDetailsExpanded;
+    public bool IsDetailsExpanded
+    {
+      get { return _isDetailsExpanded; }
+      set
+      {
+        if (_isDetailsExpanded != value)
+        {
+          _isDetailsExpanded = value;
+          CurrentBioImage.ShowDetails(_isDetailsExpanded);
+          NotifyOfPropertyChange(() => IsDetailsExpanded);
         }
       }
     }
@@ -409,8 +444,10 @@ namespace BioModule.ViewModels
           _currentPhoto = value;
           Message = "";
 
-         // if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
+          //if (_currentPhoto != null && _database.Persons.PhotosIndexesWithoutExistingFile.Contains(_currentPhoto.Id))          
            // Message = "Can't upload photo";
+
+          OnPhotoChanged();
 
           NotifyOfPropertyChange(() => CurrentPhoto);
           NotifyOfPropertyChange(() => CanAddPhoto );
@@ -419,23 +456,11 @@ namespace BioModule.ViewModels
       }
     }
 
-    private PhotoInfoExpanderViewModel _bioImageDetails;
-    public PhotoInfoExpanderViewModel BioImageDetails
-    {
-      get { return _bioImageDetails; }
-      set
-      {
-        if (_bioImageDetails != value)
-        {
-          _bioImageDetails = value;
-          NotifyOfPropertyChange(() => BioImageDetails);
-        }
-      }
-    }
     #endregion
 
     #region Global Variables    
 
+    public const long MY_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom);
     public const long MIN_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn);
     public const long MAX_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn
                                                    | BioImageStyle.Arrows | BioImageStyle.BioSelector
@@ -445,9 +470,14 @@ namespace BioModule.ViewModels
     private readonly INotifier _notifier;
     private readonly IBioSkyNetRepository _database;
 
-    public delegate void BioImageChangedEventHandler(PhotoViewEnum bioImageModel);
+    public delegate void BioImageChangedEventHandler(BioImageModelEnum bioImageModel);
 
     public event BioImageChangedEventHandler BioImageModelChanged;
+
+    public delegate void PhotoChangedEventHandler();
+
+    public event PhotoChangedEventHandler PhotoChanged;
+
     #endregion
   }
 

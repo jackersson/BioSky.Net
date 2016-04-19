@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Grpc.Core;
 using BioContracts.Services;
 using BioContracts.Common;
+using BioContracts.Locations;
 
 namespace BioModule.ViewModels
 {
@@ -52,7 +53,7 @@ namespace BioModule.ViewModels
       base.OnActivate();
       RefreshData();
       CardEnrollment.Subscribe(this);
-      _imageViewer.ChangeBioImageModel( PhotoViewEnum.Faces);
+      _imageViewer.ChangeBioImageModel( BioImageModelEnum.Faces);
     }
 
     protected override void OnDeactivate(bool close)
@@ -153,7 +154,7 @@ namespace BioModule.ViewModels
     #region Observer
     public void OnCardDetected(string cardNumber)  {  CardNumber = cardNumber; }
         
-    public void OnError(Exception ex) {}
+    public void OnError(Exception ex, LocationDevice device) {}
 
     public void OnReady(bool isReady) {}
     #endregion

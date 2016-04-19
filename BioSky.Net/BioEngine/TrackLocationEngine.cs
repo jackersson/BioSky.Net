@@ -2,18 +2,32 @@
 using BioContracts;
 using BioService;
 using BioContracts.Locations;
+using System.Collections.Concurrent;
+using BioContracts.Locations.Observers;
+using BioContracts.Holders;
+using System.Linq;
+using BioContracts.CaptureDevices;
+using BioContracts.AccessDevices;
 
 namespace BioEngine
 {
   public class TrackLocationEngine : ITrackLocationEngine
-  { 
-    public TrackLocationEngine(  IProcessorLocator locator )      
-    {     
+  {
+    public TrackLocationEngine(IProcessorLocator locator)
+    {
       _locator = locator;
-      _trackLocationsSet = new Dictionary<long, TrackLocation>();
-      _trackLocations    = new AsyncObservableCollection<TrackLocation>();   
-    
-      _locator.GetProcessor<IBioSkyNetRepository>().Locations.DataChanged += RefreshData;        
+      _trackLocationsSet = new ConcurrentDictionary<long, TrackLocation>();
+      _trackLocations    = new AsyncObservableCollection<TrackLocation>();
+
+
+      HashSet<string> AccessDevicess  = new HashSet<string>();
+      HashSet<string> CaptureDevicess = new HashSet<string>();
+
+      _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
+      _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
+
+      _locationsHolder = _locator.GetProcessor<IBioSkyNetRepository>().Locations;
+      _locationsHolder.DataChanged += RefreshData;
     }
            
     private void RefreshData()
@@ -23,15 +37,16 @@ namespace BioEngine
       
       foreach (Location location in data)
       {
+        CheckDeviceObservers(location);
+
         TrackLocation currentLocation = null;
         if (_trackLocationsSet.TryGetValue(location.Id, out currentLocation))
         {
           currentLocation.Update(location);
           continue;
-        }
-          
+        }          
          TrackLocation trackLocation = new TrackLocation(_locator, location);
-         _trackLocationsSet.Add(location.Id, trackLocation);       
+         _trackLocationsSet.TryAdd(location.Id, trackLocation);     
       }
       
       _trackLocations.Clear();
@@ -41,17 +56,68 @@ namespace BioEngine
         if (!dict.ContainsKey(locationID))
         {
           _trackLocationsSet[locationID].Stop();
-          _trackLocationsSet.Remove(locationID);
+          TrackLocation removed = null;
+          _trackLocationsSet.TryRemove(locationID, out removed);
         }
         else        
           _trackLocations.Add(_trackLocationsSet[locationID]);        
       }
-            
+
+      RemoveDevices();
       OnLocationsChanged();
     }
 
-    private Dictionary<long, TrackLocation> _trackLocationsSet;
-    private Dictionary<long, TrackLocation> TrackLocationsSet
+    private void RemoveDevices()
+    {
+      foreach (string deviceName in AccessDevices)
+      {
+        AccessDevice accessDevice = _locationsHolder.AccessDevices.Where(x => x.Portname == deviceName).FirstOrDefault();
+        if (accessDevice == null)
+        {
+          _accessDeviceEngine.Remove(deviceName);
+          AccessDevices.Remove(deviceName);
+        }
+      }
+
+      foreach (string deviceName in CaptureDevices)
+      {
+        CaptureDevice captureDevice = _locationsHolder.CaptureDevices.Where(x => x.Devicename == deviceName).FirstOrDefault();
+        if (captureDevice == null)
+        {
+          _captureDeviceEngine.Remove(deviceName);
+          CaptureDevices.Remove(deviceName);
+        }
+      }
+    }
+
+    private void CheckDeviceObservers(Location location)
+    {
+      if (location.AccessDevice != null && location.AccessDevice.Id > 0)
+      {
+        string deviceName = location.AccessDevice.Portname;
+        if (!AccessDevices.Contains(deviceName))
+        {
+          _accessDeviceEngine.Add(deviceName);
+          AccessDevices.Add(deviceName);
+        }
+      }
+
+      if (location.CaptureDevice != null && location.CaptureDevice.Id > 0)
+      {
+        string deviceName = location.CaptureDevice.Devicename;
+        if (!CaptureDevices.Contains(deviceName))
+        {
+          _captureDeviceEngine.Add(deviceName);
+          CaptureDevices.Add(deviceName);
+        }
+      }
+    }
+
+    private HashSet<string> AccessDevices ;
+    private HashSet<string> CaptureDevices;
+
+    private ConcurrentDictionary<long, TrackLocation> _trackLocationsSet;
+    private ConcurrentDictionary<long, TrackLocation> TrackLocationsSet
     {
      get { return _trackLocationsSet; }
     }
@@ -68,7 +134,10 @@ namespace BioEngine
         LocationsChanged();
     }
 
-    public event     LocationsChangedEventHandler LocationsChanged;   
-    private readonly IProcessorLocator _locator;  
+    public event     LocationsChangedEventHandler LocationsChanged    ;   
+    private readonly IProcessorLocator            _locator            ;
+    private readonly IFullLocationHolder          _locationsHolder    ;
+    private readonly ICaptureDeviceEngine         _captureDeviceEngine;
+    private readonly IAccessDeviceEngine          _accessDeviceEngine ;
   }
 }

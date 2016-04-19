@@ -203,10 +203,107 @@
         <!--*****************************************EnrollmentExpanderView**************************************************-->
 
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.ColumnSpan="4">
-            <ContentControl>
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Grid.ColumnSpan="4"
+              Visibility="{Binding BioImageDetailsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+              >
+            <!--<ContentControl>
                 <local:PhotoInfoExpanderView DataContext="{Binding BioImageDetails}"></local:PhotoInfoExpanderView>
-            </ContentControl>
+            </ContentControl>-->
+            <Expander BorderBrush="#00119EDA" Background="#00119EDA"  
+                  ExpandDirection="Down" IsExpanded="{Binding IsDetailsExpanded, Mode=TwoWay}"                 
+                  RenderTransformOrigin="0.5,0.5">
+
+                <ContentControl Content="{Binding CurrentBioImage.Information}">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type vm:PhotoInformationViewModel}">
+                            <local:PhotoInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
+                            </local:PhotoInformationView>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:FingerInformationViewModel}">
+                            <local:FingerInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
+                            </local:FingerInformationView>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:IrisInformationViewModel}">
+                            <local:IrisInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
+                            </local:IrisInformationView>
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                </ContentControl>
+                
+                <Expander.Template>
+                    <ControlTemplate  TargetType="{x:Type Expander}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+
+                            <Grid >
+                                <ToggleButton x:Name="ExpanderButton" Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left"
+                                       BorderThickness="1" BorderBrush="#7F3587BD"  Width="32" Height="32"                               
+                                      IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                      Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="Photo information"
+                                      Padding="1.5,0"                                     
+                                          >
+                                    <Image Width="32" Height="32" Name="ArrowImage" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
+                                   Source="{Binding Source={StaticResource ResourceLoader}, Path=InformationCircleIconSource}">
+                                        <Image.RenderTransform>
+                                            <RotateTransform Angle="0" />
+                                        </Image.RenderTransform>
+                                    </Image>
+                                </ToggleButton>
+                            </Grid>
+
+
+                            <ContentPresenter x:Name="ExpanderContent"
+                                          Visibility="Collapsed"
+                                          Grid.Row="1" Grid.ColumnSpan="2">
+                                <ContentPresenter.LayoutTransform>
+                                    <ScaleTransform ScaleY="0"/>
+                                </ContentPresenter.LayoutTransform>
+                            </ContentPresenter>
+
+                        </Grid>
+
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ExpanderContent" 
+                                    Property="Visibility" Value="Visible"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ExpanderContent"
+                                                         Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleY)"
+                                                         To="1"
+                                                         Duration="0:0:0.2"/>
+
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ExpanderContent"
+                                                         Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleY)"
+                                                         To="0"
+                                                         Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+
+
+                </Expander.Template>
+            </Expander>
         </Grid>
 
         
@@ -221,13 +318,13 @@
                 <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
 
-                <i:Interaction.Triggers>
+                <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ChangeBioImageModel">
-                            <cal:Parameter Value="{x:Static vm:PhotoViewEnum.Faces}" />
+                            <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Faces}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                </i:Interaction.Triggers>-->
             </Button>
             <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
                     ToolTip="Fingers" BorderBrush="#7F3587BD">
@@ -235,13 +332,13 @@
                 <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FingerScanColorIconSource}"  />
 
-                <i:Interaction.Triggers>
+                <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ChangeBioImageModel">
-                            <cal:Parameter Value="{x:Static vm:PhotoViewEnum.Fingers}" />
+                            <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Fingers}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                </i:Interaction.Triggers>-->
             </Button>
             <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
                     ToolTip="Irises"  BorderBrush="#7F3587BD">
@@ -249,18 +346,18 @@
                 <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=IrisScanColorIconSource}"  />
 
-                <i:Interaction.Triggers>
+               <!-- <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <cal:ActionMessage MethodName="ChangeBioImageModel">
-                            <cal:Parameter Value="{x:Static vm:PhotoViewEnum.Irises}" />
+                            <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Irises}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                </i:Interaction.Triggers>-->
             </Button>
         </StackPanel>
 
 
-        <Button cal:Message.Attach="[Event Click] = [Action Clear()]"  
+        <Button cal:Message.Attach="[Event Click] = [Action OnClearClick()]"  
                 Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 ToolTip="{lex:Loc Cancel}" Width="32" Height="32"   

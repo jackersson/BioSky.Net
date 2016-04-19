@@ -10,7 +10,6 @@ using System.Linq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using BioGRPC.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -27,9 +26,7 @@ namespace BioModule.ViewModels
     {
       _locator       = locator;
       _methodInvoker = new FastMethodInvoker();
-      _validator     = new  BioValidator();
-
-      _networkUtils  = new NetworkUtils();
+      _validator = new  BioValidator();
 
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService    = _locator.GetProcessor<IServiceManager>();
@@ -104,9 +101,9 @@ namespace BioModule.ViewModels
       }
       else
       {
-        Location temp = new Location() { LocationName = "", Description = "" };
-        //temp.CaptureDevices.Add(new CaptureDevice() { Devicename = "USB Camera" });
+        Location temp = new Location() { LocationName = "", Description = "" };       
         CurrentLocation = temp;
+        _revertLocation = null;
         _locationPageMode = LocationPageMode.New;
       }
 
@@ -156,17 +153,24 @@ namespace BioModule.ViewModels
     {
       Location location = new Location();
 
+      location.EntityState = EntityState.Unchanged;
+
       if (CurrentLocation.Id > 0)
         location.Id = CurrentLocation.Id;
 
-      if (_revertLocation == null || CurrentLocation.Description != _revertLocation.Description)
+      if(_revertLocation != null)
+      {
+        if (CurrentLocation.Description != _revertLocation.Description)
+          location.Description = CurrentLocation.Description;
+
+        if (CurrentLocation.LocationName != _revertLocation.LocationName)
+          location.LocationName = CurrentLocation.LocationName;
+      }
+      else
+      {
         location.Description  = CurrentLocation.Description;
-
-      if (_revertLocation == null || CurrentLocation.LocationName != _revertLocation.LocationName)
         location.LocationName = CurrentLocation.LocationName;
-
-      if (_revertLocation == null || CurrentLocation.MacAddress != _revertLocation.MacAddress)
-        location.MacAddress = MacAddress;
+      }
 
       AccessDevice  accessDevice  = LocationDevicesListViewModel.AccessDevices .GetDevice();
       CaptureDevice captureDevice = LocationDevicesListViewModel.CaptureDevices.GetDevice();
@@ -177,13 +181,18 @@ namespace BioModule.ViewModels
       if (captureDevice != null)  
         location.CaptureDevice = captureDevice;      
 
-      if (CurrentLocation.AccessType != _locationPermissionViewModel.SelectedState)
+      if (_locationPermissionViewModel.IsAccessChanged)
+      {
         location.AccessType = _locationPermissionViewModel.SelectedState;
+        location.EntityState = EntityState.Modified;
+      }
 
       RepeatedField<Person> persons = _locationPermissionViewModel.GetResult();
-      if (persons != null && persons.Count > 0)
-        location.Persons.Add(persons);    
-     
+      if(persons != null)
+      {
+        if (persons.Count > 0)
+          location.Persons.Add(persons);
+      }    
 
       return location;
     }
@@ -252,11 +261,13 @@ namespace BioModule.ViewModels
 
     public bool CanRevert
     {
-      get {
+      get
+      {
         return IsActive && _revertLocation != null
-                        && _currentLocation != null 
-                        && _locationPermissionViewModel.IsAccessChanged;
-                         
+                        && _currentLocation != null
+                        && (  _locationPermissionViewModel.IsAccessChanged
+                           || _locationDevicesListViewModel.DeviceChanged
+                           || _currentLocation.GetHashCode() != _revertLocation.GetHashCode());
       }
     }
 
@@ -264,7 +275,6 @@ namespace BioModule.ViewModels
     {
       get { return IsActive && _currentLocation != null && _currentLocation.Id > 0; }
     }
-
 
     private Location _currentLocation;
     public Location CurrentLocation
@@ -278,12 +288,10 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => CurrentLocation);
           NotifyOfPropertyChange(() => LocationName   );
           NotifyOfPropertyChange(() => Description    );
-          NotifyOfPropertyChange(() => MacAddress     );
 
           NotifyOfPropertyChange(() => CanApply);
           NotifyOfPropertyChange(() => CanRevert);
-          NotifyOfPropertyChange(() => CanDelete);
-
+          NotifyOfPropertyChange(() => CanDelete);          
         }
       }
     }
@@ -297,11 +305,12 @@ namespace BioModule.ViewModels
       {
         _currentLocation.LocationName = value;
         NotifyOfPropertyChange(() => LocationName);
+        Refresh();     
       }
     }
 
     [Required(ErrorMessage = "You must enter a Location Description.")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "The Description must only contain letters (a-z, A-Z).")]
+    [RegularExpression(@"^[a-zA-Zа-яА-яїі `\-]+$", ErrorMessage = "The Description must only contain letters (a-z, A-Z, а-я, А-я).")]
     public string Description
     {
       get { return (_currentLocation != null) ? _currentLocation.Description : string.Empty; }
@@ -309,18 +318,8 @@ namespace BioModule.ViewModels
       {
         _currentLocation.Description = value;
         NotifyOfPropertyChange(() => Description);
+        Refresh();
       }
-    }
-
-    public string MacAddress
-    {
-      get {
-
-        string result =  (_currentLocation != null && !string.IsNullOrEmpty(_currentLocation.MacAddress))
-                   ? _currentLocation.MacAddress
-                   : _networkUtils.GetMACAddress();
-
-        return result; }     
     }
 
     private DevicesListViewModel _locationDevicesListViewModel;
@@ -333,6 +332,7 @@ namespace BioModule.ViewModels
         {
           _locationDevicesListViewModel = value;
           NotifyOfPropertyChange(() => LocationDevicesListViewModel);
+          Refresh();
         }
       }
     }
@@ -366,7 +366,6 @@ namespace BioModule.ViewModels
     private readonly INotifier            _notifier        ;
     private readonly DialogsHolder        _dialogsHolder   ;
     private readonly IValidator           _validator       ;
-    private readonly NetworkUtils         _networkUtils    ;
 
     #endregion
   }

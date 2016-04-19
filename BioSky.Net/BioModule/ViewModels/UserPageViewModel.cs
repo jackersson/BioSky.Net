@@ -1,36 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Caliburn.Micro;
 using BioContracts;
-using BioModule.ResourcesLoader;
-using System.Windows.Media.Imaging;
-using System.Collections.ObjectModel;
-
 using BioModule.Utils;
-using BioData;
-using System.Reflection;
-using System.Windows;
-using MahApps.Metro.Controls.Dialogs;
 using BioService;
-using System.IO;
-using Grpc.Core;
-
 using WPFLocalizeExtension.Extensions;
-using WPFLocalizeExtension.Providers;
-using XAMLMarkupExtensions.Base;
 using BioContracts.Services;
-using System.ComponentModel;
 using BioContracts.BioTasks.Utils;
 
 namespace BioModule.ViewModels
 {
   public enum UserPageMode
   {
-    NewUser
+     NewUser
    , ExistingUser
   }
 
@@ -76,18 +58,27 @@ namespace BioModule.ViewModels
 
       DisplayName = "AddNewUser";
 
-      _database.Persons.DataChanged += Persons_DataChanged;
+      _database.Persons.DataChanged += Persons_DataChanged;      
     }
 
     protected override void OnActivate()
     {
+      CurrentPhotoImageView.PhotoChanged += CurrentPhotoChanged;
+
       base.OnActivate();
       Update(_user);
     }
 
     protected override void OnDeactivate(bool close)
     {
+      CurrentPhotoImageView.PhotoChanged -= CurrentPhotoChanged;
       base.OnDeactivate(close);
+    }
+
+    private void CurrentPhotoChanged()
+    {
+      NotifyOfPropertyChange(() => CanApply);
+      NotifyOfPropertyChange(() => CanRevert);
     }
 
     private void UserDataChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -119,9 +110,8 @@ namespace BioModule.ViewModels
 
     #region Update
 
-    private void OnBioImageModelChanged(PhotoViewEnum bioImageModel)
+    private void OnBioImageModelChanged(BioImageModelEnum bioImageModel)
     {
-
       foreach(IScreen item in Items)
       {
         if(item is IUserBioItemsController)
@@ -130,7 +120,6 @@ namespace BioModule.ViewModels
           if (item2.PageEnum == bioImageModel)
             ActivateItem(item);
         }
-
       }
     }
     private bool ContainRequiredFields(Person user)
@@ -177,8 +166,10 @@ namespace BioModule.ViewModels
         _user = ResetUser(new Person());
 
       NotifyOfPropertyChange(() => CanDelete);
-      
-      CurrentPhotoImageView.UpdateFromPhoto(_user.Thumbnail);
+
+      Photo photo =_user.Photos.Where(x => x.Id == _user.Photoid).FirstOrDefault();
+
+      CurrentPhotoImageView.UpdateFromPhoto(photo);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
@@ -189,12 +180,14 @@ namespace BioModule.ViewModels
     #region Interface            
     public async void Apply()
     {
-
-      if (!CurrentPhotoImageView.IsValid)
+      if(_userPageMode == UserPageMode.NewUser)
       {
-        _dialogs.CustomTextDialog.Update("Warning", "Upload personal photo from File or Camera, please!", DialogStatus.Error);
-        _dialogs.CustomTextDialog.Show();
-        return;
+        if (!CurrentPhotoImageView.IsValid)
+        {
+          _dialogs.CustomTextDialog.Update("Warning", "Upload personal photo from File or Camera, please!", DialogStatus.Error);
+          _dialogs.CustomTextDialog.Show();
+          return;
+        }
       }
       
       bool? result = _dialogs.AreYouSureDialog.Show();
@@ -205,7 +198,10 @@ namespace BioModule.ViewModels
       try
       {
         if (_userPageMode == UserPageMode.ExistingUser)
-          await _bioService.PersonDataClient.Update(_user);
+        {
+          Person updatedUser = UserForUpdate();
+          await _bioService.PersonDataClient.Update(updatedUser);
+        }
         else
         {
           Photo thumbnail = CurrentPhotoImageView.CurrentPhoto;          
@@ -220,6 +216,55 @@ namespace BioModule.ViewModels
       {
         _notifier.Notify(e);
       }       
+    }
+
+    public Person UserForUpdate()
+    {
+      Person updatedPerson = new Person();
+
+      updatedPerson.Id = _user.Id;
+
+      if (_user.Firstname != _revertUser.Firstname)
+        updatedPerson.Firstname = _user.Firstname;
+
+      if (_user.Lastname != _revertUser.Lastname)
+        updatedPerson.Lastname = _user.Lastname;
+
+      if (_user.Dateofbirth != _revertUser.Dateofbirth)
+        updatedPerson.Dateofbirth = (_user.Dateofbirth != 0) ? _user.Dateofbirth : -1;
+
+      //if (_user.Gender != _revertUser.Gender)
+        updatedPerson.Gender = _user.Gender;
+
+      if (_user.Email != _revertUser.Email)
+        updatedPerson.Email = (_user.Email != "") ? _user.Email : "(Deleted)";
+
+      if (_user.Country != _revertUser.Country)
+        updatedPerson.Country = (_user.Country != "") ? _user.Country : "(Deleted)";
+
+      if (_user.City != _revertUser.City)
+        updatedPerson.City = (_user.City != "") ? _user.City : "(Deleted)";
+
+      if (_user.Comments != _revertUser.Comments)
+        updatedPerson.Comments = (_user.Comments != "") ? _user.Comments : "(Deleted)";
+
+      //if (_user.Rights != _revertUser.Rights)
+        updatedPerson.Rights = _user.Rights;
+
+
+      Photo currentPhoto = CurrentPhotoImageView.CurrentPhoto;
+      if (_user.Photoid != currentPhoto.Id || currentPhoto.Id <= 0)
+      {
+        if(currentPhoto.Id <= 0)
+        {
+          currentPhoto.Personid = _user.Id;
+          currentPhoto.Datetime = DateTime.Now.Ticks;
+        }
+
+        updatedPerson.Thumbnail = currentPhoto;
+      }
+
+      return updatedPerson;
     }
 
     public void Revert()
@@ -250,11 +295,11 @@ namespace BioModule.ViewModels
 
     #region UI
 
-    
+    /*
     public override int GetHashCode()
     {   
       return _user != null ?_user.Id.GetHashCode() : DisplayName.GetHashCode();
-    }
+    }*/
     
     public UserPageMode GetUserPageMode()
     {
@@ -270,7 +315,9 @@ namespace BioModule.ViewModels
 
     public bool CanRevert
     {
-      get { return IsActive && _userPageMode == UserPageMode.ExistingUser && !_user.Equals(_revertUser); }
+      get { return IsActive && _userPageMode == UserPageMode.ExistingUser 
+                   && (!_user.Equals(_revertUser) || CurrentPhotoImageView.CurrentPhoto == null 
+                   || CurrentPhotoImageView.CurrentPhoto.Id != _user.Photoid || CurrentPhotoImageView.CurrentPhoto.Id <= 0); }
     }
 
     public bool CanDelete
@@ -334,7 +381,7 @@ namespace BioModule.ViewModels
     private Person                            _revertUser   ;
     private Person                            _user         ;
     private readonly DialogsHolder            _dialogs      ;
-    private          BioImageUtils            _bioUtils     ;
+    private BioImageUtils _bioUtils     ;
     private readonly FastMethodInvoker        _methodInvoker;
     private readonly IProcessorLocator        _locator      ;
     private readonly INotifier                _notifier     ;

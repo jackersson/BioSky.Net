@@ -8,7 +8,8 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"          
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
-             xmlns:local="clr-namespace:BioModule.Views"        
+             xmlns:local="clr-namespace:BioModule.Views"     
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"  
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
@@ -24,16 +25,79 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-            <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+            <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+
+            <SolidColorBrush x:Key="MyColor" Color="#FFF1F1F1"></SolidColorBrush>
+            <Style x:Key="GreyScaleImage" TargetType="Image">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="GreyScaleTextBlock" TargetType="TextBlock">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource=
+                                      {RelativeSource Mode=FindAncestor
+                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="MyStandardButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrushNormal}" />
+                <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="True">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHighlighted}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundSelected}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSelected}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundNormal}" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>       
+        </ResourceDictionary>       
     </UserControl.Resources>
 
    <!-- Visibility="{Binding AnyLocationExists, Converter={StaticResource BooleanToVisibilityConverter}}" -->
@@ -50,24 +114,33 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="0" >
-                <Button Margin="2" Style="{StaticResource SquareButtonStyle}"
+                <Button Margin="2" Style="{StaticResource MyStandardButton}"
                         cal:Message.Attach="[Event Click]=[Action ShowLocations]"
                         IsEnabled="{Binding CanShowLocations}"
                         >
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="5,0,5,0">
                         <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=WarningIconSource}"
-                         Height="18" Width="18"></Image>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Locations</TextBlock>
+                               Style="{StaticResource GreyScaleImage}" 
+                               Height="18" Width="18"/>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                   Foreground="{StaticResource MyColor}" Style="{StaticResource GreyScaleTextBlock}"
+                                   Text="Locations" />
                     </StackPanel>
                 </Button>
 
-                <Button Margin="2" Style="{StaticResource SquareButtonStyle}"
+                <Button Margin="2" Style="{StaticResource MyStandardButton}"
                         cal:Message.Attach="[Event Click]=[Action ShowVisitors]"
                         IsEnabled="{Binding CanShowVisitors}"
                         >
-                    <StackPanel Orientation="Vertical">                     
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Visitors (10)</TextBlock>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Selected Location</TextBlock>
+                    <StackPanel Orientation="Vertical" Margin="5,0,5,0">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                   Style="{StaticResource GreyScaleTextBlock}" Text="{Binding VisitorsView.FilteredVisitors.Count , StringFormat=Visitors({0}), FallbackValue='Visitors'}"
+                                    Foreground="{StaticResource MyColor}"  
+                                    />
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                   Style="{StaticResource GreyScaleTextBlock}" 
+                                    Foreground="{StaticResource MyColor}"
+                                   Text="{Binding TrackItemsShort.SelectedTrackLocation.Caption}"/>                        
                     </StackPanel>
                 </Button>
             </StackPanel>

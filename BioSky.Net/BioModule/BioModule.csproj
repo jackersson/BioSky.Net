@@ -215,6 +215,7 @@
     <Compile Include="Utils\IUserPhotoController.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
     <Compile Include="Utils\SimpleTabController.cs" />
+    <Compile Include="Utils\TrackLocationUtils.cs" />
     <Compile Include="Validation\Error.cs" />
     <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Validation\Validator.cs" />
@@ -270,7 +271,6 @@
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\PeriodTimePickerViewModel.cs" />
     <Compile Include="ViewModels\BioImageViewModel.cs" />
-    <Compile Include="ViewModels\PhotoInfoExpanderViewModel.cs" />
     <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
@@ -368,9 +368,6 @@
     </Compile>
     <Compile Include="Views\BioImageView.xaml.cs">
       <DependentUpon>BioImageView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PhotoInfoExpanderView.xaml.cs">
-      <DependentUpon>PhotoInfoExpanderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PhotoInformationView.xaml.cs">
       <DependentUpon>PhotoInformationView.xaml</DependentUpon>
@@ -552,10 +549,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BioImageView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PhotoInfoExpanderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

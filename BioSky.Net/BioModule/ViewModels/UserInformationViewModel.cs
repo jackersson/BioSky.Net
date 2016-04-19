@@ -1,20 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Caliburn.Micro;
-
-using BioModule.ResourcesLoader;
-using System.Windows.Media.Imaging;
-
-using BioData;
-using System.Collections.ObjectModel;
-
-using System.Windows.Data;
-using System.Reflection;
-using System.Globalization;
 using BioService;
 using BioModule.Utils;
 using BioContracts;
@@ -23,7 +11,7 @@ using System.ComponentModel;
 using BioModule.Validation;
 
 namespace BioModule.ViewModels
-{ 
+{
 
   public delegate void ValidationStateEventHandler(bool state);
   public class UserInformationViewModel : Screen, IUpdatable, IDataErrorInfo
@@ -34,7 +22,7 @@ namespace BioModule.ViewModels
       _locator     = locator;
       _database    = _locator.GetProcessor<IBioSkyNetRepository>();
       _imageViewer = imageViewer;
-      _notifier    = _locator.GetProcessor<INotifier>();
+
       _validator = new BioValidator();
 
       DisplayName = "Information";
@@ -53,7 +41,7 @@ namespace BioModule.ViewModels
     {
       base.OnActivate();
 
-      _imageViewer.ChangeBioImageModel(PhotoViewEnum.Faces);
+      _imageViewer.ChangeBioImageModel(BioImageModelEnum.Faces);
     }
 
     protected override void OnDeactivate(bool close)
@@ -117,16 +105,21 @@ namespace BioModule.ViewModels
       }
     }
 
-    //[RegularExpression(@"^[1-9`\-. :]{1,24}$", ErrorMessage = "Invalid datetime (Check for ':' '.' '-')")]
-    public long Dateofbirth
+    public DateTime Dateofbirth
     {
-      get { return (_user != null) ? _user.Dateofbirth : 0; }
+      get
+      {
+        return (_user != null && _user.Dateofbirth != 0) 
+               ? new DateTime(_user.Dateofbirth) : _startDateTime;
+      }
       set
       {
-        _user.Dateofbirth = value;
+        User.Dateofbirth = (value != _startDateTime) ? value.Ticks : 0;         
         NotifyOfPropertyChange(() => Dateofbirth);
       }
     }
+
+
 
     [RegularExpression(@"^[a-zA-Zа-яА-яїі `\-]{2,}$", ErrorMessage = "The City must only contain letters (a-z, A-Z, а-я, А-Я, `).")]
     public string City
@@ -210,22 +203,11 @@ namespace BioModule.ViewModels
     {
       if (ValidationStateChanged != null)
         ValidationStateChanged(state);
-    }        
+    }
     #endregion
 
-    public void OnDateofBirthChanged(string text)
-    {
-      try
-      {
-        string dateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
-        DateTime dt = DateTime.ParseExact(text, dateFormat, CultureInfo.InvariantCulture);
-        User.Dateofbirth = dt.Ticks;
-      }
-      catch (Exception ex)
-      {
-        _notifier.Notify(ex);
-      }
-    }
+   // private DateTime _selectedDate;
+
 
     private bool _isEnabled;
     public bool IsEnabled
@@ -255,10 +237,11 @@ namespace BioModule.ViewModels
       get { return _database.BioCultureSources.GenderSources; }
     }
     #endregion
+    private DateTime _startDateTime = new DateTime(1915, 1, 1);
+
     private readonly IValidator             _validator  ;
     private readonly IProcessorLocator      _locator    ;
     private readonly IBioSkyNetRepository   _database   ;
     private          IUserBioItemsUpdatable _imageViewer;
-    private readonly INotifier              _notifier   ;
   }
 }

@@ -10,6 +10,7 @@ using System.IO.Ports;
 using BioContracts.Abstract;
 using BioContracts.Common;
 using System.Collections.Generic;
+using BioContracts.Locations;
 
 namespace BioAccessDevice
 {  
@@ -189,7 +190,7 @@ namespace BioAccessDevice
         return;
 
       foreach (KeyValuePair<int, IAccessDeviceObserver> observer in _observer.Observers)
-        observer.Value.OnError(exception);
+        observer.Value.OnError(exception, LocationDevice.AccessDevice);
     }
 
     private void OnReady(bool isOk)

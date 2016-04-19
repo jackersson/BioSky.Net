@@ -45,15 +45,13 @@ namespace BioModule
             .Register(Component.For<GeneralSettingsPageViewModel>())
             .Register(Component.For<TrackControlViewModel>().LifeStyle.Singleton)
             .Register(Component.For<UserPageViewModel>().LifestyleTransient())
-            .Register(Component.For<DialogsHolder>())
             .Register(Component.For<AuthenticationPageViewModel>())
             .Register(Component.For<VisitorsFilterMenuViewModel>())
             .Register(Component.For<HomePageViewModel>())
-            .Register(Component.For<ErrorViewerViewModel>());
+            .Register(Component.For<ErrorViewerViewModel>())
+            .Register(Component.For<TrackLocationUtils>());
 
-
-
-
+       
 
 
         //container.Register(Component.For<IWindsorContainer>().Instance(container));
@@ -67,7 +65,7 @@ namespace BioModule
         container.Register(Component.For<ToolBarViewModel>().LifeStyle.Singleton);
 
         container.Register(Component.For<ILoginInformation>().ImplementedBy<LoginInformationViewModel>());
-
+        container.Register(Component.For<IDialogsHolder, DialogsHolder>().ImplementedBy<DialogsHolder>());
 
         container.Resolve<IProcessorLocator>().Init(container);
 
