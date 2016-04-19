@@ -116,8 +116,8 @@ namespace BioData.Holders.Grouped
       if (from.Rights != to.Rights)
         to.Rights = from.Rights;
 
-      if(from.Photoid != to.Photoid && from.Photoid != 0)      
-        to.Photoid = from.Photoid;
+      if(from.Thumbnailid != to.Thumbnailid && from.Thumbnailid != 0)      
+        to.Thumbnailid = from.Thumbnailid;
 
       Console.WriteLine(_dataSet);
     }

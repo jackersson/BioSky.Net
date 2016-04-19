@@ -20,11 +20,11 @@ namespace BioEngine
       _trackLocations    = new AsyncObservableCollection<TrackLocation>();
 
 
-      HashSet<string> AccessDevicess  = new HashSet<string>();
-      HashSet<string> CaptureDevicess = new HashSet<string>();
+      AccessDevices  = new HashSet<string>();
+      CaptureDevices = new HashSet<string>();
 
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-      _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
+      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
 
       _locationsHolder = _locator.GetProcessor<IBioSkyNetRepository>().Locations;
       _locationsHolder.DataChanged += RefreshData;

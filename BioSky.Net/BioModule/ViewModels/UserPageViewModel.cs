@@ -167,7 +167,7 @@ namespace BioModule.ViewModels
 
       NotifyOfPropertyChange(() => CanDelete);
 
-      Photo photo =_user.Photos.Where(x => x.Id == _user.Photoid).FirstOrDefault();
+      Photo photo =_user.Photos.Where(x => x.Id == _user.Thumbnailid).FirstOrDefault();
 
       CurrentPhotoImageView.UpdateFromPhoto(photo);
 
@@ -253,12 +253,12 @@ namespace BioModule.ViewModels
 
 
       Photo currentPhoto = CurrentPhotoImageView.CurrentPhoto;
-      if (_user.Photoid != currentPhoto.Id || currentPhoto.Id <= 0)
+      if (_user.Thumbnailid != currentPhoto.Id || currentPhoto.Id <= 0)
       {
         if(currentPhoto.Id <= 0)
         {
-          currentPhoto.Personid = _user.Id;
-          currentPhoto.Datetime = DateTime.Now.Ticks;
+          //currentPhoto.Personid = _user.Id;
+         // currentPhoto.Datetime = DateTime.Now.Ticks;
         }
 
         updatedPerson.Thumbnail = currentPhoto;
@@ -317,7 +317,7 @@ namespace BioModule.ViewModels
     {
       get { return IsActive && _userPageMode == UserPageMode.ExistingUser 
                    && (!_user.Equals(_revertUser) || CurrentPhotoImageView.CurrentPhoto == null 
-                   || CurrentPhotoImageView.CurrentPhoto.Id != _user.Photoid || CurrentPhotoImageView.CurrentPhoto.Id <= 0); }
+                   || CurrentPhotoImageView.CurrentPhoto.Id != _user.Thumbnailid || CurrentPhotoImageView.CurrentPhoto.Id <= 0); }
     }
 
     public bool CanDelete

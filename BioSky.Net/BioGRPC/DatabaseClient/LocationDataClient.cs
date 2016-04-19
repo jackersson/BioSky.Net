@@ -118,6 +118,7 @@ namespace BioGRPC.DatabaseClient
 
       try
       {
+        /*
         RawIndexes result = await _client.RemoveLocationsAsync(_rawIndexes);
         Console.WriteLine(result);
 
@@ -126,6 +127,7 @@ namespace BioGRPC.DatabaseClient
           location = new Location() { Id = id , Dbresult = Result.Success};
 
         _database.Locations.Remove(targetItem, location);
+        */
       }
       catch (RpcException e)
       {

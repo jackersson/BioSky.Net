@@ -43,6 +43,7 @@ namespace BioModule.BioModels
       ph.SizeType = PhotoSizeType.Croped;
       ph.OriginType = PhotoOriginType.Enrolled;
 
+      /*
       ph.PortraitCharacteristic = new PortraitCharacteristic()
       {
         Age = 24
@@ -52,7 +53,7 @@ namespace BioModule.BioModels
 
       BiometricLocation bl = new BiometricLocation() { Confidence = 1.0f, Xpos = 100.0f, Ypos = 100.0f };
       ph.PortraitCharacteristic.Faces.Add(new FaceCharacteristic() { Location = bl, Width = 100 });
-
+      */
       return ph;
 
     }
@@ -101,13 +102,14 @@ namespace BioModule.BioModels
         return;
 
       _markerBitmapHolder.Unmarked = _imageView.GetImageByIndex(0);
-
+      /*
       Bitmap detailedBitmap = _marker.DrawPortraitCharacteristics(CurrentPhoto.PortraitCharacteristic
                                      , BitmapConversion.BitmapSourceToBitmap(_markerBitmapHolder.Unmarked));
 
       _markerBitmapHolder.Marked = BitmapConversion.BitmapToBitmapSource(detailedBitmap);
 
       _imageView.SetSingleImage(_markerBitmapHolder.Marked);
+      */
     }
 
     public void UploadPhoto(Photo photo)

@@ -82,9 +82,11 @@ namespace BioModule.BioModels
 
     public void OnReady(bool isReady) { }
 
-    public PhotoViewEnum EnumState {
-      get { return PhotoViewEnum.Fingers; }
+    public void ShowDetails(bool state)
+    {
+      throw new NotImplementedException();
     }
+    
     public BitmapSource SettingsToogleButtonBitmap
     {
       get { return ResourceLoader.UserFingerprintIconSource; }
@@ -142,7 +144,13 @@ namespace BioModule.BioModels
         }
       }
     }
-   
+
+    BioImageModelEnum IBioImageModel.EnumState
+    {
+      get { return BioImageModelEnum.Fingers; }
+    }
+        
+
     private IImageViewUpdate _imageView;
   }
 }

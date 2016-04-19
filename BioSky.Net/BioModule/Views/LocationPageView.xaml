@@ -53,6 +53,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="56"/>
             <RowDefinition Height="56"/>
+            <RowDefinition Height="56"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="48"/>
 
@@ -81,8 +82,17 @@
                  >
         </TextBox>
 
+        <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
+                 Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="2"
+                 Controls:TextBoxHelper.Watermark="PC MAC Address"
+                 Controls:TextBoxHelper.UseFloatingWatermark="True"
+                 Text="{Binding MacAddress, Mode=OneWay
+                       , UpdateSourceTrigger=PropertyChanged }" IsReadOnly="True"
+                 >
+        </TextBox>
+
         <TabControl Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" 
-                    Grid.Row="2" 
+                    Grid.Row="3" 
                     VerticalAlignment="Stretch" ItemsSource="{Binding Items}"               
                     SelectedItem="{Binding ActiveItem}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"                    
@@ -131,7 +141,7 @@
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" Style="{StaticResource GreyScaleImage}" />
         </Button>
 
-        <Button  Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch" 
+        <Button  Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch" 
                  VerticalAlignment="Stretch" ToolTip="{lex:Loc RevertChanges}"
                  Style="{DynamicResource MetroCircleButtonStyle}"
                  cal:Message.Attach="[Event Click]=[Action Revert]"
@@ -140,7 +150,7 @@
                    Width="32" Height="32" Style="{StaticResource GreyScaleImage}"  />
         </Button>
 
-        <Button Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch" Name="DeleteButton"
+        <Button Grid.Row="4" Grid.Column="3" HorizontalAlignment="Stretch" Name="DeleteButton"
                 VerticalAlignment="Stretch" ToolTip="{lex:Loc Delete}"
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click]=[Action Delete]"
