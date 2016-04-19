@@ -33,7 +33,8 @@ namespace BioModule.ViewModels
         return;
 
       FullTrackLocation.Update(location);
-     
+      VisitorsView.UpdateLocation(location.CurrentLocation);
+
       ActiveItem = Items[0];
       OpenTab();
     }

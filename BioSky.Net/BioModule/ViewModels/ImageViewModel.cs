@@ -68,8 +68,7 @@ namespace BioModule.ViewModels
         ImageItemViewModel item = ImageItems[index];
         item.UpdateImageSource(img);
         item.Zoom(_scrollFieldWidth, _scrollFieldHeight);
-      }
- 
+      } 
     } 
    
     public string Upload()

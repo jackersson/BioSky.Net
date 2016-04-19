@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using BioContracts.CaptureDevices;
+using BioContracts.Locations;
 
 namespace BioModule.ViewModels
 {
@@ -83,7 +84,7 @@ namespace BioModule.ViewModels
      //   observer.OnFrame(ref frame);
     }
 
-    public void OnStop(bool stopped, string message) {
+    public void OnStop(bool stopped, string message, LocationDevice device) {
 
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
      // foreach (ICaptureDeviceObserver observer in _observer.Observers)

@@ -215,6 +215,7 @@
     <Compile Include="Utils\IUserPhotoController.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
     <Compile Include="Utils\SimpleTabController.cs" />
+    <Compile Include="Utils\TrackLocationUtils.cs" />
     <Compile Include="Validation\Error.cs" />
     <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Validation\Validator.cs" />

@@ -65,7 +65,6 @@ namespace BioModule.ViewModels
           SelectedLocations.Add(location);
       }
 
-
       foreach (Location location in unselectedRecords)
         SelectedLocations.Remove(location);
 
@@ -84,7 +83,7 @@ namespace BioModule.ViewModels
     public void Reset()
     {
       SelectedLocations.Clear();
-      NotifyOfPropertyChange(() => SelectedLocations);
+      RefreshUI();
     }
 
     private void RefreshUI()
@@ -92,7 +91,7 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => SelectedLocations);
       NotifyOfPropertyChange(() => LocationFilterText);
       NotifyOfPropertyChange(() => LocationButtonText);
-      NotifyOfPropertyChange(() => CanRevert);
+      NotifyOfPropertyChange(() => CanRevert);      
     }
 
 
@@ -104,7 +103,7 @@ namespace BioModule.ViewModels
     {
       get {
         string text = "Locations";
-        if ( SelectedLocations.Count > 1 )
+        if ( SelectedLocations.Count > 0 )
           text = string.Format("{0} ({1})", text, SelectedLocations.Count);
         else if (SelectedLocations.Count == Locations.Count && Locations.Count != 0)
           text = "Locations All";
@@ -261,7 +260,7 @@ namespace BioModule.ViewModels
   }
   #endregion
 
-#region dateinterval
+  #region dateinterval
   public class DateInterval
   {
     public DateInterval(int year, int month, int day, int hour, int minutes, int seconds)
@@ -283,7 +282,6 @@ namespace BioModule.ViewModels
   }
 
   #endregion
-
 
   #region datetimePeriod
   public class DateTimePeriod
@@ -400,6 +398,21 @@ namespace BioModule.ViewModels
     {
       Reset();
     }
+
+    public void SetTimePeriod(long from, long to)
+    {
+      Reset();
+
+      _period.DateTimeFrom = new DateTime(from);
+      _period.DateTimeTo   = new DateTime(to);
+
+      TimeFilterText = string.Format("{0} {1}-{2} {3}", _period.DateTimeFrom.ToShortDateString()
+                                                      , _period.DateTimeFrom.ToShortTimeString()
+                                                      , _period.DateTimeTo.ToShortDateString()
+                                                      , _period.DateTimeTo.ToShortTimeString());
+
+      TimeFilterText = _period.DateTimeFrom + "-" + _period.DateTimeTo;
+    }
     public void OnPeriodClick()
     {
       _dialogsHolder.PeriodTimePicker.Show();
@@ -407,7 +420,7 @@ namespace BioModule.ViewModels
 
       if (result == null)
         return;
-      
+
       TimeFilterText = result.FromDateString + "-" + result.ToDateString;
 
       _period.DateTimeFrom = result.FromDateLong;
@@ -478,6 +491,7 @@ namespace BioModule.ViewModels
     public VisitorsFilterMenuViewModel(IProcessorLocator locator)
     {
       _locator       = locator;
+      _database      = locator.GetProcessor<IBioSkyNetRepository>();
 
       Filters = new ObservableCollection<IFilterable>();
       Filters.Add(new LocationFilter(locator));
@@ -490,7 +504,7 @@ namespace BioModule.ViewModels
     protected override void OnActivate()
     {
       foreach (IFilterable filter in Filters)
-        Filters[0].PropertyChanged += OnFiltersChanged;
+        filter.PropertyChanged += OnFiltersChanged;
 
       base.OnActivate();
     }
@@ -498,7 +512,7 @@ namespace BioModule.ViewModels
     protected override void OnDeactivate(bool close)
     {
       foreach (IFilterable filter in Filters)
-        Filters[0].PropertyChanged -= OnFiltersChanged;
+        filter.PropertyChanged -= OnFiltersChanged;
 
       base.OnDeactivate(close);
     }
@@ -512,8 +526,61 @@ namespace BioModule.ViewModels
    
     public void UpdateQuery()
     {
+      ClearQuery();
       foreach (IFilterable filter in Filters)
         filter.Apply(_query);     
+    }
+
+    public void ClearQuery()
+    {
+      _query.DatetimeFrom = 0     ;
+      _query.DatetimeTo   = 0     ;
+      _query.Countries    .Clear();
+      _query.Locations    .Clear();
+      _query.Persons      .Clear();
+    }
+
+    public void SetQuery(QueryVisitors query)
+    {
+      foreach (IFilterable item in Filters)
+      {
+        if (item is LocationFilter)
+        {
+          LocationFilter locationFilter = item as LocationFilter;
+          locationFilter.SelectedLocations.Clear();
+
+          if (query.Locations.Count > 0)
+          {
+            foreach(long locationId in query.Locations)
+            {
+              Location location = null;
+              _database.Locations.DataSet.TryGetValue(locationId, out location);
+              if(location != null)
+                locationFilter.SelectedLocations.Add(location);
+            }
+          }
+        }
+        else if (item is CountryFilter)
+        {
+          CountryFilter countryFilter = item as CountryFilter;
+          countryFilter.SelectedCountry = null;
+
+          if (query.Countries.Count > 0)
+          {
+            foreach (string country in query.Countries)            
+              countryFilter.SelectedCountry = country;            
+          }
+        }
+        else if (item is TimeFilter)
+        {
+          TimeFilter timeFilter = item as TimeFilter;
+
+          if (query.DatetimeFrom == 0 && query.DatetimeTo == 0)
+            timeFilter.OnAllTimeClick();
+          else if(query.DatetimeFrom >= 0)
+            timeFilter.SetTimePeriod(query.DatetimeFrom, query.DatetimeTo);
+        }
+      }
     }
 
     public QueryVisitors GetQuery()
@@ -526,9 +593,7 @@ namespace BioModule.ViewModels
     {
       NotifyOfPropertyChange(() => IsResetButtonEnabled);
     }
-     
 
- 
     public bool IsResetButtonEnabled
     {
       get
@@ -542,9 +607,13 @@ namespace BioModule.ViewModels
       }
     }
 
-                     QueryVisitors     _query  ;
-    private readonly IProcessorLocator _locator; 
+    #region GlobalVariables
 
+    QueryVisitors        _query   ;
+    private readonly IProcessorLocator    _locator ;
+    private readonly IBioSkyNetRepository _database;
+
+    #endregion
   }
 
   public enum TimeEnum

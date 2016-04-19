@@ -13,6 +13,7 @@ namespace BioData
 
     public BioLocalStorage()
     {
+      GenerateDefault();
       LoadConfiguration();
 
       //"192.168.1.127:50052" Taras
@@ -43,23 +44,31 @@ namespace BioData
 
     private void LoadConfiguration()
     {
-      if (!File.Exists(ConfigurationFilePath))
-      {
-        GenerateDefault();
-        return;
-      }
+      if (!File.Exists(ConfigurationFilePath))        
+        return;     
 
       try
       {
         using (FileStream fs = new FileStream(ConfigurationFilePath, FileMode.Open, FileAccess.Read))
         {
-          Configuration = Deserialize(fs);
+          UpdateCurrentConfiguration(Configuration, Deserialize(fs));
         }
       }
       catch (Exception ex)
       {
         Console.WriteLine(ex.Message);
       }
+    }
+
+    private void UpdateCurrentConfiguration( Dictionary<ConfigurationParametrs, ConfigurationValue> current
+                                           , Dictionary<ConfigurationParametrs, ConfigurationValue> fromFile)
+    {
+      foreach(var item in fromFile)
+      {
+        if(current.ContainsKey(item.Key))        
+          current[item.Key] = item.Value;    
+      }
+
     }
 
     private void SaveConfiguration()
@@ -80,6 +89,12 @@ namespace BioData
       }
     }
 
+    public void ReturnToDefault()
+    {
+      GenerateDefault();
+      SaveConfiguration();
+    }
+
     private void GenerateDefault()
     {
       Configuration.Clear();
@@ -92,7 +107,7 @@ namespace BioData
 
       Configuration.Add(ConfigurationParametrs.FaceServiceAddress, new ConfigurationValue()
       {
-         Current = "192.168.1.178:50052"
+          Current = "192.168.1.178:50052"
         , Default = "127.0.0.1:50051"
       });
 
@@ -106,6 +121,12 @@ namespace BioData
       {
           Current = "en"
         , Default = "en"
+      });
+
+      Configuration.Add(ConfigurationParametrs.ItemsCountPerPage, new ConfigurationValue()
+      {
+          Current = "10"
+        , Default = "10"
       });
 
       Configuration.Add(ConfigurationParametrs.LogsFilePathway, new ConfigurationValue()
@@ -126,6 +147,7 @@ namespace BioData
       BinaryFormatter formatter = new BinaryFormatter();
       var key = formatter.Deserialize(stream);
       Dictionary<ConfigurationParametrs, ConfigurationValue> value = (Dictionary<ConfigurationParametrs, ConfigurationValue>)key;
+      
       return value;
     }
 

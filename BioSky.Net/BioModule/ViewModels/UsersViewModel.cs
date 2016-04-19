@@ -27,6 +27,11 @@ namespace BioModule.ViewModels
       _selectedPersons = new ObservableCollection<Person>();
       PageController   = new PageControllerViewModel();
 
+      int count = 0;
+      string s = _database.LocalStorage.GetParametr(ConfigurationParametrs.ItemsCountPerPage);
+      if (Int32.TryParse(s, out count))
+        PAGES_COUNT = count;
+
       _database.Persons.DataChanged      += RefreshData;      
       //_database.PhotoHolder.DataChanged  += RefreshData;
 

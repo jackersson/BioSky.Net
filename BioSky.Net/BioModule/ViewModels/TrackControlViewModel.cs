@@ -32,6 +32,16 @@ namespace BioModule.ViewModels
       _selector = locator.GetProcessor<ViewModelSelector>();
     }
 
+    protected override void OnActivate()
+    {
+      base.OnActivate();     
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      base.OnDeactivate(close);
+    }
+
     private void OnSelectedLocationChanged(TrackLocation location)
     {
       if (SelectedLocationChanged != null)
@@ -55,8 +65,8 @@ namespace BioModule.ViewModels
         _selectedTrackLocation = value;
 
         if(_selectedTrackLocation != null)        
-          _selectedTrackLocation.ScreenViewModel.Activate();       
-        
+          _selectedTrackLocation.ScreenViewModel.Activate();               
+
         OnSelectedLocationChanged(_selectedTrackLocation);
         //FullTrackTabContro.Update(_selectedTrackLocation);
         NotifyOfPropertyChange(() => SelectedTrackLocation);
@@ -173,7 +183,12 @@ namespace BioModule.ViewModels
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
       }
 
+      foreach(TrackLocation location in TrackItemsShort.TrackControlItems)
+        location.ScreenViewModel.Activate();      
+
       TrackItemsShort.SelectDefault();
+      if (locations.Count == 1)
+        ShowVisitors();
       NotifyOfPropertyChange(() => TrackItemsShort);
     }
 
@@ -208,14 +223,18 @@ namespace BioModule.ViewModels
     {
       TrackTabControl.Update(location);
       //VisitorsView update by location
+      ActivateItem(VisitorsView);
+      NotifyOfPropertyChange(() => VisitorsCount);
     }
-
-
-
-
     #endregion
 
     #region UI
+
+    public int VisitorsCount
+    {
+      get{ return (VisitorsView != null && VisitorsView.VisitorsCollectionView != null)
+                  ? VisitorsView.VisitorsCollectionView.ItemsCount : 0;}
+    }
 
     public bool CanShowLocations {
       get { return !TrackItemsShort.IsActive; }
@@ -228,12 +247,14 @@ namespace BioModule.ViewModels
     private void RefreshUI()
     {
       NotifyOfPropertyChange(() => CanShowLocations);
-      NotifyOfPropertyChange(() => CanShowVisitors );
+      NotifyOfPropertyChange(() => CanShowVisitors );      
     }
 
     public void ShowLocations()
     {
       Object = TrackItemsShort;
+      ActivateItem(TrackItemsShort);
+      DeactivateItem(VisitorsView, false);
       RefreshUI();
     }
 
@@ -241,6 +262,7 @@ namespace BioModule.ViewModels
     {
       Object = VisitorsView;
       ActivateItem(VisitorsView);
+      DeactivateItem(TrackItemsShort, false);
       RefreshUI();
     }
 
@@ -274,6 +296,7 @@ namespace BioModule.ViewModels
           _trackTabControl = value;
           NotifyOfPropertyChange(() => TrackTabControl);
           NotifyOfPropertyChange(() => VisitorsView   );
+          NotifyOfPropertyChange(() => VisitorsCount  );
         }
       }
     }

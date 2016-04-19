@@ -15,6 +15,7 @@ namespace BioContracts.Common
       Task tsk = Task.Run(() => {
         _observers.TryAdd(observer.GetHashCode(), observer);
       });
+      tsk.Wait();
     }
 
     public void Unsubscribe(T observer)
@@ -23,6 +24,7 @@ namespace BioContracts.Common
         T removed;
         _observers.TryRemove(observer.GetHashCode(), out removed);
       });
+      tsk.Wait();
     }
 
     public void UnsubscribeAll()
@@ -35,7 +37,7 @@ namespace BioContracts.Common
           _observers.TryRemove(observer.Value.GetHashCode(), out removed);
         }
       });
-      Task.WaitAll(tsk);
+      tsk.Wait();
     }
 
     public bool HasObserver(T observer) {

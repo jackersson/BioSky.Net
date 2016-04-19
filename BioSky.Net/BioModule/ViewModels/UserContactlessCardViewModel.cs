@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Grpc.Core;
 using BioContracts.Services;
 using BioContracts.Common;
+using BioContracts.Locations;
 
 namespace BioModule.ViewModels
 {
@@ -153,7 +154,7 @@ namespace BioModule.ViewModels
     #region Observer
     public void OnCardDetected(string cardNumber)  {  CardNumber = cardNumber; }
         
-    public void OnError(Exception ex) {}
+    public void OnError(Exception ex, LocationDevice device) {}
 
     public void OnReady(bool isReady) {}
     #endregion

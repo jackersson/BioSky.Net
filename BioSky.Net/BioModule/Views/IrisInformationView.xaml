@@ -20,11 +20,11 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <SolidColorBrush x:Key="MyColor" Color="#FF012943"></SolidColorBrush>
+            <SolidColorBrush x:Key="MyColor" Color="#FFDDDDDD"></SolidColorBrush>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="#7FFFFFFF">
+    <Grid Background="#CC8C8C8C">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>

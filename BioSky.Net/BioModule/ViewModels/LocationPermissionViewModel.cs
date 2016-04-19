@@ -255,11 +255,15 @@ namespace BioModule.ViewModels
     public bool IsAccessChanged
     {
       get {
-        RepeatedField<Person> p = GetResult();
+        //RepeatedField<Person> p = GetResult();
 
         bool flag = false;
 
-        if (AccessedPersons.Count != CurrentLocation.Persons.Count)
+        int currentPersonsCount = CurrentLocation.Persons.Count;
+        if (currentPersonsCount == 0 && CurrentLocation.AccessType == AccessType.All)
+          currentPersonsCount = _database.Persons.Data.Count;
+
+        if (AccessedPersons.Count != currentPersonsCount)
           flag = true;
         else
         {

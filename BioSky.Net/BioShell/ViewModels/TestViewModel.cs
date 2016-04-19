@@ -1,4 +1,5 @@
 ﻿using BioContracts;
+using BioContracts.Locations;
 using BioModule.ResourcesLoader;
 using Caliburn.Micro;
 using System;
@@ -44,7 +45,7 @@ namespace BioShell.ViewModels
     }
 
 
-    public void OnError(Exception ex)
+    public void OnError(Exception ex, LocationDevice device)
     {
       System.Action act = delegate { UpdateFromSource(NotOk); UpdateFromSource2(NotOk);  };
       System.Windows.Application.Current.Dispatcher.Invoke(act);

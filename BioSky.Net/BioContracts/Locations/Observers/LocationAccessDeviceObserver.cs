@@ -14,8 +14,7 @@ namespace BioContracts.Locations.Observers
     public void Stop()
     {
       _accessDeviceEngine.Unsubscribe(_observer);
-      if (!string.IsNullOrEmpty(_deviceName))
-        _accessDeviceEngine.Remove(_deviceName);
+      _deviceName = null;
     }
 
     public void Start(string deviceName)
@@ -28,7 +27,6 @@ namespace BioContracts.Locations.Observers
 
       _deviceName = deviceName;
 
-      _accessDeviceEngine.Add(_deviceName);
       _accessDeviceEngine.Subscribe(_observer, _deviceName);
     }
 
@@ -45,6 +43,11 @@ namespace BioContracts.Locations.Observers
 
     public bool IsDeviceOk {
       get { return _accessDeviceEngine.IsDeviceActive(_deviceName); }
+    }
+
+    public string DeviceName
+    {
+      get { return _deviceName; }
     }
 
     private string _deviceName;

@@ -2,6 +2,7 @@
 using BioContracts;
 using BioContracts.CaptureDevices;
 using BioContracts.Common;
+using BioContracts.Locations;
 using BioModule.ResourcesLoader;
 using BioModule.Utils;
 using BioModule.ViewModels;
@@ -148,7 +149,7 @@ namespace BioModule.BioModels
     }
 
 
-    public void OnStop(bool stopped, string message)
+    public void OnStop(bool stopped, string message, LocationDevice device)
     {
       _imageView.SetSingleImage(null);
     }

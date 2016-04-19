@@ -6,7 +6,7 @@ namespace BioContracts.Locations
 {
   public interface IFullLocationObserver : IVerificationObserver
   {
-    void OnError(Exception ex);
+    void OnError(Exception ex, LocationDevice device);
 
     void OnOk(bool ok);
 

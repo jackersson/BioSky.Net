@@ -52,13 +52,15 @@ namespace BioData.Holders.Grouped
         AddAccessDevice (requested, responded.AccessDevice);
         AddCaptureDevice(requested, responded.CaptureDevice);
 
+        CheckAccessDevices(requested);
+        CheckCaptureDevices(requested);
+
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);        
       }
       OnDataChanged();
       ShowLocationResult(requested, responded);
     }
-
     public void Update( Location requested
                       , Location responded)
     {
@@ -68,32 +70,90 @@ namespace BioData.Holders.Grouped
         Console.WriteLine(Data);
         if (oldItem != null)
         {
-          if(requested.CaptureDevice != null)
+          CheckDevices(requested);
+
+          if (requested.CaptureDevice != null)
           {
-            oldItem.CaptureDevice = (oldItem.CaptureDevice == null)
-                        ? new CaptureDevice() 
-                        : oldItem.CaptureDevice;
-            oldItem.CaptureDevice.MergeFrom(requested.CaptureDevice);
-          }
-          
+            if (requested.CaptureDevice.EntityState == EntityState.Deleted)
+            {
+              CaptureDevices.Remove(CaptureDevices.Where(x => x.Devicename == requested.CaptureDevice.Devicename).FirstOrDefault());
+              oldItem.CaptureDevice = new CaptureDevice();
+            }
+            else
+            {
+              oldItem.CaptureDevice = (oldItem.CaptureDevice == null)
+                                      ? new CaptureDevice()
+                                      : oldItem.CaptureDevice;
+              oldItem.CaptureDevice.MergeFrom(requested.CaptureDevice);
+            }
+          }          
           if(requested.AccessDevice != null)
           {
-            oldItem.AccessDevice = (oldItem.AccessDevice == null)
-                       ? new AccessDevice()
-                       : oldItem.AccessDevice;
-            oldItem.AccessDevice.MergeFrom(requested.AccessDevice);
+            if (requested.AccessDevice.EntityState == EntityState.Deleted)
+            {
+              AccessDevices.Remove(AccessDevices.Where(x => x.Portname == requested.AccessDevice.Portname).FirstOrDefault());
+              oldItem.AccessDevice = new AccessDevice();
+            }
+            else
+            {
+              oldItem.AccessDevice = (oldItem.AccessDevice == null)
+                                     ? new AccessDevice()
+                                     : oldItem.AccessDevice;
+              oldItem.AccessDevice.MergeFrom(requested.AccessDevice);
+            }
           }
-
           CopyFrom(responded, oldItem);
         }
 
         Console.WriteLine(Data);
         Console.WriteLine(DataSet);
       }
-
-
       OnDataChanged();
       ShowLocationResult(requested, responded);
+    }
+
+    private void CheckDevices(Location requested)
+    {      
+      if (requested.AccessDevice == null && requested.CaptureDevice == null)
+        return;
+
+      foreach (Location location in Data)
+      {
+        AccessDevice accessDevice = location.AccessDevice;
+        if (requested.AccessDevice != null && requested.AccessDevice.EntityState != EntityState.Deleted)
+        {
+          if (requested.AccessDevice != null && accessDevice != null)
+            if (accessDevice.Portname == requested.AccessDevice.Portname)
+              location.AccessDevice = new AccessDevice();
+        }
+
+        CaptureDevice captureDevice = location.CaptureDevice;
+        if (requested.CaptureDevice != null && requested.CaptureDevice.EntityState != EntityState.Deleted)
+        {
+          if (requested.CaptureDevice != null && captureDevice != null)
+            if (captureDevice.Devicename == requested.CaptureDevice.Devicename)
+              location.CaptureDevice = new CaptureDevice();
+        }
+      }
+    }
+    private void CheckAccessDevices(Location requested)
+    {
+      if (requested.AccessDevice != null && requested.AccessDevice.Id > 0)
+      {
+        AccessDevice accessDevice = AccessDevices.Where(x => x.Portname == requested.AccessDevice.Portname).FirstOrDefault();
+        if (accessDevice == null)
+          AccessDevices.Add(requested.AccessDevice);
+      }
+    }
+
+    private void CheckCaptureDevices(Location requested)
+    {
+      if (requested.CaptureDevice != null && requested.CaptureDevice.Id > 0)
+      {
+        CaptureDevice captureDevice = CaptureDevices.Where(x => x.Devicename == requested.CaptureDevice.Devicename).FirstOrDefault();
+        if (captureDevice == null)
+          CaptureDevices.Add(requested.CaptureDevice);
+      }
     }
 
     private void CopyFrom(Location from, Location to)
@@ -113,6 +173,9 @@ namespace BioData.Holders.Grouped
       if (from.CaptureDevice != null)       
         AddCaptureDevice(to, from.CaptureDevice);
 
+      CheckAccessDevices(to);
+      CheckCaptureDevices(to);
+
       to.Persons.Clear();
       to.Persons.Add(from.Persons);
     }
@@ -127,7 +190,14 @@ namespace BioData.Holders.Grouped
           _dataSet.Remove(requested.Id);
           var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
           if (item != null)
+          {
+            if(item.AccessDevice != null && item.AccessDevice.Id > 0)
+              AccessDevices.Remove(AccessDevices.Where(x => x.Portname == item.AccessDevice.Portname).FirstOrDefault());
+            if (item.CaptureDevice != null && item.CaptureDevice.Id > 0)
+              CaptureDevices.Remove(CaptureDevices.Where(x => x.Devicename == item.CaptureDevice.Devicename).FirstOrDefault());
+
             Data.Remove(item);
+          }
         }
       }
       OnDataChanged();
@@ -150,9 +220,10 @@ namespace BioData.Holders.Grouped
       if (responded.AccessDevice != null)
       {
         AccessDevice accessDevice = responded.AccessDevice;
+        string state = requested.AccessDevice.EntityState.ToString();
         locationItem.Members.Add(new TreeItem
         {
-            Name = string.Format("Access Device: {0} ({1})", accessDevice.Portname, accessDevice.Id)
+            Name = string.Format("Access Device: {0} ({1}) {2}", accessDevice.Portname, accessDevice.Id, state)
           , IsSuccess = (accessDevice.Dbresult == Result.Success) ? true : false
         });
       }
@@ -160,9 +231,10 @@ namespace BioData.Holders.Grouped
       if (responded.CaptureDevice != null)
       {
         CaptureDevice captureDevice = responded.CaptureDevice;
+        string state = requested.CaptureDevice.EntityState.ToString();
         locationItem.Members.Add(new TreeItem
         {
-            Name = string.Format("Capture Device: {0} ({1})", captureDevice.Devicename, captureDevice.Id)
+            Name = string.Format("Capture Device: {0} ({1}) {2}", captureDevice.Devicename, captureDevice.Id, state)
           , IsSuccess = (captureDevice.Dbresult == Result.Success) ? true : false
         });
       }
@@ -211,7 +283,6 @@ namespace BioData.Holders.Grouped
 
     public bool HasUserAccess(long locationID, long userID)
     {
-
       return true;
     }
 
@@ -299,11 +370,6 @@ namespace BioData.Holders.Grouped
       {
         return (_locationItems == null) ? _locationItems = new List<TreeItem>()
                                      : _locationItems;
-      }
-      set
-      {
-        if (_locationItems != value)
-          _locationItems = value;
       }
     }
 

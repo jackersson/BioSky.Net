@@ -4,6 +4,7 @@ using BioContracts;
 using BioContracts.Abstract;
 using BioContracts.CaptureDevices;
 using BioContracts.Common;
+using BioContracts.Locations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -227,7 +228,7 @@ namespace BioCaptureDevices
     private void OnStop(bool stopped, string message)
     {
       foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)       
-        observer.Value.OnStop(true, message);
+        observer.Value.OnStop(true, message, LocationDevice.CaptureDevice);
     }
 
     private void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all)

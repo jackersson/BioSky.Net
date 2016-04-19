@@ -48,7 +48,8 @@ namespace BioModule
             .Register(Component.For<AuthenticationPageViewModel>())
             .Register(Component.For<VisitorsFilterMenuViewModel>())
             .Register(Component.For<HomePageViewModel>())
-            .Register(Component.For<ErrorViewerViewModel>());
+            .Register(Component.For<ErrorViewerViewModel>())
+            .Register(Component.For<TrackLocationUtils>());
 
        
 
