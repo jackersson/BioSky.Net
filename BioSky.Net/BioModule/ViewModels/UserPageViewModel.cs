@@ -149,8 +149,8 @@ namespace BioModule.ViewModels
       user.Firstname   = "";
       user.Lastname    = "";
       //user.Thumbnailid = user.Thumbnailid <= 0 ? 0 : user.Thumbnailid;
-      user.Gender      = Person.Types.Gender.Male;
-      user.Rights      = Person.Types.Rights.Operator;
+      user.Gender      = Gender.Male;
+      user.Rights      = Rights.Operator;
      
       _userPageMode = UserPageMode.NewUser;
       //_user         = null;
@@ -210,7 +210,7 @@ namespace BioModule.ViewModels
         {
           Photo thumbnail = CurrentPhotoImageView.CurrentPhoto;          
           _user.Thumbnail = thumbnail;
-          _user.Thumbnail.Personid = _user.Id;
+          //_user.Thumbnail.Personid = _user.Id;
           _user.Thumbnail.Datetime = DateTime.Now.Ticks;         
           
           await _bioService.PersonDataClient.Add(_user);

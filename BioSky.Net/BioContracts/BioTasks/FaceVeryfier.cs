@@ -64,7 +64,7 @@ namespace BioContracts.BioTasks
         SubscribeOnFeedback(false);
 
         Photo photo = GetCapturedPhoto();
-        Photo feedbackPhoto = enrollFeedback.Photo;
+        Photo feedbackPhoto = null;// enrollFeedback.Photo;
 
         if (photo == null || feedbackPhoto == null || !enrollFeedback.Success)
         {

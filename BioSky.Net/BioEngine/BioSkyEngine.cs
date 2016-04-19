@@ -64,9 +64,9 @@ namespace BioEngine
       {
         _authenticatedPerson = value;
         _loginInformation.UpdateUser(_authenticatedPerson);
-        Person.Types.Rights rights = (_authenticatedPerson != null)
+        Rights rights = (_authenticatedPerson != null)
                                                                    ? _authenticatedPerson.Rights
-                                                                   : Person.Types.Rights.Manager;
+                                                                   : Rights.Manager;
 
         PermissionController.Instance.UpdateAuthenticatedPersonRights(rights);
       }

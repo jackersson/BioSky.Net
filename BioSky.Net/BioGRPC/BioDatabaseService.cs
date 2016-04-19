@@ -2,6 +2,9 @@
 using BioService;
 using BioContracts.Services;
 using BioGRPC.DatabaseClient;
+using Grpc.Core;
+using System;
+using BioGRPC.Utils;
 
 namespace BioGRPC
 {
@@ -9,13 +12,35 @@ namespace BioGRPC
   { 
     public BioDatabaseService( IProcessorLocator locator
                              , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
-    {    
+    {
+      _client = client;
+
+      _utils = new NetworkUtils();
+
       _visitorDataClient   = new VisitorDataClient (locator, client);
       _photosDataClient    = new PhotoDataClient   (locator, client);
       _personDataClient    = new PersonDataClient  (locator, client);
       _locationDataClient  = new LocationDataClient(locator, client);
       _cardsDataClient     = new CardDataClient    (locator, client);
     }
+
+    public async void Subscribe()
+    {
+      try
+      {
+        BioClient currentPCInfo = new BioClient();
+        currentPCInfo.IpAddress  = _utils.GetLocalIPAddress();
+        currentPCInfo.MacAddress = _utils.GetMACAddress();
+
+        var call = await _client.AddClientAsync(currentPCInfo);
+        Console.WriteLine(call);
+      }
+      catch (RpcException ex) {
+        Console.WriteLine(ex.Message);
+      }      
+    }
+
+
 
     private PhotoDataClient _photosDataClient;
     public IOwnerDataClient<Person, Photo> PhotosDataClient
@@ -50,7 +75,9 @@ namespace BioGRPC
     public IDataClient<Location, QueryLocations> LocationDataClient
     {
       get { return _locationDataClient; }
-    }    
+    }
 
+    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
+    private NetworkUtils _utils;
   }
 }

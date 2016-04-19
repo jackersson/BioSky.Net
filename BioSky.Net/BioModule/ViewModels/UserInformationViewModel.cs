@@ -149,9 +149,9 @@ namespace BioModule.ViewModels
       }
     }
 
-    public Person.Types.Rights Rights
+    public Rights Rights
     {
-      get { return (_user != null) ? _user.Rights : Person.Types.Rights.Custom; }
+      get { return (_user != null) ? _user.Rights : Rights.Custom; }
       set
       {
         _user.Rights = value;
@@ -169,9 +169,9 @@ namespace BioModule.ViewModels
       }
     }
 
-    public Person.Types.Gender Gender
+    public Gender Gender
     {
-      get { return (_user != null) ? _user.Gender : Person.Types.Gender.None; }
+      get { return (_user != null) ? _user.Gender : Gender.None; }
       set
       {
         _user.Gender = value;

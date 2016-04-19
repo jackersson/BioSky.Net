@@ -45,7 +45,7 @@ namespace BioGRPC.DatabaseClient
 
       try
       {
-        requested.Personid = owner.Id;
+        //requested.Personid = owner.Id;
         Response responded = await _client.SetThumbnailAsync(requested);
         Console.WriteLine(responded);
         _database.Persons.SetThumbnail(owner, requested, responded);

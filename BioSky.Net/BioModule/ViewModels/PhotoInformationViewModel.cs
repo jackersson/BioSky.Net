@@ -24,11 +24,12 @@ namespace BioModule.ViewModels
     {
       get
       {
+        /*
         bool canShow = (_currentPhoto != null
                        && _currentPhoto.PortraitCharacteristic != null);
 
-        FaceCharacteristic fc = canShow ? _currentPhoto.PortraitCharacteristic.Faces.FirstOrDefault() : null;
-        return (fc != null && fc.Location != null) ? fc.Location.Confidence : 0.0f;
+        FaceCharacteristic fc = canShow ? _currentPhoto.PortraitCharacteristic.Faces.FirstOrDefault() : null; */
+        return /*(fc != null && fc.Location != null) ? fc.Location.Confidence : */0.0f;
       }
     }
 
@@ -51,8 +52,8 @@ namespace BioModule.ViewModels
     {
       get
       {
-        bool canShow = (_currentPhoto != null && _currentPhoto.PortraitCharacteristic != null);
-        return canShow ? _currentPhoto.PortraitCharacteristic.FacesCount : 0;
+       // bool canShow = (_currentPhoto != null && _currentPhoto.PortraitCharacteristic != null);
+        return /* canShow ? _currentPhoto.PortraitCharacteristic.FacesCount : */ 0;
       }
     }
 
@@ -60,8 +61,8 @@ namespace BioModule.ViewModels
     {
       get
       {
-        bool canShow = (_currentPhoto != null && _currentPhoto.PortraitCharacteristic != null);
-        return canShow ? _currentPhoto.PortraitCharacteristic.Age : 0;
+      //  bool canShow = (_currentPhoto != null && _currentPhoto.PortraitCharacteristic != null);
+        return /*canShow ? _currentPhoto.PortraitCharacteristic.Age : */ 0;
       }
     }
 

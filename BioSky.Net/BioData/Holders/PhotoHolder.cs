@@ -18,8 +18,8 @@ namespace BioData.Holders
 
     public void CheckPhotosIfFileExisted(Visitor visitor)
     {
-      CheckPhotosIfFileExisted(visitor.Fullphoto  );
-      CheckPhotosIfFileExisted(visitor.Cropedphoto);      
+     // CheckPhotosIfFileExisted(visitor.Fullphoto  );
+     // CheckPhotosIfFileExisted(visitor.Cropedphoto);      
     }
 
     public void CheckPhotosIfFileExisted(Photo photo)

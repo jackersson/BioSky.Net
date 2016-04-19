@@ -202,7 +202,7 @@ namespace BioData.Holders.Grouped
       {
         requested.Id       = responsed.Id;
         requested.PhotoUrl = responsed.PhotoUrl;
-        requested.Personid = owner.Id;
+       // requested.Personid = owner.Id;
 
         _dataSet[owner.Id].Photos.Add(requested);
 
@@ -222,7 +222,7 @@ namespace BioData.Holders.Grouped
         Photo newThumbnail = _dataSet[owner.Id].Photos.Where(x => x.Id == requested.Id).FirstOrDefault();
         if (newThumbnail != null)
         {
-          _dataSet[owner.Id].Photoid   = requested.Id;
+         // _dataSet[owner.Id].Photoid   = requested.Id;
           _dataSet[owner.Id].Thumbnail = newThumbnail;
         }
               

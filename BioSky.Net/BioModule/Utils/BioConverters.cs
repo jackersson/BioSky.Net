@@ -257,7 +257,7 @@ namespace BioModule.Utils
         if(person != null && person.Photos != null)
         {
 
-          Photo photo = person.Photos.Where(x => x.Id == person.Photoid).FirstOrDefault(); //.GetValue(person.Thumbnailid);
+          Photo photo = null;// person.Photos.Where(x => x.Id == person.Photoid).FirstOrDefault(); //.GetValue(person.Thumbnailid);
 
           if (photo != null)
           {
@@ -471,10 +471,10 @@ namespace BioModule.Utils
 
   #region StringToEnumConverter
 
-  public class StringToGenderConverter : StringToEnumConverter<BioService.Person.Types.Gender>
+  public class StringToGenderConverter : StringToEnumConverter<Gender>
   { }
 
-  public class StringToRightsConverter : StringToEnumConverter<BioService.Person.Types.Rights>
+  public class StringToRightsConverter : StringToEnumConverter<Rights>
   { }
 
   public class StringToStateConverter : StringToEnumConverter<AccessType>

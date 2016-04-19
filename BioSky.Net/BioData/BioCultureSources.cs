@@ -1,4 +1,5 @@
 ﻿using BioContracts.Common;
+using BioService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace BioData
       get
       {
         if(_genderSources == null)
-          return _genderSources = Enum.GetNames(typeof(BioService.Person.Types.Gender)).ToList();
+          return _genderSources = Enum.GetNames(typeof(Gender)).ToList();
         return _genderSources;
       }
     }
@@ -28,7 +29,7 @@ namespace BioData
       get
       {
         if (_rightsSources == null)
-          return _rightsSources = Enum.GetNames(typeof(BioService.Person.Types.Rights)).ToList();
+          return _rightsSources = Enum.GetNames(typeof(Rights)).ToList();
         return _rightsSources;
       }
     }

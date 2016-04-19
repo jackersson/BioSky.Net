@@ -1,5 +1,6 @@
 ﻿using BioContracts;
 using BioModule.Utils;
+using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace BioModule.ViewModels
     public void OnLogin()
     {
       _bioEngine.AuthenticatedPerson = new BioService.Person { Firstname = LoginData
-                                                             , Rights = BioService.Person.Types.Rights.Supervisor };
+                                                             , Rights = Rights.Supervisor };
       TryClose(true);
     }
     protected override void OnActivate()

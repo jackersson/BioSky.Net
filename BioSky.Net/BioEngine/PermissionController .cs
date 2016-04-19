@@ -1,8 +1,7 @@
-﻿
-using Caliburn.Micro;
-using static BioService.Person.Types;
+﻿using Caliburn.Micro;
 using BioContracts;
 using System.Collections.Generic;
+using BioService;
 
 namespace BioEngine
 {

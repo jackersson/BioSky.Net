@@ -114,7 +114,7 @@ namespace BioModule.ViewModels
       if (!result || photo == null)
         return;
       
-      photo.Personid = User.Id;
+      //photo.Personid = User.Id;
       photo.Datetime = DateTime.Now.Ticks;
 
       try {

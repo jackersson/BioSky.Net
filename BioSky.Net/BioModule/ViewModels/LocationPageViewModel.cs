@@ -10,6 +10,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using BioGRPC.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -26,7 +27,9 @@ namespace BioModule.ViewModels
     {
       _locator       = locator;
       _methodInvoker = new FastMethodInvoker();
-      _validator = new  BioValidator();
+      _validator     = new  BioValidator();
+
+      _networkUtils  = new NetworkUtils();
 
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService    = _locator.GetProcessor<IServiceManager>();
@@ -156,11 +159,14 @@ namespace BioModule.ViewModels
       if (CurrentLocation.Id > 0)
         location.Id = CurrentLocation.Id;
 
-      if (CurrentLocation.Description != _revertLocation.Description)
+      if (_revertLocation == null || CurrentLocation.Description != _revertLocation.Description)
         location.Description  = CurrentLocation.Description;
 
-      if (CurrentLocation.LocationName != _revertLocation.LocationName)
+      if (_revertLocation == null || CurrentLocation.LocationName != _revertLocation.LocationName)
         location.LocationName = CurrentLocation.LocationName;
+
+      if (_revertLocation == null || CurrentLocation.MacAddress != _revertLocation.MacAddress)
+        location.MacAddress = MacAddress;
 
       AccessDevice  accessDevice  = LocationDevicesListViewModel.AccessDevices .GetDevice();
       CaptureDevice captureDevice = LocationDevicesListViewModel.CaptureDevices.GetDevice();
@@ -175,7 +181,7 @@ namespace BioModule.ViewModels
         location.AccessType = _locationPermissionViewModel.SelectedState;
 
       RepeatedField<Person> persons = _locationPermissionViewModel.GetResult();
-      if (persons.Count > 0)
+      if (persons != null && persons.Count > 0)
         location.Persons.Add(persons);    
      
 
@@ -272,6 +278,7 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => CurrentLocation);
           NotifyOfPropertyChange(() => LocationName   );
           NotifyOfPropertyChange(() => Description    );
+          NotifyOfPropertyChange(() => MacAddress     );
 
           NotifyOfPropertyChange(() => CanApply);
           NotifyOfPropertyChange(() => CanRevert);
@@ -303,6 +310,17 @@ namespace BioModule.ViewModels
         _currentLocation.Description = value;
         NotifyOfPropertyChange(() => Description);
       }
+    }
+
+    public string MacAddress
+    {
+      get {
+
+        string result =  (_currentLocation != null && !string.IsNullOrEmpty(_currentLocation.MacAddress))
+                   ? _currentLocation.MacAddress
+                   : _networkUtils.GetMACAddress();
+
+        return result; }     
     }
 
     private DevicesListViewModel _locationDevicesListViewModel;
@@ -348,6 +366,7 @@ namespace BioModule.ViewModels
     private readonly INotifier            _notifier        ;
     private readonly DialogsHolder        _dialogsHolder   ;
     private readonly IValidator           _validator       ;
+    private readonly NetworkUtils         _networkUtils    ;
 
     #endregion
   }

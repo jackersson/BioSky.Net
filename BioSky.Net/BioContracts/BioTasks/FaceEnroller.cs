@@ -50,8 +50,8 @@ namespace BioContracts.BioTasks
       {
         EnrollmentData data = new EnrollmentData();
         data.Images.Add(_photos);
-        if (_person != null)
-          data.Personid = _person.Id;
+       /// if (_person != null)
+         // data.Personid = _person.Id;
 
         await _bioService.FaceService.Enroll(data);
       }
@@ -71,7 +71,7 @@ namespace BioContracts.BioTasks
         SubscribeOnFeedback(false);
 
         Photo photo = GetCapturedPhoto();
-        Photo feedbackPhoto = feedback.Photo;
+        Photo feedbackPhoto = null;// feedback.Photo;
 
         if (photo == null || feedbackPhoto == null || !feedback.Success)
         {

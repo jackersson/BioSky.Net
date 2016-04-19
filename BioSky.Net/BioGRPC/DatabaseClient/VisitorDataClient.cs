@@ -58,9 +58,9 @@ namespace BioGRPC.DatabaseClient
 
       try
       {
-        Visitor newVisitor = await _client.AddVisitorAsync(item);
-        Console.WriteLine(newVisitor);
-        _uiDispatcher.Invoke( () => _database.Visitors.Add(item, newVisitor) );
+       // Visitor newVisitor = await _client.AddVisitorAsync(item);
+        //Console.WriteLine(newVisitor);
+        //_uiDispatcher.Invoke( () => _database.Visitors.Add(item, newVisitor) );
       }
       catch (RpcException e) {
         _notifier.Notify(e);
@@ -105,7 +105,7 @@ namespace BioGRPC.DatabaseClient
              Id = item.Id
            //, EntityState = EntityState.Deleted
            //, Dbresult    = ResultStatus.Failed
-           , Photoid = item.Photoid
+           //, Photoid = item.Photoid
          };
          _list.Visitors.Add(newItem);        
       }

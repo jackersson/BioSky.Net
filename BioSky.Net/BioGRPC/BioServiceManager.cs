@@ -55,7 +55,7 @@ namespace BioGRPC
     public void Start(IServiceConfiguration configuration)
     {      
       IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
-
+      
       _databaseClientChannel = new Channel(configuration.DatabaseService, ChannelCredentials.Insecure);
 
       _facialClientChannel   = new Channel(configuration.FacialService  , ChannelCredentials.Insecure);
