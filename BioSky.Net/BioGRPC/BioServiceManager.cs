@@ -1,5 +1,6 @@
 ﻿using BioContracts;
 using BioContracts.Services;
+using BioGRPC.Utils;
 using BioService;
 using Grpc.Core;
 
@@ -49,7 +50,8 @@ namespace BioGRPC
   {
     public BioServiceManager( IProcessorLocator locator )
     {
-      _locator = locator;    
+      _locator      = locator;
+      _networkUtils = new NetworkUtils();
     }
 
     public void Start(IServiceConfiguration configuration)
@@ -78,6 +80,17 @@ namespace BioGRPC
     }
 
 
+    private string _macAddress;
+    public string MacAddress
+    {
+      get
+      {
+        if (string.IsNullOrEmpty(_macAddress))
+          _macAddress = _networkUtils.GetMACAddress();
+        return _macAddress;
+      }
+    }
+
     private IFaceService _faceService;
     public IFaceService FaceService
     {
@@ -93,7 +106,8 @@ namespace BioGRPC
     private Channel _databaseClientChannel;
     private Channel _facialClientChannel  ;
 
-    private readonly IProcessorLocator _locator;
+    private readonly IProcessorLocator _locator     ;
+    private readonly NetworkUtils      _networkUtils;
 
   }
 }

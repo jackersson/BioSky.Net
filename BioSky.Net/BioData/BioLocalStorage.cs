@@ -15,7 +15,6 @@ namespace BioData
     {
       GenerateDefault();
       LoadConfiguration();
-
       //"192.168.1.127:50052" Taras
       //"192.168.1.178:50051"  Serg
     }
@@ -151,6 +150,8 @@ namespace BioData
       return value;
     }
 
+
+
     private string ConfigurationFilePath
     {
       get { return AppDomain.CurrentDomain.BaseDirectory + CONFIGURATION_FILE_NAME; }
@@ -180,6 +181,8 @@ namespace BioData
           _configuration = value;
       }
     }
+
+
 
     private const string CONFIGURATION_FILE_NAME = "config.txt";
   }

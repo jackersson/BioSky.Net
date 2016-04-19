@@ -40,6 +40,8 @@ namespace BioContracts
     bool IsActivityAllowed(Activity permissionRule);
     
     Person AuthenticatedPerson { get; set; }
-    
+ 
+
+
   }
 }

@@ -28,7 +28,7 @@ namespace BioContracts
       _notifier            = locator.GetProcessor<INotifier>();
       _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-
+     
       //_veryfier = new Verifyer(_locator);
       _observer = new BioObserver<IFullLocationObserver>();
       _devices  = new Dictionary<LocationDevice, ILocationDeviceObserver>();
@@ -53,7 +53,7 @@ namespace BioContracts
     }
 
     private void Start()
-    {
+    {     
       Init();
 
       foreach (KeyValuePair<LocationDevice, ILocationDeviceObserver> pair in _devices)      
@@ -258,6 +258,7 @@ namespace BioContracts
     private readonly INotifier            _notifier           ;
     private readonly IAccessDeviceEngine  _accessDeviceEngine ;
     private readonly ICaptureDeviceEngine _captureDeviceEngine;
+
     #endregion
   }
 

@@ -28,12 +28,13 @@ namespace BioModule.ViewModels
       _locator       = locator;
       _methodInvoker = new FastMethodInvoker();
       _validator     = new BioValidator();
-      _networkUtils  = new NetworkUtils();
+
 
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService    = _locator.GetProcessor<IServiceManager>();
       _notifier      = _locator.GetProcessor<INotifier>();
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
+      _bioEngine     = _locator.GetProcessor<IBioEngine>();
 
       _locationDevicesListViewModel = new DevicesListViewModel(_locator);
       _locationDevicesListViewModel.DisplayName = "Devices";
@@ -46,7 +47,7 @@ namespace BioModule.ViewModels
       Items.Add(_locationPermissionViewModel );
 
       ActiveItem = Items[0];
-      OpenTab();
+      OpenTab();      
 
       _database.Locations.DataChanged += Locations_DataChanged;
 
@@ -326,7 +327,7 @@ namespace BioModule.ViewModels
       {       
         return (_currentLocation != null && !string.IsNullOrEmpty(_currentLocation.MacAddress))
                    ? _currentLocation.MacAddress
-                   : _networkUtils.GetMACAddress();
+                   : _bioService.MacAddress;
       }
     }
 
@@ -374,7 +375,7 @@ namespace BioModule.ViewModels
     private readonly INotifier            _notifier        ;
     private readonly DialogsHolder        _dialogsHolder   ;
     private readonly IValidator           _validator       ;
-    private readonly NetworkUtils         _networkUtils    ;
+    private readonly IBioEngine           _bioEngine       ;
 
     #endregion
   }

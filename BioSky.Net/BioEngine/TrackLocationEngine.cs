@@ -19,12 +19,9 @@ namespace BioEngine
       _trackLocationsSet = new ConcurrentDictionary<long, TrackLocation>();
       _trackLocations    = new AsyncObservableCollection<TrackLocation>();
 
-
-      AccessDevices  = new HashSet<string>();
-      CaptureDevices = new HashSet<string>();
-
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
+      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine> ();
+      //_bioEngine           = locator.GetProcessor<IBioEngine>          ();
 
       _locationsHolder = _locator.GetProcessor<IBioSkyNetRepository>().Locations;
       _locationsHolder.DataChanged += RefreshData;
@@ -32,12 +29,13 @@ namespace BioEngine
            
     private void RefreshData()
     {      
-      IBioSkyNetRepository database            = _locator.GetProcessor<IBioSkyNetRepository>();
-      AsyncObservableCollection<Location> data = database.Locations.Data;
+      IBioSkyNetRepository database       = _locator.GetProcessor<IBioSkyNetRepository>();
+      IServiceManager      serviceManager = _locator.GetProcessor<IServiceManager>();
+    IEnumerable<Location> data = database.Locations.Data.Where(x => x.MacAddress == serviceManager.MacAddress);
       
       foreach (Location location in data)
       {
-        CheckDeviceObservers(location);
+        //CheckDeviceObservers(location);
 
         TrackLocation currentLocation = null;
         if (_trackLocationsSet.TryGetValue(location.Id, out currentLocation))
@@ -63,10 +61,11 @@ namespace BioEngine
           _trackLocations.Add(_trackLocationsSet[locationID]);        
       }
 
-      RemoveDevices();
+      //RemoveDevices();
       OnLocationsChanged();
     }
 
+    /*
     private void RemoveDevices()
     {
       foreach (string deviceName in AccessDevices)
@@ -115,6 +114,7 @@ namespace BioEngine
 
     private HashSet<string> AccessDevices ;
     private HashSet<string> CaptureDevices;
+    */
 
     private ConcurrentDictionary<long, TrackLocation> _trackLocationsSet;
     private ConcurrentDictionary<long, TrackLocation> TrackLocationsSet
@@ -139,5 +139,6 @@ namespace BioEngine
     private readonly IFullLocationHolder          _locationsHolder    ;
     private readonly ICaptureDeviceEngine         _captureDeviceEngine;
     private readonly IAccessDeviceEngine          _accessDeviceEngine ;
+
   }
 }
