@@ -30,7 +30,7 @@ namespace BioModule.ViewModels
       AsyncObservableCollection<string> temp = _bioEngine.CaptureDeviceEngine().GetDevicesNames();
       foreach (string deviceName in temp)
       {       
-        if (!CaptureDevicesNames.Contains(deviceName))
+        if (!string.IsNullOrEmpty(deviceName) && !CaptureDevicesNames.Contains(deviceName))
           CaptureDevicesNames.Add(deviceName);        
       }      
     }
@@ -45,7 +45,7 @@ namespace BioModule.ViewModels
         CaptureDevicesNames.Clear();
         foreach (string devicename in _database.Locations.CaptureDevicesSet)
         {
-          if (string.IsNullOrEmpty(devicename) && !CaptureDevicesNames.Contains(devicename))
+          if (!string.IsNullOrEmpty(devicename) && !CaptureDevicesNames.Contains(devicename))
             CaptureDevicesNames.Add(devicename);
         }
       }
