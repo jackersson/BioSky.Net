@@ -32,7 +32,7 @@ namespace BioEngine
       IEnumerable <Location> data        = database.Locations.Data.Where(x => x.MacAddress == serviceManager.MacAddress);
 
 
-      UpdateDevicesEngines();
+     // UpdateDevicesEngines();
 
       foreach (Location location in data)
       {

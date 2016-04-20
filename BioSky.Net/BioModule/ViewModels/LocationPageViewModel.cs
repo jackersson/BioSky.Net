@@ -168,10 +168,8 @@ namespace BioModule.ViewModels
 
       if (flag || CurrentLocation.LocationName != _revertLocation.LocationName)
           location.LocationName = CurrentLocation.LocationName;
-
-      if (flag ||  CurrentLocation.MacAddress != _revertLocation.MacAddress)
-          location.MacAddress = MacAddress;
-    
+           
+      location.MacAddress = MacAddress;    
 
       AccessDevice  accessDevice  = LocationDevicesListViewModel.AccessDevices .GetDevice();
       CaptureDevice captureDevice = LocationDevicesListViewModel.CaptureDevices.GetDevice();

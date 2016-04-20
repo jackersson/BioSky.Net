@@ -152,6 +152,9 @@
     <Compile Include="BioDataInstaller.cs" />
     <Compile Include="BioLocalStorage.cs" />
     <Compile Include="BioSkyNetRepository.cs" />
+    <Compile Include="Holders\AccessDeviceHolder.cs" />
+    <Compile Include="Holders\CaptureDeviceHolder.cs" />
+    <Compile Include="Holders\FingerprintDeviceHolder.cs" />
     <Compile Include="Holders\Grouped\FullLocationHolder.cs" />
     <Compile Include="Holders\Grouped\FullPersonHolder.cs" />
     <Compile Include="Holders\Grouped\FullVisitorHolder.cs" />

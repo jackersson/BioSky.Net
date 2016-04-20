@@ -138,7 +138,7 @@ namespace BioCaptureDevices
         return;
       }
 
-      IEnumerable<string> devicesToAdd    = devices.Where      (x => _devices.ContainsKey(x));
+      IEnumerable<string> devicesToAdd    = devices.Where      (x => ContainsKey(x));
       IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x)   );
 
       if (devicesToAdd != null)
@@ -153,7 +153,13 @@ namespace BioCaptureDevices
           Remove(deviceName);
       }     
     }
-    
+
+    private bool ContainsKey(string key)
+    {
+      СaptureDeviceListener result;
+      return _devices.TryGetValue(key, out result);
+    }
+
     private readonly CaptureDeviceEnumerator _deviceEnumerator;
     private Dictionary<string, СaptureDeviceListener> _devices;
     

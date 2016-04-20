@@ -113,7 +113,7 @@ namespace BioAccessDevice
       return _deviceEnumerator.DevicesNames;
     }
 
-    public void UpdateFromSet(HashSet<string> devices)
+    public void UpdateFromSet(ICollection<string> devices)
     {
       if (devices == null || devices.Count <= 0)
       {
@@ -121,8 +121,8 @@ namespace BioAccessDevice
         return;
       }
 
-      IEnumerable<string> devicesToAdd    = devices.Where(x => _devices.ContainsKey(x));
-      IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x));
+      IEnumerable<string> devicesToAdd    = devices.Where(x => !ContainsKey(x));
+      IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => devices.Contains(x));
 
       if (devicesToAdd != null)
       {
@@ -137,6 +137,11 @@ namespace BioAccessDevice
       }
     }
 
+    private bool ContainsKey( string key)
+    {
+      AccessDeviceListener result;
+      return _devices.TryGetValue(key,  out result);
+    }
 
     private readonly AccessDevicesEnumerator _deviceEnumerator;
     private Dictionary<string, AccessDeviceListener> _devices;
