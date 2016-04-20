@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BioGRPC.Utils
 {
@@ -17,11 +13,8 @@ namespace BioGRPC.Utils
       string sMacAddress = string.Empty;
       foreach (NetworkInterface adapter in nics)
       {
-        if (sMacAddress == String.Empty)// only return MAC Address from first card  
-        {
-          //IPInterfaceProperties properties = adapter.GetIPProperties(); Line is not required
-          sMacAddress = adapter.GetPhysicalAddress().ToString();
-        }
+        if (string.IsNullOrEmpty(sMacAddress))        
+          sMacAddress = adapter.GetPhysicalAddress().ToString();        
       }
       return sMacAddress;
     }
