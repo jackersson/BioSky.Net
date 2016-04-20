@@ -27,8 +27,10 @@ namespace BioEngine
            
     private void RefreshData()
     {      
-      IBioSkyNetRepository database            = _locator.GetProcessor<IBioSkyNetRepository>();
-      AsyncObservableCollection<Location> data = database.Locations.Data;
+      IBioSkyNetRepository database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      IServiceManager     serviceManager = _locator.GetProcessor<IServiceManager>();
+      IEnumerable <Location> data        = database.Locations.Data.Where(x => x.MacAddress == serviceManager.MacAddress);
+
 
       UpdateDevicesEngines();
 
