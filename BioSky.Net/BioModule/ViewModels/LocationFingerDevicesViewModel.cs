@@ -18,39 +18,40 @@ using BioService;
 using Google.Protobuf.Collections;
 using BioContracts;
 using BioModule.Utils;
+using BioContracts.FingerprintDevices;
 
 namespace BioModule.ViewModels
 {
-  public class LocationAccessDevicesViewModel : Screen, IUpdatable
+  public class LocationFingerDevicesViewModel : Screen, IUpdatable
   {
-    public LocationAccessDevicesViewModel(IProcessorLocator locator)
+    public LocationFingerDevicesViewModel(IProcessorLocator locator)
     {
-      DisplayName = "AccessDevices";
+      DisplayName = "FingerDevices";
 
       _locator = locator;
 
       _bioEngine = _locator.GetProcessor<IBioEngine>();
-      _database  = _locator.GetProcessor<IBioSkyNetRepository>();
+      _database = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      AccessDevicesNames = new AsyncObservableCollection<string>(); //_bioEngine.AccessDeviceEngine().GetAccessDevicesNames();
+      FingerDevicesNames = new AsyncObservableCollection<string>(); 
     }
 
     #region Update
 
     protected override void OnActivate()
     {
-      _bioEngine.AccessDeviceEngine().GetDevicesNames().CollectionChanged += AccessDevicesNames_CollectionChanged;
+      _bioEngine.FingerprintDeviceEngine().GetDevicesNames().CollectionChanged += FingerDevicesNames_CollectionChanged;
       RefreshData();
       base.OnActivate();
     }
 
     protected override void OnDeactivate(bool close)
     {
-      _bioEngine.AccessDeviceEngine().GetDevicesNames().CollectionChanged -= AccessDevicesNames_CollectionChanged;
+      _bioEngine.FingerprintDeviceEngine().GetDevicesNames().CollectionChanged -= FingerDevicesNames_CollectionChanged;
       base.OnDeactivate(close);
     }
 
-    private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void FingerDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       RefreshData();
     }
@@ -61,33 +62,33 @@ namespace BioModule.ViewModels
     }
     public void RefreshConnectedDevices()
     {
-      AsyncObservableCollection<string> temp = _bioEngine.AccessDeviceEngine().GetDevicesNames();
-      foreach (string deviceName in temp)
+      AsyncObservableCollection<FingerprintDeviceInfo> temp = _bioEngine.FingerprintDeviceEngine().GetDevicesNames();
+      foreach (FingerprintDeviceInfo device in temp)
       {
-        if (!string.IsNullOrEmpty(deviceName) && !AccessDevicesNames.Contains(deviceName))
-          AccessDevicesNames.Add(deviceName);
+        if (!string.IsNullOrEmpty(device.Name) && !FingerDevicesNames.Contains(device.Name))
+          FingerDevicesNames.Add(device.Name);
       }
     }
 
-    public AccessDevice GetDevice()
+    public FingerprintDevice GetDevice()
     {
-      AccessDevice result = null;
+      FingerprintDevice result = null;
       if (DesiredDeviceName == ActiveDeviceName)
         return result;
 
       if (DesiredDeviceName == string.Empty && ActiveDeviceName != string.Empty)
-        return new AccessDevice() { Portname = CurrentLocation.AccessDevice.Portname, EntityState = EntityState.Deleted };
+        return new FingerprintDevice() { Devicename = CurrentLocation.AccessDevice.Portname, EntityState = EntityState.Deleted };
 
       if (DesiredDeviceName != string.Empty && ActiveDeviceName == string.Empty)
-        return new AccessDevice() { EntityState = EntityState.Added , Portname = DesiredDeviceName};
+        return new FingerprintDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
 
       if (DesiredDeviceName != string.Empty && ActiveDeviceName != string.Empty)
-        return new AccessDevice() { EntityState = EntityState.Added, Portname = DesiredDeviceName };
+        return new FingerprintDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
 
       return result;
     }
 
-    public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedAccessDevice = null; }
+    public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedFingerDevice = null; }
 
 
     public void RefreshData()
@@ -96,16 +97,16 @@ namespace BioModule.ViewModels
       if (!IsActive)
         return;
 
-      AccessDevicesNames.Clear();
-      foreach (string portname in _database.Locations.AccessDevicesSet)
+      FingerDevicesNames.Clear();
+      foreach (string devicename in _database.Locations.FingerDevicesSet)
       {
-        if (!string.IsNullOrEmpty(portname) && !AccessDevicesNames.Contains(portname))
-          AccessDevicesNames.Add(portname);
+        if (!string.IsNullOrEmpty(devicename) && !FingerDevicesNames.Contains(devicename))
+          FingerDevicesNames.Add(devicename);
       }
 
-      RefreshConnectedDevices();      
+      RefreshConnectedDevices();
     }
-    
+
     private void OnDeviceChanged()
     {
       if (DeviceChanged != null)
@@ -118,16 +119,24 @@ namespace BioModule.ViewModels
 
     public void OnRemove(string source)
     {
-      if (DesiredDeviceName == SelectedAccessDevice)
+      if (DesiredDeviceName == SelectedFingerDevice)
         DesiredDeviceName = string.Empty;
     }
 
     public void OnActive(string source)
     {
-      DesiredDeviceName = SelectedAccessDevice;
+      DesiredDeviceName = SelectedFingerDevice;
     }
 
     public void Apply() { }
+
+    public bool CanApply
+    {
+      get
+      {
+        return !string.IsNullOrEmpty(DesiredDeviceName);
+      }
+    }
 
     #endregion
 
@@ -165,23 +174,16 @@ namespace BioModule.ViewModels
         }
       }
     }
-    public bool CanApply
-    {
-      get
-      {
-        return !string.IsNullOrEmpty(DesiredDeviceName);
-      }
-    }
 
     private string _desiredDeviceName;
     public string DesiredDeviceName
     {
       get { return _desiredDeviceName; }
       set
-      {      
-         _desiredDeviceName = value;
-         OnDeviceChanged();
-         NotifyOfPropertyChange(() => DesiredDeviceName);        
+      {
+        _desiredDeviceName = value;
+        OnDeviceChanged();
+        NotifyOfPropertyChange(() => DesiredDeviceName);
       }
     }
 
@@ -198,39 +200,39 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => CurrentLocation);
 
           if (value != null)
-          {           
-            ActiveDeviceName = value.AccessDevice == null ? string.Empty : value.AccessDevice.Portname;
+          {
+            ActiveDeviceName = value.FingerprintDevice == null ? string.Empty : value.FingerprintDevice.Devicename;
             DesiredDeviceName = ActiveDeviceName;
           }
         }
       }
     }
 
-    private string _selectedAccessDevice;
-    public string SelectedAccessDevice
+    private string _selectedFingerDevice;
+    public string SelectedFingerDevice
     {
-      get { return _selectedAccessDevice; }
+      get { return _selectedFingerDevice; }
       set
       {
-        if (_selectedAccessDevice != value)
+        if (_selectedFingerDevice != value)
         {
-          _selectedAccessDevice = value;
+          _selectedFingerDevice = value;
           MenuRemoveStatus = value == null ? false : true;
-          NotifyOfPropertyChange(() => SelectedAccessDevice);
+          NotifyOfPropertyChange(() => SelectedFingerDevice);
         }
       }
     }
 
-    private AsyncObservableCollection<string> _accessDevicesNames;
-    public AsyncObservableCollection<string> AccessDevicesNames
+    private AsyncObservableCollection<string> _fingerDevicesNames;
+    public AsyncObservableCollection<string> FingerDevicesNames
     {
-      get { return _accessDevicesNames; }
+      get { return _fingerDevicesNames; }
       set
       {
-        if (_accessDevicesNames != value)
+        if (_fingerDevicesNames != value)
         {
-          _accessDevicesNames = value;
-          NotifyOfPropertyChange(() => AccessDevicesNames);
+          _fingerDevicesNames = value;
+          NotifyOfPropertyChange(() => FingerDevicesNames);
         }
       }
     }

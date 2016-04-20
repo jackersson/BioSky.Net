@@ -19,6 +19,7 @@ namespace BioData.Holders.Grouped
 
       AccessDevicesSet  = new HashSet<string>();
       CaptureDevicesSet = new HashSet<string>();
+      FingerDevicesSet  = new HashSet<string>();
 
       _dialogsHolder = locator.GetProcessor<IDialogsHolder>();
     }
@@ -36,6 +37,8 @@ namespace BioData.Holders.Grouped
             AccessDevicesSet.Add(location.AccessDevice.Portname);
           if (location.CaptureDevice != null)
             CaptureDevicesSet.Add(location.CaptureDevice.Devicename);
+          if (location.FingerprintDevice != null)
+            FingerDevicesSet.Add(location.FingerprintDevice.Devicename);
         }
 
         OnDataChanged();
@@ -55,6 +58,7 @@ namespace BioData.Holders.Grouped
 
         AddAccessDevice (requested, responded.AccessDevice);
         AddCaptureDevice(requested, responded.CaptureDevice);
+        AddFingerDevice (requested, responded.CaptureDevice);
 
         CheckDevices(requested);
 
@@ -105,6 +109,21 @@ namespace BioData.Holders.Grouped
               oldItem.AccessDevice.MergeFrom(requested.AccessDevice);
             }
           }
+          if (requested.FingerprintDevice != null)
+          {
+            if (requested.FingerprintDevice.EntityState == EntityState.Deleted)
+            {
+              FingerDevicesSet.Remove(requested.FingerprintDevice.Devicename);
+              oldItem.FingerprintDevice = new FingerprintDevice();
+            }
+            else
+            {
+              oldItem.FingerprintDevice = (oldItem.FingerprintDevice == null)
+                                     ? new FingerprintDevice()
+                                     : oldItem.FingerprintDevice;
+              oldItem.FingerprintDevice.MergeFrom(requested.FingerprintDevice);
+            }
+          }
           CopyFrom(responded, oldItem);
         }
 
@@ -130,6 +149,8 @@ namespace BioData.Holders.Grouped
               AccessDevicesSet.Remove(item.AccessDevice.Portname);
             if (item.CaptureDevice != null && item.CaptureDevice.Locationid > 0)
               CaptureDevicesSet.Remove(item.CaptureDevice.Devicename);
+            if (item.FingerprintDevice != null && item.FingerprintDevice.Locationid > 0)
+              FingerDevicesSet.Remove(item.FingerprintDevice.Devicename);
 
             Data.Remove(item);
           }
@@ -161,6 +182,14 @@ namespace BioData.Holders.Grouped
             if (captureDevice.Devicename == requested.CaptureDevice.Devicename)
               location.CaptureDevice = new CaptureDevice();
         }
+
+        FingerprintDevice fingerDevice = location.FingerprintDevice;
+        if (requested.FingerprintDevice != null && requested.FingerprintDevice.EntityState != EntityState.Deleted)
+        {
+          if (requested.FingerprintDevice != null && fingerDevice != null)
+            if (fingerDevice.Devicename == requested.FingerprintDevice.Devicename)
+              location.FingerprintDevice = new FingerprintDevice();
+        }
       }
     }
 
@@ -180,6 +209,9 @@ namespace BioData.Holders.Grouped
 
       if (from.CaptureDevice != null)       
         AddCaptureDevice(to, from.CaptureDevice);
+
+      if (from.FingerprintDevice != null)
+        AddFingerDevice(to, from.CaptureDevice);
 
       to.Persons.Clear();
       to.Persons.Add(from.Persons);
@@ -308,6 +340,21 @@ namespace BioData.Holders.Grouped
         CaptureDevicesSet.Add(owner.CaptureDevice.Devicename);
     }
 
+    private void AddFingerDevice(Location owner, CaptureDevice responded)
+    {
+      if (responded == null)
+        return;
+
+      owner.FingerprintDevice.Id         = responded.Id;
+      owner.FingerprintDevice.Locationid = owner.Id    ;
+
+      if (owner.FingerprintDevice != null
+          && owner.FingerprintDevice.Locationid > 0
+          && !string.IsNullOrEmpty(owner.FingerprintDevice.Devicename)
+          && !FingerDevicesSet.Contains(owner.FingerprintDevice.Devicename))
+        FingerDevicesSet.Add(owner.FingerprintDevice.Devicename);
+    }
+
     private AsyncObservableCollection<Location> _data;
     public AsyncObservableCollection<Location> Data
     {
@@ -341,6 +388,17 @@ namespace BioData.Holders.Grouped
       {
         if (_captureDevicesSet != value)
           _captureDevicesSet = value;
+      }
+    }
+
+    private HashSet<string> _fingerDevicesSet;
+    public HashSet<string> FingerDevicesSet
+    {
+      get { return _fingerDevicesSet; }
+      private set
+      {
+        if (_fingerDevicesSet != value)
+          _fingerDevicesSet = value;
       }
     }
 

@@ -685,8 +685,8 @@ namespace BioModule.Utils
       if (values != null)
       {
         string collectionItem = values[0] != null ? values[0].ToString() : string.Empty;
-        string actualItem = values[1] != null ? values[1].ToString() : string.Empty;
-        string desiredItem = values[2] != null ? values[2].ToString() : string.Empty;
+        string actualItem     = values[1] != null ? values[1].ToString() : string.Empty;
+        string desiredItem    = values[2] != null ? values[2].ToString() : string.Empty;
 
         if (actualItem != string.Empty && collectionItem == actualItem && desiredItem == actualItem)
           return ResourceLoader.OkIconSource;

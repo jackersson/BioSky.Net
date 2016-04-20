@@ -16,6 +16,8 @@ namespace BioModule.ViewModels
   {
     public LocationCaptureDevicesViewModel(IProcessorLocator locator)
     {
+      DisplayName = "CaptureDevices";
+
       _locator = locator;
 
       _bioEngine = _locator.GetProcessor<IBioEngine>();
@@ -87,35 +89,43 @@ namespace BioModule.ViewModels
 
     public void OnRemove(string source)
     {
-      if (DesiredCaptureDeviceName == SelectedCaptureDevice)
-        DesiredCaptureDeviceName = string.Empty;
+      if (DesiredDeviceName == SelectedCaptureDevice)
+        DesiredDeviceName = string.Empty;
     }
 
     public void OnActive(string source)
     {
-      DesiredCaptureDeviceName = SelectedCaptureDevice;
+      DesiredDeviceName = SelectedCaptureDevice;
     }
 
     private void OnDeviceChanged()
     {
       if (DeviceChanged != null)
         DeviceChanged(null, EventArgs.Empty);      
-    }     
+    }
+
+    public bool CanApply
+    {
+      get
+      {
+        return !string.IsNullOrEmpty(DesiredDeviceName);
+      }
+    }
 
     public CaptureDevice GetDevice()
     {
       CaptureDevice result = null;
-      if (DesiredCaptureDeviceName == ActiveCaptureDeviceName)
+      if (DesiredDeviceName == ActiveDeviceName)
         return result;
 
-      if (DesiredCaptureDeviceName == string.Empty && ActiveCaptureDeviceName != string.Empty)
+      if (DesiredDeviceName == string.Empty && ActiveDeviceName != string.Empty)
         return new CaptureDevice() { Devicename = CurrentLocation.CaptureDevice.Devicename, EntityState = EntityState.Deleted };
       
-      if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName == string.Empty)
-        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredCaptureDeviceName };
+      if (DesiredDeviceName != string.Empty && ActiveDeviceName == string.Empty)
+        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
 
-      if (DesiredCaptureDeviceName != string.Empty && ActiveCaptureDeviceName != string.Empty)
-        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredCaptureDeviceName };
+      if (DesiredDeviceName != string.Empty && ActiveDeviceName != string.Empty)
+        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
 
       return result;
     }
@@ -168,35 +178,35 @@ namespace BioModule.ViewModels
       }
     }
 
-    private string _activeCaptureDeviceName;
-    public string ActiveCaptureDeviceName
+    private string _activeDeviceName;
+    public string ActiveDeviceName
     {
-      get { return _activeCaptureDeviceName; }
+      get { return _activeDeviceName; }
       set
       {
-        if (_activeCaptureDeviceName != value)
+        if (_activeDeviceName != value)
         {
-          _activeCaptureDeviceName = value;
-          NotifyOfPropertyChange(() => ActiveCaptureDeviceName);
+          _activeDeviceName = value;
+          NotifyOfPropertyChange(() => ActiveDeviceName);
         }
       }
     }
 
-    private string _desiredCaptureDeviceName;
-    public string DesiredCaptureDeviceName
+    private string _desiredDeviceName;
+    public string DesiredDeviceName
     {
-      get  { return _desiredCaptureDeviceName; }
+      get  { return _desiredDeviceName; }
       set
       {        
-        _desiredCaptureDeviceName = value;
+        _desiredDeviceName = value;
         OnDeviceChanged();
-        NotifyOfPropertyChange(() => DesiredCaptureDeviceName); 
+        NotifyOfPropertyChange(() => DesiredDeviceName); 
       }
     }
         
     public bool IsDeviceChanged
     {
-      get { return DesiredCaptureDeviceName != ActiveCaptureDeviceName;  }
+      get { return DesiredDeviceName != ActiveDeviceName;  }
     }
 
     private Location _currentLocation;
@@ -213,8 +223,8 @@ namespace BioModule.ViewModels
 
           if ( value != null)
           {          
-            ActiveCaptureDeviceName = value.CaptureDevice == null ? string.Empty : value.CaptureDevice.Devicename;
-            DesiredCaptureDeviceName = ActiveCaptureDeviceName;
+            ActiveDeviceName = value.CaptureDevice == null ? string.Empty : value.CaptureDevice.Devicename;
+            DesiredDeviceName = ActiveDeviceName;
           }         
         }
       }
