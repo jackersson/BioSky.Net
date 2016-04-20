@@ -64,7 +64,7 @@ namespace BioModule.ViewModels
       AsyncObservableCollection<string> temp = _bioEngine.AccessDeviceEngine().GetDevicesNames();
       foreach (string deviceName in temp)
       {
-        if (!AccessDevicesNames.Contains(deviceName))
+        if (!string.IsNullOrEmpty(deviceName) && !AccessDevicesNames.Contains(deviceName))
           AccessDevicesNames.Add(deviceName);
       }
     }

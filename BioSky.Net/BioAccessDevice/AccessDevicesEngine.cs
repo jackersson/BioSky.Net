@@ -2,6 +2,7 @@
 using BioContracts;
 using BioContracts.AccessDevices;
 using System.Linq;
+using System.Collections.Concurrent;
 
 namespace BioAccessDevice
 {
@@ -9,7 +10,7 @@ namespace BioAccessDevice
   {
     public AccessDevicesEngine()
     {
-      _devices = new Dictionary<string, AccessDeviceListener>();
+      _devices = new ConcurrentDictionary<string, AccessDeviceListener>();
 
       _deviceEnumerator = new AccessDevicesEnumerator();
       _deviceEnumerator.Start();
@@ -34,7 +35,7 @@ namespace BioAccessDevice
       {
         listener = new AccessDeviceListener(deviceName);
         listener.Start();       
-        _devices.Add(deviceName, listener);
+        _devices.TryAdd(deviceName, listener);
       }
     }
 
@@ -44,11 +45,9 @@ namespace BioAccessDevice
         return;
 
       AccessDeviceListener listener;
-      if (_devices.TryGetValue(deviceName, out listener))
-      {
+      _devices.TryRemove(deviceName, out listener);
+      if (listener != null)
         listener.Stop();
-        _devices.Remove(deviceName);   
-      }    
     }
 
     public bool IsDeviceActive(string deviceName)
@@ -121,25 +120,31 @@ namespace BioAccessDevice
         return;
       }
 
-      IEnumerable<string> devicesToAdd    = devices.Where(x => _devices.ContainsKey(x));
+      IEnumerable<string> devicesToAdd    = devices.Where(x => !_devices.ContainsKey(x));
       IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x));
 
       if (devicesToAdd != null)
       {
         foreach (string deviceName in devicesToAdd)
-          Add(deviceName);
+        {
+          if (!string.IsNullOrEmpty(deviceName))
+            Add(deviceName);
+        }
       }
 
       if (devicesToRemove != null)
       {
         foreach (string deviceName in devicesToRemove)
-          Remove(deviceName);
+        {
+          if (!string.IsNullOrEmpty(deviceName))
+            Remove(deviceName);
+        }
       }
     }
 
 
     private readonly AccessDevicesEnumerator _deviceEnumerator;
-    private Dictionary<string, AccessDeviceListener> _devices;
+    private ConcurrentDictionary<string, AccessDeviceListener> _devices;
 
   }
 }

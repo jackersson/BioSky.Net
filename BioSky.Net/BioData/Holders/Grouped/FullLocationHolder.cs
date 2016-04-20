@@ -286,11 +286,11 @@ namespace BioData.Holders.Grouped
       owner.AccessDevice.Id         = responded.Id;
       owner.AccessDevice.Locationid = owner.Id    ;
 
-      if (owner.AccessDevice != null && owner.AccessDevice.Locationid > 0)
-      {
-        if (!AccessDevicesSet.Contains(owner.AccessDevice.Portname))
-          AccessDevicesSet.Add(owner.AccessDevice.Portname);
-      }
+      if (owner.AccessDevice != null 
+          && owner.AccessDevice.Locationid > 0 
+          && !string.IsNullOrEmpty(owner.AccessDevice.Portname)
+          && !AccessDevicesSet.Contains(owner.AccessDevice.Portname))
+        AccessDevicesSet.Add(owner.AccessDevice.Portname);
     }
 
     private void AddCaptureDevice(Location owner, CaptureDevice responded)
@@ -301,11 +301,11 @@ namespace BioData.Holders.Grouped
       owner.CaptureDevice.Id         = responded.Id;
       owner.CaptureDevice.Locationid = owner.Id    ;
 
-      if (owner.CaptureDevice != null && owner.CaptureDevice.Locationid > 0)
-      {
-        if (!CaptureDevicesSet.Contains(owner.CaptureDevice.Devicename))
-          CaptureDevicesSet.Add(owner.CaptureDevice.Devicename);
-      }
+      if (owner.CaptureDevice != null 
+          && owner.CaptureDevice.Locationid > 0 
+          && !string.IsNullOrEmpty(owner.CaptureDevice.Devicename)
+          && !CaptureDevicesSet.Contains(owner.CaptureDevice.Devicename))
+        CaptureDevicesSet.Add(owner.CaptureDevice.Devicename);
     }
 
     private AsyncObservableCollection<Location> _data;
