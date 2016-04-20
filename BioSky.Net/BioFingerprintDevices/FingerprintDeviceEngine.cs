@@ -1,6 +1,8 @@
 ﻿using BioContracts;
 using BioContracts.FingerprintDevices;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BioFingerprintDevices
 {
@@ -8,7 +10,7 @@ namespace BioFingerprintDevices
   {
     public FingerprintDeviceEngine()
     {
-      _devices = new Dictionary<string, FingerprintDeviceListener>();
+      _devices = new ConcurrentDictionary<string, FingerprintDeviceListener>();
 
       _deviceEnumerator = new FingerprintDeviceEnumerator();
       _deviceEnumerator.Start();
@@ -24,7 +26,7 @@ namespace BioFingerprintDevices
       {
         listener = new FingerprintDeviceListener(deviceName, _deviceEnumerator);
         listener.Start();
-        _devices.Add(deviceName, listener);
+        _devices.TryAdd(deviceName, listener);
       }
     }
 
@@ -62,14 +64,12 @@ namespace BioFingerprintDevices
         return;
 
       FingerprintDeviceListener listener;
-      if (_devices.TryGetValue(deviceName, out listener))
-      {
+      _devices.TryRemove(deviceName, out listener);
+      if (listener != null)
         listener.Kill();
-        _devices.Remove(deviceName);
-      }
     }
 
-    public void Stop()
+    public void RemoveAll()
     {
       _deviceEnumerator.Stop();
 
@@ -102,7 +102,37 @@ namespace BioFingerprintDevices
       }
     }
 
+    public void UpdateFromSet(HashSet<string> devices)
+    {
+      if (devices == null || devices.Count <= 0)
+      {
+        RemoveAll();
+        return;
+      }
+
+      IEnumerable<string> devicesToAdd    =  devices.Where(x => !_devices.ContainsKey(x));
+      IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x));
+
+      if (devicesToAdd != null)
+      {
+        foreach (string deviceName in devicesToAdd)
+        {
+          if (!string.IsNullOrEmpty(deviceName))
+            Add(deviceName);
+        }
+      }
+
+      if (devicesToRemove != null)
+      {
+        foreach (string deviceName in devicesToRemove)
+        {
+          if (!string.IsNullOrEmpty(deviceName))
+            Remove(deviceName);
+        }
+      }
+    }
+
     private readonly FingerprintDeviceEnumerator          _deviceEnumerator;
-    private Dictionary<string, FingerprintDeviceListener> _devices         ;
+    private ConcurrentDictionary<string, FingerprintDeviceListener> _devices         ;
   }
 }

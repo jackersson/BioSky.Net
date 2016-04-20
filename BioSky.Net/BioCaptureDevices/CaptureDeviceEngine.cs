@@ -4,6 +4,7 @@ using BioContracts.Common;
 using BioContracts.CaptureDevices;
 using System.Collections;
 using System.Linq;
+using System.Collections.Concurrent;
 
 namespace BioCaptureDevices
 {
@@ -11,7 +12,7 @@ namespace BioCaptureDevices
   {
     public CaptureDeviceEngine()
     {
-      _devices = new Dictionary<string, СaptureDeviceListener>(); 
+      _devices = new ConcurrentDictionary<string, СaptureDeviceListener>(); 
         
       _deviceEnumerator = new CaptureDeviceEnumerator();
       _deviceEnumerator.Start();
@@ -27,7 +28,7 @@ namespace BioCaptureDevices
       {      
         listener = new СaptureDeviceListener(cameraName, _deviceEnumerator);
         listener.Start();
-        _devices.Add(cameraName, listener);
+        _devices.TryAdd(cameraName, listener);
       }
     }    
 
@@ -37,11 +38,9 @@ namespace BioCaptureDevices
         return;
 
       СaptureDeviceListener listener;
-      if (_devices.TryGetValue(cameraName, out listener))
-      {       
-        listener.Kill();       
-        _devices.Remove(cameraName);   
-      }
+      _devices.TryRemove(cameraName, out listener);
+      if (listener != null)
+        listener.Kill();      
     }
 
     public bool IsDeviceActive(string cameraName)
@@ -138,30 +137,30 @@ namespace BioCaptureDevices
         return;
       }
 
-      IEnumerable<string> devicesToAdd    = devices.Where      (x => ContainsKey(x));
+      IEnumerable<string> devicesToAdd    = devices.Where      (x => !_devices.ContainsKey(x));
       IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x)   );
 
       if (devicesToAdd != null)
       {
         foreach (string deviceName in devicesToAdd)
-          Add(deviceName);
+        {
+          if(!string.IsNullOrEmpty(deviceName))
+            Add(deviceName);
+        }
       }
 
       if (devicesToRemove != null)
       {
         foreach (string deviceName in devicesToRemove)
-          Remove(deviceName);
+        {
+          if (!string.IsNullOrEmpty(deviceName))
+            Remove(deviceName);
+        }
       }     
     }
-
-    private bool ContainsKey(string key)
-    {
-      СaptureDeviceListener result;
-      return _devices.TryGetValue(key, out result);
-    }
-
+    
     private readonly CaptureDeviceEnumerator _deviceEnumerator;
-    private Dictionary<string, СaptureDeviceListener> _devices;
+    private ConcurrentDictionary<string, СaptureDeviceListener> _devices;
     
   
   }

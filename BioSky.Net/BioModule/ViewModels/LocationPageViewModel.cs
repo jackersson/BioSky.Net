@@ -36,14 +36,20 @@ namespace BioModule.ViewModels
       _dialogsHolder = _locator.GetProcessor<DialogsHolder>();
       _bioEngine     = _locator.GetProcessor<IBioEngine>();
 
-      _locationDevicesListViewModel = new DevicesListViewModel(_locator);
-      _locationDevicesListViewModel.DisplayName = "Devices";
-      _locationDevicesListViewModel.PropertyChanged += DevicesPropertyChanged;
-
       _locationPermissionViewModel = new LocationPermissionViewModel(_locator);
       _locationPermissionViewModel.PermissionsChanged += _locationPermissionViewModel_PermissionsChanged;
 
-      Items.Add(_locationDevicesListViewModel);     
+      LocationAccessDevices  = new LocationAccessDevicesViewModel (_locator);
+      LocationCaptureDevices = new LocationCaptureDevicesViewModel(_locator);
+      LocationFingerDevices  = new LocationFingerDevicesViewModel (_locator);
+
+      LocationAccessDevices .PropertyChanged += DevicesPropertyChanged;
+      LocationCaptureDevices.PropertyChanged += DevicesPropertyChanged;
+      LocationFingerDevices .PropertyChanged += DevicesPropertyChanged;
+
+      Items.Add(LocationAccessDevices ); 
+      Items.Add(LocationCaptureDevices);
+      Items.Add(LocationFingerDevices );
       Items.Add(_locationPermissionViewModel );
 
       ActiveItem = Items[0];
@@ -56,16 +62,12 @@ namespace BioModule.ViewModels
 
     private void Locations_DataChanged()
     {
-      if (_locationPageMode == LocationPageMode.Existing)
-      {
-        Location location = _database.Locations.GetValue(CurrentLocation.Id);
-        Update(location);
-      }
-      else
-      {
-        Location location = _database.Locations.GetValue(CurrentLocation);
-        Update(location);
-      }
+      Location location;
+      if (_locationPageMode == LocationPageMode.Existing)      
+        location = _database.Locations.GetValue(CurrentLocation.Id);      
+      else      
+        location = _database.Locations.GetValue(CurrentLocation);      
+      Update(location);
     }
 
     private void RefreshUI()
@@ -171,14 +173,19 @@ namespace BioModule.ViewModels
            
       location.MacAddress = MacAddress;    
 
-      AccessDevice  accessDevice  = LocationDevicesListViewModel.AccessDevices .GetDevice();
-      CaptureDevice captureDevice = LocationDevicesListViewModel.CaptureDevices.GetDevice();
-      
+      AccessDevice      accessDevice  = LocationAccessDevices .GetDevice();
+      CaptureDevice     captureDevice = LocationCaptureDevices.GetDevice();
+      FingerprintDevice fingerDevice  = LocationFingerDevices .GetDevice();
+
+
       if (accessDevice != null)        
         location.AccessDevice = accessDevice;      
 
       if (captureDevice != null)  
-        location.CaptureDevice = captureDevice;      
+        location.CaptureDevice = captureDevice;
+
+      if (fingerDevice != null)
+        location.FingerprintDevice = fingerDevice;
 
       if (_locationPermissionViewModel.IsAccessChanged)
       {
@@ -250,7 +257,10 @@ namespace BioModule.ViewModels
     public bool CanApply
     {
       get {
-        return IsActive && string.IsNullOrEmpty(Error) && _locationDevicesListViewModel.CanApply
+        return IsActive && string.IsNullOrEmpty(Error) 
+                        &&(  LocationAccessDevices .CanApply
+                          || LocationCaptureDevices.CanApply
+                          || LocationFingerDevices .CanApply)
                         && ( ( _locationPageMode == LocationPageMode.New )
                           || ( _locationPageMode == LocationPageMode.Existing && CanRevert) );
       }
@@ -263,7 +273,9 @@ namespace BioModule.ViewModels
         return IsActive && _revertLocation != null
                         && _currentLocation != null
                         && (  _locationPermissionViewModel.IsAccessChanged
-                           || _locationDevicesListViewModel.DeviceChanged
+                           || LocationAccessDevices .IsDeviceChanged 
+                           || LocationCaptureDevices.IsDeviceChanged 
+                           || LocationFingerDevices .IsDeviceChanged
                            || _currentLocation.GetHashCode() != _revertLocation.GetHashCode());
       }
     }
@@ -329,16 +341,46 @@ namespace BioModule.ViewModels
       }
     }
 
-    private DevicesListViewModel _locationDevicesListViewModel;
-    public DevicesListViewModel LocationDevicesListViewModel
+    private LocationAccessDevicesViewModel _locationAccessDevices;
+    public LocationAccessDevicesViewModel LocationAccessDevices
     {
-      get { return _locationDevicesListViewModel; }
+      get { return _locationAccessDevices; }
       set
       {
-        if (_locationDevicesListViewModel != value)
+        if (_locationAccessDevices != value)
         {
-          _locationDevicesListViewModel = value;
-          NotifyOfPropertyChange(() => LocationDevicesListViewModel);
+          _locationAccessDevices = value;
+          NotifyOfPropertyChange(() => LocationAccessDevices);
+          Refresh();
+        }
+      }
+    }
+
+    private LocationCaptureDevicesViewModel _locationCaptureDevices;
+    public LocationCaptureDevicesViewModel LocationCaptureDevices
+    {
+      get { return _locationCaptureDevices; }
+      set
+      {
+        if (_locationCaptureDevices != value)
+        {
+          _locationCaptureDevices = value;
+          NotifyOfPropertyChange(() => LocationCaptureDevices);
+          Refresh();
+        }
+      }
+    }
+
+    private LocationFingerDevicesViewModel _locationFingerDevices;
+    public LocationFingerDevicesViewModel LocationFingerDevices
+    {
+      get { return _locationFingerDevices; }
+      set
+      {
+        if (_locationFingerDevices != value)
+        {
+          _locationFingerDevices = value;
+          NotifyOfPropertyChange(() => LocationFingerDevices);
           Refresh();
         }
       }

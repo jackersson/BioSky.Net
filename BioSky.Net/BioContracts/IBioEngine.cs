@@ -1,5 +1,6 @@
 ﻿using BioContracts.AccessDevices;
 using BioContracts.CaptureDevices;
+using BioContracts.FingerprintDevices;
 using BioContracts.Locations;
 using BioService;
 
@@ -36,7 +37,9 @@ namespace BioContracts
     ICaptureDeviceEngine CaptureDeviceEngine();
 
     ITrackLocationEngine TrackLocationEngine();
-   
+
+    IFingerprintDeviceEngine FingerprintDeviceEngine();
+
     bool IsActivityAllowed(Activity permissionRule);
     
     Person AuthenticatedPerson { get; set; }

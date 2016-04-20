@@ -7,6 +7,7 @@ using BioContracts.Holders;
 using System.Linq;
 using BioContracts.CaptureDevices;
 using BioContracts.AccessDevices;
+using BioContracts.FingerprintDevices;
 
 namespace BioEngine
 {
@@ -20,6 +21,8 @@ namespace BioEngine
 
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
+      _fingerDeviceEngine = locator.GetProcessor<IFingerprintDeviceEngine>();
+
 
       _locationsHolder = _locator.GetProcessor<IBioSkyNetRepository>().Locations;
       _locationsHolder.DataChanged += RefreshData;
@@ -66,6 +69,8 @@ namespace BioEngine
     {
       _captureDeviceEngine.UpdateFromSet(_locationsHolder.CaptureDevicesSet);
       _accessDeviceEngine .UpdateFromSet(_locationsHolder.AccessDevicesSet );
+      _fingerDeviceEngine .UpdateFromSet(_locationsHolder.FingerDevicesSet );
+
     }
 
     private ConcurrentDictionary<long, TrackLocation> _trackLocationsSet;
@@ -91,5 +96,6 @@ namespace BioEngine
     private readonly IFullLocationHolder          _locationsHolder    ;
     private readonly ICaptureDeviceEngine         _captureDeviceEngine;
     private readonly IAccessDeviceEngine          _accessDeviceEngine ;
+    private readonly IFingerprintDeviceEngine     _fingerDeviceEngine ;
   }
 }
