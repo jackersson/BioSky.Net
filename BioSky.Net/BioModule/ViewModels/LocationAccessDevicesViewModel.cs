@@ -52,7 +52,7 @@ namespace BioModule.ViewModels
 
     private void AccessDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-      RefreshConnectedDevices();
+      RefreshData();
     }
     public void Update(Location location)
     {
@@ -96,12 +96,11 @@ namespace BioModule.ViewModels
       if (!IsActive)
         return;
 
-      foreach (AccessDevice ac in _database.Locations.AccessDevices)
+      AccessDevicesNames.Clear();
+      foreach (string portname in _database.Locations.AccessDevicesSet)
       {
-        if (ac == null)
-          continue;
-        if (!AccessDevicesNames.Contains(ac.Portname))
-          AccessDevicesNames.Add(ac.Portname);
+        if (!string.IsNullOrEmpty(portname) && !AccessDevicesNames.Contains(portname))
+          AccessDevicesNames.Add(portname);
       }
 
       RefreshConnectedDevices();      

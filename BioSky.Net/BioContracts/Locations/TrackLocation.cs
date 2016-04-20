@@ -44,10 +44,10 @@ namespace BioContracts
       if (location == null)
         return;
 
-      //if (_devices.Count > 0)
-        //Stop();      
+      if (_devices.Count > 0)
+        Stop();
 
-      _currentLocation  = location;
+      _currentLocation = location;
 
       Start();
     }
