@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using BioContracts.Holders;
+using BioContracts.CaptureDevices;
+using BioContracts.AccessDevices;
 
 namespace BioData.Holders.Grouped
 {
@@ -15,8 +17,8 @@ namespace BioData.Holders.Grouped
       DataSet = new Dictionary<long, Location>();     
       Data = new AsyncObservableCollection<Location>();
 
-      AccessDevices  = new List<AccessDevice>();
-      CaptureDevices = new List<CaptureDevice>();
+      AccessDevicesSet  = new HashSet<string>();
+      CaptureDevicesSet = new HashSet<string>();
 
       _dialogsHolder = locator.GetProcessor<IDialogsHolder>();
     }
@@ -30,8 +32,10 @@ namespace BioData.Holders.Grouped
         foreach (Location location in data)
         {
           _dataSet.Add(location.Id, location);
-          AccessDevices.Add(location.AccessDevice);
-          CaptureDevices.Add(location.CaptureDevice);
+          if(location.AccessDevice != null)
+            AccessDevicesSet.Add(location.AccessDevice.Portname);
+          if (location.CaptureDevice != null)
+            CaptureDevicesSet.Add(location.CaptureDevice.Devicename);
         }
 
         OnDataChanged();
@@ -52,8 +56,7 @@ namespace BioData.Holders.Grouped
         AddAccessDevice (requested, responded.AccessDevice);
         AddCaptureDevice(requested, responded.CaptureDevice);
 
-        CheckAccessDevices(requested);
-        CheckCaptureDevices(requested);
+        CheckDevices(requested);
 
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);        
@@ -76,7 +79,7 @@ namespace BioData.Holders.Grouped
           {
             if (requested.CaptureDevice.EntityState == EntityState.Deleted)
             {
-              CaptureDevices.Remove(CaptureDevices.Where(x => x.Devicename == requested.CaptureDevice.Devicename).FirstOrDefault());
+              CaptureDevicesSet.Remove(requested.CaptureDevice.Devicename);
               oldItem.CaptureDevice = new CaptureDevice();
             }
             else
@@ -91,7 +94,7 @@ namespace BioData.Holders.Grouped
           {
             if (requested.AccessDevice.EntityState == EntityState.Deleted)
             {
-              AccessDevices.Remove(AccessDevices.Where(x => x.Portname == requested.AccessDevice.Portname).FirstOrDefault());
+              AccessDevicesSet.Remove(requested.AccessDevice.Portname);
               oldItem.AccessDevice = new AccessDevice();
             }
             else
@@ -107,6 +110,30 @@ namespace BioData.Holders.Grouped
 
         Console.WriteLine(Data);
         Console.WriteLine(DataSet);
+      }
+      OnDataChanged();
+      ShowLocationResult(requested, responded);
+    }
+
+    public void Remove(Location requested
+                      , Location responded)
+    {
+      if (responded != null)
+      {
+        if (responded.Dbresult == Result.Success)
+        {
+          _dataSet.Remove(requested.Id);
+          var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
+          if (item != null)
+          {
+            if (item.AccessDevice != null && item.AccessDevice.Locationid > 0)
+              AccessDevicesSet.Remove(item.AccessDevice.Portname);
+            if (item.CaptureDevice != null && item.CaptureDevice.Locationid > 0)
+              CaptureDevicesSet.Remove(item.CaptureDevice.Devicename);
+
+            Data.Remove(item);
+          }
+        }
       }
       OnDataChanged();
       ShowLocationResult(requested, responded);
@@ -136,25 +163,6 @@ namespace BioData.Holders.Grouped
         }
       }
     }
-    private void CheckAccessDevices(Location requested)
-    {
-      if (requested.AccessDevice != null && requested.AccessDevice.Id > 0)
-      {
-        AccessDevice accessDevice = AccessDevices.Where(x => x.Portname == requested.AccessDevice.Portname).FirstOrDefault();
-        if (accessDevice == null)
-          AccessDevices.Add(requested.AccessDevice);
-      }
-    }
-
-    private void CheckCaptureDevices(Location requested)
-    {
-      if (requested.CaptureDevice != null && requested.CaptureDevice.Id > 0)
-      {
-        CaptureDevice captureDevice = CaptureDevices.Where(x => x.Devicename == requested.CaptureDevice.Devicename).FirstOrDefault();
-        if (captureDevice == null)
-          CaptureDevices.Add(requested.CaptureDevice);
-      }
-    }
 
     private void CopyFrom(Location from, Location to)
     {
@@ -173,37 +181,9 @@ namespace BioData.Holders.Grouped
       if (from.CaptureDevice != null)       
         AddCaptureDevice(to, from.CaptureDevice);
 
-      CheckAccessDevices(to);
-      CheckCaptureDevices(to);
-
       to.Persons.Clear();
       to.Persons.Add(from.Persons);
     }
-
-    public void Remove( Location requested
-                      , Location responded )
-    {
-      if (responded != null)
-      {
-        if (responded.Dbresult == Result.Success)
-        {
-          _dataSet.Remove(requested.Id);
-          var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
-          if (item != null)
-          {
-            if(item.AccessDevice != null && item.AccessDevice.Id > 0)
-              AccessDevices.Remove(AccessDevices.Where(x => x.Portname == item.AccessDevice.Portname).FirstOrDefault());
-            if (item.CaptureDevice != null && item.CaptureDevice.Id > 0)
-              CaptureDevices.Remove(CaptureDevices.Where(x => x.Devicename == item.CaptureDevice.Devicename).FirstOrDefault());
-
-            Data.Remove(item);
-          }
-        }
-      }
-      OnDataChanged();
-      ShowLocationResult(requested, responded);
-    }
-
     private void ShowLocationResult(Location requested, Location responded)
     {
       LocationItems.Clear();
@@ -304,7 +284,13 @@ namespace BioData.Holders.Grouped
         return;
 
       owner.AccessDevice.Id         = responded.Id;
-      owner.AccessDevice.Locationid = owner.Id    ;      
+      owner.AccessDevice.Locationid = owner.Id    ;
+
+      if (owner.AccessDevice != null && owner.AccessDevice.Locationid > 0)
+      {
+        if (!AccessDevicesSet.Contains(owner.AccessDevice.Portname))
+          AccessDevicesSet.Add(owner.AccessDevice.Portname);
+      }
     }
 
     private void AddCaptureDevice(Location owner, CaptureDevice responded)
@@ -313,7 +299,13 @@ namespace BioData.Holders.Grouped
         return;
             
       owner.CaptureDevice.Id         = responded.Id;
-      owner.CaptureDevice.Locationid = owner.Id    ;  
+      owner.CaptureDevice.Locationid = owner.Id    ;
+
+      if (owner.CaptureDevice != null && owner.CaptureDevice.Locationid > 0)
+      {
+        if (!CaptureDevicesSet.Contains(owner.CaptureDevice.Devicename))
+          CaptureDevicesSet.Add(owner.CaptureDevice.Devicename);
+      }
     }
 
     private AsyncObservableCollection<Location> _data;
@@ -330,25 +322,25 @@ namespace BioData.Holders.Grouped
       }
     }
 
-    private List<AccessDevice> _accessDevices;
-    public List<AccessDevice> AccessDevices
+    private HashSet<string> _accessDevicesSet;
+    public HashSet<string> AccessDevicesSet
     {
-      get { return _accessDevices; }
+      get { return _accessDevicesSet; }
       private set
       {
-        if (_accessDevices != value)
-          _accessDevices = value;
+        if (_accessDevicesSet != value)
+          _accessDevicesSet = value;
       }
     }
 
-    private List<CaptureDevice> _captureDevices;
-    public List<CaptureDevice> CaptureDevices
+    private HashSet<string> _captureDevicesSet;
+    public HashSet<string> CaptureDevicesSet
     {
-      get { return _captureDevices; }
+      get { return _captureDevicesSet; }
       private set
       {
-        if (_captureDevices != value)
-          _captureDevices = value;
+        if (_captureDevicesSet != value)
+          _captureDevicesSet = value;
       }
     }
 
@@ -384,7 +376,9 @@ namespace BioData.Holders.Grouped
       }
     }
 
-    private IDialogsHolder _dialogsHolder;
+    private IDialogsHolder       _dialogsHolder      ;
+    private ICaptureDeviceEngine _captureDeviceEngine;
+    private IAccessDeviceEngine  _accessDeviceEngine ;
 
     public event DataChangedHandler DataChanged;
     public event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<Location>> DataUpdated;    

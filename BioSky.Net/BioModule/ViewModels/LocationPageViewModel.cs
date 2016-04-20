@@ -53,16 +53,13 @@ namespace BioModule.ViewModels
 
     private void Locations_DataChanged()
     {
-      if (_locationPageMode == LocationPageMode.Existing)
-      {
-        Location location = _database.Locations.GetValue(CurrentLocation.Id);
-        Update(location);
-      }
-      else
-      {
-        Location location = _database.Locations.GetValue(CurrentLocation);
-        Update(location);
-      }
+      Location location;
+      if (_locationPageMode == LocationPageMode.Existing)      
+        location = _database.Locations.GetValue(CurrentLocation.Id);      
+      else      
+        location = _database.Locations.GetValue(CurrentLocation); 
+
+      Update(location);
     }
 
     private void RefreshUI()
@@ -166,11 +163,9 @@ namespace BioModule.ViewModels
         if (CurrentLocation.LocationName != _revertLocation.LocationName)
           location.LocationName = CurrentLocation.LocationName;
       }
-      else
-      {
-        location.Description  = CurrentLocation.Description;
-        location.LocationName = CurrentLocation.LocationName;
-      }
+
+      location.LocationName = CurrentLocation.LocationName;
+      location.Description = CurrentLocation.Description;
 
       AccessDevice  accessDevice  = LocationDevicesListViewModel.AccessDevices .GetDevice();
       CaptureDevice captureDevice = LocationDevicesListViewModel.CaptureDevices.GetDevice();
@@ -188,11 +183,8 @@ namespace BioModule.ViewModels
       }
 
       RepeatedField<Person> persons = _locationPermissionViewModel.GetResult();
-      if(persons != null)
-      {
-        if (persons.Count > 0)
-          location.Persons.Add(persons);
-      }    
+      if(persons != null && persons.Count > 0)
+        location.Persons.Add(persons);
 
       return location;
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BioContracts;
 using BioContracts.AccessDevices;
+using System.Linq;
 
 namespace BioAccessDevice
 {
@@ -14,7 +15,7 @@ namespace BioAccessDevice
       _deviceEnumerator.Start();
     }
 
-    public void Stop()
+    public void RemoveAll()
     {
       _deviceEnumerator.Stop();
       foreach ( KeyValuePair<string, AccessDeviceListener> par in _devices)      
@@ -46,7 +47,7 @@ namespace BioAccessDevice
       if (_devices.TryGetValue(deviceName, out listener))
       {
         listener.Stop();
-        _devices.Remove(deviceName);
+        _devices.Remove(deviceName);   
       }    
     }
 
@@ -112,7 +113,33 @@ namespace BioAccessDevice
       return _deviceEnumerator.DevicesNames;
     }
 
+    public void UpdateFromSet(HashSet<string> devices)
+    {
+      if (devices == null || devices.Count <= 0)
+      {
+        RemoveAll();
+        return;
+      }
+
+      IEnumerable<string> devicesToAdd    = devices.Where(x => _devices.ContainsKey(x));
+      IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x));
+
+      if (devicesToAdd != null)
+      {
+        foreach (string deviceName in devicesToAdd)
+          Add(deviceName);
+      }
+
+      if (devicesToRemove != null)
+      {
+        foreach (string deviceName in devicesToRemove)
+          Remove(deviceName);
+      }
+    }
+
+
     private readonly AccessDevicesEnumerator _deviceEnumerator;
-    private Dictionary<string, AccessDeviceListener> _devices;    
+    private Dictionary<string, AccessDeviceListener> _devices;
+
   }
 }

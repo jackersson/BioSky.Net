@@ -1,12 +1,14 @@
 ﻿using BioContracts.CaptureDevices;
 using BioContracts.Common;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace BioContracts.CaptureDevices
 {
   public interface ICaptureDeviceEngine
   {
-    void Stop();
+    void RemoveAll();
     void Add(string deviceName);
     void Remove(string deviceName);
     bool IsDeviceActive(string deviceName);    
@@ -16,6 +18,9 @@ namespace BioContracts.CaptureDevices
     void ApplyResolution(string deviceName, int resolutionIndex);
 
     void ApplyProperties(string deviceName, IntPtr parentWindow );
+    
+    void UpdateFromSet( HashSet<string> devices );
+    
     AsyncObservableCollection<string> GetDevicesNames();
     
   }

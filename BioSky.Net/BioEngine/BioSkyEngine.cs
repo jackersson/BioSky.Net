@@ -41,8 +41,8 @@ namespace BioEngine
 
     public void Stop()
     {
-      _captureDeviceEngine.Stop();
-      _accessDeviceEngine.Stop();
+      _captureDeviceEngine.RemoveAll();
+      _accessDeviceEngine.RemoveAll();
     }
 
     public bool IsActivityAllowed(Activity activity)

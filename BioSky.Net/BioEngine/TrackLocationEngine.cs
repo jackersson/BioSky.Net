@@ -3,7 +3,6 @@ using BioContracts;
 using BioService;
 using BioContracts.Locations;
 using System.Collections.Concurrent;
-using BioContracts.Locations.Observers;
 using BioContracts.Holders;
 using System.Linq;
 using BioContracts.CaptureDevices;
@@ -19,10 +18,6 @@ namespace BioEngine
       _trackLocationsSet = new ConcurrentDictionary<long, TrackLocation>();
       _trackLocations    = new AsyncObservableCollection<TrackLocation>();
 
-
-      HashSet<string> AccessDevicess  = new HashSet<string>();
-      HashSet<string> CaptureDevicess = new HashSet<string>();
-
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
 
@@ -34,11 +29,11 @@ namespace BioEngine
     {      
       IBioSkyNetRepository database            = _locator.GetProcessor<IBioSkyNetRepository>();
       AsyncObservableCollection<Location> data = database.Locations.Data;
-      
+
+      UpdateDevicesEngines();
+
       foreach (Location location in data)
       {
-        CheckDeviceObservers(location);
-
         TrackLocation currentLocation = null;
         if (_trackLocationsSet.TryGetValue(location.Id, out currentLocation))
         {
@@ -62,59 +57,14 @@ namespace BioEngine
         else        
           _trackLocations.Add(_trackLocationsSet[locationID]);        
       }
-
-      RemoveDevices();
       OnLocationsChanged();
     }
 
-    private void RemoveDevices()
+    private void UpdateDevicesEngines()
     {
-      foreach (string deviceName in AccessDevices)
-      {
-        AccessDevice accessDevice = _locationsHolder.AccessDevices.Where(x => x.Portname == deviceName).FirstOrDefault();
-        if (accessDevice == null)
-        {
-          _accessDeviceEngine.Remove(deviceName);
-          AccessDevices.Remove(deviceName);
-        }
-      }
-
-      foreach (string deviceName in CaptureDevices)
-      {
-        CaptureDevice captureDevice = _locationsHolder.CaptureDevices.Where(x => x.Devicename == deviceName).FirstOrDefault();
-        if (captureDevice == null)
-        {
-          _captureDeviceEngine.Remove(deviceName);
-          CaptureDevices.Remove(deviceName);
-        }
-      }
+      _captureDeviceEngine.UpdateFromSet(_locationsHolder.CaptureDevicesSet);
+      _accessDeviceEngine .UpdateFromSet(_locationsHolder.AccessDevicesSet );
     }
-
-    private void CheckDeviceObservers(Location location)
-    {
-      if (location.AccessDevice != null && location.AccessDevice.Id > 0)
-      {
-        string deviceName = location.AccessDevice.Portname;
-        if (!AccessDevices.Contains(deviceName))
-        {
-          _accessDeviceEngine.Add(deviceName);
-          AccessDevices.Add(deviceName);
-        }
-      }
-
-      if (location.CaptureDevice != null && location.CaptureDevice.Id > 0)
-      {
-        string deviceName = location.CaptureDevice.Devicename;
-        if (!CaptureDevices.Contains(deviceName))
-        {
-          _captureDeviceEngine.Add(deviceName);
-          CaptureDevices.Add(deviceName);
-        }
-      }
-    }
-
-    private HashSet<string> AccessDevices ;
-    private HashSet<string> CaptureDevices;
 
     private ConcurrentDictionary<long, TrackLocation> _trackLocationsSet;
     private ConcurrentDictionary<long, TrackLocation> TrackLocationsSet
