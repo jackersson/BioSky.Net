@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using BioContracts.Common;
 using BioContracts.CaptureDevices;
+using System.Collections;
+using System.Linq;
 
 namespace BioCaptureDevices
 {
@@ -9,7 +11,7 @@ namespace BioCaptureDevices
   {
     public CaptureDeviceEngine()
     {
-      _devices = new Dictionary<string, СaptureDeviceListener>();
+      _devices = new Dictionary<string, СaptureDeviceListener>(); 
         
       _deviceEnumerator = new CaptureDeviceEnumerator();
       _deviceEnumerator.Start();
@@ -25,7 +27,7 @@ namespace BioCaptureDevices
       {      
         listener = new СaptureDeviceListener(cameraName, _deviceEnumerator);
         listener.Start();
-        _devices.Add(cameraName, listener); 
+        _devices.Add(cameraName, listener);
       }
     }    
 
@@ -38,7 +40,7 @@ namespace BioCaptureDevices
       if (_devices.TryGetValue(cameraName, out listener))
       {       
         listener.Kill();       
-        _devices.Remove(cameraName);
+        _devices.Remove(cameraName);   
       }
     }
 
@@ -77,46 +79,6 @@ namespace BioCaptureDevices
       }
     }
 
-    /*
-    public VideoCapabilities[] GetCaptureDeviceVideoCapabilities(string cameraName)
-    {
-      if (cameraName == null)
-        return null;
-
-      СaptureDeviceListener listener;
-      if (_captureDevices.TryGetValue(cameraName, out listener))
-        return listener.GetVideoCapabilities();
-
-      return null;
-    }
-
-    public void SetCaptureDeviceVideoCapabilities(string cameraName, int selectedResolution)
-    {
-      if (cameraName == null)
-        return;
-
-      СaptureDeviceListener listener;
-      if (_captureDevices.TryGetValue(cameraName, out listener))
-      {
-        if (listener != null)
-          listener.SetVideoCapability(selectedResolution);
-      }
-    }
-    
-    public VideoCapabilities GetVideoResolution(string cameraName)
-    {
-      if (cameraName == null)
-        return null;
-
-      СaptureDeviceListener listener;
-      if (_captureDevices.TryGetValue(cameraName, out listener))
-      {
-        if (listener != null)
-          return listener.GetVideoResolution();
-      }
-      return null;
-    }
-    */
     public AsyncObservableCollection<string> GetDevicesNames()
     {
       return _deviceEnumerator.CaptureDevicesNames;
@@ -158,18 +120,43 @@ namespace BioCaptureDevices
     }
 
 
-    public void Stop()
+    public void RemoveAll()
     {
       _deviceEnumerator.Stop();
    
       foreach (KeyValuePair<string, СaptureDeviceListener> par in _devices)
         par.Value.Kill();
 
-      _devices.Clear();
+      _devices.Clear();    
     }
 
+    public void UpdateFromSet(HashSet<string> devices)
+    {
+      if (devices == null || devices.Count <= 0)
+      {
+        RemoveAll();
+        return;
+      }
+
+      IEnumerable<string> devicesToAdd    = devices.Where      (x => _devices.ContainsKey(x));
+      IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x)   );
+
+      if (devicesToAdd != null)
+      {
+        foreach (string deviceName in devicesToAdd)
+          Add(deviceName);
+      }
+
+      if (devicesToRemove != null)
+      {
+        foreach (string deviceName in devicesToRemove)
+          Remove(deviceName);
+      }     
+    }
+    
     private readonly CaptureDeviceEnumerator _deviceEnumerator;
     private Dictionary<string, СaptureDeviceListener> _devices;
+    
   
   }
 }

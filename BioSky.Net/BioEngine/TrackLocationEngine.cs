@@ -3,7 +3,6 @@ using BioContracts;
 using BioService;
 using BioContracts.Locations;
 using System.Collections.Concurrent;
-using BioContracts.Locations.Observers;
 using BioContracts.Holders;
 using System.Linq;
 using BioContracts.CaptureDevices;
@@ -20,8 +19,7 @@ namespace BioEngine
       _trackLocations    = new AsyncObservableCollection<TrackLocation>();
 
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine> ();
-      //_bioEngine           = locator.GetProcessor<IBioEngine>          ();
+      _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
 
       _locationsHolder = _locator.GetProcessor<IBioSkyNetRepository>().Locations;
       _locationsHolder.DataChanged += RefreshData;
@@ -29,14 +27,15 @@ namespace BioEngine
            
     private void RefreshData()
     {      
-      IBioSkyNetRepository database       = _locator.GetProcessor<IBioSkyNetRepository>();
-      IServiceManager      serviceManager = _locator.GetProcessor<IServiceManager>();
-    IEnumerable<Location> data = database.Locations.Data.Where(x => x.MacAddress == serviceManager.MacAddress);
-      
+      IBioSkyNetRepository database      = _locator.GetProcessor<IBioSkyNetRepository>();
+      IServiceManager     serviceManager = _locator.GetProcessor<IServiceManager>();
+      IEnumerable <Location> data        = database.Locations.Data.Where(x => x.MacAddress == serviceManager.MacAddress);
+
+
+      UpdateDevicesEngines();
+
       foreach (Location location in data)
       {
-        //CheckDeviceObservers(location);
-
         TrackLocation currentLocation = null;
         if (_trackLocationsSet.TryGetValue(location.Id, out currentLocation))
         {
@@ -60,61 +59,14 @@ namespace BioEngine
         else        
           _trackLocations.Add(_trackLocationsSet[locationID]);        
       }
-
-      //RemoveDevices();
       OnLocationsChanged();
     }
 
-    /*
-    private void RemoveDevices()
+    private void UpdateDevicesEngines()
     {
-      foreach (string deviceName in AccessDevices)
-      {
-        AccessDevice accessDevice = _locationsHolder.AccessDevices.Where(x => x.Portname == deviceName).FirstOrDefault();
-        if (accessDevice == null)
-        {
-          _accessDeviceEngine.Remove(deviceName);
-          AccessDevices.Remove(deviceName);
-        }
-      }
-
-      foreach (string deviceName in CaptureDevices)
-      {
-        CaptureDevice captureDevice = _locationsHolder.CaptureDevices.Where(x => x.Devicename == deviceName).FirstOrDefault();
-        if (captureDevice == null)
-        {
-          _captureDeviceEngine.Remove(deviceName);
-          CaptureDevices.Remove(deviceName);
-        }
-      }
+      _captureDeviceEngine.UpdateFromSet(_locationsHolder.CaptureDevicesSet);
+      _accessDeviceEngine .UpdateFromSet(_locationsHolder.AccessDevicesSet );
     }
-
-    private void CheckDeviceObservers(Location location)
-    {
-      if (location.AccessDevice != null && location.AccessDevice.Id > 0)
-      {
-        string deviceName = location.AccessDevice.Portname;
-        if (!AccessDevices.Contains(deviceName))
-        {
-          _accessDeviceEngine.Add(deviceName);
-          AccessDevices.Add(deviceName);
-        }
-      }
-
-      if (location.CaptureDevice != null && location.CaptureDevice.Id > 0)
-      {
-        string deviceName = location.CaptureDevice.Devicename;
-        if (!CaptureDevices.Contains(deviceName))
-        {
-          _captureDeviceEngine.Add(deviceName);
-          CaptureDevices.Add(deviceName);
-        }
-      }
-    }
-
-    private HashSet<string> AccessDevices ;
-    private HashSet<string> CaptureDevices;
-    */
 
     private ConcurrentDictionary<long, TrackLocation> _trackLocationsSet;
     private ConcurrentDictionary<long, TrackLocation> TrackLocationsSet
@@ -139,6 +91,5 @@ namespace BioEngine
     private readonly IFullLocationHolder          _locationsHolder    ;
     private readonly ICaptureDeviceEngine         _captureDeviceEngine;
     private readonly IAccessDeviceEngine          _accessDeviceEngine ;
-
   }
 }

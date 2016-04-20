@@ -42,11 +42,11 @@ namespace BioModule.ViewModels
 
       try
       {
-
-        foreach (CaptureDevice cd in _database.Locations.CaptureDevices)
+        CaptureDevicesNames.Clear();
+        foreach (string devicename in _database.Locations.CaptureDevicesSet)
         {
-          if (cd != null && !CaptureDevicesNames.Contains(cd.Devicename))
-            CaptureDevicesNames.Add(cd.Devicename);
+          if (string.IsNullOrEmpty(devicename) && !CaptureDevicesNames.Contains(devicename))
+            CaptureDevicesNames.Add(devicename);
         }
       }
       catch (Exception ex)
@@ -66,7 +66,7 @@ namespace BioModule.ViewModels
     }
     private void CaptureDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-      RefreshConnectedDevices();
+      RefreshData();
     }
     #endregion
 
