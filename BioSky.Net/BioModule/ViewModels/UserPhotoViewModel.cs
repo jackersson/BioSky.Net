@@ -119,18 +119,17 @@ namespace BioModule.ViewModels
     }
 
     public async void Add(Photo photo)
-    {     
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+    {          
+      var result = _dialogsHolder.AreYouSureDialog.Show();
 
-      if (!result || photo == null)
+      if (!result.HasValue || !result.Value || photo == null)
         return;
       
-      //photo.Personid = User.Id;
+      photo.OwnerId  = User.Id;
       photo.Datetime = DateTime.Now.Ticks;
 
       try {
-        await _bioService.PhotosDataClient.Add(User, photo);
+        await _bioService.PhotosDataClient.Add(User.Id, photo);
       }
       catch (Exception e) {
         _notifier.Notify(e);
@@ -149,7 +148,7 @@ namespace BioModule.ViewModels
         return;
 
       try {
-        await _bioService.PhotosDataClient.Remove(User, photo);
+        await _bioService.PhotosDataClient.Remove(User.Id, photo);
       }
       catch (Exception e) {
         _notifier.Notify(e);

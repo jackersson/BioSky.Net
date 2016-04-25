@@ -30,7 +30,8 @@ namespace BioContracts
       else
       {
         // Raises the CollectionChanged event on the creator thread
-        _synchronizationContext.Send(RaiseCollectionChanged, e);
+        if (_synchronizationContext != null)
+          _synchronizationContext.Send(RaiseCollectionChanged, e);
       }
     }
 
@@ -58,7 +59,8 @@ namespace BioContracts
       else
       {
         // Raises the PropertyChanged event on the creator thread
-        _synchronizationContext.Send(RaisePropertyChanged, e);
+        if (_synchronizationContext != null)
+          _synchronizationContext.Send(RaisePropertyChanged, e);
       }
     }
 

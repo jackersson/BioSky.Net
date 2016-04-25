@@ -102,7 +102,7 @@ namespace BioFingerprintDevices
       }
     }
 
-    public void UpdateFromSet(HashSet<string> devices)
+    public void UpdateFromSet(ICollection<string> devices)
     {
       if (devices == null || devices.Count <= 0)
       {
@@ -110,7 +110,7 @@ namespace BioFingerprintDevices
         return;
       }
 
-      IEnumerable<string> devicesToAdd    =  devices.Where(x => !_devices.ContainsKey(x));
+      IEnumerable<string> devicesToAdd    =  devices.Where(x => !ContainsKey(x));
       IEnumerable<string> devicesToRemove = _devices.Keys.Where(x => !devices.Contains(x));
 
       if (devicesToAdd != null)
@@ -130,6 +130,12 @@ namespace BioFingerprintDevices
             Remove(deviceName);
         }
       }
+    }
+
+    private bool ContainsKey(string key)
+    {
+      FingerprintDeviceListener result;
+      return _devices.TryGetValue(key, out result);
     }
 
     private readonly FingerprintDeviceEnumerator          _deviceEnumerator;

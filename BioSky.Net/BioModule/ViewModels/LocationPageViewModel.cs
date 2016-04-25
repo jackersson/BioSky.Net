@@ -37,7 +37,7 @@ namespace BioModule.ViewModels
       _bioEngine     = _locator.GetProcessor<IBioEngine>();
 
       _locationPermissionViewModel = new LocationPermissionViewModel(_locator);
-      _locationPermissionViewModel.PermissionsChanged += _locationPermissionViewModel_PermissionsChanged;
+     // _locationPermissionViewModel.PermissionsChanged += _locationPermissionViewModel_PermissionsChanged;
 
       LocationAccessDevices  = new LocationAccessDevicesViewModel (_locator);
       LocationCaptureDevices = new LocationCaptureDevicesViewModel(_locator);
@@ -83,12 +83,12 @@ namespace BioModule.ViewModels
       RefreshUI();
       base.OnActivate();
     }
-    
+   /* 
     private void _locationPermissionViewModel_PermissionsChanged(object sender, EventArgs e)
     {
-      RefreshUI();
+      //RefreshUI();
     }
-
+*/
     private void DevicesPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
       RefreshUI();
@@ -157,9 +157,7 @@ namespace BioModule.ViewModels
     private Location GetLocation()
     {
       Location location = new Location();
-
-      location.EntityState = EntityState.Unchanged;
-
+      
       if (CurrentLocation.Id > 0)
         location.Id = CurrentLocation.Id;
 
@@ -171,33 +169,25 @@ namespace BioModule.ViewModels
       if (flag || CurrentLocation.LocationName != _revertLocation.LocationName)
           location.LocationName = CurrentLocation.LocationName;
            
-      location.MacAddress = MacAddress;    
+      location.MacAddress = MacAddress;
 
-      AccessDevice      accessDevice  = LocationAccessDevices .GetDevice();
-      CaptureDevice     captureDevice = LocationCaptureDevices.GetDevice();
-      FingerprintDevice fingerDevice  = LocationFingerDevices .GetDevice();
-
-
-      if (accessDevice != null)        
-        location.AccessDevice = accessDevice;      
-
-      if (captureDevice != null)  
+      CaptureDevice captureDevice = LocationCaptureDevices.GetDevice();
+      if (captureDevice != null)
         location.CaptureDevice = captureDevice;
+     
+      AccessDevice accessDevice   = LocationAccessDevices.GetDevice();
+      if (accessDevice != null)
+        location.AccessDevice = accessDevice;
+        
+      FingerprintDevice fingerprintDevice   = LocationFingerDevices.GetDevice();
+      if (fingerprintDevice != null)
+        location.FingerprintDevice = fingerprintDevice;
+      
+      AccessInfo accessInfo = _locationPermissionViewModel.GetResult();
+      if (accessInfo != null)
+        location.AccessInfo = accessInfo;
 
-      if (fingerDevice != null)
-        location.FingerprintDevice = fingerDevice;
-
-      if (_locationPermissionViewModel.IsAccessChanged)
-      {
-        location.AccessType = _locationPermissionViewModel.SelectedState;
-        location.EntityState = EntityState.Modified;
-      }
-
-      RepeatedField<Person> persons = _locationPermissionViewModel.GetResult();     
-      if (persons != null && persons.Count > 0)
-        location.Persons.Add(persons);
-         
-
+     
       return location;
     }
 
@@ -237,7 +227,7 @@ namespace BioModule.ViewModels
       
       if (!result.Value || CurrentLocation == null)
         return;
-
+    
       try {       
         await _bioService.DatabaseService.LocationDataClient.Remove(CurrentLocation);       
       }
@@ -272,7 +262,7 @@ namespace BioModule.ViewModels
       {
         return IsActive && _revertLocation != null
                         && _currentLocation != null
-                        && (  _locationPermissionViewModel.IsAccessChanged
+                        && (  _locationPermissionViewModel.IsAccessChanged()
                            || LocationAccessDevices .IsDeviceChanged 
                            || LocationCaptureDevices.IsDeviceChanged 
                            || LocationFingerDevices .IsDeviceChanged

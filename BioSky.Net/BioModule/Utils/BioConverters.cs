@@ -15,8 +15,8 @@ using System.Windows.Documents;
 using System.Windows;
 using BioContracts;
 using BioService;
-using static BioService.Location.Types;
 using BioContracts.Holders;
+using static BioService.AccessInfo.Types;
 
 namespace BioModule.Utils
 {
@@ -244,7 +244,7 @@ namespace BioModule.Utils
     public ConvertPhotoIdToImage(IBioSkyNetRepository database)
     {
       _database = database;
-      //_photoHolder = _database.PhotoHolder;
+      _photoHolder = _database.Photos;
       _personHolder = _database.Persons;
     }
 
@@ -254,13 +254,13 @@ namespace BioModule.Utils
       {
         Person person = _personHolder.GetValue((long)value);
         
-        if(person != null && person.Photos != null)
+        if(person != null)
         {
-
-          Photo photo = null;// person.Photos.Where(x => x.Id == person.Photoid).FirstOrDefault(); //.GetValue(person.Thumbnailid);
+          Photo photo = _photoHolder.GetValue(person.Thumbnailid); 
 
           if (photo != null)
           {
+            return ResourceLoader.OkIconSource;
             string fullFilePathway = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway) + photo.PhotoUrl;
             if (File.Exists(fullFilePathway))
             {
@@ -280,6 +280,7 @@ namespace BioModule.Utils
     private readonly IBioSkyNetRepository  _database    ;
   
     private readonly IFullPersonHolder _personHolder;
+    private readonly IPhotoHolder      _photoHolder;
   }
   #endregion
 
@@ -658,14 +659,25 @@ namespace BioModule.Utils
     public object Convert(object[] values, Type targetType, object parameter,
         System.Globalization.CultureInfo culture)
     {
-      if (values != null)
+      if (values != null && values.Count() > 2 )
       {
-        long id = (long)values[0];
-        ISet<long> set = (ISet<long>)values[1];
-        return (set != null && set.Contains(id)) ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
+        AccessType accessType = (AccessType)values[0];
+        switch (accessType)
+        {
+          case AccessType.All:
+            return ResourceLoader.OkIconSource;
+          case AccessType.None:
+            return ResourceLoader.CancelIconSource;
+          case AccessType.Custom:
+          {
+            long id        = (long)values[1];
+            ISet<long> set = (ISet<long>)values[2];
+            return (set != null && set.Contains(id)) ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
+          }
+        }       
       }
 
-      return ResourceLoader.OkIconSource;
+      return ResourceLoader.CancelIconSource;
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter,

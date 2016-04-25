@@ -1,6 +1,5 @@
 ﻿using BioService;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BioData.Holders
 {
@@ -35,30 +34,33 @@ namespace BioData.Holders
           break;
 
         case EntityState.Deleted:
-          owner.AccessDevice = null;
           Remove(owner.AccessDevice);
+          owner.AccessDevice = null;          
           break;
       }
     }
 
-    private void Remove(AccessDevice accessDevice) {
-      DataSet.Remove(accessDevice.Portname);
+    private void Remove(AccessDevice device) {
+      if (device == null)
+        return;
+
+      DataSet.Remove(device.Portname);
     }
 
-    public void Add(long locationId, AccessDevice accessDevice)
+    public void Add(long locationId, AccessDevice device)
     {
-      string deviceName = accessDevice.Portname;
+      if (device == null)
+        return;
+
+      string deviceName = device.Portname;
       if (!ContainesKey(deviceName))
-        DataSet.Add(accessDevice.Portname, locationId);
+        DataSet.Add(deviceName, locationId);
       else
       {
         Location location = _locationHolder.GetValue(DataSet[deviceName]);
         location.AccessDevice = null;
         DataSet[deviceName] = locationId;
-      }
-      ICollection<string> val;
-      val.Where ( x => true);
-      //Dictionary<string, long>.ValueCollection
+      }  
     }
 
     private bool ContainesKey(string key)

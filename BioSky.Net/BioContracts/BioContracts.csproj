@@ -147,6 +147,8 @@
     <Compile Include="FingerprintDevices\FingerprintDeviceInfo.cs" />
     <Compile Include="FingerprintDevices\IFingerprintDeviceEngine.cs" />
     <Compile Include="FingerprintDevices\IFingerprintDeviceObserver.cs" />
+    <Compile Include="Holders\ICardHolder.cs" />
+    <Compile Include="Holders\IPhotoHolder.cs" />
     <Compile Include="IDeviceConnectivity.cs" />
     <Compile Include="IDialogsHolder.cs" />
     <Compile Include="INotificationDialog.cs" />

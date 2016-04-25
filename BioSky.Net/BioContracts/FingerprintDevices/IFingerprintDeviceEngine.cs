@@ -16,7 +16,7 @@ namespace BioContracts.FingerprintDevices
     void Subscribe  (IFingerprintDeviceObserver observer, string deviceName);
     void Unsubscribe(IFingerprintDeviceObserver observer);
     bool HasObserver(IFingerprintDeviceObserver observer, string deviceName);
-    void UpdateFromSet(HashSet<string> devices);
+    void UpdateFromSet(ICollection<string> devices);
     AsyncObservableCollection<FingerprintDeviceInfo> GetDevicesNames();
   }
 }

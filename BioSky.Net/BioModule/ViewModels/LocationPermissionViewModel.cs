@@ -14,12 +14,11 @@ using System.Windows.Controls;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
-using static BioService.Location.Types;
 using Google.Protobuf.Collections;
+using static BioService.AccessInfo.Types;
 
 namespace BioModule.ViewModels
 {
-
   public class LocationPermissionViewModel : Screen, IUpdatable
   {
     public LocationPermissionViewModel(IProcessorLocator locator)
@@ -32,8 +31,8 @@ namespace BioModule.ViewModels
       SelectedPersons = new ObservableCollection<Person>();
       PageController  = new PageControllerViewModel();
 
-      AccessedPersons = new HashSet<long>();
-
+      DesiredAccessedPersons = new HashSet<long>();
+      ActiveAccessedPersons  = new HashSet<long>();
 
       _database.Persons.DataChanged += RefreshData;
     }
@@ -66,13 +65,31 @@ namespace BioModule.ViewModels
 
     public void Update(Location location)
     {
+      if (CurrentLocation == location)
+        return;
+
       CurrentLocation = location;
+      DesiredAccessedPersons.Clear();
+      ActiveAccessedPersons .Clear();
 
-      AccessedPersons.Clear();
-      foreach (Person person in CurrentLocation.Persons)
-        AccessedPersons.Add(person.Id);
+      AccessInfo currentAccessInfo = CurrentLocation.AccessInfo;
 
-      SelectedState = location.AccessType;
+      if (currentAccessInfo == null)
+      {
+        SelectedAccessType = AccessType.None;
+        return;
+      }
+
+      AccessType currentState  = currentAccessInfo.AccessType;
+
+      SelectedAccessType = currentState;
+
+      if (currentState == AccessType.Custom)
+      {
+        ActiveAccessedPersons  = new HashSet<long>(currentAccessInfo.Persons.Select(x => x.Id));
+        DesiredAccessedPersons = new HashSet<long>(ActiveAccessedPersons);
+      }      
+      
       RefreshData();
     }
 
@@ -98,56 +115,26 @@ namespace BioModule.ViewModels
         return false;
       };    
     }
-    
-    private void SetPermissionState()
+        
+    public AccessInfo GetResult()
     {
-      if (SelectedState == AccessType.Custom)
-        return;
-
-      bool state = (SelectedState == AccessType.All) ? true : false;
-
-      if (Users == null)
-        Users = _database.Persons.Data;
-
-      foreach (Person item in Users)
-        ActiveDeactiveItem(item, state);
-
-      NotifyChanges();
-    }
-
-    private void NotifyChanges()
-    {
-      NotifyOfPropertyChange(() => AccessedPersons);
-      OnPermissionsChanged();
-    }
-
-    public RepeatedField<Person> GetResult()
-    {
-      if (SelectedState != AccessType.Custom)
+      if (!IsAccessChanged(false))
         return null;
-      
-      RepeatedField<Person> persons = new RepeatedField<Person>();
 
-      RepeatedField<Person> existingPersons = CurrentLocation.Persons;
+      AccessInfo result  = new AccessInfo();
+      result.AccessType  = SelectedAccessType;
+      result.EntityState = EntityState.Modified;
 
-      if (AccessedPersons.Count > 0)
-      {
-        for (int i = 0; i < existingPersons.Count; ++i)
-        {
-          Person pp = existingPersons[i];
-          if (!AccessedPersons.Contains(pp.Id))
-            persons.Add(new Person() { EntityState = EntityState.Deleted, Id = pp.Id });
-        }
+      if (SelectedAccessType != AccessType.Custom)
+        return result;
 
-        List<long> personsToAdd = new List<long>(AccessedPersons);
-        for (int i = 0; i < personsToAdd.Count; ++i)
-        {
-          Person pp = new Person { EntityState = EntityState.Added, Id = personsToAdd[i] };
-          persons.Add(pp);
-        }
-      }
+      IEnumerable<long> itemsToAdd    = DesiredAccessedPersons.Except(ActiveAccessedPersons);
+      IEnumerable<long> itemsToRemove = ActiveAccessedPersons.Except(DesiredAccessedPersons);
 
-      return persons;
+      result.Persons.Add(itemsToAdd.Select   (x => new Person() { Id = x, EntityState = EntityState.Added }));
+      result.Persons.Add(itemsToRemove.Select(x => new Person() { Id = x, EntityState = EntityState.Deleted }));         
+
+      return result;
     }
 
     public void OnSelectionChanged(SelectionChangedEventArgs e)
@@ -168,48 +155,94 @@ namespace BioModule.ViewModels
     }
     
     public void Apply() {}
-
-    public void OnAllow(bool state)
-    {
-      if (SelectedPersons.Count < 1)
-        return;
-      
-      foreach (Person item in SelectedPersons)        
-        ActiveDeactiveItem(item, state);
-        
-      CheckOnState();
-      NotifyChanges();
-    }
-
-   
-
-    private void OnPermissionsChanged()
-    {
-      if (PermissionsChanged != null)
-        PermissionsChanged(null, EventArgs.Empty);
-    }
     
     private void CheckOnState()
     {
-      if (AccessedPersons.Count >= Users.Count)
-        SelectedState = AccessType.All;
-      else if (AccessedPersons.Count <= 0)
-        SelectedState = AccessType.None;
+      if (DesiredAccessedPersons.Count >= Users.Count)
+        SelectedAccessType = AccessType.All;
+      else if (DesiredAccessedPersons.Count <= 0)
+        SelectedAccessType = AccessType.None;
       else
-        SelectedState = AccessType.Custom;    
+        SelectedAccessType = AccessType.Custom;    
     }
 
     private void ActiveDeactiveItem(Person item, bool activate)
     {
       if (activate)
-        AccessedPersons.Add(item.Id);
+        DesiredAccessedPersons.Add(item.Id);
       else
-        AccessedPersons.Remove(item.Id);      
+        DesiredAccessedPersons.Remove(item.Id);      
     }
 
     #endregion
+       
+    private bool _isAccessChanged;
+    public bool IsAccessChanged( bool useActive = true )
+    {     
+      if (useActive && !IsActive)
+        return _isAccessChanged;
+
+      bool flag = false;
+      AccessInfo currentAccessInfo = CurrentLocation.AccessInfo;
+      if (currentAccessInfo == null)
+        _isAccessChanged = true;
+      else
+      {
+        AccessType currentAccessType = currentAccessInfo.AccessType;
+
+        if (currentAccessType != SelectedAccessType)
+          _isAccessChanged = true;
+        else if (SelectedAccessType != AccessType.Custom)
+          _isAccessChanged = false;
+        else
+          _isAccessChanged = DesiredAccessedPersons.SequenceEqual(ActiveAccessedPersons);
+      }
+      return _isAccessChanged;             
+    }
 
     #region UI
+    private HashSet<long> _desiredAccessedPersons;
+    public HashSet<long> DesiredAccessedPersons
+    {
+      get { return _desiredAccessedPersons; }
+      set
+      {
+        if (_desiredAccessedPersons != value)
+        {
+          _desiredAccessedPersons = value;        
+          NotifyOfPropertyChange(() => DesiredAccessedPersons);
+        }
+      }
+    }
+
+    private HashSet<long> _activeAccessedPersons;
+    public HashSet<long> ActiveAccessedPersons
+    {
+      get { return _activeAccessedPersons; }
+      set
+      {
+        if (_activeAccessedPersons != value)
+        {
+          _activeAccessedPersons = value;
+          NotifyOfPropertyChange(() => ActiveAccessedPersons);
+        }
+      }
+    }
+
+    private ObservableCollection<Person> _selectedPersons;
+    public ObservableCollection<Person> SelectedPersons
+    {
+      get { return _selectedPersons; }
+      set
+      {
+        if (_selectedPersons != value)
+        {
+          _selectedPersons = value;
+          NotifyOfPropertyChange(() => SelectedPersons);
+        }
+      }
+    }
+
     private IPagingCollectionView _personsCollectionView;
     public IPagingCollectionView UsersCollectionView
     {
@@ -251,71 +284,24 @@ namespace BioModule.ViewModels
         }
       }
     }
-    
-    public bool IsAccessChanged
-    {
-      get {
-        //RepeatedField<Person> p = GetResult();
 
-        bool flag = false;
-
-        int currentPersonsCount = CurrentLocation.Persons.Count;
-        if (currentPersonsCount == 0 && CurrentLocation.AccessType == AccessType.All)
-          currentPersonsCount = _database.Persons.Data.Count;
-
-        if (AccessedPersons.Count != currentPersonsCount)
-          flag = true;
-        else
-        {
-          foreach (Person person in CurrentLocation.Persons)
-            if (!AccessedPersons.Contains(person.Id))
-              flag = true;
-        }
-
-        return CurrentLocation.AccessType != SelectedState || flag;
-      }
-    }
-
-    private HashSet<long> _accessedPersons;
-    public HashSet<long> AccessedPersons
-    {
-      get { return _accessedPersons; }
-      set
-      {
-        if (_accessedPersons != value)
-        {
-          _accessedPersons = value;        
-          NotifyOfPropertyChange(() => AccessedPersons);
-        }
-      }
-    }
-
-    private ObservableCollection<Person> _selectedPersons;
-    public ObservableCollection<Person> SelectedPersons
-    {
-      get { return _selectedPersons; }
-      set
-      {
-        if (_selectedPersons != value)
-        {
-          _selectedPersons = value;
-          NotifyOfPropertyChange(() => SelectedPersons);
-        }
-      }
-    }
 
     private AccessType _selectedState;
-    public AccessType SelectedState
+    public AccessType SelectedAccessType
     {
       get { return _selectedState; }
       set
-      {
-        //if (_selectedState != value)
-        //{
-          _selectedState = value;
-          SetPermissionState();
-          NotifyOfPropertyChange(() => SelectedState);
-        //}
+      {        
+        _selectedState = value;
+       
+        NotifyOfPropertyChange(() => SelectedAccessType);
+
+        if (SelectedAccessType != AccessType.Custom)
+        {
+          DesiredAccessedPersons.Clear();
+          NotifyOfPropertyChange(() => DesiredAccessedPersons);
+          return;
+        }
       }
     }
 
@@ -377,8 +363,6 @@ namespace BioModule.ViewModels
     private readonly IProcessorLocator    _locator   ;
     private readonly IBioSkyNetRepository _database  ;
     private int PAGES_COUNT = 100;
-
-    public event EventHandler PermissionsChanged;
     #endregion
   }  
 

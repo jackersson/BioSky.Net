@@ -7,6 +7,7 @@ using BioService;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
 using BioContracts.BioTasks.Utils;
+using BioData.Holders.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -180,6 +181,7 @@ namespace BioModule.ViewModels
     #region Interface            
     public async void Apply()
     {
+      /*
       if(_userPageMode == UserPageMode.NewUser)
       {
         if (!CurrentPhotoImageView.IsValid)
@@ -189,6 +191,7 @@ namespace BioModule.ViewModels
           return;
         }
       }
+      */
       
       bool? result = _dialogs.AreYouSureDialog.Show();
    
@@ -204,54 +207,52 @@ namespace BioModule.ViewModels
         }
         else
         {
-          Photo thumbnail = CurrentPhotoImageView.CurrentPhoto;          
-          _user.Thumbnail = thumbnail;
+          //Photo thumbnail = CurrentPhotoImageView.CurrentPhoto;          
+          //_user.Thumbnail = thumbnail;
           //_user.Thumbnail.Personid = _user.Id;
-          _user.Thumbnail.Datetime = DateTime.Now.Ticks;         
+          //_user.Thumbnail.Datetime = DateTime.Now.Ticks;         
           
           await _bioService.PersonDataClient.Add(_user);
         }    
       }
-      catch (Exception e)
-      {
+      catch (Exception e) {
         _notifier.Notify(e);
       }       
     }
 
     public Person UserForUpdate()
     {
-      Person updatedPerson = new Person();
-
-      updatedPerson.Id = _user.Id;
-
-      if (_user.Firstname != _revertUser.Firstname)
+      Person updatedPerson = new Person() { Id = _user.Id } ;
+      #region info fields
+      if ( !string.Equals(_user.Firstname, _revertUser.Firstname))
         updatedPerson.Firstname = _user.Firstname;
 
-      if (_user.Lastname != _revertUser.Lastname)
+      if ( !string.Equals(_user.Lastname, _revertUser.Lastname) )
         updatedPerson.Lastname = _user.Lastname;
 
       if (_user.Dateofbirth != _revertUser.Dateofbirth)
         updatedPerson.Dateofbirth = (_user.Dateofbirth != 0) ? _user.Dateofbirth : -1;
 
-      //if (_user.Gender != _revertUser.Gender)
+      if (_user.Gender != _revertUser.Gender)
         updatedPerson.Gender = _user.Gender;
 
-      if (_user.Email != _revertUser.Email)
-        updatedPerson.Email = (_user.Email != "") ? _user.Email : "(Deleted)";
+      if (!string.Equals(_user.Email, _revertUser.Email) )
+        updatedPerson.Email = !string.IsNullOrEmpty(_user.Email) ? _user.Email : ProtoFieldsUtils.FIELD_DELETE_STATE;
 
-      if (_user.Country != _revertUser.Country)
-        updatedPerson.Country = (_user.Country != "") ? _user.Country : "(Deleted)";
+      if (!string.Equals(_user.Country, _revertUser.Country))
+        updatedPerson.Country = !string.IsNullOrEmpty(_user.Country) ? _user.Country : ProtoFieldsUtils.FIELD_DELETE_STATE;
 
-      if (_user.City != _revertUser.City)
-        updatedPerson.City = (_user.City != "") ? _user.City : "(Deleted)";
+      if (!string.Equals(_user.City, _revertUser.City))
+        updatedPerson.City = !string.IsNullOrEmpty(_user.City) ? _user.City : ProtoFieldsUtils.FIELD_DELETE_STATE;
 
-      if (_user.Comments != _revertUser.Comments)
-        updatedPerson.Comments = (_user.Comments != "") ? _user.Comments : "(Deleted)";
+      if (!string.Equals(_user.Comments, _revertUser.Comments))
+        updatedPerson.Comments = !string.IsNullOrEmpty(_user.Comments) ? _user.Comments : ProtoFieldsUtils.FIELD_DELETE_STATE;
 
-      //if (_user.Rights != _revertUser.Rights)
+      if (_user.Rights != _revertUser.Rights)
         updatedPerson.Rights = _user.Rights;
 
-
+      #endregion
+      /*
       Photo currentPhoto = CurrentPhotoImageView.CurrentPhoto;
       if (_user.Thumbnailid != currentPhoto.Id || currentPhoto.Id <= 0)
       {
@@ -263,6 +264,7 @@ namespace BioModule.ViewModels
 
         updatedPerson.Thumbnail = currentPhoto;
       }
+      */
 
       return updatedPerson;
     }
@@ -280,9 +282,7 @@ namespace BioModule.ViewModels
       if (!result.HasValue || (!result.Value))
         return;
 
-      try
-      {       
-        Person personToDelete = new Person() { Id = _user.Id };
+      try {              
         await _bioService.PersonDataClient.Remove(_user);      
       }
       catch (Exception e)

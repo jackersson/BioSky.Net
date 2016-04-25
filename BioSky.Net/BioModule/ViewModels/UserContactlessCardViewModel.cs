@@ -73,13 +73,15 @@ namespace BioModule.ViewModels
         return;
       }
 
-      Person person = _database.Persons.GetPersonByCardNumber(CardNumber);
+      Person person = _database.Persons.CardDataHolder.GetPersonByCardNumber(CardNumber);
       if (person != null)
         CardState = "Card is already used" + " " + person.Firstname + " " + person.Lastname;
-
-
-      CardState = "Card is avaliable to use";
-      CanAddCard = true;
+      else
+      {
+        CardState = "Card is avaliable to use";
+        CanAddCard = true;
+      }
+      
     }
 
     #region Update
@@ -120,7 +122,7 @@ namespace BioModule.ViewModels
       CanAddCard = false;
 
       try  {
-        await _bioService.CardsDataClient.Add(_user, card);
+        await _bioService.CardsDataClient.Add(_user.Id, card);
       }
       catch (RpcException e)  {
         _notifier.Notify(e);
@@ -142,7 +144,7 @@ namespace BioModule.ViewModels
       Card card = new Card() { Id = SelectedCard.Id };     
 
       try {
-        await _bioService.CardsDataClient.Remove(_user, card);
+        await _bioService.CardsDataClient.Remove(_user.Id, card);
       }
       catch (Exception e) {
         _notifier.Notify(e);

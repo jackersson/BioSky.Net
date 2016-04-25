@@ -19,32 +19,47 @@ namespace BioGRPC.DatabaseClient
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier = _locator.GetProcessor<INotifier>();
 
+      _database.Photos.RequestPhoto += PhotoHolder_RequestPhoto;
+
       _rawIndexes = new RawIndexes();      
     }
-      /*
-    public async Task Select(QueryPhoto command)
+
+    private async void PhotoHolder_RequestPhoto(QueryPhoto query)
     {
       try
       {
-        PhotoList call = await _client.SelectPhotosAsync(command);
-        //_database.PhotoHolder.Update(call.Photos);
+        await Select(query);       
       }
       catch (RpcException e)
       {
         _notifier.Notify(e);
       }
     }
-    */
-    public async Task Add(Person owner, Photo requested)
+
+    public async Task Select(QueryPhoto query)
     {
-      if (requested == null || owner == null)
+      try
+      {
+        PhotoList call = await _client.SelectPhotosAsync(query);
+        Console.WriteLine(call);
+        _database.Photos.UpdateFromQuery(query, call.Photos);
+      }
+      catch (RpcException e)
+      {
+        _notifier.Notify(e);
+      }
+    }
+    
+    public async Task Add(long ownerId, Photo requested)
+    {
+      if (requested == null)
         return;
 
       try
       {
         Photo responded = await _client.AddPhotoAsync(requested);
         Console.WriteLine(responded);
-        _database.Persons.AddPhoto(owner, requested, responded);
+        _database.Photos.UpdateFromResponse(requested, responded);
       }
       catch (RpcException e)
       {
@@ -53,9 +68,9 @@ namespace BioGRPC.DatabaseClient
     }
     
     
-    public async Task Remove(Person owner, IList<Photo> targeIds)
+    public async Task Remove(long ownerId, IList<Photo> targeIds)
     {
-      if (targeIds == null || targeIds.Count <= 0 || owner == null)
+      if (targeIds == null || targeIds.Count <= 0 )
         return;
       
       _rawIndexes.Indexes.Clear();
@@ -63,23 +78,23 @@ namespace BioGRPC.DatabaseClient
         _rawIndexes.Indexes.Add(item.Id);
 
       try {
-        await RemovePerformer(owner, _rawIndexes);
+       // await RemovePerformer(owner, _rawIndexes);
       }
       catch (RpcException e) {
         _notifier.Notify(e);
       }
     }
 
-    public async Task Remove(Person owner, Photo item)
+    public async Task Remove(long ownerId, Photo item)
     {
-      if (item == null || owner == null)
+      if (item == null )
         return;
 
       _rawIndexes.Indexes.Clear();
       _rawIndexes.Indexes.Add(item.Id);
 
       try {
-        await RemovePerformer(owner, _rawIndexes);
+        //await RemovePerformer(owner, _rawIndexes);
       }
       catch (RpcException e) {
         _notifier.Notify(e);
@@ -94,7 +109,7 @@ namespace BioGRPC.DatabaseClient
       try {
         RawIndexes result = await _client.RemovePhotosAsync(rawIndexes);
         Console.WriteLine(result);
-        _database.Persons.RemovePhotos(owner, rawIndexes.Indexes, result.Indexes);
+        //_database.Persons.RemovePhotos(owner, rawIndexes.Indexes, result.Indexes);
       }
       catch (RpcException e) {
         _notifier.Notify(e);

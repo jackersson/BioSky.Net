@@ -26,7 +26,7 @@ namespace BioContracts.Locations.BioTasks
       foreach (KeyValuePair<int, IVerificationObserver> observer in _observer.Observers)
         observer.Value.OnVerificationProgress(0);
 
-      Person pp = _database.Persons.GetPersonByCardNumber(cardNumber);
+      Person pp = _database.Persons.CardDataHolder.GetPersonByCardNumber(cardNumber);
 
       _visitor = new Visitor();
       _visitor.CardNumber = cardNumber;

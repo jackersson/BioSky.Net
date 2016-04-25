@@ -3,9 +3,8 @@ using BioService;
 using Caliburn.Micro;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using BioContracts.Holders;
-using System.Collections;
+using BioData.Holders.Utils;
 
 namespace BioData.Holders.Grouped
 {
@@ -14,9 +13,13 @@ namespace BioData.Holders.Grouped
     public FullLocationHolder(IProcessorLocator locator)
     {
       DataSet = new Dictionary<long, Location>();     
-      Data = new AsyncObservableCollection<Location>();
+      Data    = new AsyncObservableCollection<Location>();
 
-      _accessDeviceHolder = new AccessDeviceHolder(this);    
+      _accessDeviceHolder      = new AccessDeviceHolder(this);
+      _captureDeviceHolder     = new CaptureDeviceHolder(this);
+      _fingerprintDeviceHolder = new FingerprintDeviceHolder(this);
+
+      _fieldsUtils  = new ProtoFieldsUtils();
 
       _dialogsHolder = locator.GetProcessor<IDialogsHolder>();
     }
@@ -33,7 +36,9 @@ namespace BioData.Holders.Grouped
         long id = location.Id;
         _dataSet.Add(id, location);
 
-        _accessDeviceHolder.Add(id, location.AccessDevice);        
+        _accessDeviceHolder     .Add(id, location.AccessDevice     );
+        _captureDeviceHolder    .Add(id, location.CaptureDevice    );
+        _fingerprintDeviceHolder.Add(id, location.FingerprintDevice);
       }
 
       OnDataChanged();     
@@ -41,12 +46,16 @@ namespace BioData.Holders.Grouped
 
     public void Add(Location requested, Location responded)
     {
-      if (responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
+      if (responded != null && responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
       {
-        requested.Id                    = responded.Id                   ;
-        requested.AccessInfo.AccessType = responded.AccessInfo.AccessType;
+        requested.Id                    = responded.Id;
 
-        _accessDeviceHolder.UpdateFromResponse(requested, responded.AccessDevice, null);       
+        if (responded.AccessInfo != null)
+          requested.AccessInfo.AccessType = responded.AccessInfo.AccessType;
+
+        _accessDeviceHolder     .UpdateFromResponse(requested, responded.AccessDevice     , null);
+        _captureDeviceHolder    .UpdateFromResponse(requested, responded.CaptureDevice    , null);
+        _fingerprintDeviceHolder.UpdateFromResponse(requested, responded.FingerprintDevice, null);        
 
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);        
@@ -60,18 +69,18 @@ namespace BioData.Holders.Grouped
     public void Update( Location requested
                       , Location responded)
     {
-      if (responded.Dbresult == Result.Success)
+      if (responded != null && responded.Dbresult == Result.Success)
       {
         Location oldItem = GetValue(requested.Id);
      
         if (oldItem != null)
         {         
-          _accessDeviceHolder.UpdateFromResponse(oldItem, responded.AccessDevice, requested.AccessDevice);          
-          CopyFrom(responded, oldItem, requested);
-        }
+          _accessDeviceHolder     .UpdateFromResponse(oldItem, responded.AccessDevice     , requested.AccessDevice     );
+          _captureDeviceHolder    .UpdateFromResponse(oldItem, responded.CaptureDevice    , requested.CaptureDevice    );
+          _fingerprintDeviceHolder.UpdateFromResponse(oldItem, responded.FingerprintDevice, requested.FingerprintDevice);
 
-        Console.WriteLine(Data);
-        Console.WriteLine(DataSet);
+          CopyFrom(responded, oldItem, requested);
+        }        
       }
 
       OnDataChanged();
@@ -81,43 +90,33 @@ namespace BioData.Holders.Grouped
     public void Remove( Location requested
                       , Location responded)
     {   
-      /*
+      
       if (responded != null && responded.Dbresult == Result.Success)
       {
         _dataSet.Remove(requested.Id);
         var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
         if (item != null)
         {
-          if (item.AccessDevice != null && item.AccessDevice.Locationid > 0)
-            AccessDevicesSet.Remove(item.AccessDevice.Portname);
-          if (item.CaptureDevice != null && item.CaptureDevice.Locationid > 0)
-            CaptureDevicesSet.Remove(item.CaptureDevice.Devicename);
+          _accessDeviceHolder     .UpdateFromResponse(item, responded.AccessDevice     , null);
+          _captureDeviceHolder    .UpdateFromResponse(item, responded.CaptureDevice    , null);
+          _fingerprintDeviceHolder.UpdateFromResponse(item, responded.FingerprintDevice, null);          
 
           Data.Remove(item);
         }
       }      
-      */
+      
       OnDataChanged();
       ShowLocationResult(requested, responded);
     }
       
-    //TODO make in utils
-    public bool IsDeleteState(string field)
-    {
-      if (string.IsNullOrEmpty(field))
-        return false;
-
-      string deleteState = "delete";
-      return deleteState.Equals(field);
-    }
-
+    
     private void CopyFrom(Location from, Location to, Location requested)
     {   
       if (!string.IsNullOrEmpty(requested.LocationName))        
         to.LocationName = from.LocationName;
 
       bool hasDescription          = !string.IsNullOrEmpty(requested.LocationName);
-      bool needToDeleteDescription = IsDeleteState(from.Description);
+      bool needToDeleteDescription = _fieldsUtils.IsDeleteState(from.Description);
       if (needToDeleteDescription)
         to.Description = string.Empty;
       else
@@ -129,16 +128,16 @@ namespace BioData.Holders.Grouped
       if (!string.IsNullOrEmpty(requested.MacAddress))
         to.MacAddress = from.MacAddress;
 
-      #region personAccess      
-      if (from.AccessInfo.EntityState == EntityState.Unchanged || from.AccessInfo.Dbresult == Result.Failed)
-        return;
-           
-      bool toHasAccessInfo   = to.AccessInfo != null;
-      bool fromHasAccessInfo = from.AccessInfo != null;
+      #region personAccess 
 
+      bool fromHasAccessInfo = from.AccessInfo != null;
       if (!fromHasAccessInfo)
         return;
 
+      if (from.AccessInfo.EntityState == EntityState.Unchanged || from.AccessInfo.Dbresult == Result.Failed)
+        return;
+           
+      bool toHasAccessInfo   = to.AccessInfo != null;     
       if (!toHasAccessInfo)
         to.AccessInfo = new AccessInfo();
 
@@ -163,6 +162,7 @@ namespace BioData.Holders.Grouped
     #region DisplayResults
     private void ShowLocationResult(Location requested, Location responded)
     {
+      return;
       LocationItems.Clear();
 
       if (responded == null)
@@ -241,7 +241,6 @@ namespace BioData.Holders.Grouped
     {
       Location location = null;
       DataSet.TryGetValue(Id, out location);
-
       return location;
     }
 
@@ -259,7 +258,9 @@ namespace BioData.Holders.Grouped
       if (DataChanged != null)
         DataChanged();
     }
-        
+
+    #region Collections
+
     private AsyncObservableCollection<Location> _data;
     public AsyncObservableCollection<Location> Data
     {
@@ -289,16 +290,25 @@ namespace BioData.Holders.Grouped
       get { return _accessDeviceHolder.DataSet.Keys; }
     }
 
-    public ICollection<string> CaptureDevices
-    {
-      get
-      {
-        throw new NotImplementedException();
-      }
+    public ICollection<string> CaptureDevices  {
+      get { return _captureDeviceHolder.DataSet.Keys; }
     }
 
-    AccessDeviceHolder           _accessDeviceHolder;
+    public ICollection<string> FingerprintDevices {
+      get { return _fingerprintDeviceHolder.DataSet.Keys; }
+    }
+
+    #endregion
+
+    #region global variables
+    private readonly AccessDeviceHolder      _accessDeviceHolder     ;
+    private readonly CaptureDeviceHolder     _captureDeviceHolder    ;
+    private readonly FingerprintDeviceHolder _fingerprintDeviceHolder;
+
+    private readonly ProtoFieldsUtils        _fieldsUtils;
+
     public event DataChangedHandler DataChanged;
-    public event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<Location>> DataUpdated;    
+    public event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<Location>> DataUpdated;
+    #endregion
   }
 }

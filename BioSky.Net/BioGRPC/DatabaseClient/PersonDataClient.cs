@@ -56,35 +56,33 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
-    public async Task Add(Person item)
+    public async Task Add(Person requested)
     {
-      if (item == null)
+      if (requested == null)
         return;
   
       try
       {
-        Person newPerson = await _client.AddPersonAsync(item);
-        Console.WriteLine(newPerson);
-        _database.Persons.Add(item, newPerson);
+        Person responded = await _client.AddPersonAsync(requested);
+        Console.WriteLine(responded);
+        _database.Persons.Add(requested, responded);
       }
       catch (RpcException e)
       {
         _notifier.Notify(e);
       }
-    }
+    }    
 
-    
-
-    public async Task Update(Person item)
+    public async Task Update(Person requested)
     {
-      if (item == null)
+      if (requested == null)
         return;  
      
       try
       {
-        Person udatedPerson = await _client.UpdatePersonAsync(item);
-        Console.WriteLine(item);
-        _database.Persons.Update(item, udatedPerson);
+        Person responded = await _client.UpdatePersonAsync(requested);
+        Console.WriteLine(requested);
+        _database.Persons.Update(requested, responded);
       }
       catch (RpcException e)
       {
@@ -129,12 +127,13 @@ namespace BioGRPC.DatabaseClient
     {
       if (item == null)
         return;
-
+      Person requested = new Person() { Id = item.Id };
       try
       {
-        Person deletedPerson = await _client.RemovePersonAsync(item);
-        Console.WriteLine(deletedPerson);
-        _database.Persons.Remove(item, deletedPerson);
+
+        Person response = await _client.RemovePersonAsync(requested);
+        Console.WriteLine(response);
+        _database.Persons.Remove(requested, response);
       }
       catch (RpcException e)
       {

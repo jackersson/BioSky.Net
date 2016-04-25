@@ -19,7 +19,7 @@ namespace BioContracts.CaptureDevices
 
     void ApplyProperties(string deviceName, IntPtr parentWindow );
     
-    void UpdateFromSet( HashSet<string> devices );
+    void UpdateFromSet( ICollection<string> devices );
     
     AsyncObservableCollection<string> GetDevicesNames();
     

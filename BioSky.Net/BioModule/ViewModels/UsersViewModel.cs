@@ -32,8 +32,8 @@ namespace BioModule.ViewModels
       if (Int32.TryParse(s, out count))
         PAGES_COUNT = count;
 
-      _database.Persons.DataChanged      += RefreshData;      
-      //_database.PhotoHolder.DataChanged  += RefreshData;
+      _database.Persons.DataChanged  += RefreshData;      
+      _database.Photos.DataChanged   += RefreshData;
 
 
       IsDeleteButtonEnabled = false;   
