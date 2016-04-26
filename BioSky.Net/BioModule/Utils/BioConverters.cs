@@ -527,6 +527,9 @@ namespace BioModule.Utils
   public class StringToGenderConverter : StringToEnumConverter<Gender>
   { }
 
+  public class StringToFingerConverter : StringToEnumConverter<Finger>
+  { }
+
   public class StringToRightsConverter : StringToEnumConverter<Rights>
   { }
 

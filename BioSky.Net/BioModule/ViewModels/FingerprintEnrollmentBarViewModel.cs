@@ -117,15 +117,13 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
-    public string SelectedFinger
+    public Finger SelectedFinger
     {
-      get { return _fingerSelector.SelectedFinger.ToString(); }
+      get { return _fingerSelector != null ? _fingerSelector.SelectedFinger : Finger.Any; }
       set
       {
-        Finger result;
-        Enum.TryParse(value, out result);
-        if (result != _fingerSelector.SelectedFinger)
-          _fingerSelector.SelectedFinger = result;
+        if (_fingerSelector != null && _fingerSelector.SelectedFinger != value)
+          _fingerSelector.SelectedFinger = value;       
       }
     }
 
@@ -138,15 +136,8 @@ namespace BioModule.ViewModels
           _fingers = Enum.GetNames(typeof(Finger)).ToList();
         return _fingers;
       }
-      set
-      {
-        if (_fingers != value)
-        {
-          _fingers = value;
-          NotifyOfPropertyChange(() => Fingers);
-        }
-      }
     }
+     
 
     private AsyncObservableCollection<FingerprintDeviceInfo> _devicesNames;
     public AsyncObservableCollection<FingerprintDeviceInfo> DevicesNames

@@ -5,13 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"  
              xmlns:cal="http://www.caliburnproject.org"
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:local="clr-namespace:BioModule.Views"
              mc:Ignorable="d" 
              Height="64"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        <ResourceDictionary>
+            <utils:StringToFingerConverter x:Key="StringToFingerConverter" />
+             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
@@ -36,7 +40,7 @@
         </ComboBox>
 
         <ComboBox ItemsSource="{Binding Fingers}"  
-                  SelectedItem="{Binding SelectedFinger, Mode=TwoWay}"                 
+                  SelectedItem="{Binding SelectedFinger, Converter={StaticResource StringToFingerConverter}, Mode=TwoWay}"                 
                   Controls:TextBoxHelper.Watermark="Fingers"               
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" 
