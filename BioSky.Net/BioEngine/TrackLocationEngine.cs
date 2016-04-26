@@ -34,8 +34,8 @@ namespace BioEngine
       IServiceManager     serviceManager = _locator.GetProcessor<IServiceManager>();
       IEnumerable <Location> data        = database.Locations.Data.Where(x => x.MacAddress == serviceManager.MacAddress);
 
-
-      UpdateDevicesEngines();
+      
+     // UpdateDevicesEngines();
 
       foreach (Location location in data)
       {
@@ -67,10 +67,9 @@ namespace BioEngine
 
     private void UpdateDevicesEngines()
     {
-      _captureDeviceEngine.UpdateFromSet(_locationsHolder.CaptureDevicesSet);
-      _accessDeviceEngine .UpdateFromSet(_locationsHolder.AccessDevicesSet );
-      _fingerDeviceEngine .UpdateFromSet(_locationsHolder.FingerDevicesSet );
-
+      _captureDeviceEngine.UpdateFromSet(_locationsHolder.CaptureDevices     );
+      _accessDeviceEngine .UpdateFromSet(_locationsHolder.AccessDevices      );
+      _fingerDeviceEngine .UpdateFromSet(_locationsHolder.FingerprintDevices );
     }
 
     private ConcurrentDictionary<long, TrackLocation> _trackLocationsSet;

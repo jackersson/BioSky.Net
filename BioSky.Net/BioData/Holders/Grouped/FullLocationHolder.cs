@@ -3,221 +3,166 @@ using BioService;
 using Caliburn.Micro;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using BioContracts.Holders;
-using BioContracts.CaptureDevices;
-using BioContracts.AccessDevices;
+using BioData.Holders.Utils;
 
 namespace BioData.Holders.Grouped
 {
-  public class FullLocationHolder : PropertyChangedBase, IFullLocationHolder
+  public class FullLocationHolder : PropertyChangedBase, IFullLocationHolder, ILocationGetAble
   {
     public FullLocationHolder(IProcessorLocator locator)
     {
       DataSet = new Dictionary<long, Location>();     
-      Data = new AsyncObservableCollection<Location>();
+      Data    = new AsyncObservableCollection<Location>();
 
-      AccessDevicesSet  = new HashSet<string>();
-      CaptureDevicesSet = new HashSet<string>();
-      FingerDevicesSet  = new HashSet<string>();
+      _accessDeviceHolder      = new AccessDeviceHolder(this);
+      _captureDeviceHolder     = new CaptureDeviceHolder(this);
+      _fingerprintDeviceHolder = new FingerprintDeviceHolder(this);
+
+      _fieldsUtils  = new ProtoFieldsUtils();
 
       _dialogsHolder = locator.GetProcessor<IDialogsHolder>();
     }
 
     public void Init(Google.Protobuf.Collections.RepeatedField<Location> data)
-    {
-      try
-      {
-        Data = new AsyncObservableCollection<Location>(data);
+    {      
+      Data = new AsyncObservableCollection<Location>(data);
 
-        foreach (Location location in data)
-        {
-          _dataSet.Add(location.Id, location);
-          if(location.AccessDevice != null)
-            AccessDevicesSet.Add(location.AccessDevice.Portname);
-          if (location.CaptureDevice != null)
-            CaptureDevicesSet.Add(location.CaptureDevice.Devicename);
-          if (location.FingerprintDevice != null)
-            FingerDevicesSet.Add(location.FingerprintDevice.Devicename);
-        }
-
-        OnDataChanged();
-      }
-      catch (Exception ex)
+      foreach (Location location in data)
       {
-        Console.WriteLine(ex);
+        if (location == null)
+          continue;
+
+        long id = location.Id;
+        _dataSet.Add(id, location);
+
+        _accessDeviceHolder     .Add(id, location.AccessDevice     );
+        _captureDeviceHolder    .Add(id, location.CaptureDevice    );
+        _fingerprintDeviceHolder.Add(id, location.FingerprintDevice);
       }
+
+      OnDataChanged();     
     }
 
     public void Add(Location requested, Location responded)
     {
-      if (responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
+      if (responded != null && responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
       {
-        requested.Id         = responded.Id        ;
-        requested.AccessType = responded.AccessType;
+        requested.Id                    = responded.Id;
 
-        AddAccessDevice (requested, responded.AccessDevice);
-        AddCaptureDevice(requested, responded.CaptureDevice);
-        AddFingerDevice (requested, responded.CaptureDevice);
+        if (responded.AccessInfo != null)
+          requested.AccessInfo.AccessType = responded.AccessInfo.AccessType;
 
-        CheckDevices(requested);
+        _accessDeviceHolder     .UpdateFromResponse(requested, responded.AccessDevice     , null);
+        _captureDeviceHolder    .UpdateFromResponse(requested, responded.CaptureDevice    , null);
+        _fingerprintDeviceHolder.UpdateFromResponse(requested, responded.FingerprintDevice, null);        
 
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);        
       }
+
       OnDataChanged();
+
       ShowLocationResult(requested, responded);
     }
+
     public void Update( Location requested
                       , Location responded)
     {
-      if (responded.Dbresult == Result.Success)
+      if (responded != null && responded.Dbresult == Result.Success)
       {
         Location oldItem = GetValue(requested.Id);
-        Console.WriteLine(Data);
+     
         if (oldItem != null)
-        {
-          CheckDevices(requested);
+        {         
+          _accessDeviceHolder     .UpdateFromResponse(oldItem, responded.AccessDevice     , requested.AccessDevice     );
+          _captureDeviceHolder    .UpdateFromResponse(oldItem, responded.CaptureDevice    , requested.CaptureDevice    );
+          _fingerprintDeviceHolder.UpdateFromResponse(oldItem, responded.FingerprintDevice, requested.FingerprintDevice);
 
-          if (requested.CaptureDevice != null)
-          {
-            if (requested.CaptureDevice.EntityState == EntityState.Deleted)
-            {
-              CaptureDevicesSet.Remove(requested.CaptureDevice.Devicename);
-              oldItem.CaptureDevice = new CaptureDevice();
-            }
-            else
-            {
-              oldItem.CaptureDevice = (oldItem.CaptureDevice == null)
-                                      ? new CaptureDevice()
-                                      : oldItem.CaptureDevice;
-              oldItem.CaptureDevice.MergeFrom(requested.CaptureDevice);
-            }
-          }          
-          if(requested.AccessDevice != null)
-          {
-            if (requested.AccessDevice.EntityState == EntityState.Deleted)
-            {
-              AccessDevicesSet.Remove(requested.AccessDevice.Portname);
-              oldItem.AccessDevice = new AccessDevice();
-            }
-            else
-            {
-              oldItem.AccessDevice = (oldItem.AccessDevice == null)
-                                     ? new AccessDevice()
-                                     : oldItem.AccessDevice;
-              oldItem.AccessDevice.MergeFrom(requested.AccessDevice);
-            }
-          }
-          if (requested.FingerprintDevice != null)
-          {
-            if (requested.FingerprintDevice.EntityState == EntityState.Deleted)
-            {
-              FingerDevicesSet.Remove(requested.FingerprintDevice.Devicename);
-              oldItem.FingerprintDevice = new FingerprintDevice();
-            }
-            else
-            {
-              oldItem.FingerprintDevice = (oldItem.FingerprintDevice == null)
-                                     ? new FingerprintDevice()
-                                     : oldItem.FingerprintDevice;
-              oldItem.FingerprintDevice.MergeFrom(requested.FingerprintDevice);
-            }
-          }
-          CopyFrom(responded, oldItem);
-        }
-
-        Console.WriteLine(Data);
-        Console.WriteLine(DataSet);
+          CopyFrom(responded, oldItem, requested);
+        }        
       }
+
       OnDataChanged();
       ShowLocationResult(requested, responded);
     }
 
-    public void Remove(Location requested
+    public void Remove( Location requested
                       , Location responded)
-    {
-      if (responded != null)
+    {   
+      
+      if (responded != null && responded.Dbresult == Result.Success)
       {
-        if (responded.Dbresult == Result.Success)
+        _dataSet.Remove(requested.Id);
+        var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
+        if (item != null)
         {
-          _dataSet.Remove(requested.Id);
-          var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
-          if (item != null)
-          {
-            if (item.AccessDevice != null && item.AccessDevice.Locationid > 0)
-              AccessDevicesSet.Remove(item.AccessDevice.Portname);
-            if (item.CaptureDevice != null && item.CaptureDevice.Locationid > 0)
-              CaptureDevicesSet.Remove(item.CaptureDevice.Devicename);
-            if (item.FingerprintDevice != null && item.FingerprintDevice.Locationid > 0)
-              FingerDevicesSet.Remove(item.FingerprintDevice.Devicename);
+          _accessDeviceHolder     .UpdateFromResponse(item, responded.AccessDevice     , null);
+          _captureDeviceHolder    .UpdateFromResponse(item, responded.CaptureDevice    , null);
+          _fingerprintDeviceHolder.UpdateFromResponse(item, responded.FingerprintDevice, null);          
 
-            Data.Remove(item);
-          }
+          Data.Remove(item);
         }
-      }
+      }      
+      
       OnDataChanged();
       ShowLocationResult(requested, responded);
     }
-
-    private void CheckDevices(Location requested)
-    {      
-      if (requested.AccessDevice == null && requested.CaptureDevice == null)
-        return;
-
-      foreach (Location location in Data)
-      {
-        AccessDevice accessDevice = location.AccessDevice;
-        if (requested.AccessDevice != null && requested.AccessDevice.EntityState != EntityState.Deleted)
-        {
-          if (requested.AccessDevice != null && accessDevice != null)
-            if (accessDevice.Portname == requested.AccessDevice.Portname)
-              location.AccessDevice = new AccessDevice();
-        }
-
-        CaptureDevice captureDevice = location.CaptureDevice;
-        if (requested.CaptureDevice != null && requested.CaptureDevice.EntityState != EntityState.Deleted)
-        {
-          if (requested.CaptureDevice != null && captureDevice != null)
-            if (captureDevice.Devicename == requested.CaptureDevice.Devicename)
-              location.CaptureDevice = new CaptureDevice();
-        }
-
-        FingerprintDevice fingerDevice = location.FingerprintDevice;
-        if (requested.FingerprintDevice != null && requested.FingerprintDevice.EntityState != EntityState.Deleted)
-        {
-          if (requested.FingerprintDevice != null && fingerDevice != null)
-            if (fingerDevice.Devicename == requested.FingerprintDevice.Devicename)
-              location.FingerprintDevice = new FingerprintDevice();
-        }
-      }
-    }
-
-    private void CopyFrom(Location from, Location to)
-    {
-      if (from.LocationName != "")
+      
+    
+    private void CopyFrom(Location from, Location to, Location requested)
+    {   
+      if (!string.IsNullOrEmpty(requested.LocationName))        
         to.LocationName = from.LocationName;
 
-      if (from.Description != "")
-        to.Description = from.Description;
+      bool hasDescription          = !string.IsNullOrEmpty(requested.LocationName);
+      bool needToDeleteDescription = _fieldsUtils.IsDeleteState(from.Description);
+      if (needToDeleteDescription)
+        to.Description = string.Empty;
+      else
+      {
+        if (hasDescription )
+          to.Description = from.Description;
+      }
 
-      if(from.EntityState == EntityState.Modified)
-          to.AccessType = from.AccessType;
+      if (!string.IsNullOrEmpty(requested.MacAddress))
+        to.MacAddress = from.MacAddress;
 
-      if (from.AccessDevice != null)
-        AddAccessDevice(to, from.AccessDevice);
+      #region personAccess 
 
-      if (from.CaptureDevice != null)       
-        AddCaptureDevice(to, from.CaptureDevice);
+      bool fromHasAccessInfo = from.AccessInfo != null;
+      if (!fromHasAccessInfo)
+        return;
 
-      if (from.FingerprintDevice != null)
-        AddFingerDevice(to, from.CaptureDevice);
+      if (from.AccessInfo.EntityState == EntityState.Unchanged || from.AccessInfo.Dbresult == Result.Failed)
+        return;
+           
+      bool toHasAccessInfo   = to.AccessInfo != null;     
+      if (!toHasAccessInfo)
+        to.AccessInfo = new AccessInfo();
 
-      to.Persons.Clear();
-      to.Persons.Add(from.Persons);
+      to.AccessInfo.AccessType = from.AccessInfo.AccessType;
+
+      bool accessTypeChanged         = toHasAccessInfo && fromHasAccessInfo && to.AccessInfo.AccessType != from.AccessInfo.AccessType;
+     
+      switch (to.AccessInfo.AccessType)
+      {
+        case AccessInfo.Types.AccessType.None:
+        case AccessInfo.Types.AccessType.All:
+          to.AccessInfo.Persons.Clear();
+          break;
+
+        case AccessInfo.Types.AccessType.Custom:
+          to.AccessInfo.Persons.Clear();
+          to.AccessInfo.Persons.Add(from.AccessInfo.Persons);
+          break;
+      }
+      #endregion
     }
+    #region DisplayResults
     private void ShowLocationResult(Location requested, Location responded)
     {
+      return;
       LocationItems.Clear();
 
       if (responded == null)
@@ -235,7 +180,7 @@ namespace BioData.Holders.Grouped
         string state = requested.AccessDevice.EntityState.ToString();
         locationItem.Members.Add(new TreeItem
         {
-            Name = string.Format("Access Device: {0} ({1}) {2}", accessDevice.Portname, accessDevice.Id, state)
+            Name = string.Format("Access Device: {0} ({1}) {2}", accessDevice.Portname, state)
           , IsSuccess = (accessDevice.Dbresult == Result.Success) ? true : false
         });
       }
@@ -246,18 +191,18 @@ namespace BioData.Holders.Grouped
         string state = requested.CaptureDevice.EntityState.ToString();
         locationItem.Members.Add(new TreeItem
         {
-            Name = string.Format("Capture Device: {0} ({1}) {2}", captureDevice.Devicename, captureDevice.Id, state)
+            Name = string.Format("Capture Device: {0} ({1}) {2}", captureDevice.Devicename, state)
           , IsSuccess = (captureDevice.Dbresult == Result.Success) ? true : false
         });
       }
 
-      if (responded.Persons != null)
+      if (responded.AccessInfo.Persons != null)
       {
-        if(responded.Persons.Count > 0)
+        if(responded.AccessInfo != null && responded.AccessInfo.Persons != null && responded.AccessInfo.Persons.Count > 0)
         {
           TreeItem personsItem = new TreeItem() { Name = "Persons", IsSuccess = true };
 
-          foreach (Person person in responded.Persons)
+          foreach (Person person in responded.AccessInfo.Persons)
           {
             personsItem.Members.Add(new TreeItem
             {
@@ -276,11 +221,26 @@ namespace BioData.Holders.Grouped
       _dialogsHolder.NotificationDialog.Show();
     }
 
+    private List<TreeItem> _locationItems;
+    public List<TreeItem> LocationItems
+    {
+      get
+      {
+        return (_locationItems == null) ? _locationItems = new List<TreeItem>()
+                                     : _locationItems;
+      }
+    }
+
+
+    private IDialogsHolder _dialogsHolder;
+
+
+    #endregion
+
     public Location GetValue(long Id)
     {
       Location location = null;
       DataSet.TryGetValue(Id, out location);
-
       return location;
     }
 
@@ -289,71 +249,17 @@ namespace BioData.Holders.Grouped
       if (location == null)
         return null;
 
-      Location response = Data.Where(x => x.LocationName == location.LocationName && x.Description == location.Description).FirstOrDefault();
+      Location response = Data.Where(x => x.LocationName == location.LocationName && x.MacAddress == location.MacAddress).FirstOrDefault();
       return response;
     }
-
-    public bool HasUserAccess(long locationID, long userID)
-    {
-      return true;
-    }
-
+    
     private void OnDataChanged()
     {
       if (DataChanged != null)
         DataChanged();
     }
 
-    private void OnDataUpdated(Google.Protobuf.Collections.RepeatedField<Location> list)
-    {
-      if (DataUpdated != null)
-        DataUpdated(list);
-    }
-
-    private void AddAccessDevice (Location owner, AccessDevice responded )
-    {
-      if (responded == null)
-        return;
-
-      owner.AccessDevice.Id         = responded.Id;
-      owner.AccessDevice.Locationid = owner.Id    ;
-
-      if (owner.AccessDevice != null 
-          && owner.AccessDevice.Locationid > 0 
-          && !string.IsNullOrEmpty(owner.AccessDevice.Portname)
-          && !AccessDevicesSet.Contains(owner.AccessDevice.Portname))
-        AccessDevicesSet.Add(owner.AccessDevice.Portname);
-    }
-
-    private void AddCaptureDevice(Location owner, CaptureDevice responded)
-    {
-      if (responded == null)
-        return;
-            
-      owner.CaptureDevice.Id         = responded.Id;
-      owner.CaptureDevice.Locationid = owner.Id    ;
-
-      if (owner.CaptureDevice != null 
-          && owner.CaptureDevice.Locationid > 0 
-          && !string.IsNullOrEmpty(owner.CaptureDevice.Devicename)
-          && !CaptureDevicesSet.Contains(owner.CaptureDevice.Devicename))
-        CaptureDevicesSet.Add(owner.CaptureDevice.Devicename);
-    }
-
-    private void AddFingerDevice(Location owner, CaptureDevice responded)
-    {
-      if (responded == null)
-        return;
-
-      owner.FingerprintDevice.Id         = responded.Id;
-      owner.FingerprintDevice.Locationid = owner.Id    ;
-
-      if (owner.FingerprintDevice != null
-          && owner.FingerprintDevice.Locationid > 0
-          && !string.IsNullOrEmpty(owner.FingerprintDevice.Devicename)
-          && !FingerDevicesSet.Contains(owner.FingerprintDevice.Devicename))
-        FingerDevicesSet.Add(owner.FingerprintDevice.Devicename);
-    }
+    #region Collections
 
     private AsyncObservableCollection<Location> _data;
     public AsyncObservableCollection<Location> Data
@@ -367,40 +273,7 @@ namespace BioData.Holders.Grouped
           NotifyOfPropertyChange(() => Data);
         }
       }
-    }
-
-    private HashSet<string> _accessDevicesSet;
-    public HashSet<string> AccessDevicesSet
-    {
-      get { return _accessDevicesSet; }
-      private set
-      {
-        if (_accessDevicesSet != value)
-          _accessDevicesSet = value;
-      }
-    }
-
-    private HashSet<string> _captureDevicesSet;
-    public HashSet<string> CaptureDevicesSet
-    {
-      get { return _captureDevicesSet; }
-      private set
-      {
-        if (_captureDevicesSet != value)
-          _captureDevicesSet = value;
-      }
-    }
-
-    private HashSet<string> _fingerDevicesSet;
-    public HashSet<string> FingerDevicesSet
-    {
-      get { return _fingerDevicesSet; }
-      private set
-      {
-        if (_fingerDevicesSet != value)
-          _fingerDevicesSet = value;
-      }
-    }
+    } 
 
     private Dictionary<long, Location> _dataSet;
     public Dictionary<long, Location> DataSet
@@ -413,32 +286,29 @@ namespace BioData.Holders.Grouped
       }
     }
 
-    private List<TreeItem> _locationItems;
-    public List<TreeItem> LocationItems
-    {
-      get
-      {
-        return (_locationItems == null) ? _locationItems = new List<TreeItem>()
-                                     : _locationItems;
-      }
+    public ICollection<string> AccessDevices{
+      get { return _accessDeviceHolder.DataSet.Keys; }
     }
 
-    private Dictionary<long, HashSet<long>> _allowedUsersDataSet;
-    public Dictionary<long, HashSet<long>> AllowedUsersDataSet
-    {
-      get { return _allowedUsersDataSet; }
-      private set
-      {
-        if (_allowedUsersDataSet != value)
-          _allowedUsersDataSet = value;
-      }
+    public ICollection<string> CaptureDevices  {
+      get { return _captureDeviceHolder.DataSet.Keys; }
     }
 
-    private IDialogsHolder       _dialogsHolder      ;
-    private ICaptureDeviceEngine _captureDeviceEngine;
-    private IAccessDeviceEngine  _accessDeviceEngine ;
+    public ICollection<string> FingerprintDevices {
+      get { return _fingerprintDeviceHolder.DataSet.Keys; }
+    }
+
+    #endregion
+
+    #region global variables
+    private readonly AccessDeviceHolder      _accessDeviceHolder     ;
+    private readonly CaptureDeviceHolder     _captureDeviceHolder    ;
+    private readonly FingerprintDeviceHolder _fingerprintDeviceHolder;
+
+    private readonly ProtoFieldsUtils        _fieldsUtils;
 
     public event DataChangedHandler DataChanged;
-    public event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<Location>> DataUpdated;    
+    public event DataUpdatedHandler<Google.Protobuf.Collections.RepeatedField<Location>> DataUpdated;
+    #endregion
   }
 }

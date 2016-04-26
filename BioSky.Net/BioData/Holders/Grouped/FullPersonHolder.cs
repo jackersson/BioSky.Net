@@ -10,54 +10,52 @@ using BioContracts.Holders;
 
 namespace BioData.Holders.Grouped
 {
-  public class FullPersonHolder : PropertyChangedBase, IFullPersonHolder
+  public class FullPersonHolder : PropertyChangedBase, IFullPersonHolder, IPersonGetAble
   {
     public FullPersonHolder(IProcessorLocator locator, IOUtils ioutils, PhotoHolder photoHolder)
     {
-      DataSet         = new Dictionary<long, Person>();
-      CardsDataSet    = new Dictionary<string, long>();
+      DataSet         = new Dictionary<long, Person>();    
       Data            = new AsyncObservableCollection<Person>();
-      
+
+      _fieldsUtils = new ProtoFieldsUtils();
+
       _ioUtils     = ioutils;
       _photoHolder = photoHolder;
+
+      _cardDataHolder = new CardDataHolder(this);
 
       _dialogsHolder = locator.GetProcessor<IDialogsHolder>();
     }
 
     public void Init(RepeatedField<Person> data)
-    {
-      try
+    {      
+      Data = new AsyncObservableCollection<Person>(data);
+
+      foreach (Person person in data)
       {
-        Data = new AsyncObservableCollection<Person>(data);
+        if (person == null)
+          continue;
 
-        foreach (Person person in data)
-        {
-          long personId = person.Id;
-          _dataSet.Add(person.Id, person);
+        long personId = person.Id;
+        _dataSet.Add(personId, person);
 
-          foreach (Card card in person.Cards)
-            _cardsDataSet.Add(card.UniqueNumber, personId);
+        _cardDataHolder.Add(personId, person.Cards);          
 
-          _photoHolder.CheckPhotosIfFileExisted(person);
-        }
-                
-        OnDataChanged();
+        //_photoHolder.CheckPhotosIfFileExisted(person);
       }
-      catch(Exception ex)
-      {
-        Console.WriteLine(ex);
-      }
-
+              
+      OnDataChanged();     
     }
 
     public void Add(Person requested, Person responded)
     {
-      if (responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
+      if (responded != null && responded.Dbresult == Result.Success && !_dataSet.ContainsKey(responded.Id))
       {
         requested.Id = responded.Id;
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);
 
+        /*
         if (responded.Thumbnail != null)
         {
           requested.Thumbnail.Id = responded.Thumbnail.Id;
@@ -66,6 +64,7 @@ namespace BioData.Holders.Grouped
           AddPhoto(requested, requested.Thumbnail, responded.Thumbnail, false);
           SetThumbnail(requested, requested.Thumbnail, new Response() { Good = Result.Success }, false);
         }
+        */
         OnDataChanged();
       }  
       ShowPersonResult(requested, responded);
@@ -74,12 +73,13 @@ namespace BioData.Holders.Grouped
     public void Update( Person requested
                       , Person responded )
     {
-      if (responded.Dbresult == Result.Success)
+      if (responded != null && responded.Dbresult == Result.Success)
       {
         Person oldItem = GetValue(requested.Id);
 
         if (oldItem != null)         
-          CopyFrom(responded, oldItem);              
+          CopyFrom(requested, oldItem);
+
       }
       OnDataChanged();
 
@@ -88,44 +88,43 @@ namespace BioData.Holders.Grouped
 
     private void CopyFrom(Person from, Person to)
     {
-      if (from.Firstname != "")
+      #region info fields
+      if (!string.IsNullOrEmpty(from.Firstname ))
         to.Firstname = from.Firstname;
 
-      if (from.Lastname != "")
+      if (!string.IsNullOrEmpty(from.Lastname))
         to.Lastname = from.Lastname;
 
       if (from.Dateofbirth != 0)      
         to.Dateofbirth = (from.Dateofbirth != -1) ? from.Dateofbirth : 0;     
 
-      if (from.Country != "")
-        to.Country = (from.Country != "(Deleted)") ? from.Country : "";
+      if (!string.IsNullOrEmpty(from.Country))
+        to.Country = _fieldsUtils.IsDeleteState(from.Country) ? from.Country : string.Empty;
 
-      if (from.City != "")
-        to.City = (from.City != "(Deleted)") ? from.City : "";
+      if (!string.IsNullOrEmpty(from.City))
+        to.City = _fieldsUtils.IsDeleteState(from.City) ? from.City : string.Empty;
 
-      if (from.Email != "")
-        to.Email = (from.Email != "(Deleted)") ? from.Email : "";
+      if (!string.IsNullOrEmpty(from.Email))
+        to.Email = _fieldsUtils.IsDeleteState(from.Email) ? from.Email : string.Empty;
 
-      if (from.Comments != "")
-        to.Comments = (from.Comments != "(Deleted)") ? from.Comments : "";
-
-
+      if (!string.IsNullOrEmpty(from.Comments))
+        to.Comments = _fieldsUtils.IsDeleteState(from.Comments) ? from.Comments : string.Empty;
+      
       if (from.Gender != to.Gender)
         to.Gender = from.Gender;
 
       if (from.Rights != to.Rights)
         to.Rights = from.Rights;
+      #endregion
 
-      if(from.Thumbnailid != to.Thumbnailid && from.Thumbnailid != 0)      
-        to.Thumbnailid = from.Thumbnailid;
-
-      Console.WriteLine(_dataSet);
+      //if(from.Thumbnailid != to.Thumbnailid && from.Thumbnailid != 0)      
+      //to.Thumbnailid = from.Thumbnailid;
     }
 
     public void Remove( Person requested
                       , Person responded)
     {
-      if (responded.Dbresult == Result.Success)
+      if (responded != null && requested != null && responded.Dbresult == Result.Success)
       {
         _dataSet.Remove(requested.Id);
         var item = Data.Where(x => x.Id == requested.Id).FirstOrDefault();
@@ -133,13 +132,26 @@ namespace BioData.Holders.Grouped
           Data.Remove(item);
         
       }
+      Console.WriteLine(Data);
+
       OnDataChanged();
 
       ShowPersonResult(requested, responded);
     }
 
+    #region display results
+    
+    private List<TreeItem> _personItems;
+    private List<TreeItem> PersonItems
+    {
+      get { return (_personItems == null)? _personItems = new List<TreeItem>() 
+                                         : _personItems; }      
+    }
+
+
     private void ShowPersonResult(Person requested, Person responded)
     {
+      return;
       PersonItems.Clear();
 
       TreeItem personitem = new TreeItem()
@@ -181,8 +193,76 @@ namespace BioData.Holders.Grouped
       _dialogsHolder.NotificationDialog.Update(PersonItems, "PersonNotificationDialog");
       _dialogsHolder.NotificationDialog.Show();
     }
-    
-    private void OnDataChanged()
+    #endregion
+         
+    public Person GetValue(long Id)
+    {
+      Person person = null;
+      DataSet.TryGetValue(Id, out person);
+      return person;
+    }
+
+    public Person GetValue(Person person)
+    {
+      if (person == null)
+        return null;
+
+      Person response = Data.Where(x => x.Firstname == person.Firstname && x.Lastname == person.Lastname).FirstOrDefault();    
+      return response;
+    }
+
+    /*
+    public void AddPhoto(Person owner, Photo requested, Photo responsed, bool refresh = true)
+    {
+      if (responsed.Dbresult == Result.Success)
+      {
+        requested.Id       = responsed.Id;
+        requested.PhotoUrl = responsed.PhotoUrl;
+       // requested.Personid = owner.Id;
+
+        _dataSet[owner.Id].Photos.Add(requested);
+
+        _ioUtils.SaveFile(requested.PhotoUrl, requested.Bytestring.ToArray());
+
+        requested.Bytestring = Google.Protobuf.ByteString.Empty;
+
+        if (refresh)
+          OnDataChanged();
+      }  
+    }
+    */
+    public void SetThumbnail(Person owner, Photo requested, Response responsed, bool refresh = true)
+    {
+      if (responsed.Good == Result.Success)
+      {        
+        Photo newThumbnail = _dataSet[owner.Id].Photos.Where(x => x.Id == requested.Id).FirstOrDefault();
+        if (newThumbnail != null)
+        {
+         // _dataSet[owner.Id].Photoid   = requested.Id;
+          _dataSet[owner.Id].Thumbnail = newThumbnail;
+        }
+              
+        if (refresh)
+          OnDataChanged();
+      }
+    }
+
+    /*
+    public void RemovePhotos(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
+    {
+      foreach (long index in responsed)
+      {
+        RepeatedField<Photo> ownerPhotos = _dataSet[owner.Id].Photos;
+        IEnumerable<Photo> cards = ownerPhotos.Where(x => responsed.Contains(x.Id));
+        foreach (Photo photo in cards)
+          ownerPhotos.Remove(photo);
+      }
+      OnDataChanged();
+    }   
+  */
+
+    #region datachanged
+    public void OnDataChanged()
     {
       if (DataChanged != null)
         DataChanged();
@@ -192,6 +272,13 @@ namespace BioData.Holders.Grouped
     {
       if (DataUpdated != null)
         DataUpdated(list);
+    }
+    #endregion
+
+    #region holders
+    public ICardHolder CardDataHolder
+    {
+      get { return _cardDataHolder; }
     }
 
     private AsyncObservableCollection<Person> _data;
@@ -218,130 +305,19 @@ namespace BioData.Holders.Grouped
           _dataSet = value;
       }
     }
+    #endregion
 
-    private Dictionary<string, long> _cardsDataSet;
-    public Dictionary<string, long> CardsDataSet
-    {
-      get { return _cardsDataSet; }
-      private set
-      {
-        if (_cardsDataSet != value)
-          _cardsDataSet = value;
-      }
-    }
-    
-    public Person GetPersonByCardNumber(string cardNumber)
-    {
-      long personid;
-      CardsDataSet.TryGetValue(cardNumber, out personid);
-
-      Person person = null;
-      DataSet.TryGetValue(personid, out person);
-
-      return person;
-
-    }
-
-    public Person GetValue(long Id)
-    {
-      Person person = null;
-      DataSet.TryGetValue(Id, out person);
-
-      return person;
-    }
-
-    public Person GetValue(Person person)
-    {
-      if (person == null)
-        return null;
-
-      Person response = Data.Where(x => x.Firstname == person.Firstname && x.Lastname == person.Lastname).FirstOrDefault();    
-      return response;
-    }
-
-    public void RemoveCards(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
-    {
-      foreach (long index in responsed)
-      {
-        RepeatedField<Card> ownerCards = _dataSet[owner.Id].Cards;
-        IEnumerable<Card> cards = ownerCards.Where(x => responsed.Contains(x.Id));
-        foreach (Card card in cards)        
-          ownerCards.Remove(card);      
-      }
-      OnDataChanged();    
-    }
-
-    public void AddCard(Person owner, Card requested, Card responsed)
-    {
-      if ( responsed.Dbresult == Result.Success )
-      {
-        requested.Id = responsed.Id;
-        _dataSet[owner.Id].Cards.Add(requested);
-        
-        OnDataChanged();
-      }      
-    }
-
-    public void AddPhoto(Person owner, Photo requested, Photo responsed, bool refresh = true)
-    {
-      if (responsed.Dbresult == Result.Success)
-      {
-        requested.Id       = responsed.Id;
-        requested.PhotoUrl = responsed.PhotoUrl;
-       // requested.Personid = owner.Id;
-
-        _dataSet[owner.Id].Photos.Add(requested);
-
-        _ioUtils.SaveFile(requested.PhotoUrl, requested.Bytestring.ToArray());
-
-        requested.Bytestring = Google.Protobuf.ByteString.Empty;
-
-        if (refresh)
-          OnDataChanged();
-      }  
-    }
-
-    public void SetThumbnail(Person owner, Photo requested, Response responsed, bool refresh = true)
-    {
-      if (responsed.Good == Result.Success)
-      {        
-        Photo newThumbnail = _dataSet[owner.Id].Photos.Where(x => x.Id == requested.Id).FirstOrDefault();
-        if (newThumbnail != null)
-        {
-         // _dataSet[owner.Id].Photoid   = requested.Id;
-          _dataSet[owner.Id].Thumbnail = newThumbnail;
-        }
-              
-        if (refresh)
-          OnDataChanged();
-      }
-    } 
-
-    public void RemovePhotos(Person owner, RepeatedField<long> requested, RepeatedField<long> responsed)
-    {
-      foreach (long index in responsed)
-      {
-        RepeatedField<Photo> ownerPhotos = _dataSet[owner.Id].Photos;
-        IEnumerable<Photo> cards = ownerPhotos.Where(x => responsed.Contains(x.Id));
-        foreach (Photo photo in cards)
-          ownerPhotos.Remove(photo);
-      }
-      OnDataChanged();
-    }   
-  
-
-    private List<TreeItem> _personItems;
-    private List<TreeItem> PersonItems
-    {
-      get { return (_personItems == null)? _personItems = new List<TreeItem>() 
-                                         : _personItems; }      
-    }
-
+    #region global variables
     public event DataChangedHandler             DataChanged;
     public event DataUpdatedHandler<RepeatedField<Person>> DataUpdated;
 
+    private readonly ProtoFieldsUtils _fieldsUtils;
+
     public readonly IOUtils        _ioUtils      ;
     private         IDialogsHolder _dialogsHolder;
-    public readonly PhotoHolder    _photoHolder  ;
+
+    public readonly  PhotoHolder    _photoHolder   ;
+    private readonly CardDataHolder _cardDataHolder;
+    #endregion
   }
 }

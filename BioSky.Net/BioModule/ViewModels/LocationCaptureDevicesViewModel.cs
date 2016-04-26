@@ -45,7 +45,7 @@ namespace BioModule.ViewModels
       try
       {
         CaptureDevicesNames.Clear();
-        foreach (string devicename in _database.Locations.CaptureDevicesSet)
+        foreach (string devicename in _database.Locations.CaptureDevices)
         {
           if (!string.IsNullOrEmpty(devicename) && !CaptureDevicesNames.Contains(devicename))
             CaptureDevicesNames.Add(devicename);
@@ -111,24 +111,20 @@ namespace BioModule.ViewModels
         return !string.IsNullOrEmpty(DesiredDeviceName);
       }
     }
-
+    
     public CaptureDevice GetDevice()
     {
-      CaptureDevice result = null;
-      if (DesiredDeviceName == ActiveDeviceName)
-        return result;
+      if (string.Equals(DesiredDeviceName, ActiveDeviceName))
+        return null;
 
-      if (DesiredDeviceName == string.Empty && ActiveDeviceName != string.Empty)
-        return new CaptureDevice() { Devicename = CurrentLocation.CaptureDevice.Devicename, EntityState = EntityState.Deleted };
-      
-      if (DesiredDeviceName != string.Empty && ActiveDeviceName == string.Empty)
-        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
+      bool hasDesiredDeviceName = !string.IsNullOrEmpty(DesiredDeviceName);
+      bool hasActiveDeviceName = !string.IsNullOrEmpty(ActiveDeviceName);
 
-      if (DesiredDeviceName != string.Empty && ActiveDeviceName != string.Empty)
-        return new CaptureDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
+      string deviceName = !hasDesiredDeviceName && hasActiveDeviceName ? CurrentLocation.CaptureDevice.Devicename : DesiredDeviceName;
+      EntityState entityState = hasDesiredDeviceName ? EntityState.Added : EntityState.Deleted;
 
-      return result;
-    }
+      return new CaptureDevice() { EntityState = entityState, Devicename = deviceName };
+    }    
 
     public void Apply() { }
     #endregion

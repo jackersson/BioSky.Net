@@ -69,24 +69,21 @@ namespace BioModule.ViewModels
           FingerDevicesNames.Add(device.Name);
       }
     }
-
+    
     public FingerprintDevice GetDevice()
-    {
-      FingerprintDevice result = null;
-      if (DesiredDeviceName == ActiveDeviceName)
-        return result;
+    {     
+      if (string.Equals(DesiredDeviceName, ActiveDeviceName))
+        return null;
 
-      if (DesiredDeviceName == string.Empty && ActiveDeviceName != string.Empty)
-        return new FingerprintDevice() { Devicename = CurrentLocation.AccessDevice.Portname, EntityState = EntityState.Deleted };
+      bool hasDesiredDeviceName = !string.IsNullOrEmpty(DesiredDeviceName);
+      bool hasActiveDeviceName  = !string.IsNullOrEmpty(ActiveDeviceName);
 
-      if (DesiredDeviceName != string.Empty && ActiveDeviceName == string.Empty)
-        return new FingerprintDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
+      string deviceName       = !hasDesiredDeviceName && hasActiveDeviceName ? CurrentLocation.FingerprintDevice.Devicename : DesiredDeviceName;
+      EntityState entityState = hasDesiredDeviceName ? EntityState.Added : EntityState.Deleted;
 
-      if (DesiredDeviceName != string.Empty && ActiveDeviceName != string.Empty)
-        return new FingerprintDevice() { EntityState = EntityState.Added, Devicename = DesiredDeviceName };
-
-      return result;
+      return new FingerprintDevice() { EntityState = entityState, Devicename = deviceName };
     }
+      
 
     public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedFingerDevice = null; }
 
@@ -98,7 +95,7 @@ namespace BioModule.ViewModels
         return;
 
       FingerDevicesNames.Clear();
-      foreach (string devicename in _database.Locations.FingerDevicesSet)
+      foreach (string devicename in _database.Locations.FingerprintDevices)
       {
         if (!string.IsNullOrEmpty(devicename) && !FingerDevicesNames.Contains(devicename))
           FingerDevicesNames.Add(devicename);

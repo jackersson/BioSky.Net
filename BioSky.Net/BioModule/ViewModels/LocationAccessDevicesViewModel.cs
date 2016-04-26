@@ -69,22 +69,20 @@ namespace BioModule.ViewModels
       }
     }
 
+   
+
     public AccessDevice GetDevice()
     {
-      AccessDevice result = null;
-      if (DesiredDeviceName == ActiveDeviceName)
-        return result;
+      if (string.Equals(DesiredDeviceName, ActiveDeviceName))
+        return null;
 
-      if (DesiredDeviceName == string.Empty && ActiveDeviceName != string.Empty)
-        return new AccessDevice() { Portname = CurrentLocation.AccessDevice.Portname, EntityState = EntityState.Deleted };
+      bool hasDesiredDeviceName = !string.IsNullOrEmpty(DesiredDeviceName);
+      bool hasActiveDeviceName  = !string.IsNullOrEmpty(ActiveDeviceName );
 
-      if (DesiredDeviceName != string.Empty && ActiveDeviceName == string.Empty)
-        return new AccessDevice() { EntityState = EntityState.Added , Portname = DesiredDeviceName};
+      string portName = !hasDesiredDeviceName && hasActiveDeviceName ? CurrentLocation.AccessDevice.Portname : DesiredDeviceName;
+      EntityState entityState = hasDesiredDeviceName ? EntityState.Added : EntityState.Deleted;
 
-      if (DesiredDeviceName != string.Empty && ActiveDeviceName != string.Empty)
-        return new AccessDevice() { EntityState = EntityState.Added, Portname = DesiredDeviceName };
-
-      return result;
+      return new AccessDevice() { EntityState = entityState, Portname = portName };      
     }
 
     public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedAccessDevice = null; }
@@ -97,7 +95,7 @@ namespace BioModule.ViewModels
         return;
 
       AccessDevicesNames.Clear();
-      foreach (string portname in _database.Locations.AccessDevicesSet)
+      foreach (string portname in _database.Locations.AccessDevices)
       {
         if (!string.IsNullOrEmpty(portname) && !AccessDevicesNames.Contains(portname))
           AccessDevicesNames.Add(portname);

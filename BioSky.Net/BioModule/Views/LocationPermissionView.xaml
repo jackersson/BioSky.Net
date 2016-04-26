@@ -110,8 +110,9 @@
                                        Stretch="Fill" Width="18" Height="18">
                                     <Image.Source>
                                         <MultiBinding Converter="{StaticResource MultiUserAccessToLocationConverter}">
+                                            <Binding ElementName="GridLayout" Path="DataContext.SelectedState"></Binding>
                                             <Binding Path="Id"/>
-                                            <Binding ElementName="GridLayout" Path="DataContext.AccessedPersons"></Binding>
+                                            <Binding ElementName="GridLayout" Path="DataContext.DesiredAccessedPersons"></Binding>                                         
                                         </MultiBinding>
                                     </Image.Source>
                                 </Image>

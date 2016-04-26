@@ -9,9 +9,9 @@ namespace BioContracts.Holders
 {
   public interface IFullLocationHolder : IFullHolder<Location>
   {
-    HashSet<string> AccessDevicesSet { get; }
-    HashSet<string> CaptureDevicesSet { get; }
-    HashSet<string> FingerDevicesSet { get; }
+    ICollection<string> AccessDevices { get; }
+    ICollection<string> CaptureDevices { get; }
+    ICollection<string> FingerprintDevices { get; }
 
     Location GetValue(Location location);
   }

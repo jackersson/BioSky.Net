@@ -4,6 +4,7 @@ using BioService;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BioGRPC.DatabaseClient
@@ -18,20 +19,21 @@ namespace BioGRPC.DatabaseClient
 
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
       _notifier = _locator.GetProcessor<INotifier>();
-
-      _rawIndexes = new RawIndexes();
     }
 
-    public async Task Add(Person owner, Card item)
+    public async Task Add(long ownerId, Card request)
     {
-      if (item == null || owner == null)
+      if (request == null)
         return;
 
       try
       {
-        Card newCard = await _client.AddCardAsync(item);
-        Console.WriteLine(item);
-        _database.Persons.AddCard(owner, item, newCard);
+        Card response = await _client.AddCardAsync(request);
+        Console.WriteLine(request);
+        
+        _database.Persons.CardDataHolder.UpdateFromResponse( _database.Persons.GetValue(ownerId)
+                                                           , request
+                                                           , response);
       }
       catch (RpcException e)
       {
@@ -39,64 +41,57 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
-    public async Task Remove(Person owner, Card item)
+    public async Task Remove(long ownerId, Card item)
     {
-      if (item == null || owner == null)
+      if (item == null)
         return;
 
-      _rawIndexes.Indexes.Clear();
-      _rawIndexes.Indexes.Add(item.Id);
+      Card request = new Card() { Id = item.Id };
 
       try  {
-        await RemovePerformer(owner, _rawIndexes);
+
+        var response = await _client.RemoveCardAsync(request);
+        Console.WriteLine(response);
+        
+        _database.Persons.CardDataHolder.UpdateFromResponse(_database.Persons.GetValue(ownerId)
+                                                           , request
+                                                           , response);      
       }
       catch (RpcException e) {
         _notifier.Notify(e);
       }
     }
 
-    public async Task Remove(Person owner, IList<Card> targeIds)
+    public async Task Remove(long ownerId, IList<Card> targeIds)
     {
-      if (targeIds == null || targeIds.Count <= 0 || owner == null)
+      if (targeIds == null || targeIds.Count <= 0 )
         return;
 
-
-      _rawIndexes.Indexes.Clear();   
-
-      foreach (Card item in targeIds)      
-        _rawIndexes.Indexes.Add(item.Id);      
+      CardList request = new CardList();
+      request.Cards.Add(targeIds.Select(x => new Card() { Id = x.Id }));
+        
 
       try {
-        await RemovePerformer(owner, _rawIndexes);
+        var response = await _client.RemoveCardsAsync(request);
+        Console.WriteLine(response);
+                
+        if (response == null)
+          return;
+        _database.Persons.CardDataHolder.UpdateFromResponse(_database.Persons.GetValue(ownerId)
+                                                           , request.Cards
+                                                           , response.Cards);
       }
       catch (RpcException e) {
         _notifier.Notify(e);
       }
     }
-
-    private async Task RemovePerformer(Person owner, RawIndexes rawIndexes)
-    {
-      if (rawIndexes.Indexes.Count <= 0 || owner == null)
-        return;
-
-      try
-      {
-        RawIndexes result = await _client.RemoveCardsAsync(rawIndexes);
-        Console.WriteLine(result);
-        _database.Persons.RemoveCards(owner, rawIndexes.Indexes, result.Indexes);
-      }
-      catch (RpcException e)
-      {
-        _notifier.Notify(e);
-      }
-    }
+     
 
     public Task Update(Person owner, Card item)
     {
       throw new NotImplementedException();
     }
-
-    private RawIndexes _rawIndexes;
+    
 
     private readonly IProcessorLocator _locator;
     private readonly IBioSkyNetRepository _database;

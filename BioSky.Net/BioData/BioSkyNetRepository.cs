@@ -16,10 +16,10 @@ namespace BioData
       _localStorage = new BioLocalStorage();
       _ioUtils      = new IOUtils(_localStorage);
 
-      _photoHolder       = new PhotoHolder(_ioUtils);
+      _photos = new PhotoHolder(_ioUtils);
       _fullLocations     = new FullLocationHolder(locator);
-      _fullPersons       = new FullPersonHolder  (locator, _ioUtils, _photoHolder);
-      _fullVisitors      = new FullVisitorHolder (_photoHolder);
+      _fullPersons       = new FullPersonHolder  (locator, _ioUtils, _photos);
+      _fullVisitors      = new FullVisitorHolder (_photos);
       _bioCultureSources = new BioCultureSources ();
     }
 
@@ -43,12 +43,18 @@ namespace BioData
       get { return _localStorage;  }
     }
 
+    private PhotoHolder _photos;
+    public IPhotoHolder Photos
+    {
+      get { return _photos; }
+    }
+
     private IBioCultureSources _bioCultureSources;
     public IBioCultureSources BioCultureSources {
       get { return _bioCultureSources; }
     }
 
-    private PhotoHolder _photoHolder;   
+   
     private IOUtils     _ioUtils    ;
   }
 }

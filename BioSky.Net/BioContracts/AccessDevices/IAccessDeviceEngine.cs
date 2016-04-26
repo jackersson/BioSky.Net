@@ -8,7 +8,7 @@ namespace BioContracts.AccessDevices
 
     void Remove(string deviceName);
 
-    void UpdateFromSet(HashSet<string> devices);
+    void UpdateFromSet(ICollection<string> devices);
 
     AsyncObservableCollection<string> GetDevicesNames();
 
