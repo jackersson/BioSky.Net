@@ -232,6 +232,7 @@
     <Compile Include="ViewModels\ImageItemViewModel.cs" />
     <Compile Include="ViewModels\IrisInformationViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
+    <Compile Include="ViewModels\LocationFingerDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
     <Compile Include="ViewModels\LoginPopupViewModel.cs" />
     <Compile Include="ViewModels\NotificationDialogViewModel.cs" />
