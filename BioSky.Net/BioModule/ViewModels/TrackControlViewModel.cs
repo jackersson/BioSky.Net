@@ -65,7 +65,7 @@ namespace BioModule.ViewModels
         _selectedTrackLocation = value;
 
         if(_selectedTrackLocation != null)        
-          _selectedTrackLocation.ScreenViewModel.Activate();               
+          _selectedTrackLocation.ScreenViewModel.Activate();       
 
         OnSelectedLocationChanged(_selectedTrackLocation);
         //FullTrackTabContro.Update(_selectedTrackLocation);
@@ -181,23 +181,32 @@ namespace BioModule.ViewModels
       {
         if (location.ScreenViewModel == null)
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
-      }
-
-      foreach(TrackLocation location in TrackItemsShort.TrackControlItems)
-        location.ScreenViewModel.Activate();      
+        location.ScreenViewModel.Activate();
+      }     
 
       TrackItemsShort.SelectDefault();
       if (locations.Count == 1)
         ShowVisitors();
       NotifyOfPropertyChange(() => TrackItemsShort);
-    }
 
- 
+      CheckOnErrors();
+    }
 
     #endregion
 
     #region Interface
 
+    private void CheckOnErrors()
+    {
+      _isLocationError = false;
+      foreach (TrackLocation location in TrackItemsShort.TrackControlItems)
+      {
+        _isLocationError = location.IsOk();
+        if (!_isLocationError)        
+          break;        
+      }
+      NotifyOfPropertyChange(() => IsLocationError);
+    }
     public void OnAddNewLocation()
     {
       _selector.ShowContent( ShowableContentControl.FlyoutControlContent
@@ -230,6 +239,12 @@ namespace BioModule.ViewModels
 
     #region UI
 
+    private bool _isLocationError;
+    public bool IsLocationError
+    {
+      get { return _isLocationError; }
+    }
+
     public int VisitorsCount
     {
       get{ return (VisitorsView != null && VisitorsView.VisitorsCollectionView != null)
@@ -247,7 +262,8 @@ namespace BioModule.ViewModels
     private void RefreshUI()
     {
       NotifyOfPropertyChange(() => CanShowLocations);
-      NotifyOfPropertyChange(() => CanShowVisitors );      
+      NotifyOfPropertyChange(() => CanShowVisitors );
+      CheckOnErrors();
     }
 
     public void ShowLocations()

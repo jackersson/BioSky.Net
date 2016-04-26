@@ -14,6 +14,7 @@
              xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
              xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
+             xmlns:bioService="clr-namespace:BioService;assembly=BioContracts"              
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
@@ -26,6 +27,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <utils:MultiFingerToRadioButtonConverter x:Key="MultiFingerToRadioButtonConverter"/>
             <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
                 <Setter Property="Background" Value="Transparent"/>
                 <Style.Triggers>
@@ -37,66 +39,142 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Viewbox>
+    <Viewbox >
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="25*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Image Width="512" Height="289"
                    Source="{Binding Source={StaticResource ResourceLoader}, Path=HandsIconSource}" />
+
+            <ItemsControl ItemsSource="{Binding FingerButtonsDictionary}" Panel.ZIndex="10">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <RadioButton  Margin="{Binding Path=Value}" 
+                                      HorizontalAlignment="Left" VerticalAlignment="Top" Tag="{Binding Path=Key}"
+                                      Panel.ZIndex="10">
+                            <RadioButton.IsChecked>
+                                <MultiBinding Converter="{StaticResource MultiFingerToRadioButtonConverter}" Mode="TwoWay">
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}" 
+                                             Path="DataContext.SelectedFinger" Mode="TwoWay"/>
+                                    <Binding RelativeSource="{RelativeSource Mode=Self}" Path="Tag" />
+                                </MultiBinding>
+                            </RadioButton.IsChecked>
+                        </RadioButton>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             
             <!-- Left Hand-->
 
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="19,39,0,0"/>
-            <RadioButton  
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="65,10,0,0"/>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('4')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="110,0,0,0" Tag="{Binding IsFingerExist}"/>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('3')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="154,16,0,0" Tag="{Binding IsFingerExist}"/>
-            <RadioButton  
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="219,123,0,0"/>
+            <!--<RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[0].IsChecked}" HorizontalAlignment="Left" Panel.ZIndex="10" 
+                         Margin="19,39,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.LeftLittle}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[1].IsChecked}" HorizontalAlignment="Left" 
+                         Panel.ZIndex="10" Margin="65,10,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.LeftRing}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[2].IsChecked}" HorizontalAlignment="Left" 
+                         Panel.ZIndex="10" Margin="110,0,0,0" Tag="{Binding IsFingerExist}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.LeftMiddle}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>-
+            </RadioButton>
+
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[3].IsChecked}" HorizontalAlignment="Left" 
+                         Panel.ZIndex="10" Margin="154,16,0,0" Tag="{Binding IsFingerExist}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.LeftIndex}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[4].IsChecked}" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="219,123,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.LeftMiddle}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>-->
 
 
-             <!-- Right Hand-->
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="275,123,0,0"/>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('5')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="331,16,0,0"/>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="380,0,0,0"/>
-            
-            <RadioButton  Name="FingerOne"
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('1')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left"  Tag="{Binding IsFingerExist}" Panel.ZIndex="10" Margin="425,10,0,0"/>
-            <RadioButton 
-                         cal:Message.Attach="[Event Checked] = [Action OnFingerCheck('2')]" 
-                         VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="468,39,0,0" Tag="{Binding IsFingerExist}"/>
+            <!-- Right Hand-->
+            <!--<RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[5].IsChecked}" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="275,123,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.RightThumb}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[6].IsChecked}" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="331,16,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.RightIndex}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[7].IsChecked}"  HorizontalAlignment="Left" Panel.ZIndex="10" Margin="380,0,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.RightMiddle}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>
 
-
-
-
-
-
-
-
-
-
-
-
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[8].IsChecked}" HorizontalAlignment="Left"  Tag="{Binding IsFingerExist}" Panel.ZIndex="10" Margin="425,10,0,0">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.RightRing}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>
+            <RadioButton VerticalAlignment="Top" IsChecked="{Binding FingerItems[9].IsChecked}" HorizontalAlignment="Left" Panel.ZIndex="10" Margin="468,39,0,0" Tag="{Binding IsFingerExist}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SelectFinger">
+                            <cal:Parameter Value="{x:Static bioService:Finger.RightLittle}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </RadioButton>-->
         </Grid>
     </Viewbox>
 </UserControl>

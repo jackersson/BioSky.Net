@@ -237,7 +237,7 @@ namespace BioModule.ViewModels
       get { return _database.BioCultureSources.GenderSources; }
     }
     #endregion
-    private DateTime _startDateTime = new DateTime(1915, 1, 1);
+    private DateTime _startDateTime = DateTime.Now;
 
     private readonly IValidator             _validator  ;
     private readonly IProcessorLocator      _locator    ;

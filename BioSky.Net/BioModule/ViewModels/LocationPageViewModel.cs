@@ -27,8 +27,7 @@ namespace BioModule.ViewModels
     {
       _locator       = locator;
       _methodInvoker = new FastMethodInvoker();
-      _validator     = new BioValidator();
-
+      _validator     = new BioValidator();    
 
       _database      = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService    = _locator.GetProcessor<IServiceManager>();

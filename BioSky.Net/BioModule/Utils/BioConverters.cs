@@ -632,6 +632,8 @@ namespace BioModule.Utils
 
         if (flag)
         {
+          if (values[1] == null)
+            return false;
           bool isEnabledFlag = (bool)values[1];
           return isEnabledFlag;
         }
@@ -704,6 +706,35 @@ namespace BioModule.Utils
     {
       throw new NotImplementedException();
     }
+  }
+  #endregion
+
+  #region MultiFingerToRadioButtonConverter
+  public class MultiFingerToRadioButtonConverter : IMultiValueConverter
+  {
+    public object Convert(object[] values, Type targetType, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      //values[0] = SelectedFinger
+      //values[1] = fingerEnum
+      
+      if (values[0] != null && values[1] != null)
+      {
+        Finger SelectedFinger = (Finger)values[0];
+        Finger finger         = (Finger)values[1];
+
+        return (SelectedFinger == finger) ? true : false;
+      }
+      return false;
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+      return new object[] { Finger.RightIndex , Binding.DoNothing };
+    }
+
+    private IBioEngine _bioEngine;
   }
   #endregion
 

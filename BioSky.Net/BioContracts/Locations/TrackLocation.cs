@@ -78,7 +78,7 @@ namespace BioContracts
       }
     }
     
-    private bool IsOk()
+    public bool IsOk()
     {     
       foreach ( KeyValuePair<LocationDevice, ILocationDeviceObserver> par in _devices)
       {

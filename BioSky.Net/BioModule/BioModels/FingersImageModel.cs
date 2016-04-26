@@ -45,7 +45,7 @@ namespace BioModule.BioModels
 
     public void UploadPhoto(Photo photo)
     {
-      throw new NotImplementedException();
+      
     }
 
     public object GetInformation()
@@ -84,7 +84,7 @@ namespace BioModule.BioModels
 
     public void ShowDetails(bool state)
     {
-      throw new NotImplementedException();
+      Console.WriteLine("Show Details");
     }
     
     public BitmapSource SettingsToogleButtonBitmap
@@ -140,6 +140,7 @@ namespace BioModule.BioModels
         if (_controller != value)
         {
           _controller = value;
+          ExpanderBarModel.UpdateSelector((IFingerSelector)_controller);
           NotifyOfPropertyChange(() => Controller);
         }
       }

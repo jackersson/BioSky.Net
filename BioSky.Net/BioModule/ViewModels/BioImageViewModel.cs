@@ -53,11 +53,11 @@ namespace BioModule.ViewModels
       _notifier = locator.GetProcessor<INotifier>();
       _database = locator.GetProcessor<IBioSkyNetRepository>();
 
-      BioImageModels = new ObservableCollection<IBioImageModel>();
+      BioImageModels = new ObservableCollection<IBioImageModel>();      
 
       BioImageModels.Add(new FacesImageModel  (locator, this));
       BioImageModels.Add(new FingersImageModel(locator, this));
-      BioImageModels.Add(new IrisesImageModel(this));
+      BioImageModels.Add(new IrisesImageModel (this));
 
       SetStyle(style);
 

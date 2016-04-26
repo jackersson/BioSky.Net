@@ -3,9 +3,11 @@ using BioContracts.Common;
 using BioContracts.FingerprintDevices;
 using BioModule.ResourcesLoader;
 using BioModule.Utils;
+using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,16 @@ namespace BioModule.ViewModels
       _observer                = new BioObserver<IFingerprintDeviceObserver>();
     }
 
+    public void UpdateSelector(IFingerSelector fingerSelector)
+    {
+      _fingerSelector = fingerSelector;      
+      _fingerSelector.FingerChanged += SelectFinger;
+    }
+
+    private void SelectFinger(Finger finger)
+    {
+      NotifyOfPropertyChange(() => SelectedFinger);
+    }
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => AvaliableDevicesCount);
@@ -83,7 +95,7 @@ namespace BioModule.ViewModels
 
     public void OnReady(bool isReady)
     {
-      NotifyOfPropertyChange(() => DeviceConnectedIcon);     
+      NotifyOfPropertyChange(() => DeviceConnectedIcon);         
     }
      
     #region observer
@@ -105,6 +117,36 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
+    public string SelectedFinger
+    {
+      get { return _fingerSelector.SelectedFinger.ToString(); }
+      set
+      {
+        Finger result;
+        Enum.TryParse(value, out result);
+        if (result != _fingerSelector.SelectedFinger)
+          _fingerSelector.SelectedFinger = result;
+      }
+    }
+
+    private List<string> _fingers;
+    public List<string> Fingers
+    {
+      get
+      {
+        if(_fingers == null)
+          _fingers = Enum.GetNames(typeof(Finger)).ToList();
+        return _fingers;
+      }
+      set
+      {
+        if (_fingers != value)
+        {
+          _fingers = value;
+          NotifyOfPropertyChange(() => Fingers);
+        }
+      }
+    }
 
     private AsyncObservableCollection<FingerprintDeviceInfo> _devicesNames;
     public AsyncObservableCollection<FingerprintDeviceInfo> DevicesNames
@@ -151,6 +193,7 @@ namespace BioModule.ViewModels
     #region Global Variables   
     private BioObserver<IFingerprintDeviceObserver> _observer;
     private readonly IFingerprintDeviceEngine       _fingerprintDeviceEngine;
+    private          IFingerSelector                _fingerSelector         ;
     #endregion
 
   }
