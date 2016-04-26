@@ -21,7 +21,7 @@ namespace BioModule.BioModels
     public FingersImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       FingerInformation = new FingerInformationViewModel();
-      EnrollmentBar  = new FingerprintEnrollmentBarViewModel(locator);
+      EnrollmentBar     = new FingerprintEnrollmentBarViewModel(locator);
 
       _imageView = imageView;
     }
