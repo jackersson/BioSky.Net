@@ -731,7 +731,7 @@ namespace BioModule.Utils
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter,
         System.Globalization.CultureInfo culture)
     {
-      return new object[] { Finger.RightIndex , Binding.DoNothing };
+      return new object[] { Finger.LeftLittle , Binding.DoNothing };
     }
   }
   #endregion
