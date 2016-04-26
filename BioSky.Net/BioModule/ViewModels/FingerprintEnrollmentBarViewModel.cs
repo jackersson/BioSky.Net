@@ -26,6 +26,9 @@ namespace BioModule.ViewModels
 
     public void UpdateSelector(IFingerSelector fingerSelector)
     {
+      if (fingerSelector == null)
+        return;
+
       _fingerSelector = fingerSelector;      
       _fingerSelector.FingerChanged += SelectFinger;
     }
@@ -119,11 +122,18 @@ namespace BioModule.ViewModels
     #region UI
     public string SelectedFinger
     {
-      get { return _fingerSelector.SelectedFinger.ToString(); }
+      get
+      {
+        if (_fingerSelector == null)
+          return Finger.Any.ToString();
+        return _fingerSelector.SelectedFinger.ToString(); }
       set
       {
         Finger result;
         Enum.TryParse(value, out result);
+
+        if (_fingerSelector == null)
+          return;
         if (result != _fingerSelector.SelectedFinger)
           _fingerSelector.SelectedFinger = result;
       }

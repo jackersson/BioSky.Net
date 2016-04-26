@@ -55,8 +55,8 @@ namespace BioModule.BioModels
 
     public void UpdateController(IUserBioItemsController controller)
     {
-      if (controller != null)
-        Controller = controller;
+      if (controller != null)      
+        Controller = controller;      
     }
     
     public void UpdateFrame( Bitmap frame)
@@ -140,6 +140,7 @@ namespace BioModule.BioModels
         if (_controller != value)
         {
           _controller = value;
+          EnrollmentBar.UpdateSelector((IFingerSelector)_controller);
           NotifyOfPropertyChange(() => Controller);
         }
       }
