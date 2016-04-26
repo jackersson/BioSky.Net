@@ -733,8 +733,6 @@ namespace BioModule.Utils
     {
       return new object[] { Finger.RightIndex , Binding.DoNothing };
     }
-
-    private IBioEngine _bioEngine;
   }
   #endregion
 
