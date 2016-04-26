@@ -45,6 +45,11 @@ namespace BioModule.ViewModels
       NotifyOfPropertyChange(() => FingerButtonsDictionary);
     }
 
+    public void SelectFinger(Finger finger)
+    {
+      SelectedFinger = finger;
+    }
+
     public void Update(Person user)
     {
       if (user == null || (user != null && user.Id <= 0))
@@ -63,10 +68,6 @@ namespace BioModule.ViewModels
     protected override void OnDeactivate(bool close)
     {
       base.OnDeactivate(close);
-    }
-    public bool IsFingerExist
-    {
-      get { return true; }
     }
 
     public void Add(Photo photo)

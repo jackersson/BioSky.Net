@@ -20,8 +20,8 @@ namespace BioEngine
       _trackLocations    = new AsyncObservableCollection<TrackLocation>();
 
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
-      _accessDeviceEngine = locator.GetProcessor<IAccessDeviceEngine>();
-      _fingerDeviceEngine = locator.GetProcessor<IFingerprintDeviceEngine>();
+      _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
+      _fingerDeviceEngine  = locator.GetProcessor<IFingerprintDeviceEngine>();
 
 
       _locationsHolder = _locator.GetProcessor<IBioSkyNetRepository>().Locations;
