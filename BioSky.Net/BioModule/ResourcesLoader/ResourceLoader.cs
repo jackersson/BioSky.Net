@@ -18,6 +18,9 @@ namespace BioModule.ResourcesLoader
     public static extern bool DeleteObject(IntPtr hObject);
     public static BitmapSource BitmapToBitmapSource(Bitmap source)
     {
+      if (source == null)
+        return null;
+
       IntPtr hBitMap = source.GetHbitmap();
       BitmapSource bmp = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap( hBitMap
                                                                                      , IntPtr.Zero

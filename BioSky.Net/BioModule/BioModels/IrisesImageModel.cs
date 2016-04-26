@@ -11,22 +11,22 @@ using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using BioService;
 using System.Drawing;
+using BioContracts.IrisDevices;
+using BioContracts;
 
 namespace BioModule.BioModels
 {
-  public class IrisesImageModel : PropertyChangedBase, IBioImageModel
+  public class IrisesImageModel : PropertyChangedBase, IBioImageModel, IIrisDeviceObserver
   {
-    public IrisesImageModel(IImageViewUpdate imageView)
+    public IrisesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       Information         = new IrisInformationViewModel();
+      EnrollmentBar       = new IrisEnrollmentBarViewModel(locator);
+
       _marker             = new MarkerUtils();
-      _firstMarkerBitmapHolder = new MarkerBitmapSourceHolder();
-      _secondMarkerBitmapHolder = new MarkerBitmapSourceHolder();
 
-
-     _images = new Tuple<MarkerBitmapSourceHolder
-                        , MarkerBitmapSourceHolder>(_firstMarkerBitmapHolder
-                                                   , _secondMarkerBitmapHolder);
+      _leftEyeHolder   = new MarkerBitmapSourceHolder();
+      _rightEyeHolder  = new MarkerBitmapSourceHolder();    
    
 
       _imageView = imageView;
@@ -41,16 +41,19 @@ namespace BioModule.BioModels
         Controller = controller;
     }
     public void Activate()
-    {      
-      if(_images.Item1.Unmarked == null && _images.Item2.Unmarked == null)
-        _imageView.SetDoubleImage(ResourceLoader.IrisScanImageIconSource, ResourceLoader.IrisScanImageIconSource);
-      else
-        _imageView.SetDoubleImage(_images.Item1.Unmarked, _images.Item2.Unmarked);
+    {
+      EnrollmentBar.Unsubscribe(this);
+      EnrollmentBar.Subscribe(this);
+
+      BitmapSource targetLeftEyeImage  = _leftEyeHolder .Unmarked == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder.Unmarked ;
+      BitmapSource targetRightEyeImage = _rightEyeHolder.Unmarked == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Unmarked;
+
+      _imageView.SetDoubleImage(targetLeftEyeImage, targetRightEyeImage);
     }
 
     public void Deactivate()
     {
-
+      EnrollmentBar.Unsubscribe(this);
     }
 
     public void ShowDetails(bool state)
@@ -58,41 +61,88 @@ namespace BioModule.BioModels
       if (state)
         DrawIrisCharacteristics();
       else
-        _imageView.SetDoubleImage(_images.Item1.Unmarked, _images.Item2.Unmarked);
+        _imageView.SetDoubleImage(_leftEyeHolder.Unmarked, _rightEyeHolder.Unmarked);
     }
 
     public void DrawIrisCharacteristics()
     {
-      // if (CurrentPhoto == null)
-      //  return;
+      _leftEyeHolder .Unmarked = _imageView.GetImageByIndex(0);
+      _rightEyeHolder.Unmarked = _imageView.GetImageByIndex(1);
 
-      _images.Item1.Unmarked = _imageView.GetImageByIndex(0);
-      _images.Item2.Unmarked = _imageView.GetImageByIndex(1);
+      Bitmap detailedLeftEye  = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_leftEyeHolder.Unmarked ));
+      Bitmap detailedRightEye = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_rightEyeHolder.Unmarked));
 
-      Bitmap detailedBitmap1 = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_images.Item1.Unmarked));
-      Bitmap detailedBitmap2 = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_images.Item2.Unmarked));
+      _leftEyeHolder .Marked = BitmapConversion.BitmapToBitmapSource(detailedLeftEye);
+      _rightEyeHolder.Marked = BitmapConversion.BitmapToBitmapSource(detailedRightEye);
 
-      _images.Item1.Marked = BitmapConversion.BitmapToBitmapSource(detailedBitmap1);
-      _images.Item2.Marked = BitmapConversion.BitmapToBitmapSource(detailedBitmap2);
-
-      _imageView.SetDoubleImage(_images.Item1.Marked, _images.Item2.Marked);
+      _imageView.SetDoubleImage(_leftEyeHolder.Marked, _rightEyeHolder.Marked);
     }
 
     public void UpdateFrame(Bitmap frame)
     {
-      throw new NotImplementedException();
+      if (frame == null)
+      {
+       // _imageView.SetSingleImage(null);
+        return;
+      }
+
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(frame);
+      _imageView.SetSingleImage(newFrame);
+      //throw new NotImplementedException();
+    }
+
+    public void OnFrame( Bitmap left,  Bitmap right)
+    {
+      
+      BitmapSource targetLeft = null;
+      if (left != null)
+        targetLeft = BitmapConversion.BitmapToBitmapSource(left);
+
+      BitmapSource targetRight = null;
+      if (right != null)
+        targetRight = BitmapConversion.BitmapToBitmapSource(right);
+
+      _imageView.SetDoubleImage(targetLeft, targetRight); 
+
+      //UpdateFrame(left);
+    }
+
+    public void OnIrisQualities(IList<EyeScore> scores)
+    {
+      Console.WriteLine("OnIrisQualities");
+    }
+
+    public void OnEyesDetected(bool detected)
+    {
+      Console.WriteLine("OnEyesDetected");
+    }
+
+    public void OnState(CaptureState captureState)
+    {
+      Console.WriteLine("OnState");
+    }
+
+    public void OnError(Exception ex)
+    {
+      Console.WriteLine("OnError");
+    }
+
+    public void OnMessage(string message)
+    {
+      Console.WriteLine("OnMesage");
+    }
+
+    public void OnReady(bool isReady)
+    {
+      Console.WriteLine("OnReady");
     }
 
     #region UI
 
-    public BioImageModelEnum EnumState
-    {
-      get { return BioImageModelEnum.Irises; }
-    }
-    public BitmapSource SettingsToogleButtonBitmap
-    {
-      get { return ResourceLoader.UserIricesIconSource; }
-    }
+    public BioImageModelType BioType { get { return BioImageModelType.Irises; } }
+
+
+    public BitmapSource SettingsToogleButtonBitmap {  get { return ResourceLoader.UserIricesIconSource; }  }
 
     private IrisInformationViewModel _information;
     public IrisInformationViewModel Information
@@ -107,24 +157,7 @@ namespace BioModule.BioModels
         }
       }
     }
-
-    private Photo _currentPhoto;
-    public Photo CurrentPhoto
-    {
-      get
-      {
-        return _currentPhoto;
-      }
-      set
-      {
-        if (_currentPhoto != value)
-        {
-          _currentPhoto = value;
-          Information.Update(_currentPhoto);
-        }
-      }
-    }
-
+    
     private IUserBioItemsController _controller;
     public IUserBioItemsController Controller
     {
@@ -138,14 +171,27 @@ namespace BioModule.BioModels
         }
       }
     }
+
+    private IrisEnrollmentBarViewModel _enrollmentBar;
+    public IrisEnrollmentBarViewModel EnrollmentBar
+    {
+      get { return _enrollmentBar; }
+      set
+      {
+        if (_enrollmentBar != value)
+        {
+          _enrollmentBar = value;
+          NotifyOfPropertyChange(() => EnrollmentBar);
+        }
+      }
+    }
     #endregion
 
     #region Global Variables
-    private IImageViewUpdate         _imageView         ;
-    private MarkerUtils              _marker            ;
-    private MarkerBitmapSourceHolder _firstMarkerBitmapHolder;
-    private MarkerBitmapSourceHolder _secondMarkerBitmapHolder;
-    private Tuple<MarkerBitmapSourceHolder, MarkerBitmapSourceHolder> _images;
+    private IImageViewUpdate         _imageView     ;
+    private MarkerUtils              _marker        ;
+    private MarkerBitmapSourceHolder _leftEyeHolder ;
+    private MarkerBitmapSourceHolder _rightEyeHolder;
 
     #endregion
   }

@@ -121,7 +121,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Image Grid.Column="0" Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                            <Image Grid.Column="0" Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToThumbnailConverter}}" 
                                        Stretch="Fill" Width="50" Height="50"/>
 
                             <StackPanel Margin="-10,-4,0,0" Grid.Column="1">

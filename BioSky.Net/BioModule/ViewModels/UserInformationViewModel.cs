@@ -41,7 +41,7 @@ namespace BioModule.ViewModels
     {
       base.OnActivate();
 
-      _imageViewer.ChangeBioImageModel(BioImageModelEnum.Faces);
+      _imageViewer.SetBioImageModel(BioImageModelType.Faces);
     }
 
     protected override void OnDeactivate(bool close)

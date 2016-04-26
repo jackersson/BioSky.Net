@@ -16,7 +16,7 @@ namespace BioModule.Utils
     void Previous();
     bool CanNext           { get; }
     bool CanPrevious       { get; }
-    BioImageModelEnum PageEnum { get; }
+    BioImageModelType PageEnum { get; }
     Person User            { get; }
   }
 }

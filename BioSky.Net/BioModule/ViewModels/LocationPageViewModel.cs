@@ -10,7 +10,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
-using BioGRPC.Utils;
+//using BioGRPC.Utils;
 
 namespace BioModule.ViewModels
 {

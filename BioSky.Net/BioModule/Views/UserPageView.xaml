@@ -10,8 +10,7 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
-             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect" 
-             xmlns:bioEngine ="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"       
              lex:LocalizeDictionary.DesignCulture=""
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
@@ -23,7 +22,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>

@@ -52,7 +52,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Border Grid.Column="0" BorderBrush="#FF3E3E42" BorderThickness="1" >
-                    <Image  Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                    <Image  Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToThumbnailConverter}}" 
                          Stretch="Fill" Width="50" Height="50">                  
                    </Image>
                 </Border>

@@ -21,14 +21,14 @@ namespace BioModule.BioModels
     public FingersImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       FingerInformation = new FingerInformationViewModel();
-      ExpanderBarModel = new FingerprintEnrollmentBarViewModel(locator);
+      EnrollmentBar     = new FingerprintEnrollmentBarViewModel(locator);
 
       _imageView = imageView;
     }
 
     public void Activate()
     {
-      ExpanderBarModel.Subscribe(this);
+      EnrollmentBar.Subscribe(this);
       _imageView.SetSingleImage(FingerImageSource);
     }
 
@@ -45,7 +45,7 @@ namespace BioModule.BioModels
 
     public void UploadPhoto(Photo photo)
     {
-      
+      throw new NotImplementedException();
     }
 
     public object GetInformation()
@@ -84,7 +84,7 @@ namespace BioModule.BioModels
 
     public void ShowDetails(bool state)
     {
-      Console.WriteLine("Show Details");
+    
     }
     
     public BitmapSource SettingsToogleButtonBitmap
@@ -104,7 +104,7 @@ namespace BioModule.BioModels
     }
 
     private FingerprintEnrollmentBarViewModel _enrollmentBar;
-    public FingerprintEnrollmentBarViewModel ExpanderBarModel
+    public FingerprintEnrollmentBarViewModel EnrollmentBar
     {
       get { return _enrollmentBar; }
       set
@@ -112,7 +112,7 @@ namespace BioModule.BioModels
         if (_enrollmentBar != value)
         {
           _enrollmentBar = value;
-          NotifyOfPropertyChange(() => ExpanderBarModel);
+          NotifyOfPropertyChange(() => EnrollmentBar);
         }
       }
     }
@@ -140,15 +140,14 @@ namespace BioModule.BioModels
         if (_controller != value)
         {
           _controller = value;
-          ExpanderBarModel.UpdateSelector((IFingerSelector)_controller);
           NotifyOfPropertyChange(() => Controller);
         }
       }
     }
 
-    BioImageModelEnum IBioImageModel.EnumState
+    BioImageModelType IBioImageModel.BioType
     {
-      get { return BioImageModelEnum.Fingers; }
+      get { return BioImageModelType.Fingers; }
     }
         
 

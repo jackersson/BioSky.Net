@@ -7,8 +7,7 @@
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:vm="clr-namespace:BioModule.ViewModels"
-             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
-             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"     
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:cal="http://www.caliburnproject.org"
@@ -19,28 +18,28 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:UserPhotoViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="300" d:DesignWidth="300">
+
     
     <UserControl.Resources>
-        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-        <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+        <!-- <utils:ConvertPhotoPathToImage x:Key="ConvertPhotoPathToImage"/>-->
+        <x:Static Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        <x:Static Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <utils:MultiThumbnailConverter x:Key="MultiThumbnailConverter"/>
-        
+        <utils:MultiThumbnailConverter x:Key="MultiThumbnailConverter"/> 
 
-        <Style x:Key="GreyScaleImage" TargetType="Image">
+
+        <Style x:Key="GreyScaleImage" TargetType="{x:Type Image}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource=
-                                      {RelativeSource Mode=FindAncestor
-                                      , AncestorType=Button}, Path=IsEnabled }" Value="false">
+                <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}" Value="false">
                     <Setter Property="Effect">
                         <Setter.Value>
-                            <gray:GrayscaleEffect></gray:GrayscaleEffect>
+                            <gray:GrayscaleEffect/>
                         </Setter.Value>
                     </Setter>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-    </UserControl.Resources>
+    </UserControl.Resources> 
 
     <Grid x:Name="GridLayout">
         <Grid.RowDefinitions>
@@ -79,17 +78,11 @@
                 cal:Message.Attach="[Event Click]=[Action OnDeletePhoto]"
                 Tag="{x:Static bioContracts:Activity.PhotoRemove}"
                 >
-            <Button.IsEnabled>
-                <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}" >
-                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
-                    <Binding Path="CanDeleteItem"/>
-                    <Binding ElementName="DeleteButton" Path="Tag"/>
-                </MultiBinding>
-            </Button.IsEnabled>
+
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}"
                    Height="32" Width="32" Style="{StaticResource GreyScaleImage}"/>
         </Button>
-
+       
         <ListBox BorderThickness="1" 
                  BorderBrush="#66808080"
                  HorizontalAlignment="Stretch" x:Name="ListBoxView"
@@ -112,7 +105,7 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="16"/>
                         </Grid.RowDefinitions>
-                        
+
                         <Grid.ContextMenu>
                             <ContextMenu IsEnabled="True" cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                                 <MenuItem Header="{lex:Loc SetThumbnail}"  
@@ -122,7 +115,7 @@
                         </Grid.ContextMenu>
 
                         <Image Grid.ColumnSpan="2" Grid.RowSpan="2"
-                               Source="{Binding PhotoUrl, Converter={x:Static utils:ConverterInitializer.FileLocationToImageConverter}}"
+                               Source="{Binding Converter={x:Static utils:ConverterInitializer.PhotoIdToImageConverter}, Mode=OneWay}"
                                Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
                         <Grid   Grid.Column="1"
@@ -147,9 +140,9 @@
                                 </MultiBinding>
                             </Grid.Visibility>
                         </Grid>
-                        
 
-                     
+
+
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
@@ -158,6 +151,6 @@
                     <WrapPanel />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-        </ListBox>
+        </ListBox> 
     </Grid>
 </UserControl>

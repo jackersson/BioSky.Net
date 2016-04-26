@@ -53,7 +53,7 @@ namespace BioModule.ViewModels
       base.OnActivate();
       RefreshData();
       CardEnrollment.Subscribe(this);
-      _imageViewer.ChangeBioImageModel( BioImageModelEnum.Faces);
+      _imageViewer.SetBioImageModel( BioImageModelType.Faces);
     }
 
     protected override void OnDeactivate(bool close)

@@ -51,7 +51,20 @@ namespace BioData.Holders
 
     public void UpdateFromQuery(QueryPhoto query, IList<Photo> responded)
     {
-      Add(responded);      
+      if (query == null)
+        return;
+
+      switch (query.WithBytes)
+      {
+        case PhotoResultType.Full   :
+        case PhotoResultType.NoBytes:
+        case PhotoResultType.Undefined:
+          Add(responded);
+          break;
+        case PhotoResultType.OnlyBytes:
+          SaveLocalPhotos(responded);
+          break;
+      }      
     }
 
     private void Remove(Photo photo)
@@ -60,6 +73,18 @@ namespace BioData.Holders
         return;
 
       DataSet.Remove(photo.Id);
+    }
+
+    private void SaveLocalPhotos(IList<Photo> responded)
+    {
+      foreach (Photo ph in responded)
+      {
+        long id = ph.Id;
+        if (ContainesKey(id) && ph.Bytestring.Count() > 0)
+          _ioUtils.SaveFile(DataSet[id].PhotoUrl, ph.Bytestring.ToArray());
+      }
+
+      OnDataChanged();
     }
 
     public void Add(Photo photo)
@@ -71,9 +96,9 @@ namespace BioData.Holders
       if (!ContainesKey(id))
         DataSet.Add(id, photo);
       else           
-        DataSet[id] = photo;  
-      
-          
+        DataSet[id] = photo;
+
+      CheckPhotosIfFileExisted(photo);
     }
 
     public void Add(IEnumerable<Photo> photos)
@@ -82,44 +107,21 @@ namespace BioData.Holders
         Add(photo);
 
       OnDataChanged();
-    }
+    }  
 
     private bool ContainesKey(long key)
     {
       Photo result;
       return DataSet.TryGetValue(key, out result);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    public void CheckPhotosIfFileExisted(Person person)
-    {
-      foreach (Photo photo in person.Photos)      
-        CheckPhotosIfFileExisted(photo);      
-    }
-
-    public void CheckPhotosIfFileExisted(Visitor visitor)
-    {
-     // CheckPhotosIfFileExisted(visitor.Fullphoto  );
-     // CheckPhotosIfFileExisted(visitor.Cropedphoto);      
-    }
-
+    
     public void CheckPhotosIfFileExisted(Photo photo)
     {
       if (photo == null)
         return;
 
       if (!_ioUtils.FileExists(photo.PhotoUrl))
-        PhotosIndexesWithoutExistingFile.Add(photo.Id);
+        RequestPhotoById(photo.Id, PhotoResultType.OnlyBytes);
     }
 
     private HashSet<long> _photosIndexesWithoutExistingFile;
@@ -152,6 +154,8 @@ namespace BioData.Holders
       }
       return photo;
     }
+
+
 
     private Dictionary<long, Photo> _dataSet;
     public Dictionary<long, Photo> DataSet

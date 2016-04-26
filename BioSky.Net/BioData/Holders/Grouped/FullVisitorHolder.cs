@@ -28,7 +28,7 @@ namespace BioData.Holders.Grouped
         if (visitor != null)
         {
           _dataSet.Add(visitor.Id, visitor);
-          _photoHolder.CheckPhotosIfFileExisted(visitor);
+        //  _photoHolder.CheckPhotosIfFileExisted(visitor);
         }
       }
      

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioCaptureDevices", "BioCap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioFingerprintDevices", "BioFingerprintDevices\BioFingerprintDevices.csproj", "{818DA764-CA28-460C-9BF8-9250B7275AA0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BioIrisDevices", "BioIrisDevices\BioIrisDevices.csproj", "{5E5B32EA-AF61-41F7-A74A-B4840B826784}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,14 @@ Global
 		{818DA764-CA28-460C-9BF8-9250B7275AA0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{818DA764-CA28-460C-9BF8-9250B7275AA0}.Release|x86.ActiveCfg = Release|Any CPU
 		{818DA764-CA28-460C-9BF8-9250B7275AA0}.Release|x86.Build.0 = Release|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Debug|x86.Build.0 = Debug|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Release|x86.ActiveCfg = Release|Any CPU
+		{5E5B32EA-AF61-41F7-A74A-B4840B826784}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
