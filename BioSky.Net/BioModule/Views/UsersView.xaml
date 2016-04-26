@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BioModule.Views"
-             xmlns:data="clr-namespace:BioData;assembly=BioData"
+             xmlns:local="clr-namespace:BioModule.Views"        
              xmlns:vm="clr-namespace:BioModule.ViewModels"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
@@ -12,8 +11,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
-             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
-             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"            
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:catel="http://catel.codeplex.com"
              lex:LocalizeDictionary.DesignCulture="uk-UA"
@@ -39,7 +37,7 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
 
             <Style x:Key="GreyScaleImage" TargetType="Image">
                 <Style.Triggers>
@@ -98,7 +96,7 @@
                               />
                             </ContextMenu>
                         </StackPanel.ContextMenu>
-                        <Image Source="{Binding Id, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                        <Image Source="{Binding Id, Converter={x:Static utils:ConverterInitializer.PersonIdToThumbnailConverter}}" 
                                        Stretch="Fill" Width="128" Height="128"/>
                         <StackPanel Width="128" Orientation="Horizontal">
                             <TextBlock Text="{Binding Firstname}"

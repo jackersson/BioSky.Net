@@ -9,7 +9,7 @@
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
-             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+           
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
@@ -25,7 +25,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
             
             <Style x:Key="GreyScaleImage" TargetType="Image">
                 <Style.Triggers>

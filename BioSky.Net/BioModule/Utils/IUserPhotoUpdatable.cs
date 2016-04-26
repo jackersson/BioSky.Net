@@ -13,7 +13,7 @@ namespace BioModule.Utils
   {
     void UpdateBioItemsController(IUserBioItemsController controller);
     void UpdateFromPhoto(Photo photo);
-    void ChangeBioImageModel(BioImageModelEnum state);
+    void SetBioImageModel(BioImageModelType state);
     void Clear();
 
     Photo CurrentPhoto { get; }

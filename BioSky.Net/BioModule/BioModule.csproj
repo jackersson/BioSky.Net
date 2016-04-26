@@ -212,6 +212,7 @@
     <Compile Include="Utils\DeviceItemBase.cs" />
     <Compile Include="Utils\DialogsHolder.cs" />
     <Compile Include="Utils\FaceFinder.cs" />
+    <Compile Include="Utils\IBioImageModel.cs" />
     <Compile Include="Utils\IUserPhotoController.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
     <Compile Include="Utils\TrackLocationUtils.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="ViewModels\FullTrackControlItemViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\ImageItemViewModel.cs" />
+    <Compile Include="ViewModels\IrisEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\IrisInformationViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationFingerDevicesViewModel.cs" />
@@ -335,6 +337,9 @@
     </Compile>
     <Compile Include="Views\ImageView.xaml.cs">
       <DependentUpon>ImageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\IrisEnrollmentBarViewModel.xaml.cs">
+      <DependentUpon>IrisEnrollmentBarViewModel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\IrisInformationView.xaml.cs">
       <DependentUpon>IrisInformationView.xaml</DependentUpon>
@@ -508,6 +513,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\IrisEnrollmentBarViewModel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\IrisInformationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -664,33 +673,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BioAccessDevice\BioAccessDevice.csproj">
-      <Project>{09df37b6-4105-4c3a-8f1c-8bc4ec95dc05}</Project>
-      <Name>BioAccessDevice</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BioCaptureDevices\BioCaptureDevices.csproj">
-      <Project>{6f2ad37f-d888-4ce9-9891-b685f1f0e4a9}</Project>
-      <Name>BioCaptureDevices</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BioContracts\BioContracts.csproj">
       <Project>{fedd6c6d-6cd4-4d74-a19c-f2715b0d1f5b}</Project>
       <Name>BioContracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BioData\BioData.csproj">
-      <Project>{979ee57f-fd15-43c8-917a-4e53ad1c4ad4}</Project>
-      <Name>BioData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BioEngine\BioEngine.csproj">
-      <Project>{0e18d66b-a62b-4074-9217-bbf30d2c9322}</Project>
-      <Name>BioEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BioFingerprintDevices\BioFingerprintDevices.csproj">
-      <Project>{818da764-ca28-460c-9bf8-9250b7275aa0}</Project>
-      <Name>BioFingerprintDevices</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BioGRPC\BioGRPC.csproj">
-      <Project>{cd53527f-3158-4898-8e39-12c3531cf05c}</Project>
-      <Name>BioGRPC</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

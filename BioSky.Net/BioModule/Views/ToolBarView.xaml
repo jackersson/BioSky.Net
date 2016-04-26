@@ -6,8 +6,7 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"      
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"              
-             xmlns:utils="clr-namespace:BioModule.Utils" 
-             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:utils="clr-namespace:BioModule.Utils"         
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader" 
              xmlns:lex="http://wpflocalizeextension.codeplex.com"           
@@ -20,7 +19,7 @@
 
     <UserControl.Resources>
         <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-        <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+        <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
 
         <Style x:Key="GreyScaleImage" TargetType="Image">
             <Style.Triggers>

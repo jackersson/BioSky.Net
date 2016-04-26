@@ -23,14 +23,14 @@ namespace BioModule.BioModels
     public FacesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       Information         = new PhotoInformationViewModel();
-      ExpanderBarModel    = new FaceEnrollmentBarViewModel(locator);
+      EnrollmentBar    = new FaceEnrollmentBarViewModel(locator);
       _marker             = new MarkerUtils();
       _faceFinder         = new FaceFinder();
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
 
       _imageView = imageView;
             
-      CurrentPhoto = GetTestPhoto();
+      //CurrentPhoto = GetTestPhoto();
     }
 
     //test
@@ -60,7 +60,7 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
-      ExpanderBarModel.Subscribe(this);
+      EnrollmentBar.Subscribe(this);
       // EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
 
       //if (EnrollmentViewModel.DeviceObserver.DeviceName != null)
@@ -160,9 +160,9 @@ namespace BioModule.BioModels
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
     
     #region UI
-    public BioImageModelEnum EnumState
+    public BioImageModelType BioType
     {
-      get { return BioImageModelEnum.Faces; }
+      get { return BioImageModelType.Faces; }
     }
     public BitmapSource SettingsToogleButtonBitmap
     {
@@ -202,7 +202,7 @@ namespace BioModule.BioModels
     }
 
     private FaceEnrollmentBarViewModel _expanderBarModel;
-    public FaceEnrollmentBarViewModel ExpanderBarModel
+    public FaceEnrollmentBarViewModel EnrollmentBar
     {
       get { return _expanderBarModel; }
       set
@@ -210,7 +210,7 @@ namespace BioModule.BioModels
         if (_expanderBarModel != value)
         {
           _expanderBarModel = value;
-          NotifyOfPropertyChange(() => ExpanderBarModel);
+          NotifyOfPropertyChange(() => EnrollmentBar);
         }
       }
     }
