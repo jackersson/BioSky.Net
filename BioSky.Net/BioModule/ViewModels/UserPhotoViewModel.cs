@@ -49,7 +49,7 @@ namespace BioModule.ViewModels
       base.OnActivate();
       RefreshData();
 
-      _imageViewer.SetBioImageModel(PageEnum);
+      _imageViewer.SetBioImageModel(BioImageModelType);
     }
 
     public void Update(Person user)
@@ -327,7 +327,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    public BioImageModelType PageEnum { get { return BioImageModelType.Faces; } }
+    public BioImageModelType BioImageModelType { get { return BioImageModelType.Faces; } }
     #endregion
 
     #region Global Variables

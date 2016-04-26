@@ -118,7 +118,7 @@ namespace BioModule.ViewModels
         if(item is IUserBioItemsController)
         {
           IUserBioItemsController item2 = item as IUserBioItemsController;
-          if (item2.PageEnum == bioImageModel)
+          if (item2.BioImageModelType == bioImageModel)
             ActivateItem(item);
         }
       }

@@ -236,7 +236,7 @@ namespace BioModule.ViewModels
 
       foreach (IBioImageModel view in BioImageModels)
       {
-        if (view.BioType == controller.PageEnum)
+        if (view.BioType == controller.BioImageModelType)
         {
           view.UpdateController(controller);
           NotifyOfPropertyChange(() => UserController);

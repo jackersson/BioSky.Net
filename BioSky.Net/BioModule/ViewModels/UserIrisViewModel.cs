@@ -38,7 +38,7 @@ namespace BioModule.ViewModels
     {
       base.OnActivate();
 
-      _imageViewer.SetBioImageModel(PageEnum);
+      _imageViewer.SetBioImageModel(BioImageModelType);
     }
 
     protected override void OnDeactivate(bool close)
@@ -67,7 +67,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    public BioImageModelType PageEnum { get { return BioImageModelType.Irises; }}
+    public BioImageModelType BioImageModelType { get { return BioImageModelType.Irises; }}
 
     public Person User { get{ return _user; }}
 
