@@ -144,6 +144,7 @@
     <Compile Include="Common\BioObserver.cs" />
     <Compile Include="CaptureDevices\ICaptureDeviceObserver.cs" />
     <Compile Include="Common\GrayScaleBitmap.cs" />
+    <Compile Include="Common\PermissionController.cs" />
     <Compile Include="FingerprintDevices\FingerprintDeviceInfo.cs" />
     <Compile Include="FingerprintDevices\IFingerprintDeviceEngine.cs" />
     <Compile Include="FingerprintDevices\IFingerprintDeviceObserver.cs" />
@@ -152,6 +153,9 @@
     <Compile Include="IDeviceConnectivity.cs" />
     <Compile Include="IDialogsHolder.cs" />
     <Compile Include="INotificationDialog.cs" />
+    <Compile Include="IrisDevices\EyeScore.cs" />
+    <Compile Include="IrisDevices\IIrisDeviceEngine.cs" />
+    <Compile Include="IrisDevices\IIrisDeviceObserver.cs" />
     <Compile Include="Locations\BioTasks\TrackLocationVerification.cs" />
     <Compile Include="Locations\IFullLocationObserver.cs" />
     <Compile Include="Locations\ILocationDeviceObserver.cs" />

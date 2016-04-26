@@ -11,8 +11,7 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
-             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"     
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
@@ -49,7 +48,7 @@
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -117,7 +116,7 @@
                               />
                                 </ContextMenu>
                             </StackPanel.ContextMenu>
-                            <Image Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PhotoIDConverter}}" 
+                            <Image Source="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToThumbnailConverter}}" 
                                        Stretch="Fill" Width="128" Height="128"/>
                             <StackPanel Width="128" Orientation="Horizontal" >
                                 <TextBlock Text="{Binding Personid, Converter={x:Static utils:ConverterInitializer.PersonIdToFirstnameConverter}}"

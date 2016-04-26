@@ -9,6 +9,8 @@ using BioContracts.Common;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.BioTasks;
 using BioContracts.BioTasks.Utils;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BioModule.ViewModels
 {
@@ -30,7 +32,7 @@ namespace BioModule.ViewModels
 
       DisplayName = "Photo";      
 
-      UserImages   = new AsyncObservableCollection<Photo>();
+      UserImages   = new AsyncObservableCollection<long>();
       _bioUtils    = new BioImageUtils();
       
       _database.Persons.DataChanged     += RefreshData;
@@ -47,7 +49,7 @@ namespace BioModule.ViewModels
       base.OnActivate();
       RefreshData();
 
-      _imageViewer.ChangeBioImageModel(PageEnum);
+      _imageViewer.SetBioImageModel(PageEnum);
     }
 
     public void Update(Person user)
@@ -70,12 +72,46 @@ namespace BioModule.ViewModels
         return;
      
       UserImages.Clear();
-     
-      foreach (Photo personPhoto in _user.Photos)      
-        UserImages.Add(personPhoto);
+
+      //IEnumerable<long> photos = null;
+      if (_user.BiometricData != null && _user.BiometricData.Faces != null && _user.BiometricData.Faces.Count > 0)
+      {
+        //photos = _user.BiometricData.Faces.Select(x => x.Id);
+        foreach (FaceCharacteristic fc in _user.BiometricData.Faces)
+          UserImages.Add(fc.Photoid);
+
+        //UserImages.AddRange(_user.BiometricData.Faces.Select(x => x.Id));
+      }
+
+
+      //IEnumerable<long> photo2s = null;
+      if (_user.Photos != null && _user.Photos.Count > 0)
+      {
+        //photo2s = _user.Photos.Select(x => x.Id);
+        foreach (Photo fc in _user.Photos)
+          UserImages.Add(fc.Id);
+      }
+
+
+
+      //foreach (long id in photos)
+     //   UserImages.Add(id);
+
+   //   foreach (long id in photo2s)
+   //     UserImages.Add(id);
+
+      NotifyOfPropertyChange(() => UserImages);
       
-      if(UserImages.Count > 0)      
-        PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:YourPhotos");      
+      if (UserImages.Count > 0)
+      {
+        SelectedItem = UserImages.Where(x => x == _user.Thumbnailid).FirstOrDefault();
+        if (SelectedItem <= 0)
+          SelectedItem = UserImages.FirstOrDefault();
+
+
+
+        PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:YourPhotos");
+      }
       else
         PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:NoAvailablePhotos");
     }
@@ -87,16 +123,17 @@ namespace BioModule.ViewModels
 
     public void OnMouseRightButtonDown(Photo photo)
     {
-      CanSetThumbnail = (photo != null);
-      SelectedItem = photo;
+      CanSetThumbnail = (photo != null);      
+      SelectedItem = CanSetThumbnail ? photo.Id : 0;
     }
 
     public void OnDeletePhoto()
     {
-      if (SelectedItem == null)
+      if (SelectedItem <= 0)
         return;
 
-      Remove(SelectedItem);
+      Photo photo = _database.Photos.GetValue(SelectedItem);
+      Remove(photo);
     }
 
     public async void OnSetThumbnail()
@@ -156,24 +193,15 @@ namespace BioModule.ViewModels
     }
            
     public void Next()
-    {
-      Console.WriteLine("OnNext");
-      return;
-
-
+    {     
       if (!CanNext || CurrentPhotoIndex + 1 > UserImages.Count )
         return;
 
-      SelectedItem = UserImages[CurrentPhotoIndex + 1];
-
-      
+      SelectedItem = UserImages[CurrentPhotoIndex + 1];      
     }
 
     public void Previous()
-    {
-      Console.WriteLine("OnPrevious");
-      return;
-
+    {     
       if (!CanPrevious || CurrentPhotoIndex - 1 >= 0)
         return;
 
@@ -229,8 +257,8 @@ namespace BioModule.ViewModels
       }
     }
 
-    private AsyncObservableCollection<Photo> _userImages;
-    public AsyncObservableCollection<Photo> UserImages
+    private AsyncObservableCollection<long> _userImages;
+    public AsyncObservableCollection<long> UserImages
     {
       get { return _userImages; }
       set
@@ -243,8 +271,8 @@ namespace BioModule.ViewModels
       }
     }        
 
-    private Photo _selectedItem;
-    public Photo SelectedItem
+    private long _selectedItem;
+    public long SelectedItem
     {
       get { return _selectedItem; }
       set
@@ -252,13 +280,10 @@ namespace BioModule.ViewModels
         if (_selectedItem != value)
         {
           _selectedItem = value;
-
-          if(_selectedItem != null)
-          {
-            _imageViewer.UpdateFromPhoto(value);
-
-            CurrentPhotoIndex = UserImages.IndexOf(_imageViewer.CurrentPhoto);
-          }       
+          
+          Photo photo = _database.Photos.GetValue(_selectedItem);       
+          _imageViewer.UpdateFromPhoto(photo);
+          CurrentPhotoIndex = UserImages.IndexOf(_selectedItem);             
 
           NotifyOfPropertyChange(() => SelectedItem );
           NotifyOfPropertyChange(() => CanDeleteItem);
@@ -285,7 +310,7 @@ namespace BioModule.ViewModels
     private bool _canDeleteItem;
     public bool CanDeleteItem
     {
-      get { return SelectedItem != null; }      
+      get { return SelectedItem > 0; }      
     }
 
     private Person _user;
@@ -302,7 +327,7 @@ namespace BioModule.ViewModels
       }
     }
 
-    public BioImageModelEnum PageEnum { get { return BioImageModelEnum.Faces; } }
+    public BioImageModelType PageEnum { get { return BioImageModelType.Faces; } }
     #endregion
 
     #region Global Variables

@@ -143,7 +143,6 @@
     <Compile Include="BioEngineInstaller.cs" />
     <Compile Include="BioSkyEngine.cs" />
     <Compile Include="BioStarter.cs" />
-    <Compile Include="PermissionController .cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TrackLocationEngine.cs" />
   </ItemGroup>

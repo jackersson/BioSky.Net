@@ -58,6 +58,7 @@ namespace BioShell
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioAccessDevice.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioCaptureDevices.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioFingerprintDevices.dll"));
+        dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioIrisDevices.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioGRPC.dll"));
         dataloader.LoadData(Assembly.LoadFile(exeDir + @"\BioEngine.dll"));
        

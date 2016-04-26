@@ -9,8 +9,7 @@
              xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
-             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
-             xmlns:bioEngine="clr-namespace:BioEngine;assembly=BioEngine"
+             xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"           
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts"
              xmlns:lex="http://wpflocalizeextension.codeplex.com" 
              lex:LocalizeDictionary.DesignCulture="en-EN"
@@ -35,7 +34,7 @@
             </Style>
             
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioEngine:PermissionController.Instance" x:Key="Permissions"/>
+            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
         </ResourceDictionary>
     </UserControl.Resources>
 

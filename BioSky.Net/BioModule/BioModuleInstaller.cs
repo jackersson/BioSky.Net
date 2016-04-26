@@ -12,7 +12,7 @@ using BioContracts;
 using BioModule.ViewModels;
 //using BioModule.Model;
 using BioModule.Utils;
-using BioData;
+//using BioData;
 using System.Collections;
 using Castle.Facilities.TypedFactory;
 using System.IO;

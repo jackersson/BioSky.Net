@@ -7,6 +7,7 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels" 
              xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"   
              xmlns:local="clr-namespace:BioModule.Views"               
+             xmlns:vmUtils ="clr-namespace:BioModule.Utils"
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              xmlns:cal="http://www.caliburnproject.org"
@@ -113,16 +114,20 @@
             Background="#FFFFFFFF" BorderBrush="{x:Null}"
             Visibility="{Binding EnrollExpanderVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-            <ContentControl Content="{Binding CurrentBioImage.ExpanderBarModel}">
+            <ContentControl Content="{Binding CurrentBioImage.EnrollmentBar}">
                 <ContentControl.Resources>
                     <DataTemplate DataType="{x:Type vm:FaceEnrollmentBarViewModel}">
-                        <local:FaceEnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                        <local:FaceEnrollmentBarView x:Name="EnrollmentBar" DataContext="{Binding Mode=OneWay}">
                         </local:FaceEnrollmentBarView>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:FingerprintEnrollmentBarViewModel}">
-                        <local:FingerprintEnrollmentBarView x:Name="ExpanderBarModel" DataContext="{Binding Mode=OneWay}">
+                        <local:FingerprintEnrollmentBarView x:Name="EnrollmentBar" DataContext="{Binding Mode=OneWay}">
                         </local:FingerprintEnrollmentBarView>
                     </DataTemplate>
+                   <DataTemplate DataType="{x:Type vm:IrisEnrollmentBarViewModel}">
+                        <local:IrisEnrollmentBarViewModel x:Name="EnrollmentBar" DataContext="{Binding Mode=OneWay}">
+                        </local:IrisEnrollmentBarViewModel>
+                    </DataTemplate> 
                 </ContentControl.Resources>                
             </ContentControl>
 
@@ -318,13 +323,13 @@
                 <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
 
-                <!--<i:Interaction.Triggers>
+                <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="ChangeBioImageModel">
-                            <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Faces}" />
+                        <cal:ActionMessage MethodName="SetBioImageModel">
+                            <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Faces}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>-->
+                </i:Interaction.Triggers> 
             </Button>
             <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
                     ToolTip="Fingers" BorderBrush="#7F3587BD">
@@ -332,13 +337,13 @@
                 <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FingerScanColorIconSource}"  />
 
-                <!--<i:Interaction.Triggers>
+                <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="ChangeBioImageModel">
-                            <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Fingers}" />
+                        <cal:ActionMessage MethodName="SetBioImageModel">
+                            <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Fingers}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>-->
+                </i:Interaction.Triggers> 
             </Button>
             <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
                     ToolTip="Irises"  BorderBrush="#7F3587BD">
@@ -346,14 +351,28 @@
                 <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=IrisScanColorIconSource}"  />
 
-               <!-- <i:Interaction.Triggers>
+                <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="ChangeBioImageModel">
-                            <cal:Parameter Value="{x:Static vm:BioImageModelEnum.Irises}" />
+                        <cal:ActionMessage MethodName="SetBioImageModel">
+                            <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Irises}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers>-->
+                </i:Interaction.Triggers> 
             </Button>
+         <!--   <Button  Width="40" Height="40" Style ="{StaticResource MyStandardButton}"  
+                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0">
+
+                <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="SetBioImageModel">
+                            <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Photo}" />
+                        </cal:ActionMessage>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button> -->
         </StackPanel>
 
 

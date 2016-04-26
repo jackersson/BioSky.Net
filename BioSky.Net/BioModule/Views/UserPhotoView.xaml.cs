@@ -24,6 +24,5 @@ namespace BioModule.Views
     {
       InitializeComponent();
     }
-     
   }
 }

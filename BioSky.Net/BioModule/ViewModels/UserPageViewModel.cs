@@ -7,7 +7,7 @@ using BioService;
 using WPFLocalizeExtension.Extensions;
 using BioContracts.Services;
 using BioContracts.BioTasks.Utils;
-using BioData.Holders.Utils;
+//using BioData.Holders.Utils;
 
 namespace BioModule.ViewModels
 {
@@ -111,7 +111,7 @@ namespace BioModule.ViewModels
 
     #region Update
 
-    private void OnBioImageModelChanged(BioImageModelEnum bioImageModel)
+    private void OnBioImageModelChanged(BioImageModelType bioImageModel)
     {
       foreach(IScreen item in Items)
       {
@@ -168,9 +168,9 @@ namespace BioModule.ViewModels
 
       NotifyOfPropertyChange(() => CanDelete);
 
-      Photo photo =_user.Photos.Where(x => x.Id == _user.Thumbnailid).FirstOrDefault();
+      //Photo photo =_user.Photos.Where(x => x.Id == _user.Thumbnailid).FirstOrDefault();
 
-      CurrentPhotoImageView.UpdateFromPhoto(photo);
+      //CurrentPhotoImageView.UpdateFromPhoto(photo);
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
@@ -235,7 +235,7 @@ namespace BioModule.ViewModels
 
       if (_user.Gender != _revertUser.Gender)
         updatedPerson.Gender = _user.Gender;
-
+      /*
       if (!string.Equals(_user.Email, _revertUser.Email) )
         updatedPerson.Email = !string.IsNullOrEmpty(_user.Email) ? _user.Email : ProtoFieldsUtils.FIELD_DELETE_STATE;
 
@@ -250,7 +250,7 @@ namespace BioModule.ViewModels
 
       if (_user.Rights != _revertUser.Rights)
         updatedPerson.Rights = _user.Rights;
-
+        */
       #endregion
       /*
       Photo currentPhoto = CurrentPhotoImageView.CurrentPhoto;

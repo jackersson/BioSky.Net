@@ -13,41 +13,20 @@ using AForge.Video.DirectShow;
 using BioModule.BioModels;
 
 namespace BioModule.ViewModels
-{
-  
-  public interface IBioImageModel
-  {
-    void Activate();
-    void Deactivate();
-    void UpdateController(IUserBioItemsController controller);
-    void UploadPhoto(Photo photo);
-    void UpdateFrame(Bitmap frame);
-    void ShowDetails(bool state);
-    BioImageModelEnum EnumState                 { get; }
-    IUserBioItemsController Controller      { get; }
-  }
-
+{   
   public enum BioImageStyle : long
   {  
-    Zoom               = 1 << 0
-  , BioSelector        = 1 << 1
-  , LiveEnrollment     = 1 << 2
-  , EnrollmentFromFile = 1 << 3
-  , Information        = 1 << 4
-  , Arrows             = 1 << 5
-  , CancelBtn          = 1 << 6
+      Zoom               = 1 << 0
+    , BioSelector        = 1 << 1
+    , LiveEnrollment     = 1 << 2
+    , EnrollmentFromFile = 1 << 3
+    , Information        = 1 << 4
+    , Arrows             = 1 << 5
+    , CancelBtn          = 1 << 6
   }
-
-  public enum BioImageModelEnum
-  {
-     Faces
-   , Irises
-   , Fingers
-  }
-
+  
   public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable
   {
-
     public BioImageViewModel(IProcessorLocator locator, long style = MAX_BIO_IMAGE_STYLE)
     {
       _notifier = locator.GetProcessor<INotifier>();
@@ -57,24 +36,24 @@ namespace BioModule.ViewModels
 
       BioImageModels.Add(new FacesImageModel  (locator, this));
       BioImageModels.Add(new FingersImageModel(locator, this));
-      BioImageModels.Add(new IrisesImageModel(this));
-
+      BioImageModels.Add(new IrisesImageModel (locator, this));
+     
       SetStyle(style);
 
       // UpdateFromPhoto(GetTestPhoto());
 
-      ChangeBioImageModel(BioImageModelEnum.Faces);
+      SetBioImageModel(BioImageModelType.Faces);
 
     }
 
-    public void ChangeBioImageModel(BioImageModelEnum state)
+    public void SetBioImageModel(BioImageModelType state)
     {
-      if (CurrentBioImage != null && CurrentBioImage.EnumState == state)
+      if (CurrentBioImage != null && CurrentBioImage.BioType == state)
         return;
 
       foreach (IBioImageModel view in BioImageModels)
       {
-        if (view.EnumState == state)
+        if (view.BioType == state)
         {
           CurrentBioImage = view;         
           CurrentBioImage.Activate();
@@ -234,7 +213,7 @@ namespace BioModule.ViewModels
         CurrentBioImage.UploadPhoto(null);
     }
 
-    private void OnBioImageChanged(BioImageModelEnum bioImageModel)
+    private void OnBioImageChanged(BioImageModelType bioImageModel)
     {
       if (BioImageModelChanged != null)
         BioImageModelChanged(bioImageModel);
@@ -257,7 +236,7 @@ namespace BioModule.ViewModels
 
       foreach (IBioImageModel view in BioImageModels)
       {
-        if (view.EnumState == controller.PageEnum)
+        if (view.BioType == controller.PageEnum)
         {
           view.UpdateController(controller);
           NotifyOfPropertyChange(() => UserController);
@@ -282,7 +261,7 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => UserController);
           NotifyOfPropertyChange(() => CanUsePhotoController);
 
-          OnBioImageChanged(CurrentBioImage.EnumState);
+          OnBioImageChanged(CurrentBioImage.BioType);
         }
       }
     }
@@ -470,7 +449,7 @@ namespace BioModule.ViewModels
     private readonly INotifier _notifier;
     private readonly IBioSkyNetRepository _database;
 
-    public delegate void BioImageChangedEventHandler(BioImageModelEnum bioImageModel);
+    public delegate void BioImageChangedEventHandler(BioImageModelType bioImageModel);
 
     public event BioImageChangedEventHandler BioImageModelChanged;
 

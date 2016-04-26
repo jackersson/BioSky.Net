@@ -160,6 +160,7 @@ namespace BioData.Holders.Grouped
         , IsSuccess = (responded.Dbresult == Result.Success) ? true : false
       };
 
+      /*
       if(responded.Thumbnail != null)
       {
         Photo photo = responded.Thumbnail;
@@ -169,6 +170,7 @@ namespace BioData.Holders.Grouped
           , IsSuccess = (photo.Dbresult == Result.Success) ? true : false
         });
       }
+      */
 
       foreach (Photo photo in responded.Photos)
       {
@@ -239,7 +241,7 @@ namespace BioData.Holders.Grouped
         if (newThumbnail != null)
         {
          // _dataSet[owner.Id].Photoid   = requested.Id;
-          _dataSet[owner.Id].Thumbnail = newThumbnail;
+          //_dataSet[owner.Id].Thumbnail = newThumbnail;
         }
               
         if (refresh)

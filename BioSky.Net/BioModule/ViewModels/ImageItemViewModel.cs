@@ -31,7 +31,7 @@ namespace BioModule.ViewModels
     {
       if (source == null)
       {
-        ImageSource = source;
+        //ImageSource = source;
         return;
       }
 

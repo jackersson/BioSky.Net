@@ -1,4 +1,4 @@
-﻿using BioData;
+﻿//using BioData;
 using BioModule.ResourcesLoader;
 using System;
 using System.Collections.Generic;
@@ -25,15 +25,28 @@ namespace BioModule.Utils
   {
 
     #region UI 
-    private static ConvertPhotoIdToImage _photoIDConverter;
-    public static ConvertPhotoIdToImage PhotoIDConverter
+    private static ConvertPersonIdToThumbnail _personIdToThumbnailConverter;
+    public static ConvertPersonIdToThumbnail PersonIdToThumbnailConverter
     {
-      get { return _photoIDConverter; }
+      get { return _personIdToThumbnailConverter; }
       set
       {
-        if (_photoIDConverter != value)
+        if (_personIdToThumbnailConverter != value)
         {
-          _photoIDConverter = value;
+          _personIdToThumbnailConverter = value;
+        }
+      }
+    }
+
+    private static ConvertPhotoIdToImage _photoIdToImageConverter;
+    public static ConvertPhotoIdToImage PhotoIdToImageConverter
+    {
+      get { return _photoIdToImageConverter; }
+      set
+      {
+        if (_photoIdToImageConverter != value)
+        {
+          _photoIdToImageConverter = value;
         }
       }
     }
@@ -125,7 +138,8 @@ namespace BioModule.Utils
       _bioEngine = _locator.GetProcessor<IBioEngine>();
       
 
-      PhotoIDConverter                     = new ConvertPhotoIdToImage          (_database)          ;
+      PersonIdToThumbnailConverter         = new ConvertPersonIdToThumbnail  (_database)          ;
+      PhotoIdToImageConverter              = new ConvertPhotoIdToImage(_database);
       FileLocationToImageConverter         = new ConvertFileLocationToImage     (_database)          ;
       PersonIdToFirstnameConverter         = new ConvertPersonIdToFirstname     (_database.Persons)  ;
       PersonIdToLastnameConverter          = new ConvertPersonIdToLastname      (_database.Persons)  ;
@@ -238,10 +252,10 @@ namespace BioModule.Utils
 
   #endregion
 
-  #region ConvertPhotoIdToImage
-  public class ConvertPhotoIdToImage : IValueConverter
+  #region ConvertPersonIdToThumbnail
+  public class ConvertPersonIdToThumbnail : IValueConverter
   {
-    public ConvertPhotoIdToImage(IBioSkyNetRepository database)
+    public ConvertPersonIdToThumbnail(IBioSkyNetRepository database)
     {
       _database = database;
       _photoHolder = _database.Photos;
@@ -252,15 +266,15 @@ namespace BioModule.Utils
     {
       if (value != null)
       {
-        Person person = _personHolder.GetValue((long)value);
+        long val = value is long ? (long)value : 0;
+        Person person = _personHolder.GetValue(val);
         
         if(person != null)
         {
           Photo photo = _photoHolder.GetValue(person.Thumbnailid); 
 
           if (photo != null)
-          {
-            return ResourceLoader.OkIconSource;
+          {           
             string fullFilePathway = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway) + photo.PhotoUrl;
             if (File.Exists(fullFilePathway))
             {
@@ -281,6 +295,44 @@ namespace BioModule.Utils
   
     private readonly IFullPersonHolder _personHolder;
     private readonly IPhotoHolder      _photoHolder;
+  }
+  #endregion
+
+  #region ConvertPhotoIdToImage
+  public class ConvertPhotoIdToImage : IValueConverter
+  {
+    public ConvertPhotoIdToImage(IBioSkyNetRepository database)
+    {
+      _database    = database;
+      _photoHolder = _database.Photos;    
+    }
+
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      if (value != null)
+      {       
+        Photo photo = _photoHolder.GetValue((long)value);
+
+        if (photo != null)
+        {          
+          string fullFilePathway = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway) + photo.PhotoUrl;
+          if (File.Exists(fullFilePathway))
+          {
+            BitmapSource img = new BitmapImage(new Uri(fullFilePathway, UriKind.RelativeOrAbsolute));
+            return img;
+          }
+        }        
+      }
+      return ResourceLoader.UserDefaultImageIconSource;
+    }
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+    private readonly IBioSkyNetRepository _database;
+
+    private readonly IFullPersonHolder _personHolder;
+    private readonly IPhotoHolder _photoHolder;
   }
   #endregion
 
