@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\BioShell\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>2</WarningLevel>
@@ -234,6 +234,7 @@
     <Compile Include="ViewModels\IrisInformationViewModel.cs" />
     <Compile Include="ViewModels\LocationCaptureDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationFingerDevicesViewModel.cs" />
+    <Compile Include="ViewModels\LocationIrisDevicesViewModel.cs" />
     <Compile Include="ViewModels\LocationPermissionViewModel.cs" />
     <Compile Include="ViewModels\LoginPopupViewModel.cs" />
     <Compile Include="ViewModels\NotificationDialogViewModel.cs" />

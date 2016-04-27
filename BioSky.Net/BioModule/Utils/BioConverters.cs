@@ -566,6 +566,9 @@ namespace BioModule.Utils
   public class StringToStateConverter : StringToEnumConverter<AccessType>
   { }
 
+  public class StringToEyesConverter : StringToEnumConverter<EyeType>
+  { }
+
   public class StringToEnumConverter<TEnum> : IValueConverter
   {
     public object Convert( object value, Type targetType,

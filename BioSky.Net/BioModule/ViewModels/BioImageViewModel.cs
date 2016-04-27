@@ -39,7 +39,7 @@ namespace BioModule.ViewModels
       _notifier = locator.GetProcessor<INotifier>();
       _database = locator.GetProcessor<IBioSkyNetRepository>();
 
-      _progress = _notifier.LoadingViewModel as ProgressRingViewModel;
+      Progress = _notifier.LoadingViewModel as ProgressRingViewModel;
 
       BioImageModels = new ObservableCollection<IBioImageModel>();
 

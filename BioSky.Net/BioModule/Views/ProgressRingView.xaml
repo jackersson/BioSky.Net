@@ -11,8 +11,7 @@
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
-             lex:ResxLocalizationProvider.DefaultDictionary="lang"
-             OverridesDefaultStyle="True"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"          
              d:DataContext="{d:DesignInstance vm:ProgressRingViewModel, IsDesignTimeCreatable=False}"             
              mc:Ignorable="d" 
              Margin="{Binding Margin}"
@@ -28,15 +27,19 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </UserControl.Resources>
+    
+    
 
   <!--  Visibility="{ Binding IsActive
                           , Converter={StaticResource BooleanToVisibilityConverter}}" -->
 
     <Grid HorizontalAlignment="Stretch" 
-                  Visibility="{ Binding IsActive
-                          , Converter={StaticResource BooleanToVisibilityConverter}}"
+                 
+          Visibility="{ Binding IsActive
+                          , Converter={StaticResource BooleanToVisibilityConverter}}" 
               VerticalAlignment="Stretch" 
               >
+
 
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
