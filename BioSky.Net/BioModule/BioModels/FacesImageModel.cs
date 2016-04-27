@@ -23,7 +23,7 @@ namespace BioModule.BioModels
     public FacesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       Information         = new PhotoInformationViewModel();
-      EnrollmentBar    = new FaceEnrollmentBarViewModel(locator);
+      EnrollmentBar       = new FaceEnrollmentBarViewModel(locator);
       _marker             = new MarkerUtils();
       _faceFinder         = new FaceFinder();
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
@@ -60,6 +60,12 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
+      if (EnrollmentBar is IScreen)
+      {
+        IScreen screen = EnrollmentBar as IScreen;
+        screen.Activate();
+      }
+      EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
       // EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
 
@@ -70,11 +76,22 @@ namespace BioModule.BioModels
         _imageView.SetSingleImage(ResourceLoader.UserDefaultImageIconSource);
       else
         _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);
+
+      _isActive = true;
+      NotifyOfPropertyChange(() => IsActive);
     }
 
     public void Deactivate()
     {
-     
+      if (EnrollmentBar is IScreen)
+      {
+        IScreen screen = EnrollmentBar as IScreen;
+        screen.Deactivate(false);
+      }
+      EnrollmentBar.Unsubscribe(this);
+      _isActive = false;
+      NotifyOfPropertyChange(() => IsActive);
+
       //EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
       //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
     }
@@ -229,6 +246,12 @@ namespace BioModule.BioModels
       }
     }
 
+    private bool _isActive;
+    public bool IsActive{
+      get{
+        return _isActive;
+      }
+    }
 
     #endregion
 

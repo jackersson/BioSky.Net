@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using System.Windows.Media.Imaging;
-using BioModule.ResourcesLoader;
 using System.IO;
-using System.Drawing;
 using BioModule.Utils;
-using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using BioContracts;
 
 namespace BioModule.ViewModels
@@ -45,11 +39,12 @@ namespace BioModule.ViewModels
     {
       ShowImage(first , 0);
       ShowImage(second, 1);
+      Zoom(ZoomRate);
     }
 
     public BitmapSource GetImageByIndex(int index)
     {
-      if (ImageItems.Count >= index && ImageItems.Count != 0)
+      if (ImageItems.Count > index && ImageItems.Count != 0)
         return ImageItems[index].ImageSource;
 
       return null;
@@ -115,7 +110,7 @@ namespace BioModule.ViewModels
       _scrollFieldHeight = viewHeight;
 
       Zoom(ZoomRate);
-    }
+    }    
 
     public void Zoom(double zoomRate)
     {   

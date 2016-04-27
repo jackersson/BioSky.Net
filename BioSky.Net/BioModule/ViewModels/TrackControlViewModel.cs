@@ -135,7 +135,6 @@ namespace BioModule.ViewModels
     private readonly ViewModelSelector _selector ;
     private readonly IBioEngine        _bioEngine;
   } 
-
   public class TrackControlViewModel : Conductor<IScreen>.Collection.AllActive
   {
     public TrackControlViewModel(IProcessorLocator locator)
@@ -157,8 +156,11 @@ namespace BioModule.ViewModels
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Tracking_");
 
-      _bioEngine.TrackLocationEngine().LocationsChanged += RefreshData;
+      _bioEngine.TrackLocationEngine().LocationsChanged      += RefreshData;
+      _bioEngine.TrackLocationEngine().LocationsStateChanged += Location_State_Changed;
       _uiDispatcher = _locator.GetProcessor<Dispatcher>();
+
+      CheckOnErrors();
     }
 
     #region Update
@@ -182,31 +184,56 @@ namespace BioModule.ViewModels
         if (location.ScreenViewModel == null)
           location.ScreenViewModel = new TrackControlItemViewModel(_locator, location);
         location.ScreenViewModel.Activate();
-      }     
+      }
 
       TrackItemsShort.SelectDefault();
       if (locations.Count == 1)
         ShowVisitors();
-      NotifyOfPropertyChange(() => TrackItemsShort);
-
-      CheckOnErrors();
+      NotifyOfPropertyChange(() => TrackItemsShort);      
     }
 
     #endregion
 
     #region Interface
 
+    private bool _isNoErrorsState = true;
     private void CheckOnErrors()
     {
-      _isLocationError = false;
-      foreach (TrackLocation location in TrackItemsShort.TrackControlItems)
+      if (_timer == null)
       {
-        _isLocationError = location.IsOk();
-        if (!_isLocationError)        
-          break;        
+        _timer = new DispatcherTimer();
+        _timer.Interval = new TimeSpan(0, 0, 1);
+        _timer.Tick += _timer_Tick;
       }
-      NotifyOfPropertyChange(() => IsLocationError);
+
+      if(_isNoErrorsState)
+      {
+        _timer.Stop();
+        _locationError = false;
+      }
+      else
+      {
+        _timer.Start();
+        _locationError = true;
+      }
+      NotifyOfPropertyChange(() => LocationError);
     }
+
+    private void Location_State_Changed(bool state)
+    {
+      _isNoErrorsState = state;
+      CheckOnErrors();
+    }
+    public async void _timer_Tick(object sender, EventArgs e)
+    {
+      _timer.Stop();
+      _locationError = false;
+      NotifyOfPropertyChange(() => LocationError);
+      await Task.Delay(1000);
+      CheckOnErrors();
+    }
+
+
     public void OnAddNewLocation()
     {
       _selector.ShowContent( ShowableContentControl.FlyoutControlContent
@@ -239,10 +266,10 @@ namespace BioModule.ViewModels
 
     #region UI
 
-    private bool _isLocationError;
-    public bool IsLocationError
+    private bool _locationError;
+    public bool LocationError
     {
-      get { return _isLocationError; }
+      get { return _locationError; }
     }
 
     public int VisitorsCount
@@ -263,7 +290,6 @@ namespace BioModule.ViewModels
     {
       NotifyOfPropertyChange(() => CanShowLocations);
       NotifyOfPropertyChange(() => CanShowVisitors );
-      CheckOnErrors();
     }
 
     public void ShowLocations()
@@ -348,6 +374,7 @@ namespace BioModule.ViewModels
     private readonly INotifier            _notifier     ;
     private readonly DialogsHolder        _dialogsHolder;
     private readonly System.Windows.Threading.Dispatcher _uiDispatcher;
+    private DispatcherTimer _timer;
 
     #endregion
 

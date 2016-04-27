@@ -17,6 +17,7 @@ using BioContracts;
 using BioService;
 using BioContracts.Holders;
 using static BioService.AccessInfo.Types;
+using BioModule.ViewModels;
 
 namespace BioModule.Utils
 {
@@ -531,6 +532,8 @@ namespace BioModule.Utils
   { }
 
   public class StringToStateConverter : StringToEnumConverter<AccessType>
+  { }
+  public class StringToEyesConverter : StringToEnumConverter<EyesEnum>
   { }
 
   public class StringToEnumConverter<TEnum> : IValueConverter

@@ -8,36 +8,36 @@ using BioContracts.FingerprintDevices;
 
 namespace BioModule.ViewModels
 {
-  public class LocationFingerDevicesViewModel : Screen, IUpdatable
+  public class LocationIrisDevicesViewModel : Screen, IUpdatable
   {
-    public LocationFingerDevicesViewModel(IProcessorLocator locator)
+    public LocationIrisDevicesViewModel(IProcessorLocator locator)
     {
-      DisplayName = "FingerDevices";
+      DisplayName = "IrisDevices";
 
       _locator = locator;
 
       _bioEngine = _locator.GetProcessor<IBioEngine>();
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
 
-      FingerDevicesNames = new AsyncObservableCollection<string>(); 
+      IrisDevicesNames = new AsyncObservableCollection<string>();
     }
 
     #region Update
 
     protected override void OnActivate()
     {
-      _bioEngine.FingerprintDeviceEngine().GetDevicesNames().CollectionChanged += FingerDevicesNames_CollectionChanged;
+      _bioEngine.IrisDeviceEngine().GetDevicesNames().CollectionChanged += IrisDevicesNames_CollectionChanged;
       RefreshData();
       base.OnActivate();
     }
 
     protected override void OnDeactivate(bool close)
     {
-      _bioEngine.FingerprintDeviceEngine().GetDevicesNames().CollectionChanged -= FingerDevicesNames_CollectionChanged;
+      _bioEngine.IrisDeviceEngine().GetDevicesNames().CollectionChanged -= IrisDevicesNames_CollectionChanged;
       base.OnDeactivate(close);
     }
 
-    private void FingerDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void IrisDevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       RefreshData();
     }
@@ -48,43 +48,42 @@ namespace BioModule.ViewModels
     }
     public void RefreshConnectedDevices()
     {
-      AsyncObservableCollection<FingerprintDeviceInfo> temp = _bioEngine.FingerprintDeviceEngine().GetDevicesNames();
-      foreach (FingerprintDeviceInfo device in temp)
+      AsyncObservableCollection<string> temp = _bioEngine.IrisDeviceEngine().GetDevicesNames();
+      foreach (string device in temp)
       {
-        if (!string.IsNullOrEmpty(device.Name) && !FingerDevicesNames.Contains(device.Name))
-          FingerDevicesNames.Add(device.Name);
+        if (!string.IsNullOrEmpty(device) && !IrisDevicesNames.Contains(device))
+          IrisDevicesNames.Add(device);
       }
     }
-    
-    public FingerprintDevice GetDevice()
-    {     
+
+    public IrisDevice GetDevice()
+    {
       if (string.Equals(DesiredDeviceName, ActiveDeviceName))
         return null;
 
       bool hasDesiredDeviceName = !string.IsNullOrEmpty(DesiredDeviceName);
       bool hasActiveDeviceName  = !string.IsNullOrEmpty(ActiveDeviceName);
 
-      string deviceName       = !hasDesiredDeviceName && hasActiveDeviceName ? CurrentLocation.FingerprintDevice.Devicename : DesiredDeviceName;
+      string deviceName = !hasDesiredDeviceName && hasActiveDeviceName ? CurrentLocation.IrisDevice.Devicename : DesiredDeviceName;
       EntityState entityState = hasDesiredDeviceName ? EntityState.Added : EntityState.Deleted;
 
-      return new FingerprintDevice() { EntityState = entityState, Devicename = deviceName };
+      return new IrisDevice() { EntityState = entityState, Devicename = deviceName };
     }
-      
 
-    public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedFingerDevice = null; }
+
+    public void OnMouseRightButtonDown(string deviceItem) { MenuRemoveStatus = false; SelectedIrisDevice = null; }
 
 
     public void RefreshData()
     {
-
       if (!IsActive)
         return;
 
-      FingerDevicesNames.Clear();
-      foreach (string devicename in _database.Locations.FingerprintDevices)
+      IrisDevicesNames.Clear();
+      foreach (string devicename in _database.Locations.IrisDevices)
       {
-        if (!string.IsNullOrEmpty(devicename) && !FingerDevicesNames.Contains(devicename))
-          FingerDevicesNames.Add(devicename);
+        if (!string.IsNullOrEmpty(devicename) && !IrisDevicesNames.Contains(devicename))
+          IrisDevicesNames.Add(devicename);
       }
 
       RefreshConnectedDevices();
@@ -102,13 +101,13 @@ namespace BioModule.ViewModels
 
     public void OnRemove(string source)
     {
-      if (DesiredDeviceName == SelectedFingerDevice)
+      if (DesiredDeviceName == SelectedIrisDevice)
         DesiredDeviceName = string.Empty;
     }
 
     public void OnActive(string source)
     {
-      DesiredDeviceName = SelectedFingerDevice;
+      DesiredDeviceName = SelectedIrisDevice;
     }
 
     public void Apply() { }
@@ -184,38 +183,38 @@ namespace BioModule.ViewModels
 
           if (value != null)
           {
-            ActiveDeviceName = value.FingerprintDevice == null ? string.Empty : value.FingerprintDevice.Devicename;
+            ActiveDeviceName = value.IrisDevice == null ? string.Empty : value.IrisDevice.Devicename;
             DesiredDeviceName = ActiveDeviceName;
           }
         }
       }
     }
 
-    private string _selectedFingerDevice;
-    public string SelectedFingerDevice
+    private string _selectedIrisDevice;
+    public string SelectedIrisDevice
     {
-      get { return _selectedFingerDevice; }
+      get { return _selectedIrisDevice; }
       set
       {
-        if (_selectedFingerDevice != value)
+        if (_selectedIrisDevice != value)
         {
-          _selectedFingerDevice = value;
+          _selectedIrisDevice = value;
           MenuRemoveStatus = value == null ? false : true;
-          NotifyOfPropertyChange(() => SelectedFingerDevice);
+          NotifyOfPropertyChange(() => SelectedIrisDevice);
         }
       }
     }
 
-    private AsyncObservableCollection<string> _fingerDevicesNames;
-    public AsyncObservableCollection<string> FingerDevicesNames
+    private AsyncObservableCollection<string> _fingerIrisNames;
+    public AsyncObservableCollection<string> IrisDevicesNames
     {
-      get { return _fingerDevicesNames; }
+      get { return _fingerIrisNames; }
       set
       {
-        if (_fingerDevicesNames != value)
+        if (_fingerIrisNames != value)
         {
-          _fingerDevicesNames = value;
-          NotifyOfPropertyChange(() => FingerDevicesNames);
+          _fingerIrisNames = value;
+          NotifyOfPropertyChange(() => IrisDevicesNames);
         }
       }
     }
@@ -225,9 +224,9 @@ namespace BioModule.ViewModels
     #endregion
 
     #region Global Variables    
-    private readonly IProcessorLocator    _locator  ;
-    private readonly IBioEngine           _bioEngine;
-    private readonly IBioSkyNetRepository _database ;
+    private readonly IProcessorLocator _locator;
+    private readonly IBioEngine _bioEngine;
+    private readonly IBioSkyNetRepository _database;
 
     public event EventHandler DeviceChanged;
 

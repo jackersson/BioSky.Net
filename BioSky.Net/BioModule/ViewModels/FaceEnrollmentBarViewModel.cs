@@ -56,7 +56,6 @@ namespace BioModule.ViewModels
       StopCaptureDevice();
       base.OnDeactivate(close);
     }
-
     private void StartCaptureDevice()
     {
       if (string.IsNullOrEmpty(SelectedDevice))

@@ -108,6 +108,9 @@
                 <DataTemplate DataType="{x:Type vm:LocationFingerDevicesViewModel}">
                     <local:DevicesListView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:DevicesListView>
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:LocationIrisDevicesViewModel}">
+                    <local:DevicesListView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:DevicesListView>
+                </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:LocationPermissionViewModel}">
                     <local:LocationPermissionView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}"></local:LocationPermissionView>
                 </DataTemplate>

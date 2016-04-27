@@ -1,6 +1,7 @@
 ﻿using BioContracts.AccessDevices;
 using BioContracts.CaptureDevices;
 using BioContracts.FingerprintDevices;
+using BioContracts.IrisDevices;
 using BioContracts.Locations;
 using BioService;
 
@@ -39,6 +40,8 @@ namespace BioContracts
     ITrackLocationEngine TrackLocationEngine();
 
     IFingerprintDeviceEngine FingerprintDeviceEngine();
+
+    IIrisDeviceEngine IrisDeviceEngine();
 
     bool IsActivityAllowed(Activity permissionRule);
     

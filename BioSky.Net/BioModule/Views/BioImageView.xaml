@@ -44,7 +44,7 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="MyStandardButton" TargetType="Button">
+            <Style x:Key="MyBioImageButton" TargetType="Button">
                 <Setter Property="Background" Value="#00000000" />
                 <Setter Property="BorderBrush" Value="{StaticResource BorderBrushNormal}" />
                 <Setter Property="Foreground" Value="{StaticResource Foreground}" />
@@ -60,6 +60,16 @@
                                 </Grid>
                             </Border>
                             <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=Self}, Path=Tag }" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=Self}, Path=Tag }" Value="False">
+                                    <Setter Property="Background" Value="#00000000"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}" />
                                     <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHighlighted}" />
@@ -68,9 +78,9 @@
                                     <Setter Property="Background" Value="{StaticResource BackgroundSelected}" />
                                     <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSelected}" />
                                 </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
+                                <!--<Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Background" Value="Transparent" />
-                                </Trigger>
+                                </Trigger>-->
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -96,7 +106,7 @@
                 
             </local:ImageView>            
         </Border>
-
+        
         <TextBlock Grid.ColumnSpan="2"
                    Grid.RowSpan="4"
                    Margin="7"
@@ -317,10 +327,10 @@
 
         <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
                      Orientation="Vertical" HorizontalAlignment="Left" Width="40">
-            <Button  Width="40" Height="40" Style ="{StaticResource MyStandardButton}"  
-                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0">
+            <Button  Width="40" Height="40" Tag="{Binding BioImageModels[0].IsActive}"
+                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0" Style="{StaticResource MyBioImageButton}">
 
-                <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
+                <Image Width="40" Height="40"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
 
                 <i:Interaction.Triggers>
@@ -329,12 +339,12 @@
                             <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Faces}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers> 
+                </i:Interaction.Triggers>
             </Button>
-            <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
-                    ToolTip="Fingers" BorderBrush="#7F3587BD">
+            <Button Style ="{StaticResource MyBioImageButton}" Width="40" Height="40" 
+                    ToolTip="Fingers" BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[1].IsActive}">
 
-                <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
+                <Image Width="32" Height="32"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FingerScanColorIconSource}"  />
 
                 <i:Interaction.Triggers>
@@ -343,12 +353,12 @@
                             <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Fingers}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers> 
+                </i:Interaction.Triggers>
             </Button>
-            <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
-                    ToolTip="Irises"  BorderBrush="#7F3587BD">
+            <Button Style ="{StaticResource MyBioImageButton}" Width="40" Height="40" 
+                    ToolTip="Irises"  BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[2].IsActive}">
 
-                <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
+                <Image Width="32" Height="32"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=IrisScanColorIconSource}"  />
 
                 <i:Interaction.Triggers>
@@ -357,22 +367,9 @@
                             <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Irises}" />
                         </cal:ActionMessage>
                     </i:EventTrigger>
-                </i:Interaction.Triggers> 
-            </Button>
-         <!--   <Button  Width="40" Height="40" Style ="{StaticResource MyStandardButton}"  
-                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0">
-
-                <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
-                       Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
-
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <cal:ActionMessage MethodName="SetBioImageModel">
-                            <cal:Parameter Value="{x:Static vmUtils:BioImageModelType.Photo}" />
-                        </cal:ActionMessage>
-                    </i:EventTrigger>
                 </i:Interaction.Triggers>
-            </Button> -->
+            </Button>
+
         </StackPanel>
 
 

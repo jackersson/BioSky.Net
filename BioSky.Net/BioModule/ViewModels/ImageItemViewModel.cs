@@ -19,7 +19,7 @@ namespace BioModule.ViewModels
         return;
 
       ControlHeight = newControlHeight * ZOOM_RATIO;
-      ControlWidth  = newControlWidth * ZOOM_RATIO;
+      ControlWidth  = newControlWidth  * ZOOM_RATIO;
 
       float maxWidthScale  = (float)ControlWidth  / (float)ImageSource.Width ;      
       float maxHeightScale = (float)ControlHeight / (float)ImageSource.Height;

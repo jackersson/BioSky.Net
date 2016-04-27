@@ -257,7 +257,7 @@ namespace BioModule.ViewModels
         {
           _currentBioImage = value;        
 
-          NotifyOfPropertyChange(() => CurrentBioImage);
+          NotifyOfPropertyChange(() => CurrentBioImage);          
           NotifyOfPropertyChange(() => UserController);
           NotifyOfPropertyChange(() => CanUsePhotoController);
 

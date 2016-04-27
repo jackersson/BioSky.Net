@@ -57,9 +57,9 @@ namespace BioModule.ViewModels
       TrackLocationUtils.UpdateLocationState(false);
     }
     public void OnOk(bool ok) {
-      TrackLocationUtils.UpdateLocationState(ok);    
+      TrackLocationUtils.UpdateLocationState(ok); 
     }
-      
+
     public void OnVerificationFailure(Exception ex)
     {
       TrackLocationUtils.UpdateVerificationState(VerificationStatus.Failed, true);

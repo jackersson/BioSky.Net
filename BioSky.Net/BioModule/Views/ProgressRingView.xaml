@@ -12,6 +12,7 @@
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
+             OverridesDefaultStyle="True"
              d:DataContext="{d:DesignInstance vm:ProgressRingViewModel, IsDesignTimeCreatable=False}"             
              mc:Ignorable="d" 
              Margin="{Binding Margin}"

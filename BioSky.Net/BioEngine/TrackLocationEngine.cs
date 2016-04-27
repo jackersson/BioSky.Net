@@ -8,6 +8,7 @@ using System.Linq;
 using BioContracts.CaptureDevices;
 using BioContracts.AccessDevices;
 using BioContracts.FingerprintDevices;
+using System;
 
 namespace BioEngine
 {
@@ -16,8 +17,9 @@ namespace BioEngine
     public TrackLocationEngine(IProcessorLocator locator)
     {
       _locator = locator;
-      _trackLocationsSet = new ConcurrentDictionary<long, TrackLocation>();
-      _trackLocations    = new AsyncObservableCollection<TrackLocation>();
+      _trackLocationsSet      = new ConcurrentDictionary<long, TrackLocation>();
+      _trackLocations         = new AsyncObservableCollection<TrackLocation>();
+      _trackLocationsStateSet = new Dictionary<long, bool>();
 
       _captureDeviceEngine = locator.GetProcessor<ICaptureDeviceEngine>();
       _accessDeviceEngine  = locator.GetProcessor<IAccessDeviceEngine>();
@@ -43,9 +45,12 @@ namespace BioEngine
         if (_trackLocationsSet.TryGetValue(location.Id, out currentLocation))
         {
           currentLocation.Update(location);
+          if (!_trackLocationsStateSet.ContainsKey(location.Id))
+            currentLocation.TrackLocationStateChanged += UpdateTrackLocationState;
           continue;
         }          
          TrackLocation trackLocation = new TrackLocation(_locator, location);
+          trackLocation.TrackLocationStateChanged += UpdateTrackLocationState;
          _trackLocationsSet.TryAdd(location.Id, trackLocation);     
       }
       
@@ -63,6 +68,28 @@ namespace BioEngine
           _trackLocations.Add(_trackLocationsSet[locationID]);        
       }
       OnLocationsChanged();
+    }
+
+    private void UpdateTrackLocationState(bool state, long locationID)
+    {
+      if (locationID < 1)
+        return;
+
+      if (!_trackLocationsStateSet.ContainsKey(locationID))
+        _trackLocationsStateSet.Add(locationID, state);
+      else
+        _trackLocationsStateSet[locationID] = state;
+
+      bool flag = true;
+      foreach(KeyValuePair<long, bool> location in _trackLocationsStateSet)
+      {
+        if (!location.Value)
+        {
+          flag = false;
+          break;
+        }
+      }
+      LocationsStateChanged(flag);
     }
 
     private void UpdateDevicesEngines()
@@ -90,11 +117,19 @@ namespace BioEngine
         LocationsChanged();
     }
 
-    public event     LocationsChangedEventHandler LocationsChanged    ;   
-    private readonly IProcessorLocator            _locator            ;
-    private readonly IFullLocationHolder          _locationsHolder    ;
-    private readonly ICaptureDeviceEngine         _captureDeviceEngine;
-    private readonly IAccessDeviceEngine          _accessDeviceEngine ;
-    private readonly IFingerprintDeviceEngine     _fingerDeviceEngine ;
+    private void OnLocationsStateChanged(bool state)
+    {
+      if (LocationsStateChanged != null)
+        LocationsStateChanged(state);
+    }
+
+    Dictionary<long, bool>  _trackLocationsStateSet;
+    public event LocationsStateChangedEventHandler LocationsStateChanged;
+    public event     LocationsChangedEventHandler  LocationsChanged     ;   
+    private readonly IProcessorLocator             _locator             ;
+    private readonly IFullLocationHolder           _locationsHolder     ;
+    private readonly ICaptureDeviceEngine          _captureDeviceEngine ;
+    private readonly IAccessDeviceEngine           _accessDeviceEngine  ;
+    private readonly IFingerprintDeviceEngine      _fingerDeviceEngine  ;
   }
 }

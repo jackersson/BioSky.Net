@@ -28,14 +28,30 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
+      if(EnrollmentBar is IScreen)
+      {
+        IScreen screen = EnrollmentBar as IScreen;
+        screen.Activate();
+      }
       EnrollmentBar.Subscribe(this);
       _imageView.SetSingleImage(FingerImageSource);
+
+      _isActive = true;
+      NotifyOfPropertyChange(() => IsActive);
     }
 
     public void Deactivate()
     {
+      EnrollmentBar.Unsubscribe(this);
+      if (EnrollmentBar is IScreen)
+      {
+        IScreen screen = EnrollmentBar as IScreen;
+        screen.Deactivate(false);
+      }
       //EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
       //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
+      _isActive = false;
+      NotifyOfPropertyChange(() => IsActive);
     }
 
     public void Reset()
@@ -143,6 +159,15 @@ namespace BioModule.BioModels
           EnrollmentBar.UpdateSelector((IFingerSelector)_controller);
           NotifyOfPropertyChange(() => Controller);
         }
+      }
+    }
+
+    private bool _isActive;
+    public bool IsActive
+    {
+      get
+      {
+        return _isActive;
       }
     }
 

@@ -63,6 +63,9 @@ namespace BioModule.Utils
 
     public Bitmap DrawFingerCharacteristics(Bitmap data)
     {
+      if (data == null)
+        return null;
+
       _points.Clear();
 
       _rectangles.Add(new Rectangle() { X = 0, Y = 0, Width = 100, Height = 100 });
@@ -74,6 +77,9 @@ namespace BioModule.Utils
 
     public Bitmap DrawIrisCharacteristics(Bitmap data)
     {
+      if (data == null)
+        return null;
+
       _points.Clear();
 
       _rectangles.Add(new Rectangle() { X = 0, Y = 0, Width = 100, Height = 100 });

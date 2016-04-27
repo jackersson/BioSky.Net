@@ -2,6 +2,7 @@
 using BioContracts.AccessDevices;
 using BioContracts.CaptureDevices;
 using BioContracts.FingerprintDevices;
+using BioContracts.IrisDevices;
 using BioContracts.Locations;
 using BioGRPC.Utils;
 using BioService;
@@ -18,7 +19,7 @@ namespace BioEngine
       _captureDeviceEngine     = locator.GetProcessor<ICaptureDeviceEngine>    ();
       _loginInformation        = locator.GetProcessor<ILoginInformation>       ();
       _fingerprintDeviceEngine = locator.GetProcessor<IFingerprintDeviceEngine>();
-
+      _irisDeviceEngine        = locator.GetProcessor<IIrisDeviceEngine>       ();
 
       AuthenticatedPerson = null;
     }
@@ -46,6 +47,10 @@ namespace BioEngine
     public IFingerprintDeviceEngine FingerprintDeviceEngine()
     {
       return _fingerprintDeviceEngine;
+    }
+    public IIrisDeviceEngine IrisDeviceEngine()
+    {
+      return _irisDeviceEngine;
     }
 
     public void Stop()
@@ -81,5 +86,6 @@ namespace BioEngine
     private readonly IFingerprintDeviceEngine _fingerprintDeviceEngine;
     private readonly ITrackLocationEngine     _trackLocationEngine    ;
     private          ILoginInformation        _loginInformation       ;
+    private readonly IIrisDeviceEngine        _irisDeviceEngine       ;
   }
 }

@@ -65,7 +65,9 @@ namespace BioModule.ViewModels
 
     protected override void OnDeactivate(bool close)
     {
-      DevicesNames.CollectionChanged -= DevicesNames_CollectionChanged;
+      if(DevicesNames != null)
+        DevicesNames.CollectionChanged -= DevicesNames_CollectionChanged;
+
       StopDevice();
       base.OnDeactivate(close);
     }

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader" 
+             xmlns:utils="clr-namespace:BioModule.Utils"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
              xmlns:local="clr-namespace:BioModule.Views"
              mc:Ignorable="d" 
@@ -12,6 +13,7 @@
 
     <UserControl.Resources>
         <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        <utils:StringToEyesConverter x:Key="StringToEyesConverter"/>
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
@@ -34,9 +36,17 @@
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" 
                   Grid.Row="1"                    
-                  Grid.Column="0" Grid.ColumnSpan="2">          
+                  Grid.Column="0">          
         </ComboBox>
-    
+
+        <ComboBox ItemsSource="{Binding EyeNames}"
+                  SelectedItem="{Binding SelectedEye, Mode=TwoWay, Converter={StaticResource StringToEyesConverter}}"                
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch" 
+                  Grid.Row="1"                    
+                  Grid.Column="1" Grid.ColumnSpan="2">
+        </ComboBox>
+
         <Button Width="32" Height="32" BorderThickness="1" 
                 HorizontalAlignment="Center" VerticalAlignment="Center"                 
                 Style="{DynamicResource MetroCircleButtonStyle}"

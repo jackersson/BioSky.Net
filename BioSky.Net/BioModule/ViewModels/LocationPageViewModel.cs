@@ -41,14 +41,17 @@ namespace BioModule.ViewModels
       LocationAccessDevices  = new LocationAccessDevicesViewModel (_locator);
       LocationCaptureDevices = new LocationCaptureDevicesViewModel(_locator);
       LocationFingerDevices  = new LocationFingerDevicesViewModel (_locator);
+      LocationIrisDevices    = new LocationIrisDevicesViewModel   (_locator);
 
       LocationAccessDevices .PropertyChanged += DevicesPropertyChanged;
       LocationCaptureDevices.PropertyChanged += DevicesPropertyChanged;
       LocationFingerDevices .PropertyChanged += DevicesPropertyChanged;
+      LocationIrisDevices   .PropertyChanged += DevicesPropertyChanged;
 
       Items.Add(LocationAccessDevices ); 
       Items.Add(LocationCaptureDevices);
       Items.Add(LocationFingerDevices );
+      Items.Add(LocationIrisDevices   );
       Items.Add(_locationPermissionViewModel );
 
       ActiveItem = Items[0];
@@ -70,8 +73,7 @@ namespace BioModule.ViewModels
     }
 
     private void RefreshUI()
-    {
-      
+    {      
       NotifyOfPropertyChange(() => CanApply);
       NotifyOfPropertyChange(() => CanRevert);
       NotifyOfPropertyChange(() => CanDelete);
@@ -181,7 +183,11 @@ namespace BioModule.ViewModels
       FingerprintDevice fingerprintDevice   = LocationFingerDevices.GetDevice();
       if (fingerprintDevice != null)
         location.FingerprintDevice = fingerprintDevice;
-      
+
+      IrisDevice irisDevice = LocationIrisDevices.GetDevice();
+      if (irisDevice != null)
+        location.IrisDevice = irisDevice;
+
       AccessInfo accessInfo = _locationPermissionViewModel.GetResult();
       if (accessInfo != null)
         location.AccessInfo = accessInfo;
@@ -249,7 +255,8 @@ namespace BioModule.ViewModels
         return IsActive && string.IsNullOrEmpty(Error) 
                         &&(  LocationAccessDevices .CanApply
                           || LocationCaptureDevices.CanApply
-                          || LocationFingerDevices .CanApply)
+                          || LocationFingerDevices .CanApply
+                          || LocationIrisDevices   .CanApply)
                         && ( ( _locationPageMode == LocationPageMode.New )
                           || ( _locationPageMode == LocationPageMode.Existing && CanRevert) );
       }
@@ -265,6 +272,7 @@ namespace BioModule.ViewModels
                            || LocationAccessDevices .IsDeviceChanged 
                            || LocationCaptureDevices.IsDeviceChanged 
                            || LocationFingerDevices .IsDeviceChanged
+                           || LocationIrisDevices   .IsDeviceChanged
                            || _currentLocation.GetHashCode() != _revertLocation.GetHashCode());
       }
     }
@@ -370,6 +378,21 @@ namespace BioModule.ViewModels
         {
           _locationFingerDevices = value;
           NotifyOfPropertyChange(() => LocationFingerDevices);
+          Refresh();
+        }
+      }
+    }
+
+    private LocationIrisDevicesViewModel _locationIrisDevices;
+    public LocationIrisDevicesViewModel LocationIrisDevices
+    {
+      get { return _locationIrisDevices; }
+      set
+      {
+        if (_locationIrisDevices != value)
+        {
+          _locationIrisDevices = value;
+          NotifyOfPropertyChange(() => LocationIrisDevices);
           Refresh();
         }
       }
