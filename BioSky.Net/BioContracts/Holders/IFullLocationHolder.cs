@@ -9,9 +9,11 @@ namespace BioContracts.Holders
 {
   public interface IFullLocationHolder : IFullHolder<Location>
   {
-    ICollection<string> AccessDevices { get; }
-    ICollection<string> CaptureDevices { get; }
+    ICollection<string> AccessDevices      { get; }
+    ICollection<string> CaptureDevices     { get; }
     ICollection<string> FingerprintDevices { get; }
+    ICollection<string> IrisDevices        { get; }
+
 
     Location GetValue(Location location);
   }

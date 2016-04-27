@@ -16,7 +16,7 @@
     
     <Grid>        
        
-            <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding ImageSource}" >
+            <Image RenderOptions.BitmapScalingMode="HighQuality" Stretch="None" Source="{Binding ImageSource}">
                 <Image.LayoutTransform>
                     <ScaleTransform ScaleX="{Binding ImageSourceScale}" ScaleY="{Binding ImageSourceScale}"/>
                 </Image.LayoutTransform>

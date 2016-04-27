@@ -229,6 +229,53 @@
                         </ContextMenu>
                     </ListBox.ContextMenu>
                 </ListBox>
+
+                <!-- **********************************IrisDevicesUI*********************************************-->
+
+                <ListBox x:Name="IrisDevicesUI"                         
+                         BorderThickness="1" Grid.Row="1" Grid.Column="2" Margin="1"                      
+                         SelectedIndex="0"  
+                         Tag="{Binding DataContext, ElementName=IrisDevicesUI}"   
+                         ItemsSource="{Binding IrisDevicesNames}"
+                         SelectedItem="{Binding SelectedIrisDevice}"
+                         cal:Message.Attach="[Event MouseRightButtonDown] = [Action OnMouseRightButtonDown($mouseSelectedItem)]"
+                         ScrollViewer.CanContentScroll="False" SelectionMode="Single" Style="{StaticResource MyListBox}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                                <Image Stretch="Fill" Width="18" Height="18" 
+                                       Visibility="{Binding ItemActive, Converter={StaticResource BooleanToVisibilityConverter}}"  >
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource MultiAccessDeviceToLocationConverter}">
+                                            <Binding Path=""/>
+                                            <Binding ElementName="IrisDevicesUI" Path="DataContext.ActiveDeviceName"></Binding>
+                                            <Binding ElementName="IrisDevicesUI" Path="DataContext.DesiredDeviceName"></Binding>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                                <TextBlock  Text="{Binding}" HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Setters>
+                                <Setter Property="IsEnabled" Value="{Binding ItemEnabled}" />
+                            </Style.Setters>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+
+                    <ListBox.ContextMenu>
+                        <ContextMenu IsEnabled="True"
+                                     cal:Action.TargetWithoutContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                            <MenuItem Header="{lex:Loc Activate}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnActive($mouseSelectedItem)]"/>
+
+                            <MenuItem Header="{lex:Loc Remove}"  IsEnabled="{Binding MenuRemoveStatus, Mode=TwoWay}"                                                                                   
+                                          cal:Message.Attach="[Event Click] = [Action OnRemove($mouseSelectedItem)]"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
             </Grid>
         </ScrollViewer>
     </Grid>

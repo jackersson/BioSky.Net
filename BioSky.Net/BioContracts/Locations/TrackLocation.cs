@@ -79,15 +79,21 @@ namespace BioContracts
     }
     
     public bool IsOk()
-    {     
+    {
+      bool state = false;
       foreach ( KeyValuePair<LocationDevice, ILocationDeviceObserver> par in _devices)
       {
-       bool state = par.Value.IsDeviceOk;
+       state = par.Value.IsDeviceOk;
        if (!state)
+        {
+          OnLocationStateChanged(state, CurrentLocation.Id);
           return state;
+        }
       }
+      state = _devices.Count > 0 ? true : false;
+      OnLocationStateChanged(state, CurrentLocation.Id);
 
-      return _devices.Count > 0 ? true : false;
+      return state;
     }
 
     public void Subscribe(IFullLocationObserver observer) {
@@ -238,7 +244,13 @@ namespace BioContracts
     */
 
     #region UI   
-
+    public delegate void TrackLocationStateChangedEventHandler(bool state, long locationID);
+    public event TrackLocationStateChangedEventHandler TrackLocationStateChanged;
+    private void OnLocationStateChanged(bool state, long locationID)
+    {
+      if (TrackLocationStateChanged != null)
+        TrackLocationStateChanged(state, locationID);
+    }
     #endregion
 
     #region Global Variables  

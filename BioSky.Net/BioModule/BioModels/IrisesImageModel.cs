@@ -16,18 +16,22 @@ using BioContracts;
 
 namespace BioModule.BioModels
 {
-  public class IrisesImageModel : PropertyChangedBase, IBioImageModel, IIrisDeviceObserver
+  public interface IEyeSelector
+  {
+    EyesEnum SelectedEye { get; set; }
+  }
+
+  public class IrisesImageModel : PropertyChangedBase, IBioImageModel, IIrisDeviceObserver, IEyeSelector
   {
     public IrisesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       Information         = new IrisInformationViewModel();
-      EnrollmentBar       = new IrisEnrollmentBarViewModel(locator);
+      EnrollmentBar       = new IrisEnrollmentBarViewModel(locator, this);
 
       _marker             = new MarkerUtils();
 
       _leftEyeHolder   = new MarkerBitmapSourceHolder();
-      _rightEyeHolder  = new MarkerBitmapSourceHolder();    
-   
+      _rightEyeHolder  = new MarkerBitmapSourceHolder();
 
       _imageView = imageView;
     }
@@ -48,40 +52,59 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
+      if (EnrollmentBar is IScreen)
+      {
+        IScreen screen = EnrollmentBar as IScreen;
+        screen.Activate();
+      }
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
 
-      BitmapSource targetLeftEyeImage  = _leftEyeHolder .Unmarked == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder.Unmarked ;
-      BitmapSource targetRightEyeImage = _rightEyeHolder.Unmarked == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Unmarked;
+      SelectEye(SelectedEye);
 
-      _imageView.SetDoubleImage(targetLeftEyeImage, targetRightEyeImage);
+      _isActive = true;
+      NotifyOfPropertyChange(() => IsActive);
     }
 
     public void Deactivate()
     {
       EnrollmentBar.Unsubscribe(this);
+      if (EnrollmentBar is IScreen)
+      {
+        IScreen screen = EnrollmentBar as IScreen;
+        screen.Deactivate(false);
+      }
+      _isActive = false;
+      NotifyOfPropertyChange(() => IsActive);
     }
 
     public void ShowDetails(bool state)
     {
+      _isShowDetails = state;
       if (state)
         DrawIrisCharacteristics();
       else
-        _imageView.SetDoubleImage(_leftEyeHolder.Unmarked, _rightEyeHolder.Unmarked);
+        SelectEye(SelectedEye);
     }
+
 
     public void DrawIrisCharacteristics()
     {
-      _leftEyeHolder .Unmarked = _imageView.GetImageByIndex(0);
-      _rightEyeHolder.Unmarked = _imageView.GetImageByIndex(1);
+      if(SelectedEye != EyesEnum.Right)
+      {
+        _leftEyeHolder.Unmarked = _imageView.GetImageByIndex(0);
+        Bitmap detailedLeftEye = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_leftEyeHolder.Unmarked));
+        _leftEyeHolder.Marked = BitmapConversion.BitmapToBitmapSource(detailedLeftEye);
+      }
 
-      Bitmap detailedLeftEye  = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_leftEyeHolder.Unmarked ));
-      Bitmap detailedRightEye = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_rightEyeHolder.Unmarked));
+      if (SelectedEye != EyesEnum.Left)
+      {
+        _rightEyeHolder.Unmarked = _imageView.GetImageByIndex(1);
+        Bitmap detailedRightEye = _marker.DrawIrisCharacteristics(BitmapConversion.BitmapSourceToBitmap(_rightEyeHolder.Unmarked));
+        _rightEyeHolder.Marked = BitmapConversion.BitmapToBitmapSource(detailedRightEye);
+      }
 
-      _leftEyeHolder .Marked = BitmapConversion.BitmapToBitmapSource(detailedLeftEye);
-      _rightEyeHolder.Marked = BitmapConversion.BitmapToBitmapSource(detailedRightEye);
-
-      _imageView.SetDoubleImage(_leftEyeHolder.Marked, _rightEyeHolder.Marked);
+      SelectEye(SelectedEye, true);
     }
 
     public void UpdateFrame(Bitmap frame)
@@ -98,8 +121,7 @@ namespace BioModule.BioModels
     }
 
     public void OnFrame( Bitmap left,  Bitmap right)
-    {
-      
+    {      
       BitmapSource targetLeft = null;
       if (left != null)
         targetLeft = BitmapConversion.BitmapToBitmapSource(left);
@@ -111,6 +133,34 @@ namespace BioModule.BioModels
       _imageView.SetDoubleImage(targetLeft, targetRight); 
 
       //UpdateFrame(left);
+    }
+
+    public void SelectEye(EyesEnum eye, bool isShowDetails = false)
+    {
+      _isShowDetails = isShowDetails;
+      SelectedEye = eye;
+
+      BitmapSource targetLeftEyeImage  = _leftEyeHolder .Unmarked == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder .Unmarked;
+      BitmapSource targetRightEyeImage = _rightEyeHolder.Unmarked == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Unmarked;
+
+      if (!_isShowDetails)
+      {
+        targetLeftEyeImage  = _leftEyeHolder .Marked  == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder .Marked;
+        targetRightEyeImage = _rightEyeHolder.Marked  == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Marked;
+      }
+
+      switch (eye)
+      {
+        case EyesEnum.Both:
+          _imageView.SetDoubleImage(targetLeftEyeImage, targetRightEyeImage);
+          break;
+        case EyesEnum.Left:
+          _imageView.SetSingleImage(targetLeftEyeImage);
+          break;
+        case EyesEnum.Right:
+          _imageView.SetSingleImage(targetRightEyeImage);
+          break;
+      }
     }
 
     public void OnIrisQualities(IList<EyeScore> scores)
@@ -191,9 +241,35 @@ namespace BioModule.BioModels
         }
       }
     }
+
+    private EyesEnum _selectedEye;
+    public EyesEnum SelectedEye
+    {
+      get { return _selectedEye; }
+      set
+      {
+        if (_selectedEye != value)
+        {
+          _selectedEye = value;
+          SelectEye(_selectedEye);
+        }
+      }
+    }
+
+    private bool _isActive;
+    public bool IsActive
+    {
+      get
+      {
+        return _isActive;
+      }
+    }
     #endregion
 
     #region Global Variables
+
+    private bool _isShowDetails;
+
     private IImageViewUpdate         _imageView     ;
     private MarkerUtils              _marker        ;
     private MarkerBitmapSourceHolder _leftEyeHolder ;

@@ -24,6 +24,7 @@ namespace BioModule.Utils
     void UploadPhoto(Photo photo);
     void UpdateFrame(Bitmap frame);
     void ShowDetails(bool state);
+    bool IsActive { get;}
     BioImageModelType BioType { get; }
     IUserBioItemsController Controller { get; }
   }

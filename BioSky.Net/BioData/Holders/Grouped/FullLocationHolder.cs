@@ -15,9 +15,10 @@ namespace BioData.Holders.Grouped
       DataSet = new Dictionary<long, Location>();     
       Data    = new AsyncObservableCollection<Location>();
 
-      _accessDeviceHolder      = new AccessDeviceHolder(this);
-      _captureDeviceHolder     = new CaptureDeviceHolder(this);
+      _accessDeviceHolder      = new AccessDeviceHolder     (this);
+      _captureDeviceHolder     = new CaptureDeviceHolder    (this);
       _fingerprintDeviceHolder = new FingerprintDeviceHolder(this);
+      _irisDeviceHolder        = new IrisDeviceHolder       (this);
 
       _fieldsUtils  = new ProtoFieldsUtils();
 
@@ -39,6 +40,7 @@ namespace BioData.Holders.Grouped
         _accessDeviceHolder     .Add(id, location.AccessDevice     );
         _captureDeviceHolder    .Add(id, location.CaptureDevice    );
         _fingerprintDeviceHolder.Add(id, location.FingerprintDevice);
+        _irisDeviceHolder       .Add(id, location.IrisDevice       );
       }
 
       OnDataChanged();     
@@ -55,7 +57,8 @@ namespace BioData.Holders.Grouped
 
         _accessDeviceHolder     .UpdateFromResponse(requested, responded.AccessDevice     , null);
         _captureDeviceHolder    .UpdateFromResponse(requested, responded.CaptureDevice    , null);
-        _fingerprintDeviceHolder.UpdateFromResponse(requested, responded.FingerprintDevice, null);        
+        _fingerprintDeviceHolder.UpdateFromResponse(requested, responded.FingerprintDevice, null); 
+        _irisDeviceHolder       .UpdateFromResponse(requested, responded.IrisDevice       , null);
 
         Data.Add(requested);
         _dataSet.Add(requested.Id, requested);        
@@ -78,6 +81,7 @@ namespace BioData.Holders.Grouped
           _accessDeviceHolder     .UpdateFromResponse(oldItem, responded.AccessDevice     , requested.AccessDevice     );
           _captureDeviceHolder    .UpdateFromResponse(oldItem, responded.CaptureDevice    , requested.CaptureDevice    );
           _fingerprintDeviceHolder.UpdateFromResponse(oldItem, responded.FingerprintDevice, requested.FingerprintDevice);
+          _irisDeviceHolder       .UpdateFromResponse(oldItem, responded.IrisDevice       , requested.IrisDevice       );
 
           CopyFrom(responded, oldItem, requested);
         }        
@@ -99,7 +103,8 @@ namespace BioData.Holders.Grouped
         {
           _accessDeviceHolder     .UpdateFromResponse(item, responded.AccessDevice     , null);
           _captureDeviceHolder    .UpdateFromResponse(item, responded.CaptureDevice    , null);
-          _fingerprintDeviceHolder.UpdateFromResponse(item, responded.FingerprintDevice, null);          
+          _fingerprintDeviceHolder.UpdateFromResponse(item, responded.FingerprintDevice, null);    
+          _irisDeviceHolder       .UpdateFromResponse(item, responded.IrisDevice       , null);
 
           Data.Remove(item);
         }
@@ -297,6 +302,10 @@ namespace BioData.Holders.Grouped
     public ICollection<string> FingerprintDevices {
       get { return _fingerprintDeviceHolder.DataSet.Keys; }
     }
+    public ICollection<string> IrisDevices
+    {
+      get { return _irisDeviceHolder.DataSet.Keys; }
+    }
 
     #endregion
 
@@ -304,6 +313,8 @@ namespace BioData.Holders.Grouped
     private readonly AccessDeviceHolder      _accessDeviceHolder     ;
     private readonly CaptureDeviceHolder     _captureDeviceHolder    ;
     private readonly FingerprintDeviceHolder _fingerprintDeviceHolder;
+    private readonly IrisDeviceHolder        _irisDeviceHolder       ;
+
 
     private readonly ProtoFieldsUtils        _fieldsUtils;
 

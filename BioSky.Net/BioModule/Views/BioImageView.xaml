@@ -22,11 +22,10 @@
     <!-- d:DataContext="{d:DesignInstance vm:BioImageViewModel, IsDesignTimeCreatable=False}"-->
     <UserControl.Resources>
         <ResourceDictionary>
-
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
@@ -45,7 +44,7 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="MyStandardButton" TargetType="Button">
+            <Style x:Key="MyBioImageButton" TargetType="Button">
                 <Setter Property="Background" Value="#00000000" />
                 <Setter Property="BorderBrush" Value="{StaticResource BorderBrushNormal}" />
                 <Setter Property="Foreground" Value="{StaticResource Foreground}" />
@@ -61,6 +60,16 @@
                                 </Grid>
                             </Border>
                             <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=Self}, Path=Tag }" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding RelativeSource=
+                                   {RelativeSource Mode=Self}, Path=Tag }" Value="False">
+                                    <Setter Property="Background" Value="#00000000"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}" />
                                     <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHighlighted}" />
@@ -69,15 +78,14 @@
                                     <Setter Property="Background" Value="{StaticResource BackgroundSelected}" />
                                     <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSelected}" />
                                 </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
+                                <!--<Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Background" Value="Transparent" />
-                                </Trigger>
+                                </Trigger>-->
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
-           
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -95,15 +103,10 @@
                 Grid.Column="0" Grid.Row="0"
                 Grid.ColumnSpan="5" Grid.RowSpan="3">
             <local:ImageView DataContext="{Binding Mode=OneWay}">
-
-            </local:ImageView>
+                
+            </local:ImageView>            
         </Border>
-
-
-        <local:ProgressRingView Grid.ColumnSpan="2" HorizontalAlignment="Center" 
-                                VerticalAlignment="Center" DataContext="{Binding Progress}"/>
-
-
+        
         <TextBlock Grid.ColumnSpan="2"
                    Grid.RowSpan="4"
                    Margin="7"
@@ -113,12 +116,11 @@
         </TextBlock>
 
         <!--*****************************************EnrollmentExpanderView**************************************************-->
-        <Expander          
-           
+        <Expander            
             Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" 
             ExpandDirection="Up" 
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Bottom"           
+            VerticalAlignment="Bottom"
             Background="#FFFFFFFF" BorderBrush="{x:Null}"
             Visibility="{Binding EnrollExpanderVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
 
@@ -132,11 +134,11 @@
                         <local:FingerprintEnrollmentBarView x:Name="EnrollmentBar" DataContext="{Binding Mode=OneWay}">
                         </local:FingerprintEnrollmentBarView>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:IrisEnrollmentBarViewModel}">
+                   <DataTemplate DataType="{x:Type vm:IrisEnrollmentBarViewModel}">
                         <local:IrisEnrollmentBarViewModel x:Name="EnrollmentBar" DataContext="{Binding Mode=OneWay}">
                         </local:IrisEnrollmentBarViewModel>
-                    </DataTemplate>
-                </ContentControl.Resources>
+                    </DataTemplate> 
+                </ContentControl.Resources>                
             </ContentControl>
 
             <Expander.Template>
@@ -242,7 +244,7 @@
                         </DataTemplate>
                     </ContentControl.Resources>
                 </ContentControl>
-
+                
                 <Expander.Template>
                     <ControlTemplate  TargetType="{x:Type Expander}">
                         <Grid>
@@ -319,16 +321,16 @@
             </Expander>
         </Grid>
 
-
+        
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
 
 
         <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
                      Orientation="Vertical" HorizontalAlignment="Left" Width="40">
-            <Button  Width="40" Height="40" Style ="{StaticResource MyStandardButton}"  
-                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0">
+            <Button  Width="40" Height="40" Tag="{Binding BioImageModels[0].IsActive}"
+                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0" Style="{StaticResource MyBioImageButton}">
 
-                <Image Width="40" Height="40" Style="{StaticResource GreyScaleImage}"  
+                <Image Width="40" Height="40"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
 
                 <i:Interaction.Triggers>
@@ -339,10 +341,10 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
-                    ToolTip="Fingers" BorderBrush="#7F3587BD">
+            <Button Style ="{StaticResource MyBioImageButton}" Width="40" Height="40" 
+                    ToolTip="Fingers" BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[1].IsActive}">
 
-                <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
+                <Image Width="32" Height="32"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FingerScanColorIconSource}"  />
 
                 <i:Interaction.Triggers>
@@ -353,10 +355,10 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
-            <Button Style ="{StaticResource MyStandardButton}" Width="40" Height="40" 
-                    ToolTip="Irises"  BorderBrush="#7F3587BD">
+            <Button Style ="{StaticResource MyBioImageButton}" Width="40" Height="40" 
+                    ToolTip="Irises"  BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[2].IsActive}">
 
-                <Image Width="32" Height="32" Style="{StaticResource GreyScaleImage}" 
+                <Image Width="32" Height="32"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=IrisScanColorIconSource}"  />
 
                 <i:Interaction.Triggers>

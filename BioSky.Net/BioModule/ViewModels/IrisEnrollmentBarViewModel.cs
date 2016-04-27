@@ -1,6 +1,7 @@
 ﻿using BioContracts;
 using BioContracts.Common;
 using BioContracts.IrisDevices;
+using BioModule.BioModels;
 using BioModule.ResourcesLoader;
 using Caliburn.Micro;
 using System;
@@ -13,12 +14,19 @@ using System.Windows.Media.Imaging;
 
 namespace BioModule.ViewModels
 {
+  public enum EyesEnum
+  {
+      Both
+    , Right
+    , Left
+  }
   public class IrisEnrollmentBarViewModel : Screen, IIrisDeviceObserver, IBioObservable<IIrisDeviceObserver>
   {
-    public IrisEnrollmentBarViewModel(IProcessorLocator locator)
+    public IrisEnrollmentBarViewModel(IProcessorLocator locator, IEyeSelector selector)
     {
       _deviceEngine = locator.GetProcessor<IIrisDeviceEngine>();
       _observer = new BioObserver<IIrisDeviceObserver>();
+      _selector = selector;          
     }
 
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -44,16 +52,17 @@ namespace BioModule.ViewModels
 
       StartDevice();
 
-      base.OnActivate();
+      base.OnActivate();            
     }
 
     protected override void OnDeactivate(bool close)
     {
-      DevicesNames.CollectionChanged -= DevicesNames_CollectionChanged;
-      StopDevice();
-      base.OnDeactivate(close);
-    }
+      if(DevicesNames != null)
+        DevicesNames.CollectionChanged -= DevicesNames_CollectionChanged;
 
+      StopDevice();
+      base.OnDeactivate(close);      
+    }
     private void StartDevice()
     {
       if (string.IsNullOrEmpty(SelectedDevice))
@@ -156,15 +165,44 @@ namespace BioModule.ViewModels
           StartDevice();
 
           NotifyOfPropertyChange(() => SelectedDevice);
-
         }
+      }
+    }
+    public EyesEnum SelectedEye
+    {
+      get
+      {
+        if (_selector == null)
+          return EyesEnum.Both;
+        return _selector.SelectedEye; }
+      set
+      {
+        if (_selector == null)
+          return;
+        if (_selector.SelectedEye != value)
+        {
+          _selector.SelectedEye = value;
+          NotifyOfPropertyChange(() => SelectedEye);
+        }
+      }
+    }
+
+    private List<string> _eyeNames;
+    public List<string> EyeNames
+    {
+      get
+      {
+        if (_eyeNames == null)
+          _eyeNames = Enum.GetNames(typeof(EyesEnum)).ToList();
+        return _eyeNames;
       }
     }
     #endregion
 
     #region Global Variables   
     private BioObserver<IIrisDeviceObserver> _observer;
-    private readonly IIrisDeviceEngine _deviceEngine;
+    private readonly IIrisDeviceEngine _deviceEngine  ;
+    private readonly IEyeSelector      _selector      ;
     #endregion
 
   }
