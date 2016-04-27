@@ -58,6 +58,11 @@ namespace BioModule.BioModels
 
     }
 
+    public void ShowEnrollment(bool state)
+    {
+      EnrollmentBar.Subscribe(this);
+    }
+
     public void Activate()
     {
       EnrollmentBar.Subscribe(this);

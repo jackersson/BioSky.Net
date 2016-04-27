@@ -24,13 +24,22 @@ namespace BioModule.ViewModels
     , Arrows             = 1 << 5
     , CancelBtn          = 1 << 6
   }
+
+  public interface ILoaderController
+  {
+    void Show();
+
+    void Hide();
+  }
   
-  public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable
+  public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable, ILoaderController
   {
     public BioImageViewModel(IProcessorLocator locator, long style = MAX_BIO_IMAGE_STYLE)
     {
       _notifier = locator.GetProcessor<INotifier>();
       _database = locator.GetProcessor<IBioSkyNetRepository>();
+
+      _progress = _notifier.LoadingViewModel as ProgressRingViewModel;
 
       BioImageModels = new ObservableCollection<IBioImageModel>();
 
@@ -63,6 +72,8 @@ namespace BioModule.ViewModels
           view.Deactivate();
       }
     }
+
+  
 
     public void OnLoadFromFile()
     {
@@ -265,7 +276,7 @@ namespace BioModule.ViewModels
         }
       }
     }
-
+   
     private bool _isDetailsExpanded;
     public bool IsDetailsExpanded
     {
@@ -277,6 +288,20 @@ namespace BioModule.ViewModels
           _isDetailsExpanded = value;
           CurrentBioImage.ShowDetails(_isDetailsExpanded);
           NotifyOfPropertyChange(() => IsDetailsExpanded);
+        }
+      }
+    }
+
+    private bool _loaderActive;
+    public bool LoaderActive
+    {
+      get { return _loaderActive; }
+      private set
+      {
+        if (_loaderActive != value)
+        {
+          _loaderActive = value;
+          NotifyOfPropertyChange(() => LoaderActive);
         }
       }
     }
@@ -348,6 +373,16 @@ namespace BioModule.ViewModels
       return (currentStyle & activityL) == activityL;
     }
     public void SetStyle(long style) { ControlStyle = style; }
+
+    public void Show()
+    {
+      LoaderActive = true;
+    }
+
+    public void Hide()
+    {
+      LoaderActive = false;
+    }
 
     private long _controlStyle;
     public long ControlStyle
@@ -435,6 +470,21 @@ namespace BioModule.ViewModels
       }
     }
 
+    private  ProgressRingViewModel _progress;
+    public ProgressRingViewModel Progress
+    {
+      get { return _progress; }
+      set
+      {
+        if (_progress != value)
+        {
+          _progress = value;
+          NotifyOfPropertyChange(() => Progress);
+        }
+      }
+    }
+
+
     #endregion
 
     #region Global Variables    
@@ -448,6 +498,7 @@ namespace BioModule.ViewModels
 
     private readonly INotifier _notifier;
     private readonly IBioSkyNetRepository _database;
+
 
     public delegate void BioImageChangedEventHandler(BioImageModelType bioImageModel);
 

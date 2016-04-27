@@ -25,16 +25,21 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <utils:PhotoIdToExistenseConverter x:Key="PhotoIdToExistenseConverter"/>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <utils:MultiFingerToRadioButtonConverter x:Key="MultiFingerToRadioButtonConverter"/>
-            <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
-                <Setter Property="Background" Value="Transparent"/>
+            
+          <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MetroRadioButton}">
+                <Setter Property="RadioButton.Background" Value="Transparent"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag }" Value="true">
-                        <Setter Property="Background" Value="#FF0C6303"/>
+                    <DataTrigger Binding="{Binding PhotoID,
+                                 Converter={x:Static utils:ConverterInitializer.PhotoIdToExistenseConverter}, Mode=OneWay}"
+                                 Value="true">
+                        <Setter Property="RadioButton.Background" Value="#FF0C6303"/>
+
                     </DataTrigger>
                 </Style.Triggers>
-            </Style>
+            </Style> 
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -50,7 +55,7 @@
             <Image Width="512" Height="289"
                    Source="{Binding Source={StaticResource ResourceLoader}, Path=HandsIconSource}" />
 
-            <ItemsControl ItemsSource="{Binding FingerButtonsDictionary}" Panel.ZIndex="10">
+            <ItemsControl ItemsSource="{Binding Images}" Panel.ZIndex="10">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Grid/>
@@ -58,17 +63,20 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <RadioButton  Margin="{Binding Path=Value}"
-                                      HorizontalAlignment="Left" VerticalAlignment="Top" Tag="{Binding Path=Key}"
-                                      Panel.ZIndex="10"
+                        <RadioButton  Margin="{Binding FingerType, Converter={x:Static utils:ConverterInitializer.FingerTypeToMarginConverter}}"
+                                      HorizontalAlignment="Left" VerticalAlignment="Top" Tag="{Binding FingerType}"
+                                      Panel.ZIndex="10"                                   
+                                    
                                       cal:Action.TargetWithoutContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}, Path=DataContext}">
+                         
                             <RadioButton.IsChecked>
                                 <MultiBinding Converter="{StaticResource MultiFingerToRadioButtonConverter}" Mode="TwoWay">
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}" 
                                              Path="DataContext.SelectedFinger" Mode="TwoWay"/>
                                     <Binding RelativeSource="{RelativeSource Mode=Self}" Path="Tag" />
                                 </MultiBinding>
-                            </RadioButton.IsChecked>
+                            </RadioButton.IsChecked> 
+                            
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <cal:ActionMessage MethodName="SelectFinger">

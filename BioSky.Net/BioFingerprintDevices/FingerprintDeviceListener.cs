@@ -77,6 +77,7 @@ namespace BioFingerprintDevices
         if (frame != null)
           frame = null;
 
+        
         OnError(ex);
         return ex.ErrorCode;
       }

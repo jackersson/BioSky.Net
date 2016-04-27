@@ -17,6 +17,7 @@ using BioContracts;
 using BioService;
 using BioContracts.Holders;
 using static BioService.AccessInfo.Types;
+using System.Drawing;
 
 namespace BioModule.Utils
 {
@@ -34,6 +35,32 @@ namespace BioModule.Utils
         if (_personIdToThumbnailConverter != value)
         {
           _personIdToThumbnailConverter = value;
+        }
+      }
+    }
+
+    private static PhotoIdToExistenseConverter _photoIdToExistenseConverter;
+    public static PhotoIdToExistenseConverter PhotoIdToExistenseConverter
+    {
+      get { return _photoIdToExistenseConverter; }
+      set
+      {
+        if (_photoIdToExistenseConverter != value)
+        {
+          _photoIdToExistenseConverter = value;
+        }
+      }
+    }
+
+    private static FingerTypeToMarginConverter _fingerTypeToMarginConverter;
+    public static FingerTypeToMarginConverter FingerTypeToMarginConverter
+    {
+      get { return _fingerTypeToMarginConverter; }
+      set
+      {
+        if (_fingerTypeToMarginConverter != value)
+        {
+          _fingerTypeToMarginConverter = value;
         }
       }
     }
@@ -146,6 +173,9 @@ namespace BioModule.Utils
       LocationIdToLocationnameConverter    = new ConvertLocationIdToLocationname(_database.Locations);
       PermissionToVisibilityConverter      = new ConvertPermissionToVisibility  (_bioEngine)         ;
       MultiPermissionToVisibilityConverter = new MultiPermissionConverter       (_bioEngine)         ;
+      FingerTypeToMarginConverter          = new FingerTypeToMarginConverter();
+
+      PhotoIdToExistenseConverter = new PhotoIdToExistenseConverter();
     }
 
     private IProcessorLocator    _locator  ;
@@ -802,6 +832,74 @@ namespace BioModule.Utils
     }
   }
   #endregion
+
+
+  #region FingerTypeToMarginConverter
+  public class FingerTypeToMarginConverter : IValueConverter
+  {
+    public FingerTypeToMarginConverter()
+    {
+      _fingerButtonsDictionary = new Dictionary<Finger, Thickness>();
+
+      _fingerButtonsDictionary.Add(Finger.LeftLittle , new Thickness(19 , 39 , 0, 0));
+      _fingerButtonsDictionary.Add(Finger.LeftRing   , new Thickness(65 , 10 , 0, 0));
+      _fingerButtonsDictionary.Add(Finger.LeftMiddle , new Thickness(110, 0  , 0, 0));
+      _fingerButtonsDictionary.Add(Finger.LeftIndex  , new Thickness(154, 16 , 0, 0));
+      _fingerButtonsDictionary.Add(Finger.LeftThumb  , new Thickness(219, 123, 0, 0));
+
+      _fingerButtonsDictionary.Add(Finger.Any        , new Thickness(219, 123, 0, 0));
+
+      _fingerButtonsDictionary.Add(Finger.RightThumb , new Thickness(275, 123, 0, 0));
+      _fingerButtonsDictionary.Add(Finger.RightIndex , new Thickness(331, 16 , 0, 0));
+      _fingerButtonsDictionary.Add(Finger.RightMiddle, new Thickness(380, 0  , 0, 0));
+      _fingerButtonsDictionary.Add(Finger.RightRing  , new Thickness(425, 10 , 0, 0));
+      _fingerButtonsDictionary.Add(Finger.RightLittle, new Thickness(468, 39 , 0, 0));     
+    }
+
+    public object Convert(object value, Type targetType,
+                           object parameter, CultureInfo culture)
+    {
+      if (value == null)
+        value = Finger.Any;
+
+      Thickness thikness;
+      _fingerButtonsDictionary.TryGetValue((Finger)value, out thikness);      
+
+      return thikness; 
+    }
+    public object ConvertBack(object value, Type targetType,
+        object parameter, CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+
+    private Dictionary<Finger, Thickness> _fingerButtonsDictionary;
+
+  }
+
+  #endregion
+
+
+  public class PhotoIdToExistenseConverter : IValueConverter
+  {
+    public object Convert(object value, Type targetType,
+                           object parameter, CultureInfo culture)
+    {
+      //return Brushes.Green;
+      if (value == null)
+        return false; 
+
+      long val = (long)value;
+      return val <= 0 ? false : true; 
+    }
+    public object ConvertBack(object value, Type targetType,
+        object parameter, CultureInfo culture)
+    {
+      throw new NotImplementedException();
+    }
+
+  }
+
 
   #endregion
 }

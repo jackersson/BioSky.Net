@@ -30,15 +30,15 @@ namespace BioFingerprintDevices.Common
       switch (error)
       {
         case FTR_ERROR_EMPTY_FRAME:
-          szMessage = "Empty Frame";
+          szMessage = "Touch scanner, please";
           break;
 
         case FTR_ERROR_MOVABLE_FINGER:
-          szMessage = "Movable Finger";
+          szMessage = "Stop any finger movements";
           break;
 
         case FTR_ERROR_NO_FRAME:
-          szMessage = "Fake Finger";
+          szMessage = "Fake Finger detected";
           break;
 
         case FTR_ERROR_HARDWARE_INCOMPATIBLE:

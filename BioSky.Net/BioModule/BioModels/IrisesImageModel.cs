@@ -40,6 +40,12 @@ namespace BioModule.BioModels
       if (controller != null)
         Controller = controller;
     }
+
+    public void ShowEnrollment(bool state)
+    {
+      EnrollmentBar.Subscribe(this);
+    }
+
     public void Activate()
     {
       EnrollmentBar.Unsubscribe(this);

@@ -35,7 +35,7 @@ namespace BioModule.ViewModels
       UserImages   = new AsyncObservableCollection<long>();
       _bioUtils    = new BioImageUtils();
       
-      _database.Persons.DataChanged     += RefreshData;
+      //_database.Persons.DataChanged     += RefreshData;
       //_database.PhotoHolder.DataChanged += RefreshData;  
       PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:NoAvailablePhotos");
 
@@ -72,33 +72,21 @@ namespace BioModule.ViewModels
         return;
      
       UserImages.Clear();
-
-      //IEnumerable<long> photos = null;
-      if (_user.BiometricData != null && _user.BiometricData.Faces != null && _user.BiometricData.Faces.Count > 0)
-      {
-        //photos = _user.BiometricData.Faces.Select(x => x.Id);
-        foreach (FaceCharacteristic fc in _user.BiometricData.Faces)
+      
+      BiometricData bioData = _user.BiometricData;
+      Google.Protobuf.Collections.RepeatedField<FaceCharacteristic> faces = bioData.Faces;
+      if (bioData != null && faces != null && faces.Count > 0)
+      {        
+        foreach (FaceCharacteristic fc in faces)
           UserImages.Add(fc.Photoid);
-
-        //UserImages.AddRange(_user.BiometricData.Faces.Select(x => x.Id));
       }
 
-
-      //IEnumerable<long> photo2s = null;
-      if (_user.Photos != null && _user.Photos.Count > 0)
-      {
-        //photo2s = _user.Photos.Select(x => x.Id);
-        foreach (Photo fc in _user.Photos)
+      Google.Protobuf.Collections.RepeatedField<Photo> photos = _user.Photos;
+      if (photos != null && photos.Count > 0)
+      {         
+        foreach (Photo fc in photos)
           UserImages.Add(fc.Id);
-      }
-
-
-
-      //foreach (long id in photos)
-     //   UserImages.Add(id);
-
-   //   foreach (long id in photo2s)
-   //     UserImages.Add(id);
+      }      
 
       NotifyOfPropertyChange(() => UserImages);
       
@@ -107,8 +95,6 @@ namespace BioModule.ViewModels
         SelectedItem = UserImages.Where(x => x == _user.Thumbnailid).FirstOrDefault();
         if (SelectedItem <= 0)
           SelectedItem = UserImages.FirstOrDefault();
-
-
 
         PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:YourPhotos");
       }

@@ -20,20 +20,16 @@ namespace BioModule.ViewModels
   {
     public FingerprintEnrollmentBarViewModel(IProcessorLocator locator)
     {
+      _notifier                = locator.GetProcessor<INotifier>();
       _fingerprintDeviceEngine = locator.GetProcessor<IFingerprintDeviceEngine>();
       _observer                = new BioObserver<IFingerprintDeviceObserver>();
     }
 
     public void UpdateSelector(IFingerSelector fingerSelector)
-    {
-      _fingerSelector = fingerSelector;      
-      _fingerSelector.FingerChanged += SelectFinger;
+    {  
+      _fingerSelector = fingerSelector;           
     }
-
-    private void SelectFinger(Finger finger)
-    {
-      NotifyOfPropertyChange(() => SelectedFinger);
-    }
+       
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyOfPropertyChange(() => AvaliableDevicesCount);
@@ -46,7 +42,7 @@ namespace BioModule.ViewModels
         if (DevicesNames == null)
           DevicesNames = _fingerprintDeviceEngine.GetDevicesNames();
 
-        return String.Format("Available Devices ({0})", _devicesNames.Count);
+        return string.Format("({0}) Devices", _devicesNames.Count);
       }
     }
 
@@ -54,6 +50,9 @@ namespace BioModule.ViewModels
     {
       DevicesNames = _fingerprintDeviceEngine.GetDevicesNames();
       DevicesNames.CollectionChanged += DevicesNames_CollectionChanged;
+
+      if (_fingerSelector != null)
+        _fingerSelector.SelectedFingerChanged += OnSelectedFingerChanged;
 
       StartDevice();
 
@@ -63,8 +62,18 @@ namespace BioModule.ViewModels
     protected override void OnDeactivate(bool close)
     {
       DevicesNames.CollectionChanged -= DevicesNames_CollectionChanged;
+      if (_fingerSelector != null)
+        _fingerSelector.SelectedFingerChanged -= OnSelectedFingerChanged;
+
+      _notifier.Hide();
+
       StopDevice();
       base.OnDeactivate(close);
+    }
+
+    private void OnSelectedFingerChanged(Finger finger)
+    {
+      NotifyOfPropertyChange(() => SelectedFinger);
     }
 
     private void StartDevice()
@@ -84,13 +93,17 @@ namespace BioModule.ViewModels
 
 
     public void OnFrame(ref Bitmap frame) {
+
+      _notifier.Hide();
       foreach (KeyValuePair<int, IFingerprintDeviceObserver> observer in _observer.Observers)
         observer.Value.OnFrame(ref frame);
     }
 
     public void OnError(Exception ex)
     {
-      NotifyOfPropertyChange(() => DeviceConnectedIcon); 
+      _notifier.ShowInformation(ex.Message);
+
+       NotifyOfPropertyChange(() => DeviceConnectedIcon); 
     }
 
     public void OnReady(bool isReady)
@@ -185,6 +198,7 @@ namespace BioModule.ViewModels
     private BioObserver<IFingerprintDeviceObserver> _observer;
     private readonly IFingerprintDeviceEngine       _fingerprintDeviceEngine;
     private          IFingerSelector                _fingerSelector         ;
+    private readonly INotifier                      _notifier               ;
     #endregion
 
   }

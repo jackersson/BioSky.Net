@@ -6,6 +6,8 @@ using BioModule.BioModels;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Collections.Generic;
+using BioContracts;
+using System.Linq;
 
 namespace BioModule.ViewModels
 {
@@ -15,8 +17,9 @@ namespace BioModule.ViewModels
   {
     Finger SelectedFinger { get; set; }
 
-    event FingerChangedEventHandler FingerChanged; 
+    event FingerChangedEventHandler SelectedFingerChanged; 
   }
+  
   public class UserFingerViewModel : Screen, IUserBioItemsController, IFingerSelector
   {
     public UserFingerViewModel(IUserBioItemsUpdatable imageViewer)
@@ -26,28 +29,23 @@ namespace BioModule.ViewModels
       _imageViewer = imageViewer;
       _imageViewer.UpdateBioItemsController(this);
 
-      CreateFingers();
+      Images    = new AsyncObservableCollection<FingerprintItem>();
+      _imageSet = new Dictionary<Finger, FingerprintItem>();
+
+      Array fingers = Enum.GetValues(typeof(Finger));
+      foreach (Finger fn in fingers)
+      {
+        FingerprintItem fi = new FingerprintItem(fn);
+        _imageSet.Add(fn, fi);
+        Images.Add(fi);
+      }
+
+      IsEnabled = true;
     }
-
-    private void CreateFingers()
-    {
-      FingerButtonsDictionary.Add(Finger.LeftLittle, new Thickness(19 , 39 , 0, 0));
-      FingerButtonsDictionary.Add(Finger.LeftRing  , new Thickness(65 , 10 , 0, 0));
-      FingerButtonsDictionary.Add(Finger.LeftMiddle, new Thickness(110, 0  , 0, 0));
-      FingerButtonsDictionary.Add(Finger.LeftIndex , new Thickness(154, 16 , 0, 0));
-      FingerButtonsDictionary.Add(Finger.Any       , new Thickness(219, 123, 0, 0));
-
-      FingerButtonsDictionary.Add(Finger.RightThumb , new Thickness(275, 123, 0, 0));
-      FingerButtonsDictionary.Add(Finger.RightIndex , new Thickness(331, 16 , 0, 0));
-      FingerButtonsDictionary.Add(Finger.RightMiddle, new Thickness(380, 0  , 0, 0));
-      FingerButtonsDictionary.Add(Finger.RightRing  , new Thickness(425, 10 , 0, 0));
-      FingerButtonsDictionary.Add(Finger.RightLittle, new Thickness(468, 39 , 0, 0));
-      NotifyOfPropertyChange(() => FingerButtonsDictionary);
-    }
-
+   
     public void SelectFinger(Finger finger)
     {
-      SelectedFinger = finger;
+      SelectedFinger = finger;      
     }
 
     public void Update(Person user)
@@ -56,6 +54,47 @@ namespace BioModule.ViewModels
         return;
 
       _user = user;
+      RefreshData();
+
+      IsEnabled = true;
+    }
+
+    private void RefreshData()
+    {
+      if (!IsActive || _user == null)
+        return;
+
+      ResetImages();
+
+      BiometricData bioData = _user.BiometricData;
+      Google.Protobuf.Collections.RepeatedField<FingerprintCharacteristic> fingerprints = bioData.Fingerprints;
+      if (bioData != null && fingerprints != null && fingerprints.Count > 0)
+      {
+        foreach (FingerprintCharacteristic fc in fingerprints)
+        {
+          Finger pos = fc.Position;
+          if (_imageSet.ContainsKey(pos))
+          {
+            _imageSet[pos].PhotoID = fc.Photoid;
+            SelectedFinger = pos;
+          }
+        }          
+      }
+            
+     // NotifyOfPropertyChange(() => Images);
+
+      //if (Images.Count > 0)
+    //  {       
+        //PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:YourPhotos");
+   //   }
+      //else
+       // PhotoAvailableText = LocExtension.GetLocalizedValue<string>("BioModule:lang:NoAvailablePhotos");
+    }
+
+    private void ResetImages()
+    {
+      foreach (FingerprintItem item in Images)
+        item.Reset();
     }
 
     protected override void OnActivate()
@@ -108,15 +147,37 @@ namespace BioModule.ViewModels
       }
     }
 
-    private Dictionary<Finger, Thickness> _fingerButtonsDictionary;
-    public Dictionary<Finger, Thickness> FingerButtonsDictionary
+    private bool _isEnabled;
+    public bool IsEnabled
     {
-      get
+      get { return _isEnabled; }
+      set
       {
-        if (_fingerButtonsDictionary == null)
-          _fingerButtonsDictionary = new Dictionary<Finger, Thickness>();
-        return _fingerButtonsDictionary; }
+        if (_isEnabled != value)
+        {
+          _isEnabled = value;
+          NotifyOfPropertyChange(() => IsEnabled);
+        }
+      }
     }
+
+    private AsyncObservableCollection<FingerprintItem> _images;
+    public AsyncObservableCollection<FingerprintItem> Images
+    {
+      get { return _images; }
+      set
+      {
+        if (_images != value)
+        {
+          _images = value;
+          NotifyOfPropertyChange(() => Images);
+        }
+      }
+    }
+
+    private Dictionary<Finger, FingerprintItem> _imageSet;
+    
+
     public bool CanNext
     {
       get
@@ -133,12 +194,34 @@ namespace BioModule.ViewModels
       }
     }
 
+    private long _selectedItem;
+    public long SelectedItem
+    {
+      get { return _selectedItem; }
+      set
+      {
+        if (_selectedItem != value)
+        {
+          _selectedItem = value;
+
+         // Photo photo = _database.Photos.GetValue(_selectedItem);
+        //  _imageViewer.UpdateFromPhoto(photo);
+        //  CurrentPhotoIndex = UserImages.IndexOf(_selectedItem);
+
+          NotifyOfPropertyChange(() => SelectedItem);
+          //NotifyOfPropertyChange(() => CanDeleteItem);
+          NotifyOfPropertyChange(() => CanNext);
+          NotifyOfPropertyChange(() => CanPrevious);
+        }
+      }
+    }
+
     private void OnFingerChanged()
     {
-      if (FingerChanged != null)
-        FingerChanged(_selectedFinger);
+      if (SelectedFingerChanged != null)
+        SelectedFingerChanged(_selectedFinger);
     }
-    public event FingerChangedEventHandler FingerChanged;
+    public event FingerChangedEventHandler SelectedFingerChanged;
 
     #endregion
 
@@ -146,6 +229,36 @@ namespace BioModule.ViewModels
     public Person User { get { return _user; }}
 
     private Person                            _user            ;
-    private IUserBioItemsUpdatable            _imageViewer     ;
-  }  
+    private IUserBioItemsUpdatable            _imageViewer     ;    
+  }
+
+  public class FingerprintItem : PropertyChangedBase
+  {
+    public FingerprintItem(Finger fingerType)
+    {
+      _fingerType = fingerType;
+      PhotoID = ID_RESET_VALUE;
+    }
+
+    private long _photoId;
+    public long PhotoID
+    {
+      get { return _photoId; }
+      set
+      {
+        if (_photoId != value)
+        {
+          _photoId = value;
+          NotifyOfPropertyChange(() => PhotoID);
+        }
+      }
+    }    
+
+    private Finger _fingerType;
+    public Finger FingerType { get { return _fingerType; } }
+
+    public void Reset() { PhotoID = ID_RESET_VALUE; }
+
+    public const int ID_RESET_VALUE = -1;
+  }
 }
