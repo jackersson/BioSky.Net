@@ -159,6 +159,7 @@
     <Compile Include="Holders\Grouped\FullLocationHolder.cs" />
     <Compile Include="Holders\Grouped\FullPersonHolder.cs" />
     <Compile Include="Holders\Grouped\FullVisitorHolder.cs" />
+    <Compile Include="Holders\IrisDeviceHolder.cs" />
     <Compile Include="Holders\PhotoHolder.cs" />
     <Compile Include="Holders\Utils\IOUtils.cs" />
     <Compile Include="Holders\Utils\ProtoFieldsUtils.cs" />
