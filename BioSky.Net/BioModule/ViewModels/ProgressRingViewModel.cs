@@ -7,205 +7,168 @@ using System.Windows;
 
 namespace BioModule.ViewModels
 {
-  public class ProgressRingViewModel : Screen 
-   {
-     public ProgressRingViewModel()
-     {
-       SetValues(Margin);
-      /*ProgressRingVisibility = true;
-      ProgressRingVisibility = true;
-      ProgressRingImageVisibility = true;
-      ProgressRingTextVisibility = true;
-      ProgressRingProgressVisibility = true;
-      ProgressRingStatus = true;
-      RingHorizontalAlignment = HorizontalAlignment.Left;
-      RingVerticalAlignment = VerticalAlignment.Center;*/
-
+  public class ProgressRingViewModel : PropertyChangedBase 
+  {   
+    public ProgressRingViewModel()
+    {    
+      //SetStyle(MIN_STYLE);
+      Hide();
+      //ShowWaiting("Waiting");
     }
 
-     public async void ShowProgress(int progress, bool status, double pointX, double pointY)
-     {
-
-      UIElement el = new UIElement();
-      
-
-      Margin = new Thickness(pointX, pointY, 0, 0);
-
-      if (progress == 100)
-       {         
-         SetValues(Margin, true, true, false, false, false, progress + "%");
-         ProgressRingIconSource = status ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
-       
-         await Task.Delay(3000);
-         ProgressRingVisibility = false;
-         Margin = new Thickness(0, 0, 0, 0);
-      }
-      else       
-         SetValues(Margin, true, false, true, true, true, progress + "%");      
-      
-    }
-
-    private void SetValues(  Thickness RingMargin
-                           , bool   RingVisibility         = false
-                           , bool   RingImageVisibility    = false
-                           , bool   RingTextVisibility     = false
-                           , bool   RingProgressVisibility = false
-                           , bool   RingStatus             = false
-                           , string RingText = "0")
-     {
-       ProgressRingVisibility         = RingVisibility;
-       ProgressRingImageVisibility    = RingTextVisibility;
-       ProgressRingTextVisibility     = RingTextVisibility;
-       ProgressRingProgressVisibility = RingProgressVisibility;
-       ProgressRingStatus             = RingStatus;
-       ProgressRingText               = RingText;
-       Margin                         = RingMargin;
-     }
-
-    #region UI
-
-    private HorizontalAlignment _ringHorizontalAlignment;
-    public HorizontalAlignment RingHorizontalAlignment
+    public void ShowWaiting(string text = "")
     {
-      get { return _ringHorizontalAlignment; }
+      Message  = text;
+      IsActive = true;
+      SetStyle(CUSTOM_STYLE);
+    }
+
+    public void Hide()
+    {
+      Message  = string.Empty;
+      Progress = string.Empty;
+      IsActive = false;
+      SetStyle(MIN_STYLE);
+    }
+
+    public void ShowProgress(int progress, bool status)
+    {      
+      Progress = progress + "%";
+      if (progress == MAX_PROGRESS_VALUE)
+       {
+        // SetValues(Margin, true, true, false, false, false, progress + "%");
+        Progress = string.Format("{0}%", progress);
+        SetStyle(MAX_STYLE);
+        StatusImageSource = status ? ResourceLoader.OkIconSource : ResourceLoader.CancelIconSource;
+
+        //await Task.Delay(3000);
+
+        Hide();
+      }
+      else
+      {
+        //SetValues(Margin, true, false, true, true, true, progress + "%");
+        Progress = string.Format("{0}%", progress);
+        SetStyle(TYPICAL_STYLE);
+      }
+    }
+   
+    private bool HasFlag(long currentStyle, ProgressRingStyle style)
+    {
+      long activityL = (long)style;
+      return (currentStyle & activityL) == activityL;
+    }
+
+    public void SetStyle(long style) { ControlStyle = style; }
+
+    private long _controlStyle;
+    public long ControlStyle
+    {
+      get { return _controlStyle; }
       set
       {
-        if (_ringHorizontalAlignment != value)
+        if (_controlStyle != value)
         {
-          _ringHorizontalAlignment = value;
-          NotifyOfPropertyChange(() => RingHorizontalAlignment);
+          _controlStyle = value;
+          NotifyOfPropertyChange(() => ControlStyle      );         
+          NotifyOfPropertyChange(() => ProgressRingActive);
+          NotifyOfPropertyChange(() => StatusImageActive );
+          NotifyOfPropertyChange(() => ProgressRingActive);      
         }
       }
     }
 
-    private VerticalAlignment _ringVerticalAlignmentt;
-    public VerticalAlignment RingVerticalAlignment
-    {
-      get { return _ringVerticalAlignmentt; }
+
+    #region UI  
+
+     private bool _isActive;
+     public bool IsActive
+     {
+       get { return _isActive; }
+       private set
+       {
+        if (_isActive != value)
+        {
+          _isActive = value;
+          NotifyOfPropertyChange(() => IsActive);
+        }
+       }
+     } 
+    
+     private string _progress;
+     public string Progress
+     {
+      get { return _progress; }
       set
       {
-        if (_ringVerticalAlignmentt != value)
+        if (_progress != value)
         {
-          _ringVerticalAlignmentt = value;
-          NotifyOfPropertyChange(() => RingVerticalAlignment);
+          _progress = value;
+          NotifyOfPropertyChange(() => Progress         );
+          //NotifyOfPropertyChange(() => ProgressActive);
         }
       }
     }
 
-    private bool _progressRingVisibility;
-     public bool ProgressRingVisibility
-     {
-       get { return _progressRingVisibility; }
-       set
-       {
-         if (_progressRingVisibility != value)
-         {
-           _progressRingVisibility = value;
-           NotifyOfPropertyChange(() => ProgressRingVisibility);
-         }
-       }
-     }
-
-    private Thickness _margin;
-    public Thickness Margin
+    private string _message;
+    public string Message
     {
-      get { return _margin; }
+      get { return _message; }
       set
       {
-        if (_margin != value)
+        if (_message != value)
         {
-          _margin = value;
-          NotifyOfPropertyChange(() => Margin);
+          _message = value;
+          NotifyOfPropertyChange(() => Message);
         }
       }
     }
-
-    private bool _progressRingStatus;
-     public bool ProgressRingStatus
+  
+    public bool StatusImageActive
      {
-       get { return _progressRingStatus; }
-       set
-       {
-         if (_progressRingStatus != value)
-         {
-           _progressRingStatus = value;
-           NotifyOfPropertyChange(() => ProgressRingStatus);
-         }
-       }
-     }
+      get { return HasFlag(ControlStyle, ProgressRingStyle.StatusImage); }
+    }
 
-     private string _progressRingText;
-     public string ProgressRingText
+     public bool ProgressRingActive
      {
-       get { return _progressRingText; }
-       set
-       {
-         if (_progressRingText != value)
-         {
-           _progressRingText = value;
-           NotifyOfPropertyChange(() => ProgressRingText);
-         }
-       }
-     }
+      get { return HasFlag(ControlStyle, ProgressRingStyle.ProgressRing); }
+    }
 
-     private bool _progressRingTextVisibility;
-     public bool ProgressRingTextVisibility
+     private BitmapSource _statusImageSource;
+     public BitmapSource StatusImageSource
      {
-       get { return _progressRingTextVisibility; }
-       set
-       {
-         if (_progressRingTextVisibility != value)
-         {
-           _progressRingTextVisibility = value;
-           NotifyOfPropertyChange(() => ProgressRingTextVisibility);
-         }
-       }
-     }
-
-     private bool _progressRingImageVisibility;
-     public bool ProgressRingImageVisibility
-     {
-       get { return _progressRingImageVisibility; }
-       set
-       {
-         if (_progressRingImageVisibility != value)
-         {
-           _progressRingImageVisibility = value;
-           NotifyOfPropertyChange(() => ProgressRingImageVisibility);
-         }
-       }
-     }
-
-     private bool _progressRingProgressVisibility;
-     public bool ProgressRingProgressVisibility
-     {
-       get { return _progressRingProgressVisibility; }
-       set
-       {
-         if (_progressRingProgressVisibility != value)
-         {
-           _progressRingProgressVisibility = value;
-           NotifyOfPropertyChange(() => ProgressRingProgressVisibility);
-         }
-       }
-     }
-
-     private BitmapSource _progressRingIconSource;
-     public BitmapSource ProgressRingIconSource
-     {
-       get
-       {
-         return _progressRingIconSource;
+       get {
+         return _statusImageSource;
        }
        set
        {
-         if (_progressRingIconSource != value)
+         if (_statusImageSource != value)
          {
-           _progressRingIconSource = value;
-           NotifyOfPropertyChange(() => ProgressRingIconSource);
+           _statusImageSource = value;
+           NotifyOfPropertyChange(() => StatusImageSource);
          }
        }
      }
-     #endregion
-   }
+    #endregion
+
+    #region global variables
+
+    public enum ProgressRingStyle : long
+    {  
+        None         = 1 << 0
+      , ProgressRing = 1 << 1
+      , StatusImage  = 1 << 2  
+      , Status       = 1 << 5      
+    }
+
+    public const int MAX_PROGRESS_VALUE = 100;
+
+    public const long TYPICAL_STYLE  = (long)( ProgressRingStyle.ProgressRing | ProgressRingStyle.Status);
+    public const long MIN_STYLE      = (long)(ProgressRingStyle.None);
+    public const long MAX_STYLE      = (long)(ProgressRingStyle.ProgressRing | ProgressRingStyle.StatusImage);
+    public const long CUSTOM_STYLE   = (long)(ProgressRingStyle.ProgressRing);
+
+
+    #endregion
+  }
 }

@@ -115,6 +115,10 @@
                    Foreground="#FF222222" FontSize="12">
         </TextBlock>
 
+        <local:ProgressRingView Grid.ColumnSpan="2" HorizontalAlignment="Center" 
+                                VerticalAlignment="Center" DataContext="{Binding Progress}"/>
+
+
         <!--*****************************************EnrollmentExpanderView**************************************************-->
         <Expander            
             Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" 

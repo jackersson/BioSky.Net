@@ -16,7 +16,7 @@ using BioContracts.Common;
 
 namespace BioModule.BioModels
 {
-  public class FingersImageModel : PropertyChangedBase, IBioImageModel, IFingerprintDeviceObserver
+  public class FingersImageModel : Conductor<IScreen>.Collection.AllActive, IBioImageModel, IFingerprintDeviceObserver
   {
     public FingersImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
@@ -28,30 +28,16 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
-      if(EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Activate();
-      }
       EnrollmentBar.Subscribe(this);
-      _imageView.SetSingleImage(FingerImageSource);
+      (EnrollmentBar as IScreen).Activate();
 
-      _isActive = true;
-      NotifyOfPropertyChange(() => IsActive);
+      _imageView.SetSingleImage(FingerImageSource);
     }
 
     public void Deactivate()
     {
-      EnrollmentBar.Unsubscribe(this);
-      if (EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Deactivate(false);
-      }
-      //EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
-      //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
-      _isActive = false;
-      NotifyOfPropertyChange(() => IsActive);
+      (EnrollmentBar as IScreen).Deactivate(false);
+      EnrollmentBar.Unsubscribe(this); 
     }
 
     public void Reset()
@@ -71,8 +57,12 @@ namespace BioModule.BioModels
 
     public void UpdateController(IUserBioItemsController controller)
     {
-      if (controller != null)      
-        Controller = controller;      
+      if (controller != null)
+      {
+        Controller = controller;
+        if (_controller is IFingerSelector)
+          EnrollmentBar.UpdateSelector(_controller as IFingerSelector);
+      }
     }
     
     public void UpdateFrame( Bitmap frame)
@@ -101,8 +91,8 @@ namespace BioModule.BioModels
     public void ShowDetails(bool state)
     {
     
-    }
-    
+    } 
+
     public BitmapSource SettingsToogleButtonBitmap
     {
       get { return ResourceLoader.UserFingerprintIconSource; }
@@ -156,18 +146,8 @@ namespace BioModule.BioModels
         if (_controller != value)
         {
           _controller = value;
-          EnrollmentBar.UpdateSelector((IFingerSelector)_controller);
           NotifyOfPropertyChange(() => Controller);
         }
-      }
-    }
-
-    private bool _isActive;
-    public bool IsActive
-    {
-      get
-      {
-        return _isActive;
       }
     }
 

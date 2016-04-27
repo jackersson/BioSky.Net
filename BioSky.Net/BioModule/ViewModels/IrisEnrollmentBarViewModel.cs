@@ -3,6 +3,7 @@ using BioContracts.Common;
 using BioContracts.IrisDevices;
 using BioModule.BioModels;
 using BioModule.ResourcesLoader;
+using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,6 @@ using System.Windows.Media.Imaging;
 
 namespace BioModule.ViewModels
 {
-  public enum EyesEnum
-  {
-      Both
-    , Right
-    , Left
-  }
   public class IrisEnrollmentBarViewModel : Screen, IIrisDeviceObserver, IBioObservable<IIrisDeviceObserver>
   {
     public IrisEnrollmentBarViewModel(IProcessorLocator locator, IEyeSelector selector)
@@ -168,23 +163,14 @@ namespace BioModule.ViewModels
         }
       }
     }
-    public EyesEnum SelectedEye
+    public EyeType SelectedEye
     {
-      get
-      {
-        if (_selector == null)
-          return EyesEnum.Both;
-        return _selector.SelectedEye; }
+      get { return _selector != null ? _selector.SelectedEye : EyeType.Both; }
       set
       {
-        if (_selector == null)
-          return;
-        if (_selector.SelectedEye != value)
-        {
+        if (_selector != null && _selector.SelectedEye != value)
           _selector.SelectedEye = value;
-          NotifyOfPropertyChange(() => SelectedEye);
-        }
-      }
+      }    
     }
 
     private List<string> _eyeNames;
@@ -193,7 +179,7 @@ namespace BioModule.ViewModels
       get
       {
         if (_eyeNames == null)
-          _eyeNames = Enum.GetNames(typeof(EyesEnum)).ToList();
+          _eyeNames = Enum.GetNames(typeof(EyeType)).ToList();
         return _eyeNames;
       }
     }

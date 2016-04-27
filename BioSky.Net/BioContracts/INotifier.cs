@@ -13,6 +13,10 @@ namespace BioContracts
     void Notify(_Exception exception);
     void Notify(string message, WarningLevel level);
     void Notify(int progress, bool status, double pointX, double pointY);
+
+    void ShowInformation(string message);
+
+    void Hide();
     
     object LoadingViewModel { get; }
   }

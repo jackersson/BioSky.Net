@@ -11,48 +11,70 @@
              xmlns:lex="http://wpflocalizeextension.codeplex.com"  
              lex:LocalizeDictionary.DesignCulture="uk-UA"
              lex:ResxLocalizationProvider.DefaultAssembly="BioModule"
-             lex:ResxLocalizationProvider.DefaultDictionary="lang"
-             OverridesDefaultStyle="True"
+             lex:ResxLocalizationProvider.DefaultDictionary="lang"          
              d:DataContext="{d:DesignInstance vm:ProgressRingViewModel, IsDesignTimeCreatable=False}"             
              mc:Ignorable="d" 
              Margin="{Binding Margin}"
-             d:DesignHeight="100" d:DesignWidth="100" 
+             Width="75"
+             Height="75"
+             d:DesignHeight="75" d:DesignWidth="75" 
              HorizontalAlignment="{Binding RingHorizontalAlignment}" 
              VerticalAlignment="{Binding RingVerticalAlignment}">
 
     <UserControl.Resources>
-        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <ResourceDictionary>           
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        </ResourceDictionary>
     </UserControl.Resources>
+    
+    
 
-    <Grid HorizontalAlignment="Center" 
-              Visibility="{ Binding ProgressRingVisibility
-                          , Converter={StaticResource BooleanToVisibilityConverter}}"             
-              VerticalAlignment="Top" 
-              Grid.Column="0" Grid.ColumnSpan="4">
+  <!--  Visibility="{ Binding IsActive
+                          , Converter={StaticResource BooleanToVisibilityConverter}}" -->
 
-        <Controls:ProgressRing Grid.ColumnSpan="4" HorizontalAlignment="Center" 
-                                   Visibility="{Binding ProgressRingProgressVisibility
-                                  , Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   VerticalAlignment="Bottom">
+    <Grid HorizontalAlignment="Stretch" 
+                 
+          Visibility="{ Binding IsActive
+                          , Converter={StaticResource BooleanToVisibilityConverter}}" 
+              VerticalAlignment="Stretch" 
+              >
 
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="18"/>
+        </Grid.RowDefinitions>
+
+        <!--    Visibility="{Binding ProgressRingProgressVisibility
+                                  , Converter={StaticResource BooleanToVisibilityConverter}}" -->
+
+        <Controls:ProgressRing HorizontalAlignment="Center"                            
+                               VerticalAlignment="Center"
+                               Foreground="#CC119EDA"
+                               >
+   
         </Controls:ProgressRing>
 
-        <Ellipse Grid.ColumnSpan="4" Width="44" Height="44" 
-                 StrokeThickness="1"
-                 Margin="0,0,0,9" 
-                 Fill="#FF02B3FF"
+      <!--  <Ellipse Width="40" Height="40" 
+                            
+                 Fill="#FF2D2D30"
                  Visibility="{Binding ProgressRingStatus
                             , Converter={StaticResource BooleanToVisibilityConverter}}"
-                 HorizontalAlignment="Center" VerticalAlignment="Bottom">
-
+                 HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <Ellipse.Stroke>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF333337" Offset="1"/>
+                </LinearGradientBrush>
+            </Ellipse.Stroke>
         </Ellipse>
+ -->
+        <!--  Visibility="{Binding ProgressRingTextVisibility
+                            , Converter={StaticResource BooleanToVisibilityConverter}}"> -->
 
-        <TextBlock Text="{Binding ProgressRingText}"   Grid.ColumnSpan="4" HorizontalAlignment="Center" 
-                 Margin="0,0,0,23" 
-                   VerticalAlignment="Bottom" Foreground="#FF0A3B4F" FontWeight="Bold" 
-                       Visibility="{Binding ProgressRingTextVisibility
-                            , Converter={StaticResource BooleanToVisibilityConverter}}">
+        <TextBlock Text="{Binding Progress}"  HorizontalAlignment="Center"                 
+                   VerticalAlignment="Center" Foreground="#FFF1F1F1" FontWeight="Bold">
 
         </TextBlock>
         <Image Source="{Binding ProgressRingIconSource}" Width="40" Height="40"
@@ -61,6 +83,13 @@
                    
                    >
         </Image>
+
+        <TextBlock Text="{Binding Message}"  HorizontalAlignment="Center" 
+                   Foreground="#FFF1F1F1" FontWeight="Bold"
+                   Grid.Row="2"
+                   VerticalAlignment="Bottom">
+
+        </TextBlock>
     </Grid>
 
 </UserControl>

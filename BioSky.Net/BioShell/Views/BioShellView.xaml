@@ -24,30 +24,29 @@
                       Icon="{Binding LogoIconSource}"
                       d:DataContext="{d:DesignInstance localvm:BioShellViewModel,  IsDesignTimeCreatable=False}" WindowTitleBrush="#FF2D2D30">
     <Grid>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="44"/>
-            <RowDefinition Height="5*"/>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="1" Grid.Column="0" x:Name="ToolBar"  />
-        
-        <ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Panel.ZIndex="100" x:Name="FlyoutControl"  />
+            <ContentControl Grid.Row="1" Grid.Column="0" x:Name="ToolBar"  />
 
-        <ContentControl Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TabControl"  />
+            <ContentControl Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Panel.ZIndex="100" x:Name="FlyoutControl"  />
 
-        <ContentControl VerticalAlignment="Top" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="MainMenu"></ContentControl>
-        
-        <ContentControl Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" x:Name="LoginInformation"></ContentControl>
-        
-    </Grid>
+            <ContentControl Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="TabControl"  />
 
-        <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="ProgressRing"></ContentControl>
+            <ContentControl VerticalAlignment="Top" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="MainMenu"></ContentControl>
 
-    </Grid>
+            <ContentControl Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" x:Name="LoginInformation"></ContentControl>
+
+        </Grid>
+       <!-- <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" x:Name="ProgressRing"></ContentControl> -->
+
+    </Grid> 
 </Controls:MetroWindow>
