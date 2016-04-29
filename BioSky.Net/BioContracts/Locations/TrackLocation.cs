@@ -114,10 +114,10 @@ namespace BioContracts
         observer.Value.OnCaptureDeviceFrameChanged(ref frame);      
     }
 
-    public void OnStop(bool stopped, string message, LocationDevice device) {
+    public void OnStop(bool stopped, Exception message, LocationDevice device) {
       if (_observer.Observers.Count <= 0)
         return;    
-      OnError(new Exception(message), device);
+      OnError(message, device);
     }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {
@@ -179,6 +179,11 @@ namespace BioContracts
     {
       foreach (KeyValuePair<int, IFullLocationObserver> observer in _observer.Observers)
         observer.Value.OnVerificationProgress( progress);    
+    }
+
+    public void OnMessage(string message)
+    {
+      Console.WriteLine(message);
     }
 
     /*

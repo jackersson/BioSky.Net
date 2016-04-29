@@ -23,8 +23,9 @@ namespace BioModule.ViewModels
       SetStyle(CUSTOM_STYLE);
     }
 
-    public void Hide()
+    public async void Hide(int milliseconds = 0)
     {
+      await Task.Delay(milliseconds);
       Message  = string.Empty;
       Progress = string.Empty;
       IsActive = false;

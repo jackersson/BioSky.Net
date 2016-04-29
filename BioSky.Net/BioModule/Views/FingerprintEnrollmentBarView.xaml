@@ -32,7 +32,7 @@
 
         <ComboBox ItemsSource="{Binding DevicesNames}"
                   SelectedItem="{Binding SelectedDevice, Mode=TwoWay}" 
-                  Controls:TextBoxHelper.Watermark="Devices"               
+                  Controls:TextBoxHelper.Watermark="{Binding AvaliableDevicesCount}"               
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" 
                   Grid.Row="1"                    

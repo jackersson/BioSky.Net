@@ -1,5 +1,6 @@
 ﻿using AForge.Video;
 using AForge.Video.DirectShow;
+using BioCaptureDevices.Common;
 using BioContracts;
 using BioContracts.Abstract;
 using BioContracts.CaptureDevices;
@@ -126,10 +127,10 @@ namespace BioCaptureDevices
 
     private void OnVideoSourcePlayingFinished(object sender, ReasonToFinishPlaying reason)
     {
-      if ( reason != ReasonToFinishPlaying.StoppedByUser)
+      if ( (int)reason != CaptureDeviceErrorInfo.STOPED_BY_USER)
         _commands.Enqueue(CaptureDeviceCommands.Connect);
-
-      OnStop(true, reason.ToString());      
+      Exception ex = new Exception(CaptureDeviceErrorInfo.Instance.GetErrorMessage(reason));
+      OnStop(true, ex);      
     }    
     
     private void _videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -203,8 +204,8 @@ namespace BioCaptureDevices
 
         if (_videoSource.IsRunning)
           _videoSource.Stop();
-
-        OnStop(true, string.Empty);
+        
+        OnStop(true, new Exception());
 
       }
       catch (Exception ex) {
@@ -225,7 +226,7 @@ namespace BioCaptureDevices
         observer.Value.OnFrame(ref frame);
     }
 
-    private void OnStop(bool stopped, string message)
+    private void OnStop(bool stopped, Exception message)
     {
       foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)       
         observer.Value.OnStop(true, message, LocationDevice.CaptureDevice);

@@ -106,7 +106,20 @@
                 
             </local:ImageView>            
         </Border>
-        
+        <!--************************************************ 3D Button *************************************************************-->
+        <Grid Margin="30,0,0,0">
+            <ToggleButton x:Name="Button3d" Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left"
+                          BorderThickness="1" BorderBrush="#7F3587BD"  Width="32" Height="32"                               
+                          IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                          Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="3D Model"
+                          Padding="1.5,0" Content="3D" Foreground="#7F3587BD" FontWeight="Bold"
+                           Visibility="{Binding Button3DVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                          />
+        </Grid>
+
+        <!--************************************************ 3D Button *************************************************************-->
+
+
         <TextBlock Grid.ColumnSpan="2"
                    Grid.RowSpan="4"
                    Margin="7"
@@ -115,7 +128,7 @@
                    Foreground="#FF222222" FontSize="12">
         </TextBlock>
 
-        <local:ProgressRingView Grid.ColumnSpan="2" HorizontalAlignment="Center" 
+        <local:ProgressRingView Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Center" Panel.ZIndex="100"
                                 VerticalAlignment="Center" DataContext="{Binding Progress}"/>
 
 
@@ -234,9 +247,9 @@
 
                 <ContentControl Content="{Binding CurrentBioImage.Information}">
                     <ContentControl.Resources>
-                        <DataTemplate DataType="{x:Type vm:PhotoInformationViewModel}">
-                            <local:PhotoInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
-                            </local:PhotoInformationView>
+                        <DataTemplate DataType="{x:Type vm:FacialInformationViewModel}">
+                            <local:FacialInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
+                            </local:FacialInformationView>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:FingerInformationViewModel}">
                             <local:FingerInformationView x:Name="InformationItem" DataContext="{Binding Mode=OneWay}">
@@ -330,9 +343,10 @@
 
 
         <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
-                     Orientation="Vertical" HorizontalAlignment="Left" Width="40">
-            <Button  Width="40" Height="40" Tag="{Binding BioImageModels[0].IsActive}"
-                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0" Style="{StaticResource MyBioImageButton}">
+                    Orientation="Vertical" HorizontalAlignment="Left" Width="40">
+            <Button Width="40" Height="40" Tag="{Binding BioImageModels[0].IsActive}"
+                    ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0" Style="{StaticResource MyBioImageButton}"
+                    Visibility="{Binding FacialButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <Image Width="40" Height="40"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FaceScanColorIconSource}"  />
@@ -346,7 +360,8 @@
                 </i:Interaction.Triggers>
             </Button>
             <Button Style ="{StaticResource MyBioImageButton}" Width="40" Height="40" 
-                    ToolTip="Fingers" BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[1].IsActive}">
+                    ToolTip="Fingers" BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[1].IsActive}"
+                    Visibility="{Binding FingerButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <Image Width="32" Height="32"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=FingerScanColorIconSource}"  />
@@ -360,7 +375,8 @@
                 </i:Interaction.Triggers>
             </Button>
             <Button Style ="{StaticResource MyBioImageButton}" Width="40" Height="40" 
-                    ToolTip="Irises"  BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[2].IsActive}">
+                    ToolTip="Irises"  BorderBrush="#7F3587BD" Tag="{Binding BioImageModels[2].IsActive}"
+                    Visibility="{Binding IrisButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                 <Image Width="32" Height="32"  
                        Source="{Binding Source={StaticResource ResourceLoader}, Path=IrisScanColorIconSource}"  />
@@ -380,7 +396,7 @@
         <Button cal:Message.Attach="[Event Click] = [Action OnClearClick()]"  
                 Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Style="{DynamicResource MetroCircleButtonStyle}" 
-                ToolTip="{lex:Loc Cancel}" Width="32" Height="32"   
+                ToolTip="{lex:Loc Delete}" Width="32" Height="32"   
                 BorderThickness="0" 
                 Visibility="{Binding CancelButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"                
                 

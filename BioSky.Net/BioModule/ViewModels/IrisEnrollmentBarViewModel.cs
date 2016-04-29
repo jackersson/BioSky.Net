@@ -17,11 +17,12 @@ namespace BioModule.ViewModels
 {
   public class IrisEnrollmentBarViewModel : Screen, IIrisDeviceObserver, IBioObservable<IIrisDeviceObserver>
   {
-    public IrisEnrollmentBarViewModel(IProcessorLocator locator, IEyeSelector selector)
+    public IrisEnrollmentBarViewModel(IProcessorLocator locator, IEyeSelector selector, ProgressRingViewModel progressRing)
     {
       _deviceEngine = locator.GetProcessor<IIrisDeviceEngine>();
-      _observer = new BioObserver<IIrisDeviceObserver>();
-      _selector = selector;          
+      _observer     = new BioObserver<IIrisDeviceObserver>();
+      _selector     = selector;
+      _progressRing = progressRing;
     }
 
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -66,6 +67,8 @@ namespace BioModule.ViewModels
       _deviceEngine.Add(SelectedDevice);
       _deviceEngine.Subscribe(this, SelectedDevice);
       _deviceEngine.Capture(SelectedDevice);
+      _progressRing.Hide();
+      _noEyeDetected = true;
     }
 
     private void StopDevice()
@@ -86,17 +89,27 @@ namespace BioModule.ViewModels
     }
 
     public void OnEyesDetected(bool detected)
-    {
-      //throw new NotImplementedException();
+    {      
+      if (_noEyeDetected != detected && detected == false)
+      {
+        _noEyeDetected = detected;
+        _progressRing.ShowWaiting("No Eyes detected");
+      }
     }
+    
+    private bool _noEyeDetected;
 
     public void OnState(CaptureState captureState)
     {
-      //throw new NotImplementedException();
+      _progressRing.ShowWaiting(captureState.ToString());
+
+      if (captureState == CaptureState.Complete)
+        _progressRing.Hide(5000);
     }
-   
+
     public void OnError(Exception ex)
     {
+      _progressRing.ShowWaiting(ex.Message);
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
     }
 
@@ -120,7 +133,10 @@ namespace BioModule.ViewModels
 
     public bool HasObserver(IIrisDeviceObserver observer) { return _observer.HasObserver(observer); }
 
-    public void OnMessage(string message) { }
+    public void OnMessage(string message)
+    {
+      _progressRing.ShowWaiting(message);
+    }
   
     #endregion
 
@@ -189,6 +205,7 @@ namespace BioModule.ViewModels
     private BioObserver<IIrisDeviceObserver> _observer;
     private readonly IIrisDeviceEngine _deviceEngine  ;
     private readonly IEyeSelector      _selector      ;
+    private ProgressRingViewModel _progressRing;
     #endregion
 
   }

@@ -110,67 +110,125 @@
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
+            <!-- **************************************************Expand Arrow***********************************************-->
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="0" >
-                <Button Margin="2" Style="{StaticResource MyStandardButton}"
+            <ToggleButton Name="ExpandButton" VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" Height="32" Panel.ZIndex="100"
+                          Style="{DynamicResource MetroCircleToggleButtonStyle}" Grid.ColumnSpan="5" Grid.RowSpan="5" ToolTip="Show/Hide Locations Details">
+                <Image Name="ExpandButtonImage" Width="20" Height="20" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}">
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0" />
+                    </Image.RenderTransform>
+                </Image>
+                <ToggleButton.Triggers>
+                    <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="ExpandButtonImage"
+                                                     Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                     From="0"
+                                                     To="180"
+                                                     Duration="0:0:0.4"/>                                
+
+                            </Storyboard>
+                            </BeginStoryboard>                      
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ExpandButtonImage"
+                                                 Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                 From="180"
+                                                 To="0"
+                                                 Duration="0:0:0.4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </ToggleButton.Triggers>
+            </ToggleButton>
+
+            <!-- **************************************************Expand Arrow***********************************************-->
+
+
+            <Grid Grid.Column="1" Grid.RowSpan="2"
+                  Visibility="{Binding ElementName=ExpandButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                  Width="220">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220"/>
+                </Grid.ColumnDefinitions>
+                <!-- **************************************************Top Panel***********************************************-->
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.Row="0" >
+                    <Button Margin="2" Style="{StaticResource MyStandardButton}"
                         cal:Message.Attach="[Event Click]=[Action ShowLocations]"
                         IsEnabled="{Binding CanShowLocations}"
                         >
-                    <Grid  Margin="5,0,5,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="18"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=WarningIconSource}"
+                        <Grid  Margin="5,0,5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="18"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=WarningIconSource}"
                                Visibility="{Binding LocationError, Converter={StaticResource BooleanToVisibilityConverter}}"
                                Height="18" Width="18"/>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1"
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1"
                                    Foreground="{StaticResource MyColor}" Style="{StaticResource GreyScaleTextBlock}"
                                    Text="Locations" />
-                    </Grid>
-                </Button>
+                        </Grid>
+                    </Button>
 
-                <Button Margin="2" Style="{StaticResource MyStandardButton}"
+                    <Button Margin="2" Style="{StaticResource MyStandardButton}"
                         cal:Message.Attach="[Event Click]=[Action ShowVisitors]"
                         IsEnabled="{Binding CanShowVisitors}"
                         >
-                    <StackPanel Orientation="Vertical" Margin="5,0,5,0">
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        <StackPanel Orientation="Vertical" Margin="5,0,5,0">
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
                                    Style="{StaticResource GreyScaleTextBlock}" Text="{Binding VisitorsView.FilteredVisitors.Count , StringFormat=Visitors({0}), FallbackValue='Visitors'}"
                                     Foreground="{StaticResource MyColor}"  
                                     />
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
                                    Style="{StaticResource GreyScaleTextBlock}" 
                                     Foreground="{StaticResource MyColor}"
-                                   Text="{Binding TrackItemsShort.SelectedTrackLocation.Caption}"/>                        
-                    </StackPanel>
-                </Button>
-            </StackPanel>
+                                   Text="{Binding TrackItemsShort.SelectedTrackLocation.Caption}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <!-- **************************************************Top Panel***********************************************-->
 
-            <ContentControl Grid.Column="1"  Grid.Row="2" Content="{Binding Object}">
-                <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type vm:TrackItemsShortViewModel}">
-                        <local:TrackTabShortControlView x:Name="Object" DataContext="{Binding Mode=OneWay}">
-                        </local:TrackTabShortControlView>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
-                        <visitors:Photo x:Name="Object" DataContext="{Binding Mode=OneWay}">
-                        </visitors:Photo>
-                    </DataTemplate>
-                </ContentControl.Resources> 
-            </ContentControl>
-<!--
-            <local:TrackTabShortControlView Grid.Column="1"  Grid.Row="1" 
-                                            DataContext="{Binding Mode=OneWay}"></local:TrackTabShortControlView>-->
+                <!-- ********************************************TrackLocations Panel******************************************-->
 
-            <local:TrackTabControlView Margin="2" DataContext="{Binding TrackTabControl}" 
+                <ContentControl Grid.Column="1"  Grid.Row="2" Content="{Binding Object}">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type vm:TrackItemsShortViewModel}">
+                            <local:TrackTabShortControlView x:Name="Object" DataContext="{Binding Mode=OneWay}">
+                            </local:TrackTabShortControlView>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
+                            <visitors:Photo x:Name="Object" DataContext="{Binding Mode=OneWay}">
+                            </visitors:Photo>
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                </ContentControl>
+            </Grid>
+
+            <!-- ********************************************TrackLocations Panel******************************************-->
+
+            <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="2">
+                <local:TrackTabControlView  DataContext="{Binding TrackTabControl}" 
                                        Grid.Row="0" Grid.RowSpan="2" Grid.Column="0">
-            </local:TrackTabControlView> 
+                </local:TrackTabControlView>
+            </Grid>
         </Grid>
 
 <!--

@@ -45,7 +45,7 @@ namespace BioModule.ViewModels
         if (DevicesNames == null)
           DevicesNames = _fingerprintDeviceEngine.GetDevicesNames();
 
-        return string.Format("({0}) Devices", _devicesNames.Count);
+        return string.Format("Available Devices ({0})", _devicesNames.Count);
       }
     }
 

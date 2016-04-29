@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BioModule.ViewModels
 {
-  public class PhotoInformationViewModel : Screen
+  public class FacialInformationViewModel : Screen
   {
-    public PhotoInformationViewModel()
+    public FacialInformationViewModel()
     {
       
     }
@@ -65,12 +65,6 @@ namespace BioModule.ViewModels
         return /*canShow ? _currentPhoto.PortraitCharacteristic.Age : */ 0;
       }
     }
-
-    public string Size
-    {
-      get { return string.Empty; }
-    }
-
     public string Origin
     {
 
@@ -89,11 +83,9 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => Confidence);
           NotifyOfPropertyChange(() => Age);
           NotifyOfPropertyChange(() => FacesCount);
-          NotifyOfPropertyChange(() => Size);
           NotifyOfPropertyChange(() => Origin);
           NotifyOfPropertyChange(() => Resolution);
         }
-
       }
     }
   }

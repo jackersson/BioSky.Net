@@ -174,6 +174,11 @@ namespace BioModule.ViewModels
 
       foreach (IScreen scrn in Items)
         _methodInvoker.InvokeMethod(scrn.GetType(), "Update", scrn, new object[] { _user });
+
+      if(_userPageMode == UserPageMode.ExistingUser)
+        CurrentPhotoImageView.SetStyle(BioImageViewModel.MAX_BIO_IMAGE_STYLE);
+      else
+        CurrentPhotoImageView.SetStyle(BioImageViewModel.NEW_USER_BIO_IMAGE_STYLE);
     }
 
     #endregion

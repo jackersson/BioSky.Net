@@ -110,7 +110,7 @@
                   Controls:TextBoxHelper.Watermark="{lex:Loc Language}"
                   Controls:TextBoxHelper.UseFloatingWatermark="True"                  
                   ItemsSource="{Binding Languages}"
-                  SelectedItem="{Binding SelectedLanguage}"                  
+                  SelectedItem="{Binding GeneralSettings.SelectedLanguage}"                  
                   cal:Message.Attach="[Event SelectionChanged] = [LanguageChanged]"
                  >
             </ComboBox>
@@ -122,7 +122,7 @@
                   Controls:TextBoxHelper.ButtonsAlignment="Right" 
                  cal:Message.Attach="[Event Controls:TextBoxHelper.ButtonCommand] = [Event OpenFolder]"
                   Style="{DynamicResource ButtonCommandMetroTextBox}"
-                  Text="{Binding LocalStoragePath, UpdateSourceTrigger=PropertyChanged}"
+                  Text="{Binding GeneralSettings.LocalStoragePath, UpdateSourceTrigger=PropertyChanged}"
                  >
                 <Controls:TextBoxHelper.ButtonTemplate>
                     <ControlTemplate>
@@ -134,6 +134,8 @@
                     </ControlTemplate>
                 </Controls:TextBoxHelper.ButtonTemplate>
             </TextBox>
+            
+            
 
             <Label Grid.Row="6" Grid.ColumnSpan="4" Content="{lex:Loc FaceService}"></Label>
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
@@ -147,14 +149,14 @@
                      Grid.Column="0" Margin="2"
                      Controls:TextBoxHelper.Watermark="{lex:Loc IpAdress}"
                      Controls:TextBoxHelper.UseFloatingWatermark="True"                  
-                     Text="{Binding FaceServiceIP, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding GeneralSettings.FaceService.IP, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
 
                 <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                      Grid.Column="1" Margin="2" 
                      Controls:TextBoxHelper.Watermark="{lex:Loc Port}"
                      Controls:TextBoxHelper.UseFloatingWatermark="True"                  
-                     Text="{Binding FaceServicePort, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding GeneralSettings.FaceService.Port, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
             </Grid>
 
@@ -169,14 +171,14 @@
                      Grid.Column="0" 
                      Controls:TextBoxHelper.Watermark="{lex:Loc IpAdress}"
                      Controls:TextBoxHelper.UseFloatingWatermark="True"                  
-                     Text="{Binding DatabaseServiceIP, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding GeneralSettings.DatabaseService.IP, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
 
                 <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
                      Grid.Column="1" 
                      Controls:TextBoxHelper.Watermark="{lex:Loc Port}"
                      Controls:TextBoxHelper.UseFloatingWatermark="True"                  
-                     Text="{Binding DatabaseServicePort, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding GeneralSettings.DatabaseService.Port, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
             </Grid>
 
@@ -209,7 +211,7 @@
                                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                 Minimum="5" Maximum="100" Interval="5"                               
                                 TextAlignment="Left"
-                                Value="{Binding ItemsCountPerPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                Value="{Binding GeneralSettings.ItemsCountPerPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <Button Grid.Row="20" Grid.Column="1" 
                 HorizontalAlignment="Stretch" 

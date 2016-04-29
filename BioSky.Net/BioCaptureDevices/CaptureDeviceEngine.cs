@@ -88,6 +88,8 @@ namespace BioCaptureDevices
       if (observer == null || cameraName == null)
         return;
 
+      observer.OnMessage(DevicesInfo.Instance.GetErrorMessage(DevicesInfoEnum.CONNECTING_TO_DEVICE));
+
       СaptureDeviceListener listener;
       if (_devices.TryGetValue(cameraName, out listener))      
         listener.Subscribe(observer);      
@@ -102,10 +104,9 @@ namespace BioCaptureDevices
       {
         СaptureDeviceListener listener = par.Value;
         if (listener.HasObserver(observer))
-          listener.Unsubscribe(observer);
+          listener.Unsubscribe(observer);        
       }
-    }
-    
+    }  
     public bool HasObserver(ICaptureDeviceObserver observer, string deviceName)
     {
       if (deviceName == null)

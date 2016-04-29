@@ -15,7 +15,7 @@
              lex:ResxLocalizationProvider.DefaultDictionary="lang"
              mc:Ignorable="d" 
              cal:Message.Attach="[Event DataContextChanged]=[Action OnDataContextChanged($datacontext)]"
-             d:DataContext="{d:DesignInstance vm:PhotoInformationViewModel, IsDesignTimeCreatable=False}"         
+             d:DataContext="{d:DesignInstance vm:FacialInformationViewModel, IsDesignTimeCreatable=False}"         
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
