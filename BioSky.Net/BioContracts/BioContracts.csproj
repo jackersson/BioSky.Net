@@ -143,6 +143,7 @@
     <Compile Include="Common\AsyncObservableCollection.cs" />
     <Compile Include="Common\BioObserver.cs" />
     <Compile Include="CaptureDevices\ICaptureDeviceObserver.cs" />
+    <Compile Include="Common\DevicesInfo.cs" />
     <Compile Include="Common\GrayScaleBitmap.cs" />
     <Compile Include="Common\PermissionController.cs" />
     <Compile Include="FingerprintDevices\FingerprintDeviceInfo.cs" />

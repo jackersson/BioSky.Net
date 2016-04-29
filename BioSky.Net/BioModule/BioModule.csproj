@@ -274,7 +274,7 @@
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\PeriodTimePickerViewModel.cs" />
     <Compile Include="ViewModels\BioImageViewModel.cs" />
-    <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
+    <Compile Include="ViewModels\FacialInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserFingerViewModel.cs" />
@@ -375,8 +375,8 @@
     <Compile Include="Views\BioImageView.xaml.cs">
       <DependentUpon>BioImageView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PhotoInformationView.xaml.cs">
-      <DependentUpon>PhotoInformationView.xaml</DependentUpon>
+    <Compile Include="Views\FacialInformationView.xaml.cs">
+      <DependentUpon>FacialInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProgressRingView.xaml.cs">
       <DependentUpon>ProgressRingView.xaml</DependentUpon>
@@ -562,7 +562,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PhotoInformationView.xaml">
+    <Page Include="Views\FacialInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -723,6 +723,7 @@
     <None Include="Resources\iris_scan_color.png" />
     <None Include="Resources\iris_scan.png" />
     <None Include="Resources\bothHands.png" />
+    <None Include="Resources\snapshoot.png" />
     <Content Include="Resources\warning.png" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />
