@@ -1,5 +1,6 @@
 ﻿using AForge.Video.DirectShow;
 using BioContracts;
+using BioContracts.BioTasks.Utils;
 using BioContracts.CaptureDevices;
 using BioContracts.Common;
 using BioContracts.Locations;
@@ -9,31 +10,30 @@ using BioModule.ViewModels;
 using BioService;
 using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace BioModule.BioModels
 {
   public class FacesImageModel : PropertyChangedBase, IBioImageModel, ICaptureDeviceObserver
   {
-    public FacesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
+    public FacesImageModel(IProcessorLocator locator, IImageViewUpdate imageView, ProgressRingViewModel progressRing)
     {
-      Information         = new PhotoInformationViewModel();
-      EnrollmentBar       = new FaceEnrollmentBarViewModel(locator);
+      _utils              = new BioImageUtils();
+      Information         = new FacialInformationViewModel();
+      EnrollmentBar       = new FaceEnrollmentBarViewModel(locator, progressRing);
       _marker             = new MarkerUtils();
       _faceFinder         = new FaceFinder();
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
 
-      _imageView = imageView;
-            
+      _imageView    = imageView;
+      _progressRing = progressRing;
+
+      (_imageView as BioImageViewModel).StyleChanged += STYLE_CHANGED;
       //CurrentPhoto = GetTestPhoto();
     }
 
-    //test
+    #region test
     public Photo GetTestPhoto()
     {
       Photo ph = new Photo();
@@ -57,6 +57,7 @@ namespace BioModule.BioModels
       return ph;
 
     }
+    #endregion
 
     public void ShowEnrollment(bool state)
     {
@@ -65,20 +66,13 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
-      if (EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Activate();
-      }
+      (EnrollmentBar as IScreen).Activate();
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
-      // EnrollmentViewModel.SelectedDeviceChanged += EnrollmentViewModel_SelectedDeviceChanged;
+      EnrollmentBar.DeviceStopedByUser += SetDefaultImage;
 
-      //if (EnrollmentViewModel.DeviceObserver.DeviceName != null)
-      //  EnrollmentViewModel.DeviceObserver.Subscribe(OnNewFrame);
-      // else
-      if(_markerBitmapHolder.Unmarked == null)
-        _imageView.SetSingleImage(ResourceLoader.UserDefaultImageIconSource);
+      if (_markerBitmapHolder.Unmarked == null)
+        SetDefaultImage();
       else
         _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);
 
@@ -88,17 +82,11 @@ namespace BioModule.BioModels
 
     public void Deactivate()
     {
-      if (EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Deactivate(false);
-      }
+      (EnrollmentBar as IScreen).Deactivate(false);
       EnrollmentBar.Unsubscribe(this);
+      EnrollmentBar.DeviceStopedByUser -= SetDefaultImage;
       _isActive = false;
       NotifyOfPropertyChange(() => IsActive);
-
-      //EnrollmentViewModel.SelectedDeviceChanged -= EnrollmentViewModel_SelectedDeviceChanged;
-      //EnrollmentViewModel.DeviceObserver.Unsubscribe(OnNewFrame);
     }
     private void EnrollmentViewModel_SelectedDeviceChanged()
     {
@@ -121,7 +109,7 @@ namespace BioModule.BioModels
     public void DrawPortraitCharacteristics()
     {
       if (CurrentPhoto == null)
-        return;
+        return;      
 
       _markerBitmapHolder.Unmarked = _imageView.GetImageByIndex(0);
       /*
@@ -138,7 +126,7 @@ namespace BioModule.BioModels
     {
       if(photo == null)
       {
-        _imageView.SetSingleImage(ResourceLoader.UserDefaultImageIconSource);
+        SetDefaultImage();
         return;
       }
       CurrentPhoto = photo;
@@ -160,27 +148,69 @@ namespace BioModule.BioModels
     {
       if (frame == null)
       {
-        _imageView.SetSingleImage(ResourceLoader.UserDefaultImageIconSource);
+        SetDefaultImage();
+        return;
+      }
+
+      if (EnrollmentBar._isSnapshootActive)
+      {
+        SetPhoto(frame);
         return;
       }
 
       Bitmap processedFrame = DrawFaces(ref frame);
       BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
 
-      // Console.WriteLine(_uiDispatcher.GetHashCode());
-      //Console.WriteLine(Dispatcher.CurrentDispatcher.GetHashCode());
-
       _imageView.SetSingleImage(newFrame);
     }
 
+    private void SetPhoto(Bitmap frame)
+    {
+      EnrollmentBar._isSnapshootActive = false;
+      EnrollmentBar.SelectedDevice = null;
 
-    public void OnStop(bool stopped, string message, LocationDevice device)
+      Google.Protobuf.ByteString description = _utils.ImageToByteString(frame);
+      Photo photo = new Photo()
+      {
+          Bytestring = description
+        , Datetime   = DateTime.Now.Ticks
+        , OriginType = PhotoOriginType.Thumbnail
+        , SizeType   = PhotoSizeType.Full
+      };
+
+      CurrentPhoto = photo;
+      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(frame);
+      _imageView.SetSingleImage(newFrame);
+      _markerBitmapHolder.Unmarked = newFrame;
+    }
+
+    public void SetDefaultImage()
+    {
+      BitmapSource source = ResourceLoader.UserDefaultImageIconSource;
+      _imageView.SetSingleImage(source);
+      _markerBitmapHolder.Unmarked = source;
+    }
+
+    public void OnStop(bool stopped, Exception message, LocationDevice device)
     {
       _imageView.SetSingleImage(null);
     }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
-    
+
+    public void OnMessage(string message)
+    {
+      Console.WriteLine(message);
+    }
+
+    private void STYLE_CHANGED(long style)
+    {
+      if(style == BioImageViewModel.MAX_BIO_IMAGE_STYLE)
+        EnrollmentBar.EnrollButtonVisibility = true;
+      else
+        EnrollmentBar.EnrollButtonVisibility = false;
+    }
+
     #region UI
     public BioImageModelType BioType
     {
@@ -209,8 +239,8 @@ namespace BioModule.BioModels
       }
     }
 
-    private PhotoInformationViewModel _information;
-    public PhotoInformationViewModel Information
+    private FacialInformationViewModel _information;
+    public FacialInformationViewModel Information
     {
       get { return _information; }
       set
@@ -266,8 +296,8 @@ namespace BioModule.BioModels
     private FaceFinder               _faceFinder        ;
     private IImageViewUpdate         _imageView         ;
     private MarkerBitmapSourceHolder _markerBitmapHolder;
-
-
+    private ProgressRingViewModel    _progressRing      ;
+    private BioImageUtils            _utils             ;
     #endregion
   }
 
@@ -276,5 +306,4 @@ namespace BioModule.BioModels
     public BitmapSource Unmarked;
     public BitmapSource Marked;
   }
-
 }

@@ -90,7 +90,7 @@ namespace BioContracts.BioTasks
       OnFrame(ref frame);
     }
 
-    public void OnStop(bool stopped, string message, LocationDevice device) { }
+    public void OnStop(bool stopped, Exception message, LocationDevice device) { }
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
 
     protected override void StartAquireDataFromDevice()
@@ -101,6 +101,10 @@ namespace BioContracts.BioTasks
     protected override void StopAquireDataFromDevice()
     {
       _captureDeviceEngine.Unsubscribe(this);
+    }
+    public void OnMessage(string message)
+    {
+      Console.WriteLine(message);
     }
 
     private readonly ICaptureDeviceEngine _captureDeviceEngine;

@@ -390,4 +390,7 @@
   <data name="Fingers" xml:space="preserve">
     <value>Пальцы</value>
   </data>
+  <data name="Irises" xml:space="preserve">
+    <value>Радужная оболочка</value>
+  </data>
 </root>

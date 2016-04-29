@@ -23,16 +23,12 @@ namespace BioModule.ViewModels
     , Information        = 1 << 4
     , Arrows             = 1 << 5
     , CancelBtn          = 1 << 6
-  }
-
-  public interface ILoaderController
-  {
-    void Show();
-
-    void Hide();
-  }
-  
-  public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable, ILoaderController
+    , Btn3D              = 1 << 7
+    , FacialBtn          = 1 << 8
+    , FingerBtn          = 1 << 9
+    , IrisBtn            = 1 << 10
+  }  
+  public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable
   {
     public BioImageViewModel(IProcessorLocator locator, long style = MAX_BIO_IMAGE_STYLE)
     {
@@ -43,16 +39,14 @@ namespace BioModule.ViewModels
 
       BioImageModels = new ObservableCollection<IBioImageModel>();
 
-      BioImageModels.Add(new FacesImageModel  (locator, this));
+      BioImageModels.Add(new FacesImageModel  (locator, this, Progress));
       BioImageModels.Add(new FingersImageModel(locator, this));
-      BioImageModels.Add(new IrisesImageModel (locator, this));
+      BioImageModels.Add(new IrisesImageModel (locator, this, Progress));
      
       SetStyle(style);
-
       // UpdateFromPhoto(GetTestPhoto());
 
       SetBioImageModel(BioImageModelType.Faces);
-
     }
 
     public void SetBioImageModel(BioImageModelType state)
@@ -71,15 +65,19 @@ namespace BioModule.ViewModels
         else
           view.Deactivate();
       }
-    }
-
-  
+    }  
 
     public void OnLoadFromFile()
     {
       Photo photo = UploadPhotoFromFile();
 
-      if(CurrentBioImage != null)
+      if(photo == null)
+      {
+        Progress.ShowWaiting(DevicesInfo.Instance.GetErrorMessage(DevicesInfo.CANNOT_UPLOAD_PHOTO));
+        Progress.Hide(5000);
+      }
+
+      if (CurrentBioImage != null)
         CurrentBioImage.UploadPhoto(photo);            
     }
 
@@ -89,7 +87,8 @@ namespace BioModule.ViewModels
         UserController.Remove(CurrentPhoto);
 
       base.Clear();
-    }  
+      CurrentBioImage.UploadPhoto(null);
+    }
 
     #region testPhoto
     /*
@@ -236,6 +235,12 @@ namespace BioModule.ViewModels
         PhotoChanged();
     }
 
+    private void OnStyleChanged(long style)
+    {
+      if (StyleChanged != null)
+        StyleChanged(style);
+    }
+
     #endregion
 
     #region BioService
@@ -266,7 +271,7 @@ namespace BioModule.ViewModels
       {
         if (_currentBioImage != value)
         {
-          _currentBioImage = value;        
+          _currentBioImage = value;
 
           NotifyOfPropertyChange(() => CurrentBioImage);          
           NotifyOfPropertyChange(() => UserController);
@@ -288,20 +293,6 @@ namespace BioModule.ViewModels
           _isDetailsExpanded = value;
           CurrentBioImage.ShowDetails(_isDetailsExpanded);
           NotifyOfPropertyChange(() => IsDetailsExpanded);
-        }
-      }
-    }
-
-    private bool _loaderActive;
-    public bool LoaderActive
-    {
-      get { return _loaderActive; }
-      private set
-      {
-        if (_loaderActive != value)
-        {
-          _loaderActive = value;
-          NotifyOfPropertyChange(() => LoaderActive);
         }
       }
     }
@@ -374,16 +365,6 @@ namespace BioModule.ViewModels
     }
     public void SetStyle(long style) { ControlStyle = style; }
 
-    public void Show()
-    {
-      LoaderActive = true;
-    }
-
-    public void Hide()
-    {
-      LoaderActive = false;
-    }
-
     private long _controlStyle;
     public long ControlStyle
     {
@@ -402,10 +383,26 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => BioImageSelectorVisibility);
           NotifyOfPropertyChange(() => ArrowsVisibility);
           NotifyOfPropertyChange(() => ZoomVisibility);
+          NotifyOfPropertyChange(() => Button3DVisibility);
+          NotifyOfPropertyChange(() => FacialButtonVisibility);
+          NotifyOfPropertyChange(() => FingerButtonVisibility);
+          NotifyOfPropertyChange(() => IrisButtonVisibility);
+          OnStyleChanged(_controlStyle);
         }
       }
     }
-    
+    public bool IrisButtonVisibility
+    {
+      get { return HasFlag(ControlStyle, BioImageStyle.IrisBtn); }
+    }
+    public bool FingerButtonVisibility
+    {
+      get { return HasFlag(ControlStyle, BioImageStyle.FingerBtn); }
+    }
+    public bool FacialButtonVisibility
+    {
+      get { return HasFlag(ControlStyle, BioImageStyle.FacialBtn); }
+    }
     public bool EnrollFromPhotoVisibility
     {
       get { return HasFlag(ControlStyle, BioImageStyle.EnrollmentFromFile); }
@@ -419,6 +416,10 @@ namespace BioModule.ViewModels
     public bool CancelButtonVisibility
     {
       get { return HasFlag(ControlStyle, BioImageStyle.CancelBtn); }
+    }
+    public bool Button3DVisibility
+    {
+      get { return HasFlag(ControlStyle, BioImageStyle.Btn3D); }
     }
 
     public bool EnrollExpanderVisibility
@@ -491,10 +492,16 @@ namespace BioModule.ViewModels
 
     public const long MY_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom);
     public const long MIN_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn);
-    public const long MAX_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn
-                                                   | BioImageStyle.Arrows | BioImageStyle.BioSelector
+    public const long MAX_BIO_IMAGE_STYLE = (long)(  BioImageStyle.Zoom               | BioImageStyle.CancelBtn
+                                                   | BioImageStyle.Arrows             | BioImageStyle.BioSelector
                                                    | BioImageStyle.EnrollmentFromFile | BioImageStyle.Information
-                                                   | BioImageStyle.LiveEnrollment);
+                                                   | BioImageStyle.LiveEnrollment     | BioImageStyle.Btn3D
+                                                   | BioImageStyle.FingerBtn          | BioImageStyle.FacialBtn | BioImageStyle.IrisBtn);
+
+    public const long NEW_USER_BIO_IMAGE_STYLE = (long)( BioImageStyle.Zoom               | BioImageStyle.CancelBtn
+                                                       | BioImageStyle.Arrows             | BioImageStyle.BioSelector
+                                                       | BioImageStyle.EnrollmentFromFile 
+                                                       | BioImageStyle.LiveEnrollment     | BioImageStyle.FacialBtn );
 
     private readonly INotifier _notifier;
     private readonly IBioSkyNetRepository _database;
@@ -507,6 +514,10 @@ namespace BioModule.ViewModels
     public delegate void PhotoChangedEventHandler();
 
     public event PhotoChangedEventHandler PhotoChanged;
+
+    public delegate void StyleChangedEventHandler(long style);
+
+    public event StyleChangedEventHandler StyleChanged;
 
     #endregion
   }

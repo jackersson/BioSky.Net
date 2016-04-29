@@ -17,12 +17,14 @@
 
     <UserControl.Resources>
         <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
         <Grid.ColumnDefinitions>            
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="32"/>
             <ColumnDefinition Width="32"/>
             <ColumnDefinition Width="32"/>
             <ColumnDefinition Width="32"/>
@@ -69,7 +71,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="32"/>
                             <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="32"/>                            
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
@@ -104,14 +106,23 @@
         <Button Width="32" Height="32" BorderThickness="1" 
                 HorizontalAlignment="Center" VerticalAlignment="Center"                 
                 Style="{DynamicResource MetroCircleButtonStyle}"
-                Grid.Row="1"  Grid.Column="3" >
-            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StartIconSource}" />
+                Grid.Row="1"  Grid.Column="3" ToolTip="Snapshoot"
+                cal:Message.Attach="[Event Click] = [Action OnSnapshoot]">
+            <Image Width="15" Height="15" Source="{Binding Source={StaticResource ResourceLoader}, Path=SnapshootIconSource}" />
+        </Button>
+        
+        <Button Width="32" Height="32" BorderThickness="1" ToolTip="Stop Device"
+                HorizontalAlignment="Center" VerticalAlignment="Center"                
+                Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="4"
+                cal:Message.Attach="[Event Click] = [Action OnStopDevice]">
+            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
         </Button>
 
-        <Button Width="32" Height="32" BorderThickness="1"
+        <Button Width="32" Height="32" BorderThickness="1" 
                 HorizontalAlignment="Center" VerticalAlignment="Center"                 
-                Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="4" >
-            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
+                Style="{DynamicResource MetroCircleButtonStyle}"
+                Grid.Row="1"  Grid.Column="5" Visibility="{Binding EnrollButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" >
+            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StartIconSource}" />
         </Button>
     </Grid>
 </UserControl>

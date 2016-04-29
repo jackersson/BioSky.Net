@@ -23,21 +23,22 @@ namespace BioModule.BioModels
 
   public class IrisesImageModel : PropertyChangedBase, IBioImageModel, IIrisDeviceObserver, IEyeSelector
   {
-    public IrisesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
+    public IrisesImageModel(IProcessorLocator locator, IImageViewUpdate imageView, ProgressRingViewModel progressRing)
     {
       Information         = new IrisInformationViewModel();
-      EnrollmentBar       = new IrisEnrollmentBarViewModel(locator, this);
+      EnrollmentBar       = new IrisEnrollmentBarViewModel(locator, this, progressRing);
 
       _marker             = new MarkerUtils();
 
       _leftEyeHolder   = new MarkerBitmapSourceHolder();
       _rightEyeHolder  = new MarkerBitmapSourceHolder();
 
-      _imageView = imageView;
+      _imageView    = imageView;
+      _progressRing = progressRing;
     }
     public void UploadPhoto(Photo photo)
     {
-      throw new NotImplementedException();
+      
     }
     public void UpdateController(IUserBioItemsController controller)
     {
@@ -52,11 +53,7 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
-      if (EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Activate();
-      }
+      (EnrollmentBar as IScreen).Activate();
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
 
@@ -69,11 +66,7 @@ namespace BioModule.BioModels
     public void Deactivate()
     {
       EnrollmentBar.Unsubscribe(this);
-      if (EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Deactivate(false);
-      }
+      (EnrollmentBar as IScreen).Deactivate(false);
       _isActive = false;
       NotifyOfPropertyChange(() => IsActive);
     }
@@ -180,12 +173,12 @@ namespace BioModule.BioModels
 
     public void OnError(Exception ex)
     {
-      Console.WriteLine("OnError");
+      _progressRing.ShowWaiting(ex.Message);
     }
 
     public void OnMessage(string message)
     {
-      Console.WriteLine("OnMesage");
+      _progressRing.ShowWaiting(message);
     }
 
     public void OnReady(bool isReady)
@@ -274,6 +267,7 @@ namespace BioModule.BioModels
     private MarkerUtils              _marker        ;
     private MarkerBitmapSourceHolder _leftEyeHolder ;
     private MarkerBitmapSourceHolder _rightEyeHolder;
+    private ProgressRingViewModel    _progressRing  ;
 
     #endregion
   }

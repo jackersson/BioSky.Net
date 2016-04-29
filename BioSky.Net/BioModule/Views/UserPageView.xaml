@@ -50,110 +50,176 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
-            <ColumnDefinition Width="48"/>
-
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="64"/>
-            <RowDefinition Height="48"/>
-            <RowDefinition Height="48"/>
-            <RowDefinition Height="48"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="48"/>
 
-        </Grid.RowDefinitions>
-        
-        <TabControl Grid.Column="1" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
+        <!-- **************************************************Expand Arrow***********************************************-->
+
+        <ToggleButton Name="ExpandButton" VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" Height="32" Panel.ZIndex="100"
+                           Grid.ColumnSpan="5" Grid.RowSpan="5" ToolTip="Show/Hide Locations Details">
+            <Image Name="ExpandButtonImage" Width="20" Height="20" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="0" />
+                </Image.RenderTransform>
+            </Image>
+            <ToggleButton.Style>
+                <Style TargetType="ToggleButton" BasedOn="{StaticResource MetroCircleToggleButtonStyle}">
+                    <Style.Triggers>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter Property="Margin" Value="0,0,25,0"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ToggleButton.Style>
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="ExpandButtonImage"
+                                                     Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                     From="0"
+                                                     To="180"
+                                                     Duration="0:0:0.4"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="ExpandButtonImage"
+                                                 Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                                 From="180"
+                                                 To="0"
+                                                 Duration="0:0:0.4"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+
+        <!-- **************************************************Expand Arrow***********************************************-->
+
+        <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Name="Detailed"
+            Visibility="{Binding ElementName=ExpandButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <RowDefinition Height="48"/>
+                <RowDefinition Height="48"/>
+                <RowDefinition Height="48"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="48"/>
+            </Grid.RowDefinitions>
+
+            <TabControl Grid.Column="0" Grid.RowSpan="5" HorizontalAlignment="Stretch" 
                     VerticalAlignment="Stretch" 
-                    ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="4"                
+                    ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Grid.ColumnSpan="10"                
                     SelectedItem="{Binding ActiveItem}"
                     cal:Message.Attach="[Event SelectionChanged]=[Action OpenTab]"
                     Style="{StaticResource MetroTabControl}"
                     >
-            <TabControl.Resources>
-                <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
-                    <local:UserInformationView x:Name="ActiveItem"></local:UserInformationView>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:UserContactlessCardViewModel}">
-                    <local:UserContactlessCardView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserContactlessCardView>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:UserPhotoViewModel}">
-                    <local:UserPhotoView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserPhotoView>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:UserFingerViewModel}">
-                    <local:UserFingerView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserFingerView>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:UserIrisViewModel}">
-                    <local:UserIrisView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserIrisView>
-                </DataTemplate>
-            </TabControl.Resources> 
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid Background="Transparent">
-                        <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False" />
-                        <TextBlock Text="{Binding Result, ElementName=Proxy}" />
-                    </Grid>
-                </DataTemplate>
-            </TabControl.ItemTemplate> 
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <ContentControl Content="{Binding}" ></ContentControl>
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-            
-        </TabControl>
+                <TabControl.Resources>
+                    <DataTemplate DataType="{x:Type vm:UserInformationViewModel}">
+                        <local:UserInformationView x:Name="ActiveItem"></local:UserInformationView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:UserContactlessCardViewModel}">
+                        <local:UserContactlessCardView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserContactlessCardView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:UserPhotoViewModel}">
+                        <local:UserPhotoView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserPhotoView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:UserFingerViewModel}">
+                        <local:UserFingerView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserFingerView>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:UserIrisViewModel}">
+                        <local:UserIrisView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></local:UserIrisView>
+                    </DataTemplate>
+                </TabControl.Resources>
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="Transparent">
+                            <lex:LocProxy Source="{Binding DisplayName}" x:Name="Proxy" PrependType="False" />
+                            <TextBlock Text="{Binding Result, ElementName=Proxy}" />
+                        </Grid>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}" ></ContentControl>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
 
+            </TabControl>
 
-        <Button  Grid.Row="5" Grid.Column="2" Name="ApplyButton"
+            <Button  Grid.Row="5" Grid.Column="1" Name="ApplyButton"
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Stretch"
                  ToolTip="{lex:Loc Save}"                  
                  cal:Message.Attach="[Event Click]=[Action Apply]"
                  Style="{DynamicResource MetroCircleButtonStyle}" 
                  Tag="{x:Static bioContracts:Activity.UserAdd}">
-            <Button.IsEnabled>
-                <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
-                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
-                    <Binding Path="CanApply"/>
-                    <Binding ElementName="ApplyButton" Path="Tag"/>
-                </MultiBinding>
-            </Button.IsEnabled>
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" Style="{StaticResource GreyScaleImage}" />
-        </Button>
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
+                        <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                        <Binding Path="CanApply"/>
+                        <Binding ElementName="ApplyButton" Path="Tag"/>
+                    </MultiBinding>
+                </Button.IsEnabled>
+                <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=OkIconSource}" Style="{StaticResource GreyScaleImage}" />
+            </Button>
 
-        <Button ToolTip="{lex:Loc RevertChanges}" 
-                Grid.Row="5" Grid.Column="3" HorizontalAlignment="Stretch"
+            <Button ToolTip="{lex:Loc RevertChanges}" 
+                Grid.Row="5" Grid.Column="2" HorizontalAlignment="Stretch"
                 IsEnabled="{Binding CanRevert}"
                 VerticalAlignment="Stretch"  Style="{DynamicResource MetroCircleButtonStyle}" 
                 cal:Message.Attach="[Event Click] = [Action Revert]"
                 >
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Style="{StaticResource GreyScaleImage}" />
-        </Button>
+                <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=RefreshIconSource}" Style="{StaticResource GreyScaleImage}" />
+            </Button>
 
-        <Button ToolTip="{lex:Loc DeleteUser}" Grid.Row="5" Grid.Column="4" Name="DeleteButton"
+            <Button ToolTip="{lex:Loc DeleteUser}" Grid.Row="5" Grid.Column="4" Name="DeleteButton"
                 cal:Message.Attach="[Event Click]=[Action Remove]"                
                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  
                 Style="{DynamicResource MetroCircleButtonStyle}" 
                 Tag="{x:Static bioContracts:Activity.UserRemove}">
-            <Button.IsEnabled>
-                <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
-                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
-                    <Binding Path="CanDelete"/>
-                    <Binding ElementName="DeleteButton" Path="Tag"/>
-                </MultiBinding>
-            </Button.IsEnabled>
-            <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Style="{StaticResource GreyScaleImage}" />
-        </Button>
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
+                        <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                        <Binding Path="CanDelete"/>
+                        <Binding ElementName="DeleteButton" Path="Tag"/>
+                    </MultiBinding>
+                </Button.IsEnabled>
+                <Image Width="24" Height="24" Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" Style="{StaticResource GreyScaleImage}" />
+            </Button>
 
-        <ContentControl Grid.Column="0"
+        </Grid>
+        
+
+
+      
+
+        <ContentControl Grid.Column="0" Name="ImageView"
                         HorizontalAlignment="Stretch"  Margin="0,0,0,5"
                         VerticalAlignment="Stretch"                     
                         Grid.RowSpan="6"                                  
                         >
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>                        
+                        <DataTrigger Binding="{Binding ElementName=ExpandButton, Path=IsChecked}" Value="False">
+                            <Setter Property="Grid.ColumnSpan" Value="2" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
             <local:BioImageView DataContext="{Binding CurrentPhotoImageView}"></local:BioImageView>
         </ContentControl>
     </Grid>

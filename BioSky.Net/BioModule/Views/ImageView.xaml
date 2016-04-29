@@ -49,7 +49,7 @@
                  
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <local:ImageItemView DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>                             
+                                <local:ImageItemView DataContext="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>                             
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                         <ItemsControl.ItemsPanel>

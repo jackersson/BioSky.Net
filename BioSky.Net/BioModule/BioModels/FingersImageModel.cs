@@ -28,16 +28,21 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
+      EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
       (EnrollmentBar as IScreen).Activate();
 
       _imageView.SetSingleImage(FingerImageSource);
+      _isActive = true;
+      NotifyOfPropertyChange(() => IsActive);
     }
 
     public void Deactivate()
     {
       (EnrollmentBar as IScreen).Deactivate(false);
-      EnrollmentBar.Unsubscribe(this); 
+      EnrollmentBar.Unsubscribe(this);
+      _isActive = false;
+      NotifyOfPropertyChange(() => IsActive);
     }
 
     public void Reset()
@@ -69,7 +74,7 @@ namespace BioModule.BioModels
     {
       if (frame == null)
       {
-        _imageView.SetSingleImage(null);
+        //_imageView.SetSingleImage(null);
         return;
       }
       
@@ -155,7 +160,16 @@ namespace BioModule.BioModels
     {
       get { return BioImageModelType.Fingers; }
     }
-        
+
+    private bool _isActive;
+    public bool IsActive
+    {
+      get
+      {
+        return _isActive;
+      }
+    }
+
 
     private IImageViewUpdate _imageView;
   }

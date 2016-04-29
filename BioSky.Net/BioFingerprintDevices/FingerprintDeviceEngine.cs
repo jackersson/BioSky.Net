@@ -1,4 +1,5 @@
 ﻿using BioContracts;
+using BioContracts.Common;
 using BioContracts.FingerprintDevices;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -83,6 +84,8 @@ namespace BioFingerprintDevices
     {
       if (deviceName == null)
         return;
+
+      observer.OnMessage(DevicesInfo.Instance.GetErrorMessage(DevicesInfoEnum.CONNECTING_TO_DEVICE));
 
       FingerprintDeviceListener listener;
       if (_devices.TryGetValue(deviceName, out listener))

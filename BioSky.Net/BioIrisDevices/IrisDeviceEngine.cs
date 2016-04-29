@@ -1,4 +1,5 @@
 ﻿using BioContracts;
+using BioContracts.Common;
 using BioContracts.IrisDevices;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -81,6 +82,8 @@ namespace BioIrisDevices
     {
       if (deviceName == null)
         return;
+
+      observer.OnMessage(DevicesInfo.Instance.GetErrorMessage(DevicesInfoEnum.CONNECTING_TO_DEVICE));
 
       IrisDeviceListener listener;
       if (_devices.TryGetValue(deviceName, out listener))
