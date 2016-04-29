@@ -40,7 +40,7 @@ namespace BioModule.BioModels
       ph.Width = 640;
       ph.Height = 480;
 
-      ph.SizeType = PhotoSizeType.Croped;
+      //ph.SizeType = PhotoSizeType.Croped;
       ph.OriginType = PhotoOriginType.Enrolled;
 
       /*

@@ -107,13 +107,20 @@ namespace BioData
       Configuration.Add(ConfigurationParametrs.FaceServiceAddress, new ConfigurationValue()
       {
           Current = "192.168.1.178:50052"
-        , Default = "127.0.0.1:50051"
+        , Default = "127.0.0.1:50052"
       });
 
       Configuration.Add(ConfigurationParametrs.DatabaseServiceAddress, new ConfigurationValue()
       {
           Current = "127.0.0.1:50051"
         , Default = "127.0.0.1:50051"
+      });
+
+      Configuration.Add(ConfigurationParametrs.FingerprintServiceAddress, new ConfigurationValue()
+      {
+        Current = "127.0.0.1:50053"
+      ,
+        Default = "127.0.0.1:50053"
       });
 
       Configuration.Add(ConfigurationParametrs.Language, new ConfigurationValue()

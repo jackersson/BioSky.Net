@@ -170,20 +170,20 @@ namespace BioService {
   {
     static readonly string __ServiceName = "BioService.BiometricFingerprintSevice";
 
-    static readonly Marshaller<global::BioService.EnrollmentData> __Marshaller_EnrollmentData = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.EnrollmentData.Parser.ParseFrom);
+    static readonly Marshaller<global::BioService.FingerprintData> __Marshaller_FingerprintData = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.FingerprintData.Parser.ParseFrom);
     static readonly Marshaller<global::BioService.EnrollmentFeedback> __Marshaller_EnrollmentFeedback = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.EnrollmentFeedback.Parser.ParseFrom);
     static readonly Marshaller<global::BioService.VerificationData> __Marshaller_VerificationData = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.VerificationData.Parser.ParseFrom);
     static readonly Marshaller<global::BioService.VerificationFeedback> __Marshaller_VerificationFeedback = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BioService.VerificationFeedback.Parser.ParseFrom);
 
-    static readonly Method<global::BioService.EnrollmentData, global::BioService.EnrollmentFeedback> __Method_EnrollFingerprint = new Method<global::BioService.EnrollmentData, global::BioService.EnrollmentFeedback>(
+    static readonly Method<global::BioService.FingerprintData, global::BioService.EnrollmentFeedback> __Method_EnrollFingerprint = new Method<global::BioService.FingerprintData, global::BioService.EnrollmentFeedback>(
         MethodType.ServerStreaming,
         __ServiceName,
         "EnrollFingerprint",
-        __Marshaller_EnrollmentData,
+        __Marshaller_FingerprintData,
         __Marshaller_EnrollmentFeedback);
 
     static readonly Method<global::BioService.VerificationData, global::BioService.VerificationFeedback> __Method_VerifyFingerprint = new Method<global::BioService.VerificationData, global::BioService.VerificationFeedback>(
-        MethodType.ServerStreaming,
+        MethodType.Unary,
         __ServiceName,
         "VerifyFingerprint",
         __Marshaller_VerificationData,
@@ -198,17 +198,19 @@ namespace BioService {
     // client interface
     public interface IBiometricFingerprintSeviceClient
     {
-      AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.EnrollmentData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.EnrollmentData request, CallOptions options);
-      AsyncServerStreamingCall<global::BioService.VerificationFeedback> VerifyFingerprint(global::BioService.VerificationData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      AsyncServerStreamingCall<global::BioService.VerificationFeedback> VerifyFingerprint(global::BioService.VerificationData request, CallOptions options);
+      AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.FingerprintData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.FingerprintData request, CallOptions options);
+      global::BioService.VerificationFeedback VerifyFingerprint(global::BioService.VerificationData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      global::BioService.VerificationFeedback VerifyFingerprint(global::BioService.VerificationData request, CallOptions options);
+      AsyncUnaryCall<global::BioService.VerificationFeedback> VerifyFingerprintAsync(global::BioService.VerificationData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncUnaryCall<global::BioService.VerificationFeedback> VerifyFingerprintAsync(global::BioService.VerificationData request, CallOptions options);
     }
 
     // server-side interface
     public interface IBiometricFingerprintSevice
     {
-      Task EnrollFingerprint(global::BioService.EnrollmentData request, IServerStreamWriter<global::BioService.EnrollmentFeedback> responseStream, ServerCallContext context);
-      Task VerifyFingerprint(global::BioService.VerificationData request, IServerStreamWriter<global::BioService.VerificationFeedback> responseStream, ServerCallContext context);
+      Task EnrollFingerprint(global::BioService.FingerprintData request, IServerStreamWriter<global::BioService.EnrollmentFeedback> responseStream, ServerCallContext context);
+      Task<global::BioService.VerificationFeedback> VerifyFingerprint(global::BioService.VerificationData request, ServerCallContext context);
     }
 
     // client stub
@@ -217,25 +219,35 @@ namespace BioService {
       public BiometricFingerprintSeviceClient(Channel channel) : base(channel)
       {
       }
-      public AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.EnrollmentData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.FingerprintData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         var call = CreateCall(__Method_EnrollFingerprint, new CallOptions(headers, deadline, cancellationToken));
         return Calls.AsyncServerStreamingCall(call, request);
       }
-      public AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.EnrollmentData request, CallOptions options)
+      public AsyncServerStreamingCall<global::BioService.EnrollmentFeedback> EnrollFingerprint(global::BioService.FingerprintData request, CallOptions options)
       {
         var call = CreateCall(__Method_EnrollFingerprint, options);
         return Calls.AsyncServerStreamingCall(call, request);
       }
-      public AsyncServerStreamingCall<global::BioService.VerificationFeedback> VerifyFingerprint(global::BioService.VerificationData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public global::BioService.VerificationFeedback VerifyFingerprint(global::BioService.VerificationData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         var call = CreateCall(__Method_VerifyFingerprint, new CallOptions(headers, deadline, cancellationToken));
-        return Calls.AsyncServerStreamingCall(call, request);
+        return Calls.BlockingUnaryCall(call, request);
       }
-      public AsyncServerStreamingCall<global::BioService.VerificationFeedback> VerifyFingerprint(global::BioService.VerificationData request, CallOptions options)
+      public global::BioService.VerificationFeedback VerifyFingerprint(global::BioService.VerificationData request, CallOptions options)
       {
         var call = CreateCall(__Method_VerifyFingerprint, options);
-        return Calls.AsyncServerStreamingCall(call, request);
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::BioService.VerificationFeedback> VerifyFingerprintAsync(global::BioService.VerificationData request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_VerifyFingerprint, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::BioService.VerificationFeedback> VerifyFingerprintAsync(global::BioService.VerificationData request, CallOptions options)
+      {
+        var call = CreateCall(__Method_VerifyFingerprint, options);
+        return Calls.AsyncUnaryCall(call, request);
       }
     }
 

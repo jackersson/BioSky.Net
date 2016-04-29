@@ -26,8 +26,9 @@ namespace BioEngine
     {
       ServiceConfiguration configuration = new ServiceConfiguration();
 
-      configuration.FacialService   = _localStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress);
-      configuration.DatabaseService = _localStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress);
+      configuration.FacialService      = _localStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress);
+      configuration.DatabaseService    = _localStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress);
+      configuration.FingerprintService = _localStorage.GetParametr(ConfigurationParametrs.FingerprintServiceAddress);
       
       _serviceManager.Start(configuration);
       

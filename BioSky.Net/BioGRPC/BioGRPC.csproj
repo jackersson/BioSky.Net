@@ -133,6 +133,7 @@
   <ItemGroup>
     <Compile Include="BioDatabaseService.cs" />
     <Compile Include="BioFaceService.cs" />
+    <Compile Include="BioFingerprintService.cs" />
     <Compile Include="BioGrpcInstaller.cs" />
     <Compile Include="BioServiceManager.cs" />
     <Compile Include="DatabaseClient\CardDataClient.cs" />

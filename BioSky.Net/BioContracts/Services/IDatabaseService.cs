@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BioContracts.Services
 {
-  public interface IDatabaseService
+  public interface IDatabaseService : IService
   {
     void Subscribe();
 

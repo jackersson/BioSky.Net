@@ -20,13 +20,15 @@ namespace BioModule.ViewModels
 {
   public class GeneralSettingsPropeties
   {
-   public string SelectedLanguage    { get; set; }
-   public string LocalStoragePath    { get; set; }
-   public string FaceServiceIP       { get; set; }
-   public string FaceServicePort     { get; set; }
-   public string DatabaseServiceIP   { get; set; }
-   public string DatabaseServicePort { get; set; }
-   public int ItemsCountPerPage      { get; set; }
+    public string SelectedLanguage       { get; set; }
+    public string LocalStoragePath       { get; set; }
+    public string FaceServiceIP          { get; set; }
+    public string FaceServicePort        { get; set; }
+    public string FingerprintServicePort { get; set; }
+    public string FingerprintServiceIp   { get; set; }
+    public string DatabaseServiceIP      { get; set; }
+    public string DatabaseServicePort    { get; set; }
+    public int ItemsCountPerPage         { get; set; }
 
   }
 
@@ -54,32 +56,37 @@ namespace BioModule.ViewModels
       if (_revertingGeneralSettings == null)
         _revertingGeneralSettings = new GeneralSettingsPropeties();
 
-      SelectedLanguage       = _database.LocalStorage.GetParametr(ConfigurationParametrs.Language);
-      LocalStoragePath       = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway);
-      string faceService     = _database.LocalStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress);
-      string databaseService = _database.LocalStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress);
+      SelectedLanguage          = _database.LocalStorage.GetParametr(ConfigurationParametrs.Language);
+      LocalStoragePath          = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway);
+      string faceService        = _database.LocalStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress);
+      string databaseService    = _database.LocalStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress);
+      string fingerprintService = _database.LocalStorage.GetParametr(ConfigurationParametrs.FingerprintServiceAddress);
 
       int count = 0;
       string s = _database.LocalStorage.GetParametr(ConfigurationParametrs.ItemsCountPerPage);
       if (Int32.TryParse(s, out count))
         ItemsCountPerPage = count;
 
-      SeparateIpPort(faceService, out _faceServiceIP, out _faceServicePort);
-      SeparateIpPort(databaseService, out _databaseServiceIP, out _databaseServicePort);
+      SeparateIpPort(faceService       , out _faceServiceIP       , out _faceServicePort       );
+      SeparateIpPort(databaseService   , out _databaseServiceIP   , out _databaseServicePort   );
+      SeparateIpPort(fingerprintService, out _fingerprintServiceIP, out _fingerprintServicePort);
 
       NotifyOfPropertyChange(() => FaceServiceIP);
       NotifyOfPropertyChange(() => FaceServicePort);
       NotifyOfPropertyChange(() => DatabaseServiceIP);
       NotifyOfPropertyChange(() => DatabaseServicePort);
+      NotifyOfPropertyChange(() => FingerprintServiceIP);
+      NotifyOfPropertyChange(() => FingerprintServicePort);
 
-
-      _revertingGeneralSettings.SelectedLanguage    = SelectedLanguage;
-      _revertingGeneralSettings.LocalStoragePath    = LocalStoragePath;
-      _revertingGeneralSettings.ItemsCountPerPage   = ItemsCountPerPage;
-      _revertingGeneralSettings.FaceServiceIP       = FaceServiceIP;
-      _revertingGeneralSettings.FaceServicePort     = FaceServicePort;
-      _revertingGeneralSettings.DatabaseServiceIP   = DatabaseServiceIP;
-      _revertingGeneralSettings.DatabaseServicePort = DatabaseServicePort;
+      _revertingGeneralSettings.SelectedLanguage       = SelectedLanguage;
+      _revertingGeneralSettings.LocalStoragePath       = LocalStoragePath;
+      _revertingGeneralSettings.ItemsCountPerPage      = ItemsCountPerPage;
+      _revertingGeneralSettings.FaceServiceIP          = FaceServiceIP;
+      _revertingGeneralSettings.FaceServicePort        = FaceServicePort;
+      _revertingGeneralSettings.FingerprintServiceIp   = FingerprintServiceIP;
+      _revertingGeneralSettings.FingerprintServicePort = FingerprintServicePort;
+      _revertingGeneralSettings.DatabaseServiceIP      = DatabaseServiceIP;
+      _revertingGeneralSettings.DatabaseServicePort    = DatabaseServicePort;
 
       RefreshUI();
     }
@@ -289,7 +296,38 @@ namespace BioModule.ViewModels
       }
      }
 
-     private string _databaseServiceIP;
+    private string _fingerprintServiceIP;
+    public string FingerprintServiceIP
+    {
+      get { return _fingerprintServiceIP; }
+      set
+      {
+        if (_fingerprintServiceIP != value)
+        {
+          _fingerprintServiceIP = value;
+          NotifyOfPropertyChange(() => FingerprintServiceIP);
+          RefreshUI();
+        }
+      }
+    }
+
+    private string _fingerprintServicePort;
+    public string FingerprintServicePort
+    {
+      get { return _fingerprintServicePort; }
+      set
+      {
+        if (_fingerprintServicePort != value)
+        {
+          _fingerprintServicePort = value;
+
+          NotifyOfPropertyChange(() => FingerprintServicePort);
+          RefreshUI();
+        }
+      }
+    }
+
+    private string _databaseServiceIP;
      public string DatabaseServiceIP
      {
        get { return _databaseServiceIP; }
@@ -301,7 +339,6 @@ namespace BioModule.ViewModels
           
           NotifyOfPropertyChange(() => DatabaseServiceIP);
           RefreshUI();
-
         }
       }
      }

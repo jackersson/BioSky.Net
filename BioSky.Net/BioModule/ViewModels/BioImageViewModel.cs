@@ -190,7 +190,7 @@ namespace BioModule.ViewModels
 
       CurrentPhoto.Width    = (long)bmp.Width   ;
       CurrentPhoto.Height   = (long)bmp.Height  ;
-      CurrentPhoto.SizeType = PhotoSizeType.Full;
+     // CurrentPhoto.SizeType = PhotoSizeType.Full;
 
      
     }

@@ -20,14 +20,22 @@ namespace BioModule.ResourcesLoader
     {
       if (source == null)
         return null;
+      BitmapSource bmp = null;
 
-      IntPtr hBitMap = source.GetHbitmap();
-      BitmapSource bmp = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap( hBitMap
-                                                                                     , IntPtr.Zero
-                                                                                     , Int32Rect.Empty
-                                                                                     , BitmapSizeOptions.FromEmptyOptions());
-      DeleteObject(hBitMap);
+      try
+      {
+        IntPtr hBitMap = source.GetHbitmap();
+        bmp = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitMap
+                                                                                       , IntPtr.Zero
+                                                                                       , Int32Rect.Empty
+                                                                                       , BitmapSizeOptions.FromEmptyOptions());
+        DeleteObject(hBitMap);
 
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
       return bmp;
     }
 

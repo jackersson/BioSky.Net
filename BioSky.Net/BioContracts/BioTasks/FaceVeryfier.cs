@@ -67,7 +67,7 @@ namespace BioContracts.BioTasks
         Photo photo = GetCapturedPhoto();
         Photo feedbackPhoto = null;// enrollFeedback.Photo;
 
-        if (photo == null || feedbackPhoto == null || !enrollFeedback.Success)
+        if (photo == null || feedbackPhoto == null || enrollFeedback.Result != Result.Success)
         {
           OnVerified(null, _person);
           return;
@@ -79,7 +79,7 @@ namespace BioContracts.BioTasks
         feedbackPhoto.Datetime = DateTime.Now.Ticks;
 
         feedbackPhoto.OriginType = PhotoOriginType.Verified;
-        feedbackPhoto.SizeType = PhotoSizeType.Full;
+        //feedbackPhoto.SizeType = PhotoSizeType.Full;
 
         OnVerified(feedbackPhoto, _person);
       }

@@ -11,8 +11,7 @@ using System.Windows.Threading;
 namespace BioModule.ViewModels
 {
   public class ImageItemViewModel : PropertyChangedBase
-  {
-    
+  {    
     public void Zoom(double newControlWidth, double newControlHeight )
     {
       if (ControlHeight == newControlHeight && newControlWidth == ControlWidth )

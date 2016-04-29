@@ -13,10 +13,8 @@ namespace BioGRPC.DatabaseClient
 { 
   public class VisitorDataClient : IDataClient<Visitor, QueryVisitors>
   {
-    public VisitorDataClient( IProcessorLocator locator
-                            , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client )
-    {
-      _client   = client;
+    public VisitorDataClient( IProcessorLocator locator )
+    {    
       _locator  = locator;
 
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -128,29 +126,12 @@ namespace BioGRPC.DatabaseClient
       throw new NotImplementedException();
     }
 
-    //_database.Visitors.DataUpdated += UpdateData;
-
-    /*
-private void UpdateData(VisitorList list)
-{
-  _database.Visitors.DataUpdated -= UpdateData;
-
-  if (list != null)
-  {
-    Visitor visitor = list.Visitors.FirstOrDefault();
-    if (visitor != null)
+    public void Update(BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
     {
-      if (visitor.EntityState == EntityState.Deleted)
-      {
-        if (list.Visitors.Count > 1)
-          MessageBox.Show(list.Visitors.Count + " visitors successfully Deleted");
-        else
-          MessageBox.Show("Visitor successfully Deleted");
-      }
+      _client = client;
     }
-  }
-}   
-*/
+
+    
 
     private VisitorList _list;
 
@@ -158,6 +139,6 @@ private void UpdateData(VisitorList list)
     private readonly IProcessorLocator    _locator   ;
     private readonly IBioSkyNetRepository _database  ;    
     private readonly INotifier            _notifier  ;
-    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
+    private  BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
   }
 }

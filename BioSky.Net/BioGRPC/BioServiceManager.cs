@@ -3,46 +3,17 @@ using BioContracts.Services;
 using BioGRPC.Utils;
 using BioService;
 using Grpc.Core;
+using System.Collections.Generic;
 
 namespace BioGRPC
 {
   public class ServiceConfiguration : IServiceConfiguration
-  {
-    public ServiceConfiguration(string database_service, string facial_service )
-    {
+  {     
+    public string FacialService { get; set;  }
+       
+    public string DatabaseService { get; set; }
 
-    }
-    public ServiceConfiguration()
-    {
-
-    }
-
-    private string _facialService;
-    public string FacialService
-    {
-      get { return _facialService; }
-      set
-      {
-        if (_facialService != value)
-          _facialService = value;
-
-      }
-    }
-
-    private string _databaseService;
-    public string DatabaseService
-    {
-      get { return _databaseService; }
-      set
-      {
-        if ( _databaseService != value)        
-          _databaseService = value;
-        
-      }
-    }
-
-    //string database = "169.254.14.74:50051"
-
+    public string FingerprintService { get; set; }    
   }
   
 
@@ -51,35 +22,29 @@ namespace BioGRPC
     public BioServiceManager( IProcessorLocator locator )
     {
       _locator      = locator;
+      _services     = new List<IService>();
       _networkUtils = new NetworkUtils();
     }
 
     public void Start(IServiceConfiguration configuration)
     {      
-      IBioEngine bioEngine = _locator.GetProcessor<IBioEngine>();
-      
-      _databaseClientChannel = new Channel(configuration.DatabaseService, ChannelCredentials.Insecure);
+      _faceService        = new BioFacialService     (_locator, configuration.FacialService     );
+      _databaseService    = new BioDatabaseService   (_locator, configuration.DatabaseService   );
+      _fingerprintService = new BioFingerprintService(_locator, configuration.FingerprintService);
+      _services.Add(_faceService);
+      _services.Add(_databaseService);
+      _services.Add(_fingerprintService);
 
-      _facialClientChannel   = new Channel(configuration.FacialService  , ChannelCredentials.Insecure);
-
-      BiometricFacialSevice.IBiometricFacialSeviceClient   facialClient   = BiometricFacialSevice.NewClient(_facialClientChannel);
-      BiometricDatabaseSevice.IBiometricDatabaseSeviceClient databaseClient = BiometricDatabaseSevice.NewClient(_databaseClientChannel);
-
-      _faceService     = new BioFacialService  (_locator, facialClient  );
-      _databaseService = new BioDatabaseService(_locator, databaseClient);
-
-     
+      foreach (IService service in _services)
+        service.Start();
     }
+
     public void Stop()
     {
-      if (_databaseClientChannel != null)
-        _databaseClientChannel.ShutdownAsync().Wait();
-
-      if (_facialClientChannel != null)
-        _facialClientChannel.ShutdownAsync().Wait();
+      foreach (IService service in _services)
+        service.Stop();
     }
-
-
+    
     private string _macAddress;
     public string MacAddress
     {
@@ -101,11 +66,15 @@ namespace BioGRPC
     public IDatabaseService DatabaseService
     {
       get { return _databaseService; }
-    }  
+    }
 
-    private Channel _databaseClientChannel;
-    private Channel _facialClientChannel  ;
+    private IFingerprintService _fingerprintService;
+    public IFingerprintService FingerprintService
+    {
+      get { return _fingerprintService; }
+    }
 
+    private List<IService> _services;
     private readonly IProcessorLocator _locator     ;
     private readonly NetworkUtils      _networkUtils;
 

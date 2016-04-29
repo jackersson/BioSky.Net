@@ -11,5 +11,7 @@ namespace BioContracts.Services
     string FacialService    { get; set; }
 
     string DatabaseService  { get;  set; }
+
+    string FingerprintService { get; set; }
   }
 }

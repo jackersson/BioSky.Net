@@ -52,15 +52,13 @@ namespace BioModule.BioModels
 
     public void Activate()
     {
-      if (EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Activate();
-      }
+      if (EnrollmentBar is IScreen)        
+        (EnrollmentBar as IScreen).Activate();
+
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
 
-      SelectEye(SelectedEye);
+      SelectEye(EyeType.Both);
 
       _isActive = true;
       NotifyOfPropertyChange(() => IsActive);
@@ -145,8 +143,8 @@ namespace BioModule.BioModels
 
       //if (!_isShowDetails)
     //  {
-        targetLeftEyeImage  = _leftEyeHolder .Marked  == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder .Marked;
-        targetRightEyeImage = _rightEyeHolder.Marked  == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Marked;
+       // targetLeftEyeImage  = _leftEyeHolder .Marked  == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder .Marked;
+       // targetRightEyeImage = _rightEyeHolder.Marked  == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Marked;
    //   }
 
       switch (eye)

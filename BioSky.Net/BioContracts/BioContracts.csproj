@@ -137,6 +137,9 @@
     <Compile Include="AccessDevices\IAccessDeviceObserver.cs" />
     <Compile Include="BioTasks\BiometricPerformerBase.cs" />
     <Compile Include="BioTasks\FaceEnroller.cs" />
+    <Compile Include="BioTasks\Fingers\FingerprintEnroller.cs" />
+    <Compile Include="BioTasks\Fingers\FingerprintVerifier.cs" />
+    <Compile Include="BioTasks\Fingers\IFingerprintServiceObserver.cs" />
     <Compile Include="BioTasks\IVerificationObserver.cs" />
     <Compile Include="BioTasks\FaceVeryfier.cs" />
     <Compile Include="BioTasks\Utils\BioImageUtils.cs" />
@@ -180,6 +183,9 @@
     <Compile Include="IProcessorLocator.cs" />
     <Compile Include="IServiceManager.cs" />
     <Compile Include="IShowableContent.cs" />
+    <Compile Include="Services\Common\ServiceBase.cs" />
+    <Compile Include="Services\IFingerprintService.cs" />
+    <Compile Include="Services\IService.cs" />
     <Compile Include="Services\IThumbnailDataClient.cs" />
     <Compile Include="Locations\ITrackLocatioEngine.cs" />
     <Compile Include="Common\ProcessorLocator.cs" />

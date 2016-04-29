@@ -8,6 +8,8 @@ namespace BioContracts
     void Stop();
     IFaceService FaceService  { get; }
     IDatabaseService DatabaseService { get; }
+    IFingerprintService FingerprintService { get; }
+  
 
     string MacAddress { get; }
   }

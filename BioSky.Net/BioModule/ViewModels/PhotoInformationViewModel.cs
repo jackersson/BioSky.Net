@@ -68,7 +68,7 @@ namespace BioModule.ViewModels
 
     public string Size
     {
-      get { return (_currentPhoto != null) ? _currentPhoto.SizeType.ToString() : ""; }
+      get { return string.Empty; }
     }
 
     public string Origin
