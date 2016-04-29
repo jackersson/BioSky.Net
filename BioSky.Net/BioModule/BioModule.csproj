@@ -224,6 +224,7 @@
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\ErrorViewerDialogViewModel.cs" />
     <Compile Include="ViewModels\FaceEnrollmentBarViewModel.cs" />
+    <Compile Include="ViewModels\FacialInformationViewModel.cs" />
     <Compile Include="ViewModels\FingerBarViewModel.cs" />
     <Compile Include="ViewModels\FingerInformationViewModel.cs" />
     <Compile Include="ViewModels\FingerprintEnrollmentBarViewModel.cs" />
@@ -274,7 +275,6 @@
     <Compile Include="ViewModels\GeneralSettingsPageViewModel.cs" />
     <Compile Include="ViewModels\PeriodTimePickerViewModel.cs" />
     <Compile Include="ViewModels\BioImageViewModel.cs" />
-    <Compile Include="ViewModels\PhotoInformationViewModel.cs" />
     <Compile Include="ViewModels\ProgressRingViewModel.cs" />
     <Compile Include="ViewModels\TrackTabControlViewModel.cs" />
     <Compile Include="ViewModels\UserFingerViewModel.cs" />
@@ -317,6 +317,9 @@
     </Compile>
     <Compile Include="Views\FaceEnrollmentBarView.xaml.cs">
       <DependentUpon>FaceEnrollmentBarView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FacialInformationView.xaml.cs">
+      <DependentUpon>FacialInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FingerBarView.xaml.cs">
       <DependentUpon>FingerBarView.xaml</DependentUpon>
@@ -374,9 +377,6 @@
     </Compile>
     <Compile Include="Views\BioImageView.xaml.cs">
       <DependentUpon>BioImageView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PhotoInformationView.xaml.cs">
-      <DependentUpon>PhotoInformationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ProgressRingView.xaml.cs">
       <DependentUpon>ProgressRingView.xaml</DependentUpon>
@@ -486,6 +486,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FacialInformationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\FingerBarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -559,10 +563,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BioImageView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PhotoInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

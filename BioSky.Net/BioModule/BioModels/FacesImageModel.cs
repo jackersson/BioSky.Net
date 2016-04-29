@@ -17,17 +17,17 @@ namespace BioModule.BioModels
 {
   public class FacesImageModel : PropertyChangedBase, IBioImageModel, ICaptureDeviceObserver
   {
-    public FacesImageModel(IProcessorLocator locator, IImageViewUpdate imageView, ProgressRingViewModel progressRing)
+    public FacesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       _utils              = new BioImageUtils();
       Information         = new FacialInformationViewModel();
-      EnrollmentBar       = new FaceEnrollmentBarViewModel(locator, progressRing);
+      EnrollmentBar       = new FaceEnrollmentBarViewModel(locator);
       _marker             = new MarkerUtils();
       _faceFinder         = new FaceFinder();
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
 
       _imageView    = imageView;
-      _progressRing = progressRing;
+      //_progressRing = progressRing;
 
       (_imageView as BioImageViewModel).StyleChanged += STYLE_CHANGED;
       //CurrentPhoto = GetTestPhoto();
@@ -174,8 +174,7 @@ namespace BioModule.BioModels
       {
           Bytestring = description
         , Datetime   = DateTime.Now.Ticks
-        , OriginType = PhotoOriginType.Thumbnail
-        , SizeType   = PhotoSizeType.Full
+        , OriginType = PhotoOriginType.Thumbnail        
       };
 
       CurrentPhoto = photo;

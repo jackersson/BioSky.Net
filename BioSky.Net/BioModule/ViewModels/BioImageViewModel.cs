@@ -39,9 +39,9 @@ namespace BioModule.ViewModels
 
       BioImageModels = new ObservableCollection<IBioImageModel>();
 
-      BioImageModels.Add(new FacesImageModel  (locator, this, Progress));
+      BioImageModels.Add(new FacesImageModel  (locator, this));
       BioImageModels.Add(new FingersImageModel(locator, this));
-      BioImageModels.Add(new IrisesImageModel (locator, this, Progress));
+      BioImageModels.Add(new IrisesImageModel (locator, this));
      
       SetStyle(style);
       // UpdateFromPhoto(GetTestPhoto());
@@ -73,7 +73,7 @@ namespace BioModule.ViewModels
 
       if(photo == null)
       {
-        Progress.ShowWaiting(DevicesInfo.Instance.GetErrorMessage(DevicesInfo.CANNOT_UPLOAD_PHOTO));
+        //Progress.ShowWaiting(DevicesInfo.Instance.GetErrorMessage(DevicesInfo.CANNOT_UPLOAD_PHOTO));
         Progress.Hide(5000);
       }
 

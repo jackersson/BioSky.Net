@@ -19,14 +19,14 @@ namespace BioModule.ViewModels
   //public delegate void SelectedDeviceChangedEventHandler();
   public class FaceEnrollmentBarViewModel : Screen, ICaptureDeviceObserver, IBioObservable<ICaptureDeviceObserver>
   {    
-    public FaceEnrollmentBarViewModel(IProcessorLocator locator, ProgressRingViewModel progressRing)
+    public FaceEnrollmentBarViewModel(IProcessorLocator locator)
     {      
       _captureDeviceEngine  = locator.GetProcessor<ICaptureDeviceEngine>();
       _dialogsHolder        = locator.GetProcessor<DialogsHolder>();
       _observer             = new BioObserver<ICaptureDeviceObserver>();
       Resolution            = new AsyncObservableCollection<string>();
 
-      _progressRing = progressRing;
+      //_progressRing = progressRing;
     }
     
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)  {

@@ -83,7 +83,7 @@ namespace BioIrisDevices
       if (deviceName == null)
         return;
 
-      observer.OnMessage(DevicesInfo.Instance.GetErrorMessage(DevicesInfoEnum.CONNECTING_TO_DEVICE));
+      observer.OnMessage(""/*DevicesInfo.Instance.GetErrorMessage(DevicesInfoEnum.CONNECTING_TO_DEVICE)*/);
 
       IrisDeviceListener listener;
       if (_devices.TryGetValue(deviceName, out listener))

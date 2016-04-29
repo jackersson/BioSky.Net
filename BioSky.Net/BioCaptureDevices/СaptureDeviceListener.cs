@@ -127,7 +127,7 @@ namespace BioCaptureDevices
 
     private void OnVideoSourcePlayingFinished(object sender, ReasonToFinishPlaying reason)
     {
-      if ( (int)reason != CaptureDeviceErrorInfo.STOPED_BY_USER)
+      if ( reason != ReasonToFinishPlaying.StoppedByUser)
         _commands.Enqueue(CaptureDeviceCommands.Connect);
       Exception ex = new Exception(CaptureDeviceErrorInfo.Instance.GetErrorMessage(reason));
       OnStop(true, ex);      

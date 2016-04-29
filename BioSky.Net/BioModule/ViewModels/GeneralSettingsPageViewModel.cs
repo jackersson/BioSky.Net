@@ -7,6 +7,7 @@ using BioContracts;
 using System.Windows.Forms;
 using BioModule.Utils;
 using System.ComponentModel;
+using System.Net;
 
 namespace BioModule.ViewModels
 {
@@ -51,7 +52,7 @@ namespace BioModule.ViewModels
     }
 
     public void SeparateIpPort(string full, out string ip, out string port)
-    {
+    {   
       int i = full.IndexOf(":");
       ip   = (i != 0) ? full.Substring(0, i) : null;
       port = (i != 0) ? full.Substring(i + 1, full.Length - ip.Length - 1) : null;
@@ -68,14 +69,13 @@ namespace BioModule.ViewModels
 
     public void ResetToDefault()
     {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+      var result = _dialogsHolder.AreYouSureDialog.Show();
+      if (!result.HasValue || !result.Value)
+        return;
 
-      if (result)
-      {
-        _database.LocalStorage.ReturnToDefault();
-        RefreshData();
-      }        
+      _database.LocalStorage.ReturnToDefault();
+      RefreshData();
+              
     }
 
     public bool CanRevert{
@@ -117,13 +117,13 @@ namespace BioModule.ViewModels
 
     public void Apply()
     {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
-      if (result)
-      {
-        Save();
-        RefreshData();
-      }
+      var result = _dialogsHolder.AreYouSureDialog.Show();
+      if (!result.HasValue || !result.Value)
+        return;
+
+      Save();
+      RefreshData();
+      
     }
 
     private void Save()
@@ -138,10 +138,11 @@ namespace BioModule.ViewModels
 
     public void Revert()
      {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
-      if (result == true)       
-         RefreshData();       
+      var result = _dialogsHolder.AreYouSureDialog.Show();
+      if (!result.HasValue || !result.Value)
+        return;
+
+       RefreshData();       
      }
 
      public void OpenFolder()
@@ -177,8 +178,11 @@ namespace BioModule.ViewModels
           _generalSettings = new GeneralSettingsPropeties();
           _generalSettings.PropertyChanged += RefreshUI;
         }
-        return _generalSettings; }}
+        return _generalSettings;
+      }
+    }
     #endregion
+
     #region Global Variables 
     private readonly IBioSkyNetRepository     _database                ;
     private readonly DialogsHolder            _dialogsHolder           ;
@@ -194,6 +198,8 @@ namespace BioModule.ViewModels
       settings.DatabaseService.Port = DatabaseService.Port;
       settings.FaceService.Port     = FaceService.Port    ;
       settings.FaceService.IP       = FaceService.IP      ;
+
+
       settings.ItemsCountPerPage    = ItemsCountPerPage   ;
       settings.LocalStoragePath     = LocalStoragePath    ;
       settings.SelectedLanguage     = SelectedLanguage    ;
