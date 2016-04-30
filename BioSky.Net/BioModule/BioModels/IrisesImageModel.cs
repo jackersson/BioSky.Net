@@ -23,22 +23,21 @@ namespace BioModule.BioModels
 
   public class IrisesImageModel : PropertyChangedBase, IBioImageModel, IIrisDeviceObserver, IEyeSelector
   {
-    public IrisesImageModel(IProcessorLocator locator, IImageViewUpdate imageView, ProgressRingViewModel progressRing)
+    public IrisesImageModel(IProcessorLocator locator, IImageViewUpdate imageView)
     {
       Information         = new IrisInformationViewModel();
-      EnrollmentBar       = new IrisEnrollmentBarViewModel(locator, this, progressRing);
+      EnrollmentBar       = new IrisEnrollmentBarViewModel(locator, this);
 
       _marker             = new MarkerUtils();
 
       _leftEyeHolder   = new MarkerBitmapSourceHolder();
       _rightEyeHolder  = new MarkerBitmapSourceHolder();
 
-      _imageView    = imageView;
-      _progressRing = progressRing;
+      _imageView = imageView;
     }
     public void UploadPhoto(Photo photo)
     {
-      
+      throw new NotImplementedException();
     }
     public void UpdateController(IUserBioItemsController controller)
     {
@@ -51,13 +50,14 @@ namespace BioModule.BioModels
       EnrollmentBar.Subscribe(this);
     }
 
-    public void Activate()
-    {
+    public void Activate(bool isNewUser)
+    {     
       (EnrollmentBar as IScreen).Activate();
+
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
 
-      SelectEye(SelectedEye);
+      SelectEye(EyeType.Both);
 
       _isActive = true;
       NotifyOfPropertyChange(() => IsActive);
@@ -138,8 +138,8 @@ namespace BioModule.BioModels
 
       //if (!_isShowDetails)
     //  {
-        targetLeftEyeImage  = _leftEyeHolder .Marked  == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder .Marked;
-        targetRightEyeImage = _rightEyeHolder.Marked  == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Marked;
+       // targetLeftEyeImage  = _leftEyeHolder .Marked  == null ? ResourceLoader.IrisScanImageIconSource : _leftEyeHolder .Marked;
+       // targetRightEyeImage = _rightEyeHolder.Marked  == null ? ResourceLoader.IrisScanImageIconSource : _rightEyeHolder.Marked;
    //   }
 
       switch (eye)
@@ -173,12 +173,12 @@ namespace BioModule.BioModels
 
     public void OnError(Exception ex)
     {
-      _progressRing.ShowWaiting(ex.Message);
+      Console.WriteLine("OnError");
     }
 
     public void OnMessage(string message)
     {
-      _progressRing.ShowWaiting(message);
+      Console.WriteLine("OnMesage");
     }
 
     public void OnReady(bool isReady)
@@ -267,7 +267,6 @@ namespace BioModule.BioModels
     private MarkerUtils              _marker        ;
     private MarkerBitmapSourceHolder _leftEyeHolder ;
     private MarkerBitmapSourceHolder _rightEyeHolder;
-    private ProgressRingViewModel    _progressRing  ;
 
     #endregion
   }

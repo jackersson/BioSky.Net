@@ -1,17 +1,14 @@
 ﻿using BioContracts;
+using BioContracts.BioTasks.Fingers;
 using BioContracts.Common;
 using BioContracts.FingerprintDevices;
 using BioModule.ResourcesLoader;
-using BioModule.Utils;
 using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace BioModule.ViewModels
@@ -23,6 +20,8 @@ namespace BioModule.ViewModels
       _notifier                = locator.GetProcessor<INotifier>();
       _fingerprintDeviceEngine = locator.GetProcessor<IFingerprintDeviceEngine>();
       _observer                = new BioObserver<IFingerprintDeviceObserver>();
+
+      _enroller = new FingerprintEnroller(locator);
     }
 
     public void UpdateSelector(IFingerSelector fingerSelector)
@@ -95,6 +94,10 @@ namespace BioModule.ViewModels
     public void OnFrame(ref Bitmap frame) {
 
       _notifier.Hide();
+
+     // if (!_enroller.IsActive)
+      //  _enroller.Start(DeviceName, null);
+
       foreach (KeyValuePair<int, IFingerprintDeviceObserver> observer in _observer.Observers)
         observer.Value.OnFrame(ref frame);
     }
@@ -108,6 +111,7 @@ namespace BioModule.ViewModels
 
     public void OnReady(bool isReady)
     {
+      _notifier.Hide();
       NotifyOfPropertyChange(() => DeviceConnectedIcon);         
     }
      
@@ -199,6 +203,8 @@ namespace BioModule.ViewModels
     private readonly IFingerprintDeviceEngine       _fingerprintDeviceEngine;
     private          IFingerSelector                _fingerSelector         ;
     private readonly INotifier                      _notifier               ;
+
+    private readonly FingerprintEnroller             _enroller;
     #endregion
 
   }

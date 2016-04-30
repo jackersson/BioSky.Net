@@ -10,10 +10,8 @@ namespace BioGRPC.DatabaseClient
 {
   public class PhotoDataClient : IOwnerDataClient<Person, Photo>
   {
-    public PhotoDataClient(  IProcessorLocator locator
-                            , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    public PhotoDataClient(  IProcessorLocator locator  )
     {
-      _client  = client;
       _locator = locator;
 
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -116,11 +114,16 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
+    public void Update(BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    {
+      _client = client;
+    }
+
     private RawIndexes _rawIndexes;
 
     private readonly IProcessorLocator _locator;
     private readonly IBioSkyNetRepository _database;
     private readonly INotifier _notifier;
-    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
+    private  BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
   }
 }

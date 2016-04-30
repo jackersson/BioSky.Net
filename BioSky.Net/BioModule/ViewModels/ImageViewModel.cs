@@ -33,7 +33,8 @@ namespace BioModule.ViewModels
       if (ImageItems.Count > 1)      
         ImageItems.Clear();
       
-      ShowImage(img, 0);      
+      ShowImage(img, 0);
+      Zoom(ZoomRate);
     }
     public virtual void SetDoubleImage(BitmapSource first, BitmapSource second)
     {
@@ -62,7 +63,7 @@ namespace BioModule.ViewModels
       {
         ImageItemViewModel item = ImageItems[index];
         item.UpdateImageSource(img);
-        item.Zoom(_scrollFieldWidth, _scrollFieldHeight);
+        //item.Zoom(_scrollFieldWidth, _scrollFieldHeight);
       } 
     } 
    

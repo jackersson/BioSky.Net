@@ -7,6 +7,7 @@ using BioContracts;
 using System.Windows.Forms;
 using BioModule.Utils;
 using System.ComponentModel;
+using System.Net;
 
 namespace BioModule.ViewModels
 {
@@ -21,6 +22,7 @@ namespace BioModule.ViewModels
      }
 
     #region Update
+    
     public void RefreshData()
     {
       if (_revertingGeneralSettings == null)
@@ -51,7 +53,7 @@ namespace BioModule.ViewModels
     }
 
     public void SeparateIpPort(string full, out string ip, out string port)
-    {
+    {   
       int i = full.IndexOf(":");
       ip   = (i != 0) ? full.Substring(0, i) : null;
       port = (i != 0) ? full.Substring(i + 1, full.Length - ip.Length - 1) : null;
@@ -68,41 +70,17 @@ namespace BioModule.ViewModels
 
     public void ResetToDefault()
     {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
+      var result = _dialogsHolder.AreYouSureDialog.Show();
+      if (!result.HasValue || !result.Value)
+        return;
 
-      if (result)
-      {
-        _database.LocalStorage.ReturnToDefault();
-        RefreshData();
-      }        
+      _database.LocalStorage.ReturnToDefault();
+      RefreshData();              
     }
 
-    public bool CanRevert{
-      get
-      {
-         return   _revertingGeneralSettings.DatabaseService.IP   != GeneralSettings.DatabaseService.IP
-               || _revertingGeneralSettings.DatabaseService.Port != GeneralSettings.DatabaseService.Port
-               || _revertingGeneralSettings.FaceService.IP       != GeneralSettings.FaceService.IP
-               || _revertingGeneralSettings.FaceService.Port     != GeneralSettings.FaceService.Port
-               || _revertingGeneralSettings.ItemsCountPerPage    != GeneralSettings.ItemsCountPerPage
-               || _revertingGeneralSettings.LocalStoragePath     != GeneralSettings.LocalStoragePath
-               || _revertingGeneralSettings.SelectedLanguage     != GeneralSettings.SelectedLanguage;
-      }
-    }
+    public bool CanRevert{ get{ return !GeneralSettings.Equals(_revertingGeneralSettings);}}
 
-    public bool CanApply{
-      get
-      {
-        return   CanRevert 
-              && GeneralSettings.DatabaseService.IP   != string.Empty
-              && GeneralSettings.DatabaseService.Port != string.Empty
-              && GeneralSettings.FaceService.IP       != string.Empty
-              && GeneralSettings.FaceService.Port     != string.Empty  
-              && GeneralSettings.LocalStoragePath     != string.Empty
-              && GeneralSettings.SelectedLanguage     != string.Empty;
-      }
-    }
+    public bool CanApply{ get { return   CanRevert && !GeneralSettings.IsEmpty; }}
 
     private void RefreshUI(object sender = null, PropertyChangedEventArgs e = null)
     {
@@ -113,35 +91,44 @@ namespace BioModule.ViewModels
     {
       base.OnActivate();
       RefreshData();
+      GeneralSettings.Activate();
+      GeneralSettings.PropertyChanged += RefreshUI;
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+      GeneralSettings.Deactivate();
+      GeneralSettings.PropertyChanged -= RefreshUI;
+      base.OnDeactivate(close);
     }
 
     public void Apply()
     {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
-      if (result)
-      {
-        Save();
-        RefreshData();
-      }
+      var result = _dialogsHolder.AreYouSureDialog.Show();
+      if (!result.HasValue || !result.Value)
+        return;
+
+      Save();
+      RefreshData();      
     }
 
     private void Save()
     {
       ILocalStorage storage = _database.LocalStorage;
-      storage.UpdateParametr(ConfigurationParametrs.MediaPathway          , GeneralSettings.LocalStoragePath     + "\\");
-      storage.UpdateParametr(ConfigurationParametrs.FaceServiceAddress    , GeneralSettings.FaceService.IP     + ":" + GeneralSettings.FaceService.Port);
-      storage.UpdateParametr(ConfigurationParametrs.DatabaseServiceAddress, GeneralSettings.DatabaseService.IP + ":" + GeneralSettings.DatabaseService.Port);
+      storage.UpdateParametr(ConfigurationParametrs.MediaPathway          , string.Format("{0}\\", GeneralSettings.LocalStoragePath));
+      storage.UpdateParametr(ConfigurationParametrs.FaceServiceAddress    , string.Format("{0}:{1}", GeneralSettings.FaceService.IP    , GeneralSettings.FaceService    .Port));
+      storage.UpdateParametr(ConfigurationParametrs.DatabaseServiceAddress, string.Format("{0}:{1}", GeneralSettings.DatabaseService.IP, GeneralSettings.DatabaseService.Port));
       storage.UpdateParametr(ConfigurationParametrs.Language              , GeneralSettings.SelectedLanguage);
       storage.UpdateParametr(ConfigurationParametrs.ItemsCountPerPage     , GeneralSettings.ItemsCountPerPage.ToString());
     }
 
     public void Revert()
      {
-      _dialogsHolder.AreYouSureDialog.Show();
-      var result = _dialogsHolder.AreYouSureDialog.GetDialogResult();
-      if (result == true)       
-         RefreshData();       
+      var result = _dialogsHolder.AreYouSureDialog.Show();
+      if (!result.HasValue || !result.Value)
+        return;
+
+       RefreshData();       
      }
 
      public void OpenFolder()
@@ -172,13 +159,13 @@ namespace BioModule.ViewModels
     public GeneralSettingsPropeties GeneralSettings{
       get
       {
-        if (_generalSettings == null)
-        {
-          _generalSettings = new GeneralSettingsPropeties();
-          _generalSettings.PropertyChanged += RefreshUI;
-        }
-        return _generalSettings; }}
+        if (_generalSettings == null)        
+          _generalSettings = new GeneralSettingsPropeties();        
+        return _generalSettings;
+      }
+    }
     #endregion
+
     #region Global Variables 
     private readonly IBioSkyNetRepository     _database                ;
     private readonly DialogsHolder            _dialogsHolder           ;
@@ -190,14 +177,43 @@ namespace BioModule.ViewModels
     public GeneralSettingsPropeties Clone()
     {
       GeneralSettingsPropeties settings = new GeneralSettingsPropeties();
-      settings.DatabaseService.IP   = DatabaseService.IP  ;
-      settings.DatabaseService.Port = DatabaseService.Port;
-      settings.FaceService.Port     = FaceService.Port    ;
-      settings.FaceService.IP       = FaceService.IP      ;
-      settings.ItemsCountPerPage    = ItemsCountPerPage   ;
-      settings.LocalStoragePath     = LocalStoragePath    ;
-      settings.SelectedLanguage     = SelectedLanguage    ;
+      settings.DatabaseService = DatabaseService.CopyFrom();
+      settings.FaceService     = FaceService    .CopyFrom();
+
+      settings.ItemsCountPerPage    = ItemsCountPerPage;
+      settings.LocalStoragePath     = LocalStoragePath ;
+      settings.SelectedLanguage     = SelectedLanguage ;
       return settings;
+    }
+
+    public override bool Equals(object obj)
+    {
+      return (this.GetHashCode() == obj.GetHashCode());
+    }
+
+    public override int GetHashCode()
+    {
+      unchecked
+      {
+        int hash = 17;
+        hash = hash * 23 + DatabaseService  .GetHashCode();
+        hash = hash * 23 + FaceService      .GetHashCode();
+        hash = hash * 23 + LocalStoragePath .GetHashCode();
+        hash = hash * 23 + SelectedLanguage .GetHashCode();
+        hash = hash * 23 + ItemsCountPerPage.GetHashCode();
+        return hash;
+      }          
+    }
+    public void Activate()
+    {
+      FaceService    .PropertyChanged += OnSettingsChanged;
+      DatabaseService.PropertyChanged += OnSettingsChanged;
+    }
+
+    public void Deactivate()
+    {
+      FaceService    .PropertyChanged -= OnSettingsChanged;
+      DatabaseService.PropertyChanged -= OnSettingsChanged;
     }
 
     public void OnSettingsChanged(object sender, PropertyChangedEventArgs e){NotifyOfPropertyChange();}
@@ -229,11 +245,8 @@ namespace BioModule.ViewModels
     private FullIpAdress _faceService;
     public FullIpAdress FaceService {
       get {
-        if (_faceService == null)
-        {
-          _faceService = new FullIpAdress();
-          _faceService.PropertyChanged += OnSettingsChanged;
-        }
+        if (_faceService == null)        
+          _faceService = new FullIpAdress();        
         return _faceService;
       }
       set {
@@ -248,11 +261,8 @@ namespace BioModule.ViewModels
     private FullIpAdress _databaseService;
     public FullIpAdress DatabaseService {
       get {
-        if (_databaseService == null)
-        {
-          _databaseService = new FullIpAdress();
-          _databaseService.PropertyChanged += OnSettingsChanged;
-        }
+        if (_databaseService == null)        
+          _databaseService = new FullIpAdress();       
         return _databaseService;
       }
       set {
@@ -275,9 +285,38 @@ namespace BioModule.ViewModels
         }
       }
     }
+    public bool IsEmpty
+    {
+      get
+      {
+        return    DatabaseService.IsEmpty
+               && FaceService.IsEmpty
+               && string.IsNullOrEmpty(LocalStoragePath)
+               && string.IsNullOrEmpty(SelectedLanguage);
+      }
+    }
   }
   public class FullIpAdress : PropertyChangedBase
   {
+    public FullIpAdress CopyFrom()
+    {
+      FullIpAdress copy = new FullIpAdress();
+      copy.IP   = IP;
+      copy.Port = Port;
+      return copy;
+    }
+    public override int GetHashCode()
+    {
+      unchecked
+      {
+        int hash = 13;
+        hash = hash * 23 + IP.GetHashCode();
+        hash = hash * 23 + Port.GetHashCode();
+        return hash;
+      }
+    }
+    public bool IsEmpty{ get{ return !string.IsNullOrEmpty(IP) && !string.IsNullOrEmpty(Port); }}
+
     private string _ip;
     public string IP {
       get { return _ip; }

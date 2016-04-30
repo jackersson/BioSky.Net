@@ -39,9 +39,9 @@ namespace BioShell.Utils
       _progressRing.ShowWaiting(message);
     }
 
-    public void Hide()
+    public void Hide(int delay)
     {
-      _progressRing.Hide();
+      _progressRing.Hide(delay);
     }
 
     public object LoadingViewModel

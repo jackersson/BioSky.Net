@@ -11,10 +11,9 @@ namespace BioGRPC.DatabaseClient
 
   public class PersonDataClient : IDataClient<Person, QueryPersons>, IThumbnailDataClient
   {
-    public PersonDataClient(IProcessorLocator locator
-                             , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    public PersonDataClient(IProcessorLocator locator )
     {
-      _client = client;
+     
       _locator = locator;
   
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -141,11 +140,16 @@ namespace BioGRPC.DatabaseClient
       }
     }
 
+    public void Update(BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    {
+      _client = client;
+    }
+
     private PersonList _list;
   
     private readonly IProcessorLocator _locator;
     private readonly IBioSkyNetRepository _database;
     private readonly INotifier _notifier;
-    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
+    private BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
   }
 }

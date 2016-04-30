@@ -130,10 +130,27 @@
 
         <local:ProgressRingView Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Center" Panel.ZIndex="100"
                                 VerticalAlignment="Center" DataContext="{Binding Progress}"/>
+        
+        <!--*****************************************ExpandViewButton********************************************************-->
 
+        <ToggleButton Name="ExpandButton" 
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,1"
+                      Width="40" Height="40" Panel.ZIndex="100" BorderBrush="#7F3587BD" BorderThickness="1"
+                      Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5"   IsChecked="{Binding IsExpanded}"
+                      ToolTip="Expand view" 
+                      Style="{StaticResource MetroCircleToggleButtonStyle}">
+            <Image Name="ExpandButtonImage" Width="20" Height="20" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform" Opacity="0.5" 
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=ExpandIconSource}">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="0" />
+                </Image.RenderTransform>
+            </Image>            
+        </ToggleButton>
+        <!--*****************************************ExpandViewButton********************************************************-->
 
         <!--*****************************************EnrollmentExpanderView**************************************************-->
-        <Expander            
+        <Expander Margin="0,0,38,0"      
             Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" 
             ExpandDirection="Up" 
             HorizontalAlignment="Stretch"

@@ -85,12 +85,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="0*"/>
                 <RowDefinition Height="56"/>
-                <RowDefinition Height="10*"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="56"/>
-                <RowDefinition Height="10*"/>
+                <RowDefinition Height="24"/>               
+                <RowDefinition Height="56"/>
+
                 <RowDefinition Height="24"/>
                 <RowDefinition Height="56"/>
-                <RowDefinition Height="10*"/>
                 <RowDefinition Height="24"/>
                 <RowDefinition Height="56"/>
 
@@ -136,9 +137,9 @@
             
             
 
-            <Label Grid.Row="5" Grid.ColumnSpan="4" Content="{lex:Loc FaceService}"></Label>
+            <Label Grid.Row="6" Grid.ColumnSpan="4" Content="{lex:Loc FaceService}"></Label>
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-              Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="6"
+              Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="7"
               >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
@@ -159,9 +160,9 @@
                 </TextBox>
             </Grid>
 
-            <Label Grid.Row="8" Grid.ColumnSpan="4" Content="{lex:Loc DatabaseService}"></Label>
+            <Label Grid.Row="4" Grid.ColumnSpan="4" Content="{lex:Loc DatabaseService}"></Label>
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-              Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="9">
+              Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="1*"/>
@@ -178,6 +179,28 @@
                      Controls:TextBoxHelper.Watermark="{lex:Loc Port}"
                      Controls:TextBoxHelper.UseFloatingWatermark="True"                  
                      Text="{Binding GeneralSettings.DatabaseService.Port, UpdateSourceTrigger=PropertyChanged}">
+                </TextBox>
+            </Grid>
+
+            <Label Grid.Row="8" Grid.ColumnSpan="4" Content="{lex:Loc FingerprintService}"></Label>
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+              Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
+                     Grid.Column="0" 
+                     Controls:TextBoxHelper.Watermark="{lex:Loc IpAdress}"
+                     Controls:TextBoxHelper.UseFloatingWatermark="True"                  
+                     Text="{Binding FingerprintServiceIP, UpdateSourceTrigger=PropertyChanged}">
+                </TextBox>
+
+                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
+                     Grid.Column="1" 
+                     Controls:TextBoxHelper.Watermark="{lex:Loc Port}"
+                     Controls:TextBoxHelper.UseFloatingWatermark="True"                  
+                     Text="{Binding FingerprintServicePort, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
             </Grid>
 

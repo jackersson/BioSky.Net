@@ -724,6 +724,7 @@
     <None Include="Resources\iris_scan.png" />
     <None Include="Resources\bothHands.png" />
     <None Include="Resources\snapshoot.png" />
+    <None Include="Resources\expand.png" />
     <Content Include="Resources\warning.png" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />

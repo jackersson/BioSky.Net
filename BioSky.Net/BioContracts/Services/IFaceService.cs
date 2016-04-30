@@ -9,7 +9,7 @@ namespace BioContracts.Services
 {
   public delegate void EnrollFeedbackEventHandler      (object sender, EnrollmentFeedback   feedback);
   public delegate void VerificationFeedbackEventHandler(object sender, VerificationFeedback feedback);
-  public interface IFaceService
+  public interface IFaceService : IService
   {
     event EnrollFeedbackEventHandler       EnrollFeedbackChanged;
     event VerificationFeedbackEventHandler VerifyFeedbackChanged;

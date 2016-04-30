@@ -5,23 +5,42 @@ using BioGRPC.DatabaseClient;
 using Grpc.Core;
 using System;
 using BioGRPC.Utils;
+using BioContracts.Services.Common;
+using System.Collections.Generic;
 
 namespace BioGRPC
 {
-  public class BioDatabaseService : IDatabaseService
+  public class BioDatabaseService : ServiceBase, IDatabaseService
   { 
-    public BioDatabaseService( IProcessorLocator locator
-                             , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    public BioDatabaseService( IProcessorLocator locator )
     {
-      _client = client;
+      _locator = locator;
+      Initialize();    
+    }
 
-      _utils = new NetworkUtils();
+    public BioDatabaseService(IProcessorLocator locator, string address)
+    {
+      _locator = locator;
+       Address = address;
+      Initialize();
+    }
 
-      _visitorDataClient   = new VisitorDataClient (locator, client);
-      _photosDataClient    = new PhotoDataClient   (locator, client);
-      _personDataClient    = new PersonDataClient  (locator, client);
-      _locationDataClient  = new LocationDataClient(locator, client);
-      _cardsDataClient     = new CardDataClient    (locator, client);
+    private void Initialize()
+    {
+      _utils       = new NetworkUtils();
+      _dataClients = new List<IDataClientUpdateAble>();
+
+      _visitorDataClient   = new VisitorDataClient (_locator);
+      _photosDataClient    = new PhotoDataClient   (_locator);
+      _personDataClient    = new PersonDataClient  (_locator);
+      _locationDataClient  = new LocationDataClient(_locator);
+      _cardsDataClient     = new CardDataClient    (_locator);
+
+      _dataClients.Add(_visitorDataClient );
+      _dataClients.Add(_photosDataClient  );
+      _dataClients.Add(_personDataClient  );
+      _dataClients.Add(_locationDataClient);
+      _dataClients.Add(_cardsDataClient   );
     }
 
     public async void Subscribe()
@@ -40,7 +59,13 @@ namespace BioGRPC
       }      
     }
 
+    protected override void CreateClient()
+    {
+      _client = BiometricDatabaseSevice.NewClient(Channel);
 
+      foreach (IDataClientUpdateAble dataClient in _dataClients)
+        dataClient.Update(_client);
+    }
 
     private PhotoDataClient _photosDataClient;
     public IOwnerDataClient<Person, Photo> PhotosDataClient
@@ -77,7 +102,10 @@ namespace BioGRPC
       get { return _locationDataClient; }
     }
 
-    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
+    private List<IDataClientUpdateAble> _dataClients;
+
+    private BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
     private NetworkUtils _utils;
+    private readonly IProcessorLocator _locator;
   }
 }

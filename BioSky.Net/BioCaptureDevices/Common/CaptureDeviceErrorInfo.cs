@@ -35,19 +35,19 @@ namespace BioCaptureDevices.Common
       string szMessage;
       switch (error)
       {
-        case END_OF_STREAM_REACHED:
+        case (int)ReasonToFinishPlaying.EndOfStreamReached:
           szMessage = "End of stream reached";
           break;
 
-        case STOPED_BY_USER:
+        case (int)ReasonToFinishPlaying.StoppedByUser:
           szMessage = "Stoped by user";
           break;
 
-        case DEVICE_LOST:
+        case (int)ReasonToFinishPlaying.DeviceLost:
           szMessage = "Device lost";
           break;
 
-        case VIDEO_SOURCE_ERROR:
+        case (int)ReasonToFinishPlaying.VideoSourceError:
           szMessage = "Video source error";
           break;
 
@@ -58,11 +58,12 @@ namespace BioCaptureDevices.Common
       return szMessage;
     }
 
-
+    /*
     public const int END_OF_STREAM_REACHED = 0;
     public const int STOPED_BY_USER        = 1;
     public const int DEVICE_LOST           = 2;
     public const int VIDEO_SOURCE_ERROR    = 3;
+    */
 
     private static object syncObject = new object();
   }

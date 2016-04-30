@@ -4,15 +4,10 @@ using BioModule.ViewModels;
 using BioService;
 using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 using System.Drawing;
 using BioContracts.FingerprintDevices;
 using BioContracts;
-using BioContracts.Common;
 
 namespace BioModule.BioModels
 {
@@ -26,7 +21,7 @@ namespace BioModule.BioModels
       _imageView = imageView;
     }
 
-    public void Activate()
+    public void Activate(bool isNewUser)
     {
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
@@ -52,7 +47,7 @@ namespace BioModule.BioModels
 
     public void UploadPhoto(Photo photo)
     {
-      throw new NotImplementedException();
+      
     }
 
     public object GetInformation()

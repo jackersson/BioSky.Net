@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BioContracts.Services
 {
-  public interface IOwnerDataClient<TOwnerType, TValueType>
+  public interface IOwnerDataClient<TOwnerType, TValueType> : IDataClientUpdateAble
   {
     Task Add( long ownerID, TValueType value);
 

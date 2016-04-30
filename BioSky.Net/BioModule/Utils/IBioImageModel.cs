@@ -18,7 +18,7 @@ namespace BioModule.Utils
 
   public interface IBioImageModel
   {
-    void Activate();
+    void Activate(bool isNewUser);
     void Deactivate();
     void UpdateController(IUserBioItemsController controller);
     void UploadPhoto(Photo photo);

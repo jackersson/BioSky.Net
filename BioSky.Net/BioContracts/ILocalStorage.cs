@@ -5,6 +5,7 @@
        MediaPathway
      , FaceServiceAddress
      , DatabaseServiceAddress
+     , FingerprintServiceAddress
      , Language
      , LogsFilePathway
      , ItemsCountPerPage

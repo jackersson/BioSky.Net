@@ -11,10 +11,8 @@ namespace BioGRPC.DatabaseClient
 {
   public class CardDataClient :  IOwnerDataClient<Person, Card>
   {
-    public CardDataClient(  IProcessorLocator locator
-                          , BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    public CardDataClient(  IProcessorLocator locator  )
     {
-      _client = client;
       _locator = locator;
 
       _database = _locator.GetProcessor<IBioSkyNetRepository>();
@@ -91,11 +89,15 @@ namespace BioGRPC.DatabaseClient
     {
       throw new NotImplementedException();
     }
-    
+
+    public void Update(BiometricDatabaseSevice.IBiometricDatabaseSeviceClient client)
+    {
+      _client = client;
+    }
 
     private readonly IProcessorLocator _locator;
     private readonly IBioSkyNetRepository _database;
     private readonly INotifier _notifier;
-    private readonly BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
+    private BiometricDatabaseSevice.IBiometricDatabaseSeviceClient _client;
   }
 }

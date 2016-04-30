@@ -672,8 +672,6 @@ namespace BioModule.Utils
   }
   #endregion
 
-
-
   #region Multi Converters
 
 

@@ -20,14 +20,22 @@ namespace BioModule.ResourcesLoader
     {
       if (source == null)
         return null;
+      BitmapSource bmp = null;
 
-      IntPtr hBitMap = source.GetHbitmap();
-      BitmapSource bmp = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap( hBitMap
-                                                                                     , IntPtr.Zero
-                                                                                     , Int32Rect.Empty
-                                                                                     , BitmapSizeOptions.FromEmptyOptions());
-      DeleteObject(hBitMap);
+      try
+      {
+        IntPtr hBitMap = source.GetHbitmap();
+        bmp = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitMap
+                                                                                       , IntPtr.Zero
+                                                                                       , Int32Rect.Empty
+                                                                                       , BitmapSizeOptions.FromEmptyOptions());
+        DeleteObject(hBitMap);
 
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
       return bmp;
     }
 
@@ -138,7 +146,18 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _fingerScanColorIconSource;
     private static BitmapSource _irisScanColorIconSource;
     private static BitmapSource _snapshootIconSource;
+    private static BitmapSource _expandIconSource;
 
+
+    public static BitmapSource ExpandIconSource
+    {
+      get
+      {
+        if (_expandIconSource == null)
+          _expandIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.expand);
+        return _expandIconSource;
+      }
+    }
     public static BitmapSource SnapshootIconSource
     {
       get

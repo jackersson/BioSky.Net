@@ -8,16 +8,21 @@ using System.Threading.Tasks;
 
 using BioContracts;
 using BioContracts.Services;
+using BioContracts.Services.Common;
 
 namespace BioGRPC
 {
-  public class BioFacialService : IFaceService
+  public class BioFacialService : ServiceBase, IFaceService
   {
-    public BioFacialService( IProcessorLocator locator
-                           , BiometricFacialSevice.IBiometricFacialSeviceClient client )
+    public BioFacialService( IProcessorLocator locator  )
+    {
+      _locator = locator;      
+    }
+
+    public BioFacialService(IProcessorLocator locator, string address)
     {
       _locator = locator;
-      _client = client;
+      Address  = address;
     }
 
     public async Task Configurate( IServiceConfiguration configuration )
@@ -139,7 +144,12 @@ namespace BioGRPC
       Console.WriteLine(s);
     }
 
-    private readonly BiometricFacialSevice.IBiometricFacialSeviceClient _client;
+    protected override void CreateClient()
+    {
+      _client = BiometricFacialSevice.NewClient(Channel);
+    }
+
+    private BiometricFacialSevice.IBiometricFacialSeviceClient _client;
     private readonly IProcessorLocator _locator;
 
   }
