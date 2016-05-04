@@ -99,26 +99,47 @@
             <RowDefinition Height="32"/>
             <RowDefinition Height="48"/>
         </Grid.RowDefinitions>
-        <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" 
+
+        <Border Name="ScrollViewerGrid" BorderThickness="0" BorderBrush="#4C808080" Tag="{Binding Controller3D}"
                 Grid.Column="0" Grid.Row="0"
                 Grid.ColumnSpan="5" Grid.RowSpan="3">
-            <local:ImageView DataContext="{Binding Mode=OneWay}">
-                
-            </local:ImageView>            
+            <Border.Child>
+                <ContentControl DataContext="{Binding Mode=OneWay}">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type vm:BioImageViewModel}">
+                            <local:ImageView DataContext="{Binding Mode=OneWay}">
+                            </local:ImageView>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vm:Controller3DViewModel}">
+                            <local:Controller3DView DataContext="{Binding Mode=OneWay}">
+                            </local:Controller3DView>
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="Content" Value="{Binding Controller3D}">   
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=Button3d, Path=IsChecked}" Value="False">
+                                    <Setter Property="Content" Value="{Binding Mode=OneWay}">   
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+            </Border.Child>
         </Border>
+
         <!--************************************************ 3D Button *************************************************************-->
         <Grid Margin="30,0,0,0">
             <ToggleButton x:Name="Button3d" Background="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Left"
-                          BorderThickness="1" BorderBrush="#7F3587BD"  Width="32" Height="32"                               
-                          IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                          BorderThickness="1" BorderBrush="#7F3587BD"  Width="32" Height="32"
                           Style="{DynamicResource MetroCircleToggleButtonStyle}" ToolTip="3D Model"
                           Padding="1.5,0" Content="3D" Foreground="#7F3587BD" FontWeight="Bold"
-                           Visibility="{Binding Button3DVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                          />
+                           Visibility="{Binding Button3DVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         </Grid>
-
         <!--************************************************ 3D Button *************************************************************-->
-
 
         <TextBlock Grid.ColumnSpan="2"
                    Grid.RowSpan="4"
@@ -359,7 +380,7 @@
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
 
 
-        <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
+        <!--<StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
                     Orientation="Vertical" HorizontalAlignment="Left" Width="40">
             <Button Width="40" Height="40" Tag="{Binding BioImageModels[0].IsActive}"
                     ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0" Style="{StaticResource MyBioImageButton}"
@@ -419,7 +440,7 @@
                 
                  >
             <Image Width="32" Height="32" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
-        </Button>
+        </Button>-->
 
         <Button cal:Message.Attach="[Event Click] = [Action Next()]" 
                 Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" 

@@ -161,7 +161,9 @@ namespace BioModule.BioModels
       }
       else
       {
-        Bitmap processedFrame = DrawFaces(ref frame);
+        //Bitmap processedFrame = DrawFaces(ref frame);
+        Bitmap processedFrame = frame;
+
         newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
       }
       _imageView.SetSingleImage(newFrame);

@@ -42,12 +42,12 @@ namespace BioModule.ViewModels
       BioImageModels.Add(new FacesImageModel  (locator, this));
       BioImageModels.Add(new FingersImageModel(locator, this));
       BioImageModels.Add(new IrisesImageModel (locator, this));
-     
+
       SetStyle(style);
       // UpdateFromPhoto(GetTestPhoto());
 
       SetBioImageModel(BioImageModelType.Faces);
-    }
+    }   
 
     public void SetBioImageModel(BioImageModelType state)
     {
@@ -480,6 +480,42 @@ namespace BioModule.ViewModels
         {
           _progress = value;
           NotifyOfPropertyChange(() => Progress);
+        }
+      }
+    }
+
+    private Controller3DViewModel _controller3D;
+    public Controller3DViewModel Controller3D
+    {
+      get {
+        if (_controller3D == null)
+          _controller3D = new Controller3DViewModel();
+
+        return _controller3D; }
+      set
+      {
+        if (_controller3D != value)
+        {
+          _controller3D = value;
+          NotifyOfPropertyChange(() => Controller3D);
+        }
+      }
+    }
+
+
+    private object _contentView;
+    public object ContentView
+    {
+      get
+      {
+        return _contentView;
+      }
+      set
+      {
+        if (_contentView != value)
+        {
+          _contentView = value;
+          NotifyOfPropertyChange(() => ContentView);
         }
       }
     }
