@@ -24,6 +24,7 @@
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
             <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml"/>
                 <ResourceDictionary>
@@ -54,56 +55,8 @@
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- **************************************************Expand Arrow***********************************************-->
-
-        <ToggleButton Name="ExpandButton" VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" Height="32" Panel.ZIndex="100"
-                           Grid.ColumnSpan="5" Grid.RowSpan="5" ToolTip="Show/Hide Locations Details">
-            <Image Name="ExpandButtonImage" Width="20" Height="20" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
-                       VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
-                       Source="{Binding Source={StaticResource ResourceLoader}, Path=LeftArrowIconSource}">
-                <Image.RenderTransform>
-                    <RotateTransform Angle="0" />
-                </Image.RenderTransform>
-            </Image>
-            <ToggleButton.Style>
-                <Style TargetType="ToggleButton" BasedOn="{StaticResource MetroCircleToggleButtonStyle}">
-                    <Style.Triggers>
-                        <Trigger Property="IsChecked" Value="False">
-                            <Setter Property="Margin" Value="0,0,25,0"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ToggleButton.Style>
-            <ToggleButton.Triggers>
-                <EventTrigger RoutedEvent="ToggleButton.Checked">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="ExpandButtonImage"
-                                                     Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                                                     From="0"
-                                                     To="180"
-                                                     Duration="0:0:0.4"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="ExpandButtonImage"
-                                                 Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
-                                                 From="180"
-                                                 To="0"
-                                                 Duration="0:0:0.4"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </ToggleButton.Triggers>
-        </ToggleButton>
-
-        <!-- **************************************************Expand Arrow***********************************************-->
-
         <Grid Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Name="Detailed"
-            Visibility="{Binding ElementName=ExpandButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" >
+            Visibility="{Binding CurrentPhotoImageView.IsExpanded, Converter={StaticResource InverseBooleanConverter}}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="48"/>
@@ -213,8 +166,8 @@
                         >
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
-                    <Style.Triggers>                        
-                        <DataTrigger Binding="{Binding ElementName=ExpandButton, Path=IsChecked}" Value="False">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentPhotoImageView.IsExpanded}" Value="True">
                             <Setter Property="Grid.ColumnSpan" Value="2" />
                         </DataTrigger>
                     </Style.Triggers>

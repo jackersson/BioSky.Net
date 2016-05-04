@@ -69,8 +69,17 @@ namespace BioFingerprintDevices
         return FingerprintDeviceErrorInfo.ERROR_DISCONNECTED;
       }
 
-      try {        
-        frame = _scanMode == 0 ? CurrentDevice.GetFrame() : CurrentDevice.GetImage(_scanMode);   
+      try {
+      //  CurrentDevice.
+        if (_scanMode == 0)
+        {
+          frame = CurrentDevice.GetFrame();
+        }
+          else
+        {
+          frame = CurrentDevice.GetImage(_scanMode);
+        }
+       // frame = _scanMode == 0 ? CurrentDevice.GetFrame() : CurrentDevice.GetImage(_scanMode);   
       }
       catch (ScanAPIException ex)
       {
@@ -80,6 +89,10 @@ namespace BioFingerprintDevices
         
         OnError(ex);
         return ex.ErrorCode;
+      }
+      catch (Exception ex)
+      {
+        OnError(ex);
       }
 
       return FingerprintDeviceErrorInfo.DEVICE_OK;

@@ -59,7 +59,7 @@ namespace BioModule.ViewModels
         if (view.BioType == state)
         {
           CurrentBioImage = view;         
-          CurrentBioImage.Activate();
+          CurrentBioImage.Activate(_isNewUser);
           CurrentBioImage.ShowDetails(_isDetailsExpanded);
         }
         else
@@ -73,8 +73,8 @@ namespace BioModule.ViewModels
 
       if(photo == null)
       {
-        //Progress.ShowWaiting(DevicesInfo.Instance.GetErrorMessage(DevicesInfo.CANNOT_UPLOAD_PHOTO));
-        Progress.Hide(5000);
+        Progress.ShowWaiting("Cannot upload Photo");
+        Progress.Hide(CANNOT_UPLOAD_PHOTO_TIMER);
       }
 
       if (CurrentBioImage != null)
@@ -145,7 +145,7 @@ namespace BioModule.ViewModels
     protected override void OnActivate()
     {      
       if (CurrentBioImage != null)
-        CurrentBioImage.Activate();
+        CurrentBioImage.Activate(_isNewUser);
 
       base.OnActivate();
     }   
@@ -189,9 +189,7 @@ namespace BioModule.ViewModels
 
       CurrentPhoto.Width    = (long)bmp.Width   ;
       CurrentPhoto.Height   = (long)bmp.Height  ;
-     // CurrentPhoto.SizeType = PhotoSizeType.Full;
-
-     
+     // CurrentPhoto.SizeType = PhotoSizeType.Full;     
     }
 
     public void UpdateFromPhoto(Photo photo)
@@ -234,13 +232,6 @@ namespace BioModule.ViewModels
       if (PhotoChanged != null)
         PhotoChanged();
     }
-
-    private void OnStyleChanged(long style)
-    {
-      if (StyleChanged != null)
-        StyleChanged(style);
-    }
-
     #endregion
 
     #region BioService
@@ -374,6 +365,15 @@ namespace BioModule.ViewModels
         if (_controlStyle != value)
         {
           _controlStyle = value;
+          //for test
+          _controlStyle = MAX_BIO_IMAGE_STYLE;
+          //for test
+          _isNewUser = (_controlStyle == NEW_USER_BIO_IMAGE_STYLE);
+          if(CurrentBioImage != null)
+          {
+            CurrentBioImage.Deactivate();
+            CurrentBioImage.Activate(_isNewUser);
+          }          
           NotifyOfPropertyChange(() => ControlStyle);
           NotifyOfPropertyChange(() => EnrollFromPhotoVisibility);
           NotifyOfPropertyChange(() => LiveEnrollmentVisibility);
@@ -387,7 +387,6 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => FacialButtonVisibility);
           NotifyOfPropertyChange(() => FingerButtonVisibility);
           NotifyOfPropertyChange(() => IrisButtonVisibility);
-          OnStyleChanged(_controlStyle);
         }
       }
     }
@@ -485,10 +484,28 @@ namespace BioModule.ViewModels
       }
     }
 
+    private bool _isExpanded;
+    public bool IsExpanded
+    {
+      get { return _isExpanded; }
+      set
+      {
+        if (_isExpanded != value)
+        {
+          _isExpanded = value;
+          NotifyOfPropertyChange(() => IsExpanded);
+        }
+      }
+    }
+
 
     #endregion
 
-    #region Global Variables    
+    #region Global Variables  
+
+    private bool _isNewUser;
+
+    public const int CANNOT_UPLOAD_PHOTO_TIMER = 5000;
 
     public const long MY_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom);
     public const long MIN_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn);
@@ -514,11 +531,6 @@ namespace BioModule.ViewModels
     public delegate void PhotoChangedEventHandler();
 
     public event PhotoChangedEventHandler PhotoChanged;
-
-    public delegate void StyleChangedEventHandler(long style);
-
-    public event StyleChangedEventHandler StyleChanged;
-
     #endregion
   }
 

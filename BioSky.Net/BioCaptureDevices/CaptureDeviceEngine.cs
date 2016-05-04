@@ -88,7 +88,7 @@ namespace BioCaptureDevices
       if (observer == null || cameraName == null)
         return;
 
-      observer.OnMessage(""/*DevicesInfo.Instance.GetErrorMessage(DevicesInfoEnum.CONNECTING_TO_DEVICE)*/);
+      observer.OnMessage("Connecting to Device");
 
       СaptureDeviceListener listener;
       if (_devices.TryGetValue(cameraName, out listener))      

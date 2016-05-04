@@ -3,16 +3,12 @@ using BioContracts.BioTasks.Fingers;
 using BioContracts.Common;
 using BioContracts.FingerprintDevices;
 using BioModule.ResourcesLoader;
-using BioModule.Utils;
 using BioService;
 using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace BioModule.ViewModels
@@ -115,6 +111,7 @@ namespace BioModule.ViewModels
 
     public void OnReady(bool isReady)
     {
+      _notifier.Hide();
       NotifyOfPropertyChange(() => DeviceConnectedIcon);         
     }
      

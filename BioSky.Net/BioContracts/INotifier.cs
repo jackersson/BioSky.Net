@@ -16,7 +16,7 @@ namespace BioContracts
 
     void ShowInformation(string message);
 
-    void Hide();
+    void Hide(int delay = 0);
     
     object LoadingViewModel { get; }
   }

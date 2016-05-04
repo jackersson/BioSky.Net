@@ -146,7 +146,18 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _fingerScanColorIconSource;
     private static BitmapSource _irisScanColorIconSource;
     private static BitmapSource _snapshootIconSource;
+    private static BitmapSource _expandIconSource;
 
+
+    public static BitmapSource ExpandIconSource
+    {
+      get
+      {
+        if (_expandIconSource == null)
+          _expandIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.expand);
+        return _expandIconSource;
+      }
+    }
     public static BitmapSource SnapshootIconSource
     {
       get

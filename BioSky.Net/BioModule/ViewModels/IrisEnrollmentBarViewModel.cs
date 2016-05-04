@@ -21,7 +21,8 @@ namespace BioModule.ViewModels
     {
       _deviceEngine = locator.GetProcessor<IIrisDeviceEngine>();
       _observer     = new BioObserver<IIrisDeviceObserver>();
-      _selector     = selector;     
+      _selector     = selector;  
+      _notifier     = locator.GetProcessor<INotifier>();   
     }
 
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -66,7 +67,7 @@ namespace BioModule.ViewModels
       _deviceEngine.Add(SelectedDevice);
       _deviceEngine.Subscribe(this, SelectedDevice);
       _deviceEngine.Capture(SelectedDevice);
-      //_progressRing.Hide();
+      _notifier.Hide();
       _noEyeDetected = true;
     }
 
@@ -78,6 +79,9 @@ namespace BioModule.ViewModels
 
     public void OnFrame( Bitmap left,  Bitmap right)
     {
+      if (SelectedDevice == null)
+        return;
+
       foreach (KeyValuePair<int, IIrisDeviceObserver> observer in _observer.Observers)
         observer.Value.OnFrame( left,  right);
     }
@@ -92,23 +96,21 @@ namespace BioModule.ViewModels
       if (_noEyeDetected != detected && detected == false)
       {
         _noEyeDetected = detected;
-       // _progressRing.ShowWaiting("No Eyes detected");
+        _notifier.ShowInformation("No Eyes detected");
       }
-    }
-    
-    private bool _noEyeDetected;
+    }   
 
     public void OnState(CaptureState captureState)
     {
-     // _progressRing.ShowWaiting(captureState.ToString());
+      _notifier.ShowInformation(captureState.ToString());
 
-     // if (captureState == CaptureState.Complete)
-     //   _progressRing.Hide(5000);
+      if (captureState == CaptureState.Complete)
+        _notifier.Hide(ON_COMPLETE_TIMER);
     }
 
     public void OnError(Exception ex)
     {
-     // _progressRing.ShowWaiting(ex.Message);
+      _notifier.ShowInformation(ex.Message);
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
     }
 
@@ -134,7 +136,7 @@ namespace BioModule.ViewModels
 
     public void OnMessage(string message)
     {
-      //_progressRing.ShowWaiting(message);
+      _notifier.ShowInformation(message);
     }
   
     #endregion
@@ -200,10 +202,16 @@ namespace BioModule.ViewModels
     }
     #endregion
 
-    #region Global Variables   
+    #region Global Variables 
+      
+    private bool _noEyeDetected;
+
+    public const int ON_COMPLETE_TIMER = 5000;
+
     private BioObserver<IIrisDeviceObserver> _observer;
     private readonly IIrisDeviceEngine _deviceEngine  ;
     private readonly IEyeSelector      _selector      ;
+    private readonly INotifier         _notifier      ;
     #endregion
 
   }

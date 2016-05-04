@@ -50,10 +50,9 @@ namespace BioModule.BioModels
       EnrollmentBar.Subscribe(this);
     }
 
-    public void Activate()
-    {
-      if (EnrollmentBar is IScreen)        
-        (EnrollmentBar as IScreen).Activate();
+    public void Activate(bool isNewUser)
+    {     
+      (EnrollmentBar as IScreen).Activate();
 
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
@@ -67,11 +66,7 @@ namespace BioModule.BioModels
     public void Deactivate()
     {
       EnrollmentBar.Unsubscribe(this);
-      if (EnrollmentBar is IScreen)
-      {
-        IScreen screen = EnrollmentBar as IScreen;
-        screen.Deactivate(false);
-      }
+      (EnrollmentBar as IScreen).Deactivate(false);
       _isActive = false;
       NotifyOfPropertyChange(() => IsActive);
     }

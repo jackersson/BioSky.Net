@@ -114,7 +114,7 @@
             </Grid.ColumnDefinitions>
             <!-- **************************************************Expand Arrow***********************************************-->
 
-            <ToggleButton Name="ExpandButton" VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" Height="32" Panel.ZIndex="100"
+            <!--<ToggleButton Name="ExpandButton" VerticalAlignment="Top" HorizontalAlignment="Right" Width="32" Height="32" Panel.ZIndex="100"
                           Style="{DynamicResource MetroCircleToggleButtonStyle}" Grid.ColumnSpan="5" Grid.RowSpan="5" ToolTip="Show/Hide Locations Details">
                 <Image Name="ExpandButtonImage" Width="20" Height="20" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
                        VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform"
@@ -148,13 +148,13 @@
                         </BeginStoryboard>
                     </EventTrigger>
                 </ToggleButton.Triggers>
-            </ToggleButton>
+            </ToggleButton>-->
 
             <!-- **************************************************Expand Arrow***********************************************-->
 
 
             <Grid Grid.Column="1" Grid.RowSpan="2"
-                  Visibility="{Binding ElementName=ExpandButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                  Visibility="{Binding TrackTabControl.FullTrackLocation.BioImageView.IsExpanded, Converter={StaticResource InverseBooleanConverter}}" 
                   Width="220">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="48"/>

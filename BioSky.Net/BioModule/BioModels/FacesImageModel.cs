@@ -25,11 +25,10 @@ namespace BioModule.BioModels
       _marker             = new MarkerUtils();
       _faceFinder         = new FaceFinder();
       _markerBitmapHolder = new MarkerBitmapSourceHolder();
+      _notifier           = locator.GetProcessor<INotifier>();
 
       _imageView    = imageView;
-      //_progressRing = progressRing;
 
-      (_imageView as BioImageViewModel).StyleChanged += STYLE_CHANGED;
       //CurrentPhoto = GetTestPhoto();
     }
 
@@ -64,12 +63,12 @@ namespace BioModule.BioModels
       EnrollmentBar.Subscribe(this);
     }
 
-    public void Activate()
+    public void Activate(bool isNewUser)
     {
       (EnrollmentBar as IScreen).Activate();
+      EnrollmentBar.SetStyle(isNewUser);
       EnrollmentBar.Unsubscribe(this);
       EnrollmentBar.Subscribe(this);
-      EnrollmentBar.DeviceStopedByUser += SetDefaultImage;
 
       if (_markerBitmapHolder.Unmarked == null)
         SetDefaultImage();
@@ -84,7 +83,7 @@ namespace BioModule.BioModels
     {
       (EnrollmentBar as IScreen).Deactivate(false);
       EnrollmentBar.Unsubscribe(this);
-      EnrollmentBar.DeviceStopedByUser -= SetDefaultImage;
+
       _isActive = false;
       NotifyOfPropertyChange(() => IsActive);
     }
@@ -152,35 +151,44 @@ namespace BioModule.BioModels
         return;
       }
 
+      BitmapSource newFrame;
       if (EnrollmentBar._isSnapshootActive)
       {
-        SetPhoto(frame);
-        return;
+        GetSnapshoot(frame);
+        newFrame = BitmapConversion.BitmapToBitmapSource(frame);
+        _imageView.SetSingleImage(newFrame);
+        _markerBitmapHolder.Unmarked = newFrame;        
       }
-
-      Bitmap processedFrame = DrawFaces(ref frame);
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
-
+      else
+      {
+        Bitmap processedFrame = DrawFaces(ref frame);
+        newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
+      }
       _imageView.SetSingleImage(newFrame);
     }
 
-    private void SetPhoto(Bitmap frame)
+    private void GetSnapshoot(Bitmap frame)
     {
       EnrollmentBar._isSnapshootActive = false;
       EnrollmentBar.SelectedDevice = null;
 
+      SetSnapshootPhoto(frame);
+
+      _notifier.ShowInformation("Snapshoot done");  
+      _notifier.Hide(SNAPSHOOT_TIMER);
+    }
+
+    private void SetSnapshootPhoto(Bitmap frame)
+    {
       Google.Protobuf.ByteString description = _utils.ImageToByteString(frame);
       Photo photo = new Photo()
       {
           Bytestring = description
         , Datetime   = DateTime.Now.Ticks
-        , OriginType = PhotoOriginType.Thumbnail        
+        , OriginType = PhotoOriginType.Thumbnail
       };
 
       CurrentPhoto = photo;
-      BitmapSource newFrame = BitmapConversion.BitmapToBitmapSource(frame);
-      _imageView.SetSingleImage(newFrame);
-      _markerBitmapHolder.Unmarked = newFrame;
     }
 
     public void SetDefaultImage()
@@ -192,23 +200,15 @@ namespace BioModule.BioModels
 
     public void OnStop(bool stopped, Exception message, LocationDevice device)
     {
-      _imageView.SetSingleImage(null);
+      if (_markerBitmapHolder.Unmarked != null)
+        _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);
+      else
+        SetDefaultImage();
     }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
 
-    public void OnMessage(string message)
-    {
-      Console.WriteLine(message);
-    }
-
-    private void STYLE_CHANGED(long style)
-    {
-      if(style == BioImageViewModel.MAX_BIO_IMAGE_STYLE)
-        EnrollmentBar.EnrollButtonVisibility = true;
-      else
-        EnrollmentBar.EnrollButtonVisibility = false;
-    }
+    public void OnMessage(string message){ }
 
     #region UI
     public BioImageModelType BioType
@@ -291,12 +291,14 @@ namespace BioModule.BioModels
 
     #region GlobalVariables
 
+    public const int SNAPSHOOT_TIMER = 2000;
+
     private MarkerUtils              _marker            ;
     private FaceFinder               _faceFinder        ;
     private IImageViewUpdate         _imageView         ;
     private MarkerBitmapSourceHolder _markerBitmapHolder;
-    private ProgressRingViewModel    _progressRing      ;
     private BioImageUtils            _utils             ;
+    private INotifier _notifier;
     #endregion
   }
 

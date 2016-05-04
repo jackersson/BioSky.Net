@@ -19,14 +19,15 @@ namespace BioModule.ViewModels
   //public delegate void SelectedDeviceChangedEventHandler();
   public class FaceEnrollmentBarViewModel : Screen, ICaptureDeviceObserver, IBioObservable<ICaptureDeviceObserver>
   {    
-    public FaceEnrollmentBarViewModel(IProcessorLocator locator)
+    public FaceEnrollmentBarViewModel(IProcessorLocator locator, long style = MAX_FACE_ENROLLMENT_BAR_STYLE)
     {      
       _captureDeviceEngine  = locator.GetProcessor<ICaptureDeviceEngine>();
       _dialogsHolder        = locator.GetProcessor<DialogsHolder>();
       _observer             = new BioObserver<ICaptureDeviceObserver>();
       Resolution            = new AsyncObservableCollection<string>();
+      _notifier             = locator.GetProcessor<INotifier>();
 
-      //_progressRing = progressRing;
+      SetStyle(style);
     }
     
     private void DevicesNames_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)  {
@@ -62,14 +63,18 @@ namespace BioModule.ViewModels
 
       Resolution.Clear();
       _captureDeviceEngine.Add(SelectedDevice);
-      _captureDeviceEngine.Subscribe(this, SelectedDevice);      
+      _captureDeviceEngine.Subscribe(this, SelectedDevice);
+      foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)
+        _captureDeviceEngine.Subscribe(observer.Value, SelectedDevice);
     }
 
     private void StopCaptureDevice()
     {
       Resolution.Clear();
       _captureDeviceEngine.Unsubscribe(this);
-      _captureDeviceEngine.Remove(SelectedDevice);     
+      _captureDeviceEngine.Remove(SelectedDevice);
+      foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)
+        _captureDeviceEngine.Unsubscribe(observer.Value);
     }
 
     private void ApplyVideoDeviceCapability() {
@@ -84,7 +89,7 @@ namespace BioModule.ViewModels
     public void OnStop(bool stopped, Exception ex, LocationDevice device) {
 
       if (ex.Message != "Stoped by user")
-        _progressRing.ShowWaiting(ex.Message);
+        _notifier.ShowInformation(ex.Message);
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
     }    
 
@@ -92,7 +97,7 @@ namespace BioModule.ViewModels
     {
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
       UpdateResolution(active, all);
-      _progressRing.Hide(2000);
+      _notifier.Hide(ON_START_TIMER);
     }
 
     private void UpdateResolution(VideoCapabilities active, VideoCapabilities[] all)
@@ -122,7 +127,7 @@ namespace BioModule.ViewModels
 
     public void OnMessage(string message)
     {
-      _progressRing.ShowWaiting(message);
+      _notifier.ShowInformation(message);
     }
 
     public void OnSnapshoot()
@@ -132,11 +137,9 @@ namespace BioModule.ViewModels
       _isSnapshootActive = true;
     }
 
-    public async void OnStopDevice()
+    public void OnStopDevice()
     {
       SelectedDevice = null;
-      await Task.Delay(500);
-      OnDeviceStopedByUser();
     }
 
     #region observer
@@ -162,6 +165,41 @@ namespace BioModule.ViewModels
     #endregion
 
     #region UI
+
+    #region style
+    private long SetFlag(long currentStyle, FaceEnrollmentBarStyle style)
+    {
+      return currentStyle | (long)style;
+    }
+    private bool HasFlag(long currentStyle, FaceEnrollmentBarStyle style)
+    {
+      long activityL = (long)style;
+      return (currentStyle & activityL) == activityL;
+    }
+    public void SetStyle(long style) { ControlStyle = style; }
+
+    public void SetStyle(bool isNewUser) { ControlStyle = (isNewUser) ? NEW_USER_FACE_ENROLLMENT_BAR_STYLE : MAX_FACE_ENROLLMENT_BAR_STYLE; }
+
+    private long _controlStyle;
+    public long ControlStyle
+    {
+      get { return _controlStyle; }
+      set
+      {
+        if (_controlStyle != value)
+        {
+          _controlStyle = value;
+          NotifyOfPropertyChange(() => ControlStyle);
+          NotifyOfPropertyChange(() => EnrollButtonVisibility);
+        }
+      }
+    }
+    public bool EnrollButtonVisibility
+    {
+      get { return HasFlag(ControlStyle, FaceEnrollmentBarStyle.EnrollButton); }
+    }
+
+    #endregion
 
     private int _selectedResolution;
     public int SelectedResolution
@@ -206,21 +244,6 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    private bool _enrollButtonVisibility;
-    public bool EnrollButtonVisibility
-    {
-      get { return _enrollButtonVisibility; }
-      set
-      {
-        if (_enrollButtonVisibility != value)
-        {
-          _enrollButtonVisibility = value;
-          NotifyOfPropertyChange(() => EnrollButtonVisibility);
-        }
-      }
-    }
-
     public BitmapSource DeviceConnectedIcon
     {
       get { return _captureDeviceEngine.IsDeviceActive(SelectedDevice) ? ResourceLoader.OkIconSource : ResourceLoader.ErrorIconSource; }
@@ -242,25 +265,26 @@ namespace BioModule.ViewModels
         }
       }
     }
-
-    public delegate void DeviceStopedByUserEventHandler();
-
-    public event DeviceStopedByUserEventHandler DeviceStopedByUser;
-
-    private void OnDeviceStopedByUser()
-    {
-      if (DeviceStopedByUser != null)
-        DeviceStopedByUser();
-    }
     #endregion
 
     #region Global Variables
+
+    public const long NEW_USER_FACE_ENROLLMENT_BAR_STYLE = 0;
+    public const long MAX_FACE_ENROLLMENT_BAR_STYLE = (long)(FaceEnrollmentBarStyle.EnrollButton);
+
+    public const int ON_START_TIMER = 2000;
+
     public bool _isSnapshootActive;
     private BioObserver<ICaptureDeviceObserver> _observer           ;
     private readonly DialogsHolder              _dialogsHolder      ;
     private readonly ICaptureDeviceEngine       _captureDeviceEngine;
-    private          ProgressRingViewModel      _progressRing       ;
+    private readonly INotifier                  _notifier           ;
     #endregion
 
+  }
+
+  public enum FaceEnrollmentBarStyle
+  {
+    EnrollButton = 1 << 0
   }
 }
