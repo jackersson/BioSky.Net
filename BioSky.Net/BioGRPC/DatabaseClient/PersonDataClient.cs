@@ -26,8 +26,7 @@ namespace BioGRPC.DatabaseClient
     {
       try
       {
-        PersonList call = await _client.PersonSelectAsync(command);
-       
+        PersonList call = await _client.PersonSelectAsync(command);       
         Task task = new Task(() => _database.Persons.Init(call.Persons));
         task.Start();
       }

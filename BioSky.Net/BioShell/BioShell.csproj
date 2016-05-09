@@ -278,10 +278,9 @@
       <Project>{fedd6c6d-6cd4-4d74-a19c-f2715b0d1f5b}</Project>
       <Name>BioContracts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BioModule\BioModule.csproj">
-      <Project>{ac257dc2-4498-40c6-a31b-3d2ed33d09ea}</Project>
-      <Name>BioModule</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

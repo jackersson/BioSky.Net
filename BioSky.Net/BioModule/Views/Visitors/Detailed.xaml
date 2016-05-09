@@ -48,7 +48,6 @@
             <utils:ConvertLongToDateTime x:Key="ConvertLongToDateTime"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
         </ResourceDictionary>
     </UserControl.Resources>
 

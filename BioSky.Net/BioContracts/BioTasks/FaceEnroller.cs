@@ -1,5 +1,6 @@
 ﻿using AForge.Video.DirectShow;
 using BioContracts.CaptureDevices;
+using BioContracts.Common;
 using BioContracts.Locations;
 using BioService;
 using System;
@@ -107,7 +108,7 @@ namespace BioContracts.BioTasks
       OnFrame(ref frame);
     }
 
-    public void OnStop(bool stopped, Exception message, LocationDevice device) { }
+    public void OnStop(bool stopped, ErrorMessage message, LocationDevice device) { }
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) { }
 
     public void OnMessage(string message)

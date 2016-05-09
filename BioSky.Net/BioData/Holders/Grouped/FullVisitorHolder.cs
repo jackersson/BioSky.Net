@@ -18,7 +18,6 @@ namespace BioData.Holders.Grouped
       _photoHolder = photoHolder;
     }
 
-
     public void Init(Google.Protobuf.Collections.RepeatedField<Visitor> data)
     {
       Data = new AsyncObservableCollection<Visitor>(data);

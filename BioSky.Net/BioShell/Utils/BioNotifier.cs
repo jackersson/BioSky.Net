@@ -1,5 +1,4 @@
 ﻿using BioContracts;
-using BioModule.ViewModels;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System;
@@ -8,9 +7,9 @@ namespace BioShell.Utils
 {
   public class BioNotifier : INotifier
   {
-    public BioNotifier()
-    {      
-      _progressRing = new ProgressRingViewModel();
+    public BioNotifier(IProcessorLocator locator)
+    {
+      _progressRing = locator.GetProcessor<IProgressShowable>();
       _bioLogger    = new BioLogger();
     }
     public void Notify(_Exception exception)
@@ -46,11 +45,11 @@ namespace BioShell.Utils
 
     public object LoadingViewModel
     {
-      get {  return _progressRing;  }
+      get {  return _progressRing.GetLoadingViewModel();  }
     }
 
-    private ProgressRingViewModel _progressRing;
-    private BioLogger             _bioLogger   ;
+    private readonly IProgressShowable _progressRing;
+    private BioLogger                  _bioLogger   ;
 
   }
 }

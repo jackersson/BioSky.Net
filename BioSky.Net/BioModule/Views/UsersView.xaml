@@ -37,7 +37,6 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
             
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
 
             <Style x:Key="GreyScaleImage" TargetType="Image">
                 <Style.Triggers>
@@ -127,7 +126,7 @@
                  VerticalAlignment="Stretch" 
                  ToolTip="{lex:Loc AddNewUser}"
                  cal:Message.Attach="[Event Click] = [Action ShowUserPage('false')]"
-                 IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                 IsEnabled="{Binding Source={x:Static utils:PermissionControllerHolder.PermissionController}, Path=CurrentPermissionRights
                             , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
                             , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">                 
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddIconSource}" 

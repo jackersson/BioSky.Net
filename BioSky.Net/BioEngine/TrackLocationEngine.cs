@@ -27,17 +27,16 @@ namespace BioEngine
 
 
       _locationsHolder = _locator.GetProcessor<IBioSkyNetRepository>().Locations;
-      _locationsHolder.DataChanged += RefreshData;
+      _locationsHolder.DataChanged += RefreshData;    
     }
-           
+
     private void RefreshData()
     {      
       IBioSkyNetRepository database      = _locator.GetProcessor<IBioSkyNetRepository>();
       IServiceManager     serviceManager = _locator.GetProcessor<IServiceManager>();
       IEnumerable <Location> data        = database.Locations.Data.Where(x => x.MacAddress == serviceManager.MacAddress);
 
-      
-     // UpdateDevicesEngines();
+      // UpdateDevicesEngines();
 
       foreach (Location location in data)
       {
@@ -51,9 +50,9 @@ namespace BioEngine
         }          
          TrackLocation trackLocation = new TrackLocation(_locator, location);
           trackLocation.TrackLocationStateChanged += UpdateTrackLocationState;
-         _trackLocationsSet.TryAdd(location.Id, trackLocation);     
+         _trackLocationsSet.TryAdd(location.Id, trackLocation);
       }
-      
+
       _trackLocations.Clear();
       Dictionary<long, Location> dict = database.Locations.DataSet;
       foreach ( long locationID in _trackLocationsSet.Keys)
@@ -67,6 +66,7 @@ namespace BioEngine
         else        
           _trackLocations.Add(_trackLocationsSet[locationID]);        
       }
+
       OnLocationsChanged();
     }
 

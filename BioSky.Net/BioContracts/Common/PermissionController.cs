@@ -4,30 +4,11 @@ using System.Collections.Generic;
 
 namespace BioContracts
 {
-  public class PermissionController : PropertyChangedBase
+  public class PermissionController : PropertyChangedBase, IPermissionController
   {
     Dictionary<Rights, long> roleDictionary = new Dictionary<Rights, long>();
 
-    private static object syncObject = new object();
-
-    private static volatile PermissionController _instance;
-    public static PermissionController Instance
-    {
-      get
-      {
-        if (_instance == null)
-        {
-          lock (syncObject)
-          {
-            if (_instance == null)
-              _instance = new PermissionController();
-          }
-        }
-        return _instance;
-      }
-    }
-
-    private PermissionController()
+    public PermissionController()
     {
       Initialize();
     }
@@ -61,6 +42,7 @@ namespace BioContracts
       _managerRole = SetFlag(_managerRole, Activity.PhotoRemove);
       return _managerRole;
     }
+
     public void UpdateAuthenticatedPersonRights(Rights rights)
     {
       long role = 0;
@@ -69,7 +51,6 @@ namespace BioContracts
 
       CurrentPermissionRights = rights;
     }
-
     public bool isActivityAllowed(Activity activity)
     {
       return HasFlag(CurrentRole, activity);
@@ -88,14 +69,13 @@ namespace BioContracts
     private long CurrentRole
     {
       get { return _currentRole; }
-    }
-
+    }   
 
     private Rights _currentPermissionRights;
     public Rights CurrentPermissionRights
     {
       get { return _currentPermissionRights; }
-      private set
+      set
       {
         if (_currentPermissionRights != value)
         {

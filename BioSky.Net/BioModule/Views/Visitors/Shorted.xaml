@@ -54,7 +54,7 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -150,7 +150,7 @@
 
         <Button Style="{DynamicResource MetroCircleButtonStyle}" x:Name="button_Copy1" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Height="48"
                 ToolTip="{lex:Loc Delete}"
-                IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                IsEnabled="{Binding Source={x:Static utils:PermissionControllerHolder.PermissionController}, Path=CurrentPermissionRights
                            , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
                            , ConverterParameter={x:Static bioContracts:Activity.VisitorRemove}}">
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}" 

@@ -23,10 +23,12 @@ namespace BioData.Holders.Grouped
       _fieldsUtils  = new ProtoFieldsUtils();
 
       _dialogsHolder = locator.GetProcessor<IDialogsHolder>();
+
+      Google.Protobuf.Collections.RepeatedField<Location> data = new Google.Protobuf.Collections.RepeatedField<Location>();      
     }
 
     public void Init(Google.Protobuf.Collections.RepeatedField<Location> data)
-    {      
+    {
       Data = new AsyncObservableCollection<Location>(data);
 
       foreach (Location location in data)

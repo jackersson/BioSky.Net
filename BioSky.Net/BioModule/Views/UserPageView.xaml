@@ -22,7 +22,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <utils:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
             <ResourceDictionary.MergedDictionaries>
@@ -121,7 +120,7 @@
                  Tag="{x:Static bioContracts:Activity.UserAdd}">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
-                        <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                        <Binding Source="{x:Static utils:PermissionControllerHolder.PermissionController}" Path="CurrentPermissionRights"/>
                         <Binding Path="CanApply"/>
                         <Binding ElementName="ApplyButton" Path="Tag"/>
                     </MultiBinding>
@@ -145,7 +144,7 @@
                 Tag="{x:Static bioContracts:Activity.UserRemove}">
                 <Button.IsEnabled>
                     <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
-                        <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                        <Binding Source="{x:Static utils:PermissionControllerHolder.PermissionController}" Path="CurrentPermissionRights"/>
                         <Binding Path="CanDelete"/>
                         <Binding ElementName="DeleteButton" Path="Tag"/>
                     </MultiBinding>

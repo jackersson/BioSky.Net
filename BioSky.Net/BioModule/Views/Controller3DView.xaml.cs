@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace BioModule.Views
 {
   /// <summary>
-  /// Interaction logic for FingerBarView.xaml
+  /// Interaction logic for Controller3DView.xaml
   /// </summary>
-  public partial class FingerBarView : UserControl
+  public partial class Controller3DView : UserControl
   {
-    public FingerBarView()
+    public Controller3DView()
     {
       InitializeComponent();
     }

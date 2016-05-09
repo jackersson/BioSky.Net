@@ -1,19 +1,14 @@
 ﻿using System.Windows.Media.Imaging;
-using BioModule.ResourcesLoader;
 using System.IO;
 using System.Drawing;
 using BioService;
 using BioModule.Utils;
 using BioContracts;
-using BioContracts.Common;
-using System;
 using System.Collections.ObjectModel;
-using Caliburn.Micro;
-using AForge.Video.DirectShow;
 using BioModule.BioModels;
 
 namespace BioModule.ViewModels
-{   
+{
   public enum BioImageStyle : long
   {  
       Zoom               = 1 << 0
@@ -22,11 +17,12 @@ namespace BioModule.ViewModels
     , EnrollmentFromFile = 1 << 3
     , Information        = 1 << 4
     , Arrows             = 1 << 5
-    , CancelBtn          = 1 << 6
+    , CancelButton       = 1 << 6
     , Btn3D              = 1 << 7
-    , FacialBtn          = 1 << 8
-    , FingerBtn          = 1 << 9
-    , IrisBtn            = 1 << 10
+    , FacialButton       = 1 << 8
+    , FingerButton       = 1 << 9
+    , IrisButton         = 1 << 10
+    , ExpanderButton     = 1 << 11
   }  
   public class BioImageViewModel : ImageViewModel, IUserBioItemsUpdatable
   {
@@ -365,42 +361,45 @@ namespace BioModule.ViewModels
         if (_controlStyle != value)
         {
           _controlStyle = value;
-          //for test
-          _controlStyle = MAX_BIO_IMAGE_STYLE;
-          //for test
+          _controlStyle = MAX_BIO_IMAGE_STYLE; 
           _isNewUser = (_controlStyle == NEW_USER_BIO_IMAGE_STYLE);
           if(CurrentBioImage != null)
           {
             CurrentBioImage.Deactivate();
             CurrentBioImage.Activate(_isNewUser);
           }          
-          NotifyOfPropertyChange(() => ControlStyle);
-          NotifyOfPropertyChange(() => EnrollFromPhotoVisibility);
-          NotifyOfPropertyChange(() => LiveEnrollmentVisibility);
-          NotifyOfPropertyChange(() => CancelButtonVisibility);
-          NotifyOfPropertyChange(() => EnrollExpanderVisibility);
-          NotifyOfPropertyChange(() => BioImageDetailsVisibility);
+          NotifyOfPropertyChange(() => ControlStyle              );
+          NotifyOfPropertyChange(() => EnrollFromPhotoVisibility );
+          NotifyOfPropertyChange(() => LiveEnrollmentVisibility  );
+          NotifyOfPropertyChange(() => CancelButtonVisibility    );
+          NotifyOfPropertyChange(() => EnrollExpanderVisibility  );
+          NotifyOfPropertyChange(() => BioImageDetailsVisibility );
           NotifyOfPropertyChange(() => BioImageSelectorVisibility);
-          NotifyOfPropertyChange(() => ArrowsVisibility);
-          NotifyOfPropertyChange(() => ZoomVisibility);
-          NotifyOfPropertyChange(() => Button3DVisibility);
-          NotifyOfPropertyChange(() => FacialButtonVisibility);
-          NotifyOfPropertyChange(() => FingerButtonVisibility);
-          NotifyOfPropertyChange(() => IrisButtonVisibility);
+          NotifyOfPropertyChange(() => ArrowsVisibility          );
+          NotifyOfPropertyChange(() => ZoomVisibility            );
+          NotifyOfPropertyChange(() => Button3DVisibility        );
+          NotifyOfPropertyChange(() => FacialButtonVisibility    );
+          NotifyOfPropertyChange(() => FingerButtonVisibility    );
+          NotifyOfPropertyChange(() => IrisButtonVisibility      );
+          NotifyOfPropertyChange(() => ExpanderButtonVisibility  );
         }
       }
     }
+    public bool ExpanderButtonVisibility
+    {
+      get { return HasFlag(ControlStyle, BioImageStyle.ExpanderButton); }
+    }
     public bool IrisButtonVisibility
     {
-      get { return HasFlag(ControlStyle, BioImageStyle.IrisBtn); }
+      get { return HasFlag(ControlStyle, BioImageStyle.IrisButton); }
     }
     public bool FingerButtonVisibility
     {
-      get { return HasFlag(ControlStyle, BioImageStyle.FingerBtn); }
+      get { return HasFlag(ControlStyle, BioImageStyle.FingerButton); }
     }
     public bool FacialButtonVisibility
     {
-      get { return HasFlag(ControlStyle, BioImageStyle.FacialBtn); }
+      get { return HasFlag(ControlStyle, BioImageStyle.FacialButton); }
     }
     public bool EnrollFromPhotoVisibility
     {
@@ -414,11 +413,11 @@ namespace BioModule.ViewModels
 
     public bool CancelButtonVisibility
     {
-      get { return HasFlag(ControlStyle, BioImageStyle.CancelBtn); }
+      get { return HasFlag(ControlStyle, BioImageStyle.CancelButton); }
     }
     public bool Button3DVisibility
     {
-      get { return HasFlag(ControlStyle, BioImageStyle.Btn3D); }
+      get { return true; }//return HasFlag(ControlStyle, BioImageStyle.Btn3D) && CurrentPhoto != null; }
     }
 
     public bool EnrollExpanderVisibility
@@ -428,7 +427,7 @@ namespace BioModule.ViewModels
 
     public bool BioImageDetailsVisibility
     {
-      get { return HasFlag(ControlStyle, BioImageStyle.Information); }
+      get { return HasFlag(ControlStyle, BioImageStyle.Information) && CurrentPhoto != null; }
     }
 
     public bool BioImageSelectorVisibility
@@ -543,18 +542,24 @@ namespace BioModule.ViewModels
 
     public const int CANNOT_UPLOAD_PHOTO_TIMER = 5000;
 
-    public const long MY_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom);
-    public const long MIN_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelBtn);
-    public const long MAX_BIO_IMAGE_STYLE = (long)(  BioImageStyle.Zoom               | BioImageStyle.CancelBtn
+    public const long MY_BIO_IMAGE_STYLE  = (long)(BioImageStyle.Zoom);
+    public const long MIN_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelButton);
+    public const long MIN_EXPANDED_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom | BioImageStyle.CancelButton | BioImageStyle.ExpanderButton);
+    public const long MAX_BIO_IMAGE_STYLE = (long)(  BioImageStyle.Zoom               | BioImageStyle.CancelButton
                                                    | BioImageStyle.Arrows             | BioImageStyle.BioSelector
                                                    | BioImageStyle.EnrollmentFromFile | BioImageStyle.Information
                                                    | BioImageStyle.LiveEnrollment     | BioImageStyle.Btn3D
-                                                   | BioImageStyle.FingerBtn          | BioImageStyle.FacialBtn | BioImageStyle.IrisBtn);
+                                                   | BioImageStyle.FingerButton       | BioImageStyle.FacialButton | BioImageStyle.IrisButton
+                                                   | BioImageStyle.ExpanderButton);
 
-    public const long NEW_USER_BIO_IMAGE_STYLE = (long)( BioImageStyle.Zoom               | BioImageStyle.CancelBtn
+    public const long AUTHENTICATION_BIO_IMAGE_STYLE = (long)(BioImageStyle.Zoom               | BioImageStyle.FacialButton
+                                                            | BioImageStyle.BioSelector        | BioImageStyle.IrisButton
+                                                            | BioImageStyle.FingerButton       | BioImageStyle.LiveEnrollment);
+
+    public const long NEW_USER_BIO_IMAGE_STYLE = (long)( BioImageStyle.Zoom               | BioImageStyle.CancelButton
                                                        | BioImageStyle.Arrows             | BioImageStyle.BioSelector
-                                                       | BioImageStyle.EnrollmentFromFile 
-                                                       | BioImageStyle.LiveEnrollment     | BioImageStyle.FacialBtn );
+                                                       | BioImageStyle.EnrollmentFromFile | BioImageStyle.ExpanderButton
+                                                       | BioImageStyle.LiveEnrollment     | BioImageStyle.FacialButton);
 
     private readonly INotifier _notifier;
     private readonly IBioSkyNetRepository _database;

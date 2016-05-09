@@ -51,7 +51,10 @@ namespace BioModule.ViewModels
     public void Update(Person user)
     {
       if (user == null || (user != null && user.Id <= 0))
+      {
+        IsEnabled = false;
         return;
+      }
 
       _user = user;
       RefreshData();

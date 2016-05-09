@@ -16,18 +16,115 @@
              d:DesignHeight="300" d:DesignWidth="230">
 
     <UserControl.Resources>
-        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/VS/Colors.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+            <Style x:Key="MyStandardButton" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource BackgroundNormal}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderBrushNormal}" />
+                <Setter Property="Foreground" Value="{StaticResource Foreground}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            SnapsToDevicePixels="True">
+                                <Grid>
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundHighlighted}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHighlighted}" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource BackgroundSelected}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSelected}" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Background" Value="Transparent" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ToggleButtonStyle1" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Background" Value="{DynamicResource BackgroundNormal}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushNormal}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}"/>
+                <Setter Property="FontSize" Value="{DynamicResource UpperCaseContentFontSize}"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Padding" Value="5,6"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="MinHeight" Value="24"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <Border x:Name="Background" Background="{TemplateBinding Background}"  CornerRadius="{Binding (Controls:ControlsHelper.CornerRadius), Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{x:Null}" 
+                                        CornerRadius="{Binding (Controls:ControlsHelper.CornerRadius), Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <Border x:Name="DisabledVisualElement" Background="{DynamicResource ControlsDisabledBrush}"
+                                        CornerRadius="{Binding (Controls:ControlsHelper.CornerRadius), Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                        IsHitTestVisible="False" Opacity="0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <ContentPresenter x:Name="PART_ContentPresenter" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="BorderThickness" TargetName="Border" Value="1"/>
+                                    <Setter Property="Background" TargetName="Background" Value="{DynamicResource GrayBrush2}"/>
+                                    <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource BorderBrushNormal}"/>
+                                </Trigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsChecked" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" TargetName="Background" Value="{DynamicResource GrayBrush8}"/>
+                                </MultiTrigger>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsChecked" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" TargetName="Background" Value="{DynamicResource GrayBrush3}"/>
+                                </MultiTrigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" TargetName="Background" Value="{DynamicResource GrayBrush7}"/>
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                    <Setter Property="BorderThickness" TargetName="Border" Value="1"/>
+                                    <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource BorderBrushNormal}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" TargetName="DisabledVisualElement" Value="0.7"/>
+                                    <Setter Property="Opacity" TargetName="PART_ContentPresenter" Value="0.3"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid x:Name="GridLayout">
-        <Grid.ColumnDefinitions>            
+        <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="32"/>
-            <ColumnDefinition Width="32"/>
-            <ColumnDefinition Width="32"/>
-            <ColumnDefinition Width="32"/>
+            <ColumnDefinition Width="28"/>
+            <ColumnDefinition Width="28"/>
+            <ColumnDefinition Width="28"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -69,21 +166,22 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="32"/>                            
+                            <ColumnDefinition Width="28"/>
+                            <ColumnDefinition Width="28"/>
+                            <ColumnDefinition Width="28"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="32"/>
                             <RowDefinition Height="32"/>
                         </Grid.RowDefinitions>
-                        
-                        <ToggleButton HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="32" Height="32"
-                                      BorderThickness="1" Grid.Row="1" Grid.Column="2" 
-                                      IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"                                          
-                                      Style="{DynamicResource MetroCircleToggleButtonStyle}">
-                            <Image Width="18" Height="18" Source="{Binding Source={StaticResource ResourceLoader}, Path=SettingsIconSource}" />
+
+                        <ToggleButton  Width="24" MaxHeight="24" ToolTip="Settings" 
+                                      Grid.Row="1" Grid.Column="2" Style="{DynamicResource ToggleButtonStyle1}" 
+                                      IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"                                           
+                                      >
+                            <Image Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Source="{Binding Source={StaticResource ResourceLoader}, Path=SettingsIconSource}" />
                         </ToggleButton>
 
                         <ContentPresenter x:Name="ExpanderContent"
@@ -103,26 +201,29 @@
             </Expander.Template>
         </Expander>
 
-        <Button Width="32" Height="32" BorderThickness="1" 
+        <Button Width="24" Height="24" BorderThickness="1" 
                 HorizontalAlignment="Center" VerticalAlignment="Center"                 
-                Style="{DynamicResource MetroCircleButtonStyle}"
+                Style="{StaticResource MyStandardButton}" 
                 Grid.Row="1"  Grid.Column="3" ToolTip="Snapshoot"
                 cal:Message.Attach="[Event Click] = [Action OnSnapshoot]">
-            <Image Width="15" Height="15" Source="{Binding Source={StaticResource ResourceLoader}, Path=SnapshootIconSource}" />
-        </Button>
-        
-        <Button Width="32" Height="32" BorderThickness="1" ToolTip="Stop Device"
-                HorizontalAlignment="Center" VerticalAlignment="Center"                
-                Style="{DynamicResource MetroCircleButtonStyle}" Grid.Row="1" Grid.Column="4"
-                cal:Message.Attach="[Event Click] = [Action OnStopDevice]">
-            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
+            <Image Width="18" Height="18" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   Source="{Binding Source={StaticResource ResourceLoader}, Path=SnapshootIconSource}" />
         </Button>
 
-        <Button Width="32" Height="32" BorderThickness="1" 
+        <Button Width="24" Height="24" BorderThickness="1" ToolTip="Stop Device"
+                HorizontalAlignment="Center" VerticalAlignment="Center"                
+                Style="{StaticResource MyStandardButton}" Grid.Row="1" Grid.Column="4"
+                cal:Message.Attach="[Event Click] = [Action OnStopDevice]">
+            <Image Width="28" Height="28" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   Source="{Binding Source={StaticResource ResourceLoader}, Path=StopIconSource}" />
+        </Button>
+
+        <Button Width="24" Height="24" BorderThickness="1" Margin="2,0,0,0"
                 HorizontalAlignment="Center" VerticalAlignment="Center"                 
-                Style="{DynamicResource MetroCircleButtonStyle}"
+                Style="{StaticResource MyStandardButton}"
                 Grid.Row="1"  Grid.Column="5" Visibility="{Binding EnrollButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" >
-            <Image Width="20" Height="20" Source="{Binding Source={StaticResource ResourceLoader}, Path=StartIconSource}" />
+            <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   Source="{Binding Source={StaticResource ResourceLoader}, Path=StartIconSource}" />
         </Button>
     </Grid>
 </UserControl>

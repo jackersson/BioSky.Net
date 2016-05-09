@@ -204,7 +204,7 @@
   <data name="RegisteredUsers" xml:space="preserve">
     <value>Зарегестрированные Пользователи</value>
   </data>
-  <data name="EnrollFromImageFile" xml:space="preserve">
+  <data name="EnrollFromPhoto" xml:space="preserve">
     <value>Зарегестрировать из файла изображения</value>
   </data>
   <data name="EnrollFromCamera" xml:space="preserve">
@@ -392,5 +392,20 @@
   </data>
   <data name="Irises" xml:space="preserve">
     <value>Радужная оболочка</value>
+  </data>
+  <data name="Faces" xml:space="preserve">
+    <value>Лица</value>
+  </data>
+  <data name="FingerDevices" xml:space="preserve">
+    <value>Приборы для пальцев</value>
+  </data>
+  <data name="IrisDevices" xml:space="preserve">
+    <value>Приборы для глаз</value>
+  </data>
+  <data name="string_All" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="string_Custom" xml:space="preserve">
+    <value>Выборочно</value>
   </data>
 </root>

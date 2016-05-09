@@ -84,25 +84,42 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="0*"/>
+                <!-- Language-->
                 <RowDefinition Height="56"/>
+                <!-- Language-->
+                
+                <!-- LocalStorage-->
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="56"/>
+                <!-- LocalStorage-->
+
+                <!-- DatabaseService-->
                 <RowDefinition Height="24"/>               
                 <RowDefinition Height="56"/>
+                <!-- DatabaseService-->
 
+                <!-- FaceService-->
                 <RowDefinition Height="24"/>
                 <RowDefinition Height="56"/>
+                <!-- FaceService-->
+                
+                <!-- FingerService-->
                 <RowDefinition Height="24"/>
                 <RowDefinition Height="56"/>
+                <!-- FingerService-->
+                
+                <!-- IrisService-->
+                <RowDefinition Height="24"/>
+                <RowDefinition Height="56"/>
+                <!-- IrisService-->
 
+                <!-- ItemsPerPage-->
                 <RowDefinition Height="10*"/>
                 <RowDefinition Height="25"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="10*"/>
-
+                <RowDefinition Height="Auto"/>
+                <!-- ItemsPerPage-->
                 <RowDefinition Height="241*"/>
                 <RowDefinition Height="48"/>
-
             </Grid.RowDefinitions>
 
             <ComboBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
@@ -182,7 +199,7 @@
                 </TextBox>
             </Grid>
 
-            <Label Grid.Row="8" Grid.ColumnSpan="4" Content="{lex:Loc FingerprintService}"></Label>
+            <Label Grid.Row="8" Grid.ColumnSpan="4" Content="Fingerprint Service"></Label>
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
               Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="9">
                 <Grid.ColumnDefinitions>
@@ -193,20 +210,43 @@
                      Grid.Column="0" 
                      Controls:TextBoxHelper.Watermark="{lex:Loc IpAdress}"
                      Controls:TextBoxHelper.UseFloatingWatermark="True"                  
-                     Text="{Binding FingerprintServiceIP, UpdateSourceTrigger=PropertyChanged}">
+                    Text="{Binding GeneralSettings.FingerprintService.IP, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
 
                 <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
                      Grid.Column="1" 
                      Controls:TextBoxHelper.Watermark="{lex:Loc Port}"
                      Controls:TextBoxHelper.UseFloatingWatermark="True"                  
-                     Text="{Binding FingerprintServicePort, UpdateSourceTrigger=PropertyChanged}">
+                     Text="{Binding GeneralSettings.FingerprintService.Port, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
             </Grid>
 
-            <Label Grid.Row="11" Grid.ColumnSpan="4" Content="Items count per page"></Label>
+            <Label Grid.Row="10" Grid.ColumnSpan="4" Content="Iris Service"></Label>
+            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+              Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="11">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
+                     Grid.Column="0" 
+                     Controls:TextBoxHelper.Watermark="{lex:Loc IpAdress}"
+                     Controls:TextBoxHelper.UseFloatingWatermark="True"                  
+                     Text="{Binding GeneralSettings.IrisService.IP, UpdateSourceTrigger=PropertyChanged}">
+                </TextBox>
 
-            <Controls:NumericUpDown Name="ItemsCount" Grid.Row="12" Grid.ColumnSpan="4"
+                <TextBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="2"
+                     Grid.Column="1" 
+                     Controls:TextBoxHelper.Watermark="{lex:Loc Port}"
+                     Controls:TextBoxHelper.UseFloatingWatermark="True"                  
+                     Text="{Binding GeneralSettings.IrisService.Port, UpdateSourceTrigger=PropertyChanged}">
+                </TextBox>
+            </Grid>
+
+
+            <Label Grid.Row="13" Grid.ColumnSpan="4" Content="Items count per page"></Label>
+
+            <Controls:NumericUpDown Name="ItemsCount" Grid.Row="14" Grid.ColumnSpan="4"
                                 HasDecimals="False"   Margin="2"   
                                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                                 Minimum="5" Maximum="100" Interval="5"                               
@@ -232,7 +272,7 @@
             </Button>
 
             <Button Grid.Row="20" Grid.Column="3" HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" ToolTip="{lex:Loc ResetToDefault}"
+                VerticalAlignment="Stretch" ToolTip="Reset To Default"
                 Style="{DynamicResource MetroCircleButtonStyle}"                 
                 cal:Message.Attach="[Event Click]=[Action ResetToDefault]">
                 <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" 

@@ -114,10 +114,10 @@ namespace BioContracts
         observer.Value.OnCaptureDeviceFrameChanged(ref frame);      
     }
 
-    public void OnStop(bool stopped, Exception message, LocationDevice device) {
+    public void OnStop(bool stopped, ErrorMessage error, LocationDevice device) {
       if (_observer.Observers.Count <= 0)
         return;    
-      OnError(message, device);
+      OnError(error.ExceptionMessage, device);
     }
 
     public void OnStart(bool started, VideoCapabilities active, VideoCapabilities[] all) {

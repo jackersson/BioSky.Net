@@ -23,14 +23,13 @@ namespace BioModule.ViewModels
       _locator             = locator      ;    
       _imageViewer         = imageViewer  ;
       _imageViewer.UpdateBioItemsController(this);
-      //_imageViewer.U
 
       _database            = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioService          = _locator.GetProcessor<IServiceManager>().DatabaseService    ;
       _dialogsHolder       = _locator.GetProcessor<DialogsHolder>();
       _notifier            = _locator.GetProcessor<INotifier>();
 
-      DisplayName = "Photo";      
+      DisplayName = "Faces";      
 
       UserImages   = new AsyncObservableCollection<long>();
       _bioUtils    = new BioImageUtils();
@@ -55,8 +54,11 @@ namespace BioModule.ViewModels
     public void Update(Person user)
     {
       if (user == null || (user != null && user.Id <= 0) )
+      {
+        IsEnabled = false;
         return;
-      
+      }
+
       _user = user;
       RefreshData();
 

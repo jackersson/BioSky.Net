@@ -22,7 +22,7 @@ namespace BioModule.ViewModels
       _bioEngine         = _locator.GetProcessor<IBioEngine>();
       
       PhotoImage = new BioImageViewModel(_locator);
-      //PhotoImage.SetVisibility(false, false, true, false, false);
+      PhotoImage.SetStyle(BioImageViewModel.AUTHENTICATION_BIO_IMAGE_STYLE);
     }
     public void Show()
     {
@@ -45,7 +45,7 @@ namespace BioModule.ViewModels
     public void OnLogin()
     {
       _bioEngine.AuthenticatedPerson = new BioService.Person { Firstname = LoginData
-                                                             , Rights = Rights.Supervisor };
+                                                             , Rights = Rights.Manager };
       TryClose(true);
     }
     protected override void OnActivate()

@@ -28,28 +28,34 @@ namespace BioModule.ViewModels
       if (_revertingGeneralSettings == null)
         _revertingGeneralSettings = new GeneralSettingsPropeties();
 
-      GeneralSettings.SelectedLanguage = _database.LocalStorage.GetParametr(ConfigurationParametrs.Language              );
-      GeneralSettings.LocalStoragePath = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway          );
-      string faceService               = _database.LocalStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress    );
-      string databaseService           = _database.LocalStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress);
-      string itemsPerPage              = _database.LocalStorage.GetParametr(ConfigurationParametrs.ItemsCountPerPage     );
+      GeneralSettings.SelectedLanguage = _database.LocalStorage.GetParametr(ConfigurationParametrs.Language                 );
+      GeneralSettings.LocalStoragePath = _database.LocalStorage.GetParametr(ConfigurationParametrs.MediaPathway             );
+      string faceService               = _database.LocalStorage.GetParametr(ConfigurationParametrs.FaceServiceAddress       );
+      string databaseService           = _database.LocalStorage.GetParametr(ConfigurationParametrs.DatabaseServiceAddress   );
+      string itemsPerPage              = _database.LocalStorage.GetParametr(ConfigurationParametrs.ItemsCountPerPage        );
+      string fingerprintService        = _database.LocalStorage.GetParametr(ConfigurationParametrs.FingerprintServiceAddress);
+      string irisService               = _database.LocalStorage.GetParametr(ConfigurationParametrs.IrisServiceAddress       );
 
       int count = 0;
       if (Int32.TryParse(itemsPerPage, out count))
         GeneralSettings.ItemsCountPerPage = count;
 
-      string ip  ;
-      string port;
-      SeparateIpPort(faceService, out ip, out port);
-      GeneralSettings.FaceService.IP   = ip;
-      GeneralSettings.FaceService.Port = port;
-
-      SeparateIpPort(databaseService, out ip, out port);
-      GeneralSettings.DatabaseService.IP   = ip;
-      GeneralSettings.DatabaseService.Port = port;
+      SetFullIpAdress(GeneralSettings.FaceService       , faceService       );
+      SetFullIpAdress(GeneralSettings.DatabaseService   , databaseService   );
+      SetFullIpAdress(GeneralSettings.FingerprintService, fingerprintService);
+      SetFullIpAdress(GeneralSettings.IrisService       , irisService       );
 
       _revertingGeneralSettings = GeneralSettings.Clone();
       RefreshUI();
+    }
+
+    public void SetFullIpAdress(FullIpAdress settingsAdress, string currentAdress)
+    {
+      string ip  ;
+      string port;
+      SeparateIpPort(currentAdress, out ip, out port);
+      settingsAdress.IP   = ip  ;
+      settingsAdress.Port = port;
     }
 
     public void SeparateIpPort(string full, out string ip, out string port)
@@ -177,8 +183,10 @@ namespace BioModule.ViewModels
     public GeneralSettingsPropeties Clone()
     {
       GeneralSettingsPropeties settings = new GeneralSettingsPropeties();
-      settings.DatabaseService = DatabaseService.CopyFrom();
-      settings.FaceService     = FaceService    .CopyFrom();
+      settings.DatabaseService    = DatabaseService   .CopyFrom();
+      settings.FaceService        = FaceService       .CopyFrom();
+      settings.IrisService        = IrisService       .CopyFrom();
+      settings.FingerprintService = FingerprintService.CopyFrom();
 
       settings.ItemsCountPerPage    = ItemsCountPerPage;
       settings.LocalStoragePath     = LocalStoragePath ;
@@ -196,24 +204,30 @@ namespace BioModule.ViewModels
       unchecked
       {
         int hash = 17;
-        hash = hash * 23 + DatabaseService  .GetHashCode();
-        hash = hash * 23 + FaceService      .GetHashCode();
-        hash = hash * 23 + LocalStoragePath .GetHashCode();
-        hash = hash * 23 + SelectedLanguage .GetHashCode();
-        hash = hash * 23 + ItemsCountPerPage.GetHashCode();
+        hash = hash * 23 + DatabaseService   .GetHashCode();
+        hash = hash * 23 + FaceService       .GetHashCode();
+        hash = hash * 23 + IrisService       .GetHashCode();
+        hash = hash * 23 + FingerprintService.GetHashCode();
+        hash = hash * 23 + LocalStoragePath  .GetHashCode();
+        hash = hash * 23 + SelectedLanguage  .GetHashCode();
+        hash = hash * 23 + ItemsCountPerPage .GetHashCode();
         return hash;
       }          
     }
     public void Activate()
     {
-      FaceService    .PropertyChanged += OnSettingsChanged;
-      DatabaseService.PropertyChanged += OnSettingsChanged;
+      FaceService       .PropertyChanged += OnSettingsChanged;
+      DatabaseService   .PropertyChanged += OnSettingsChanged;
+      IrisService       .PropertyChanged += OnSettingsChanged;
+      FingerprintService.PropertyChanged += OnSettingsChanged;
     }
 
     public void Deactivate()
     {
-      FaceService    .PropertyChanged -= OnSettingsChanged;
-      DatabaseService.PropertyChanged -= OnSettingsChanged;
+      FaceService       .PropertyChanged -= OnSettingsChanged;
+      DatabaseService   .PropertyChanged -= OnSettingsChanged;
+      IrisService       .PropertyChanged -= OnSettingsChanged;
+      FingerprintService.PropertyChanged -= OnSettingsChanged;
     }
 
     public void OnSettingsChanged(object sender, PropertyChangedEventArgs e){NotifyOfPropertyChange();}
@@ -274,6 +288,44 @@ namespace BioModule.ViewModels
       }
     }
 
+    private FullIpAdress _fingerprintService;
+    public FullIpAdress FingerprintService
+    {
+      get
+      {
+        if (_fingerprintService == null)
+          _fingerprintService = new FullIpAdress();
+        return _fingerprintService;
+      }
+      set
+      {
+        if (_fingerprintService != value)
+        {
+          _fingerprintService = value;
+          NotifyOfPropertyChange(() => FingerprintService);
+        }
+      }
+    }
+
+    private FullIpAdress _irisService;
+    public FullIpAdress IrisService
+    {
+      get
+      {
+        if (_irisService == null)
+          _irisService = new FullIpAdress();
+        return _irisService;
+      }
+      set
+      {
+        if (_irisService != value)
+        {
+          _irisService = value;
+          NotifyOfPropertyChange(() => IrisService);
+        }
+      }
+    }
+
     private int _itemsCountPerPage;
     public int ItemsCountPerPage {
       get { return _itemsCountPerPage; }
@@ -290,14 +342,21 @@ namespace BioModule.ViewModels
       get
       {
         return    DatabaseService.IsEmpty
-               && FaceService.IsEmpty
-               && string.IsNullOrEmpty(LocalStoragePath)
-               && string.IsNullOrEmpty(SelectedLanguage);
+               || (  FaceService       .IsEmpty
+                  && IrisService       .IsEmpty
+                  && FingerprintService.IsEmpty)
+               || string.IsNullOrEmpty(LocalStoragePath)
+               || string.IsNullOrEmpty(SelectedLanguage);
       }
     }
   }
   public class FullIpAdress : PropertyChangedBase
   {
+    public FullIpAdress()
+    {
+      IP   = "";
+      Port = "";
+    }
     public FullIpAdress CopyFrom()
     {
       FullIpAdress copy = new FullIpAdress();
@@ -310,12 +369,12 @@ namespace BioModule.ViewModels
       unchecked
       {
         int hash = 13;
-        hash = hash * 23 + IP.GetHashCode();
+        hash = hash * 23 + IP  .GetHashCode();
         hash = hash * 23 + Port.GetHashCode();
         return hash;
       }
     }
-    public bool IsEmpty{ get{ return !string.IsNullOrEmpty(IP) && !string.IsNullOrEmpty(Port); }}
+    public bool IsEmpty{ get{ return string.IsNullOrEmpty(IP) || string.IsNullOrEmpty(Port); }}
 
     private string _ip;
     public string IP {

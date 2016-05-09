@@ -35,7 +35,8 @@ namespace BioModule
       IBioStarter starter = _locator.GetProcessor<IBioStarter>();
       starter.Run();
 
-      ConverterInitializer initializer = new ConverterInitializer(_locator);     
+      ConverterInitializer       initializer      = new ConverterInitializer(_locator);
+      PermissionControllerHolder permissionHolder = new PermissionControllerHolder(_locator); 
       
       ViewModelSelector selector = _locator.GetProcessor<ViewModelSelector>();
      // selector.ShowContent( ShowableContentControl.TabControlContent,  ViewModelsID.HomePage);
@@ -48,7 +49,6 @@ namespace BioModule
       bioShell.FlyoutControl    = _locator.GetProcessor<FlyoutControlViewModel>();
       bioShell.ToolBar          = _locator.GetProcessor<ToolBarViewModel>();
       bioShell.MainMenu         = _locator.GetProcessor<MainMenuViewModel>();
-      bioShell.ProgressRing     = _locator.GetProcessor<INotifier>().LoadingViewModel;
       bioShell.LoginInformation = _locator.GetProcessor<ILoginInformation>().LoginInformation;
     }
   }

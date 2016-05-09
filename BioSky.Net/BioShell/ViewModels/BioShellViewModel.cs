@@ -1,11 +1,11 @@
 ﻿using Caliburn.Micro;
-using BioModule.ResourcesLoader;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System;
 using System.Windows.Interop;
 using BioContracts;
 using BioAccessDevice;
+using System.Drawing;
 
 namespace BioShell.ViewModels
 {
@@ -92,21 +92,7 @@ namespace BioShell.ViewModels
           NotifyOfPropertyChange(() => FlyoutControl);
         }
       }
-    }
-
-    private object _progressRing;
-    public object ProgressRing
-    {
-      get { return _progressRing; }
-      set
-      {
-        if (_progressRing != value)
-        {
-          _progressRing = value;
-          NotifyOfPropertyChange(() => ProgressRing);
-        }
-      }
-    }
+    }   
 
     private object _loginInformation;
     public object LoginInformation
@@ -122,10 +108,40 @@ namespace BioShell.ViewModels
       }
     }
 
-    public BitmapSource LogoIconSource
+    private static BitmapSource _logoIconSource;
+    public static BitmapSource LogoIconSource
     {
-      get { return ResourceLoader.LogoIconSource; }
+      get
+      {
+        if (_logoIconSource == null)
+          _logoIconSource = BitmapToBitmapSource((Properties.Resources.logo).ToBitmap());
+        return _logoIconSource;
+      }
     }
 
+    [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+    public static extern bool DeleteObject(IntPtr hObject);
+    public static BitmapSource BitmapToBitmapSource(Bitmap source)
+    {
+      if (source == null)
+        return null;
+      BitmapSource bmp = null;
+
+      try
+      {
+        IntPtr hBitMap = source.GetHbitmap();
+        bmp = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitMap
+                                                                                       , IntPtr.Zero
+                                                                                       , Int32Rect.Empty
+                                                                                       , BitmapSizeOptions.FromEmptyOptions());
+        DeleteObject(hBitMap);
+
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex);
+      }
+      return bmp;
+    }    
   }
 }

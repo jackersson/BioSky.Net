@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:BioModule.ViewModels"      
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:gray="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"              
-             xmlns:utils="clr-namespace:BioModule.Utils"         
+             xmlns:utils="clr-namespace:BioModule.Utils"  
              xmlns:bioContracts="clr-namespace:BioContracts;assembly=BioContracts" 
              xmlns:resloader="clr-namespace:BioModule.ResourcesLoader" 
              xmlns:lex="http://wpflocalizeextension.codeplex.com"           
@@ -18,9 +18,8 @@
              d:DataContext="{d:DesignInstance vm:ToolBarViewModel, IsDesignTimeCreatable=False}">
 
     <UserControl.Resources>
-        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-        <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
-
+        <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>        
+        
         <Style x:Key="GreyScaleImage" TargetType="Image">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource=
@@ -47,7 +46,7 @@
                 
                 <Separator></Separator>
                 <Button ToolTip="{lex:Loc AddPerson}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewPerson]"
-                        IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                        IsEnabled="{Binding Source={x:Static utils:PermissionControllerHolder.PermissionController}, Path=CurrentPermissionRights
                                    , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
                                    , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddUserIconSource}" 
@@ -56,7 +55,7 @@
                 <Separator></Separator>
 
                 <Button ToolTip="{lex:Loc AddNewLocation}" cal:Message.Attach="[Event Click]=[Action OpenTabAddNewLocation]"
-                        IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                        IsEnabled="{Binding Source={x:Static utils:PermissionControllerHolder.PermissionController}, Path=CurrentPermissionRights
                                    , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
                                    , ConverterParameter={x:Static bioContracts:Activity.LocationAdd}}">
                     <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=AddLocationIconSource}" 

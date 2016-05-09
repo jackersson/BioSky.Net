@@ -20,7 +20,7 @@
              WindowStartupLocation="CenterOwner"
              Width="320" Height="500"
              ResizeMode="NoResize" IsCloseButtonEnabled="True" IsWindowDraggable="False" 
-             ShowCloseButton="{Binding ShowCloseButton}"
+             ShowCloseButton="True"
              ShowInTaskbar="False" ShowSystemMenuOnRightClick="False"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:AuthenticationPageViewModel, IsDesignTimeCreatable=False}"             
@@ -38,15 +38,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="37"/>
             <RowDefinition Height="37"/>
+            <RowDefinition Height="37"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBox x:Name="AuthenticationBox" Margin="0,0,0,10"
-                 HorizontalAlignment="Stretch"
-                 Controls:TextBoxHelper.Watermark="{lex:Loc AuthenticationBox}" Grid.Column="1" Grid.Row="0"
-                 Controls:TextBoxHelper.UseFloatingWatermark="True" VerticalAlignment="Bottom"
+        <TextBox x:Name="AuthenticationBox" Margin="0,0,0,2"
+                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 Controls:TextBoxHelper.Watermark="Authentication Box" Grid.Column="1" Grid.Row="1"
+                 Controls:TextBoxHelper.UseFloatingWatermark="True" 
                  Controls:TextBoxHelper.ClearTextButton="True"
                  Text="{Binding LoginData, UpdateSourceTrigger=PropertyChanged}"/>
 
@@ -55,7 +56,7 @@
         </Grid>
 
         <Button cal:Message.Attach="[Event Click] = [Action OnRegister]" BorderThickness="0"
-                       Grid.Row="1" Grid.Column="1" 
+                       Grid.Row="2" Grid.Column="1" 
                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                         >
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="280">
@@ -74,7 +75,7 @@
         </Button>
 
         <Button cal:Message.Attach="[Event Click] = [Action OnLogin]" BorderThickness="0"
-                Grid.Row="2" Grid.Column="1" Margin="0,2,0,0"
+                Grid.Row="3" Grid.Column="1" Margin="0,2,0,0"
                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                         >
             <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="280">

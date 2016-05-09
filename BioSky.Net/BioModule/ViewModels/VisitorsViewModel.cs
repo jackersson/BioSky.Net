@@ -44,7 +44,10 @@ namespace BioModule.ViewModels
 
       _database.Visitors.DataChanged+= RefreshData;
 
-      IsDeleteButtonEnabled = false;      
+      IsDeleteButtonEnabled = false;
+
+
+      RefreshData();
     }
 
     #region Update
@@ -86,6 +89,8 @@ namespace BioModule.ViewModels
     {
       return VisitorsFilterMenu.GetQuery();
     }
+
+
 
     private void RefreshData()
     {

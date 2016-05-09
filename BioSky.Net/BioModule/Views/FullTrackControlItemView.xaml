@@ -88,12 +88,22 @@
                         cal:View.Model="{Binding ImageView}" cal:View.Context="Video" >
             </ContentControl>
 -->
-              
-                <Image HorizontalAlignment="Left"  Height="24" Grid.Column="0"
-                       VerticalAlignment="Top" Width="24" 
-                       Source="{Binding CurrentTrackLocationUtils.LocationStateIcon}" />
 
-                <Image HorizontalAlignment="Left"  Height="24" Grid.Column="1"
+            <Image HorizontalAlignment="Left"  Height="24" Grid.Column="0"
+                       VerticalAlignment="Top" Width="24" 
+                       Source="{Binding CurrentTrackLocationUtils.LocationStateIcon}">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentLocation}" Value="{x:Null}">
+                                <Setter Property="Visibility" Value="Hidden" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+
+            <Image HorizontalAlignment="Left"  Height="24" Grid.Column="1"
                        VerticalAlignment="Top" Width="24" 
                        Source="{Binding CurrentTrackLocationUtils.VerificationStateIcon}" 
                        Visibility="{Binding CurrentTrackLocationUtils.UserVerificationIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />

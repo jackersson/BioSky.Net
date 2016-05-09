@@ -31,7 +31,6 @@
             </ResourceDictionary.MergedDictionaries>
 
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
 
             <sys:Double x:Key="MyWidth">195</sys:Double>
 
@@ -143,7 +142,7 @@
 
             <Button cal:Message.Attach="[Event Click] = [Action OnAddNewUser]" BorderThickness="0" Style="{StaticResource ButtonStyle1}"
                         VerticalAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="1" Margin="5,0,0,5" Background="#FF2F2F2F"                         
-                        IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                        IsEnabled="{Binding Source={x:Static utils:PermissionControllerHolder.PermissionController}, Path=CurrentPermissionRights
                                    , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
                                    , ConverterParameter={x:Static bioContracts:Activity.UserAdd}}">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">
@@ -170,7 +169,7 @@
 
             <Button cal:Message.Attach="[Event Click] = [Action OnAddNewLocation]" BorderThickness="0"                    
                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2" Margin="5,0,0,5" 
-                    IsEnabled="{Binding Source={StaticResource Permissions}, Path=CurrentPermissionRights
+                    IsEnabled="{Binding Source={x:Static utils:PermissionControllerHolder.PermissionController}, Path=CurrentPermissionRights
                                , Converter={x:Static utils:ConverterInitializer.PermissionToVisibilityConverter}
                                , ConverterParameter={x:Static bioContracts:Activity.LocationAdd}}" Style="{DynamicResource ButtonStyle1}">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="{StaticResource MyWidth}">

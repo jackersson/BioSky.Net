@@ -6,6 +6,7 @@
      , FaceServiceAddress
      , DatabaseServiceAddress
      , FingerprintServiceAddress
+     , IrisServiceAddress
      , Language
      , LogsFilePathway
      , ItemsCountPerPage

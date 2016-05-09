@@ -55,8 +55,7 @@
             <ColumnDefinition Width="48"/>
         </Grid.ColumnDefinitions>
 
-        <Border Grid.ColumnSpan="5" Grid.RowSpan="2" BorderBrush="#FF444444" BorderThickness="1">
-            <Grid  Grid.ColumnSpan="5" Grid.RowSpan="2" Background="#FF252525">
+            <Grid  Grid.ColumnSpan="5" Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -68,16 +67,24 @@
                     <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding PhotoAvailableText}"></TextBlock>
                 </StackPanel>
             </Grid>
-        </Border>
+
 
 
 
         <Button Name="DeleteButton" ToolTip="{lex:Loc Delete}" Width="48" Height="48" Grid.Column="4" Grid.Row="0" 
-                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                Style="{DynamicResource MetroCircleButtonStyle}" 
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                
                 cal:Message.Attach="[Event Click]=[Action OnDeletePhoto]"
                 Tag="{x:Static bioContracts:Activity.PhotoRemove}"
                 >
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource MetroCircleButtonStyle}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding SelectedItem}" Value="0">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
 
             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=DeleteIconSource}"
                    Height="32" Width="32" Style="{StaticResource GreyScaleImage}"/>

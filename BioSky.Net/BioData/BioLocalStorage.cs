@@ -43,8 +43,11 @@ namespace BioData
 
     private void LoadConfiguration()
     {
-      if (!File.Exists(ConfigurationFilePath))        
-        return;     
+      if (!File.Exists(ConfigurationFilePath))
+      {
+        GenerateDefault();
+        SaveConfiguration();
+      }
 
       try
       {
@@ -118,9 +121,14 @@ namespace BioData
 
       Configuration.Add(ConfigurationParametrs.FingerprintServiceAddress, new ConfigurationValue()
       {
-        Current = "127.0.0.1:50053"
-      ,
-        Default = "127.0.0.1:50053"
+         Current = "127.0.0.1:50053"
+       , Default = "127.0.0.1:50053"
+      });
+
+      Configuration.Add(ConfigurationParametrs.IrisServiceAddress, new ConfigurationValue()
+      {
+         Current = "127.0.0.1:50054"
+       , Default = "127.0.0.1:50054"
       });
 
       Configuration.Add(ConfigurationParametrs.Language, new ConfigurationValue()

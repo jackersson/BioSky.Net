@@ -204,7 +204,7 @@
   <data name="RegisteredUsers" xml:space="preserve">
     <value>Зареєстровані Користувачі</value>
   </data>
-  <data name="EnrollFromImageFile" xml:space="preserve">
+  <data name="EnrollFromPhoto" xml:space="preserve">
     <value>Зареєструвати з файлу зображення</value>
   </data>
   <data name="EnrollFromCamera" xml:space="preserve">
@@ -392,5 +392,20 @@
   </data>
   <data name="Irises" xml:space="preserve">
     <value>Райдужна оболонка</value>
+  </data>
+  <data name="Faces" xml:space="preserve">
+    <value>Обличчя</value>
+  </data>
+  <data name="FingerDevices" xml:space="preserve">
+    <value>Пристрої для пальців</value>
+  </data>
+  <data name="IrisDevices" xml:space="preserve">
+    <value>Пристрої для очей</value>
+  </data>
+  <data name="string_All" xml:space="preserve">
+    <value>Усі</value>
+  </data>
+  <data name="string_Custom" xml:space="preserve">
+    <value>Вибірково</value>
   </data>
 </root>

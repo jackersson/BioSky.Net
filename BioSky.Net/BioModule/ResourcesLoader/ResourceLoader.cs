@@ -124,7 +124,6 @@ namespace BioModule.ResourcesLoader
     private static BitmapSource _addLocationIconSource;
     private static BitmapSource _journalListIconSource;
     private static BitmapSource _usersListIconSource;
-    private static BitmapSource _logoListIconSource;
     private static BitmapSource _trackingListIconSource;
 
     private static BitmapSource _loaderIconSource;
@@ -346,16 +345,6 @@ namespace BioModule.ResourcesLoader
         if (_loaderIconSource == null)
           _loaderIconSource = BitmapConversion.BitmapToBitmapSource(BioModule.Properties.Resources.loader);
         return _loaderIconSource;
-      }
-    }
-    public static BitmapSource LogoIconSource
-    {
-      get
-      {
-        if (_logoListIconSource == null)
-          
-          _logoListIconSource = BitmapConversion.BitmapToBitmapSource((BioModule.Properties.Resources.logo).ToBitmap());
-        return _logoListIconSource;
       }
     }
     public static BitmapSource TrackingIconSource

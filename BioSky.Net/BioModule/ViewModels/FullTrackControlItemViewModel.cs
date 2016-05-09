@@ -25,7 +25,7 @@ namespace BioModule.ViewModels
       _locator   = locator;
       _bioEngine = locator.GetProcessor<IBioEngine>();
 
-      BioImageView = new BioImageViewModel(locator, MIN_BIO_IMAGE_STYLE);
+      BioImageView = new BioImageViewModel(locator, BioImageViewModel.MIN_EXPANDED_BIO_IMAGE_STYLE);
 
       DisplayName = LocExtension.GetLocalizedValue<string>("BioModule:lang:Location");
       
@@ -160,7 +160,7 @@ namespace BioModule.ViewModels
 
     //private readonly Dispatcher _uiDispatcher;
     private readonly IBioEngine _bioEngine;
-    private long MIN_BIO_IMAGE_STYLE = 1;
+
     private DispatcherTimer _dayTimer;
     private readonly IProcessorLocator _locator;
   }

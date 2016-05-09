@@ -178,6 +178,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="18"/>
                                 <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="18"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding Source={StaticResource ResourceLoader}, Path=WarningIconSource}"
                                Visibility="{Binding LocationError, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -190,18 +191,34 @@
 
                     <Button Margin="2" Style="{StaticResource MyStandardButton}"
                         cal:Message.Attach="[Event Click]=[Action ShowVisitors]"
-                        IsEnabled="{Binding CanShowVisitors}"
-                        >
-                        <StackPanel Orientation="Vertical" Margin="5,0,5,0">
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                   Style="{StaticResource GreyScaleTextBlock}" Text="{Binding VisitorsView.FilteredVisitors.Count , StringFormat=Visitors({0}), FallbackValue='Visitors'}"
-                                    Foreground="{StaticResource MyColor}"  
-                                    />
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        IsEnabled="{Binding CanShowVisitors}">
+                        <Grid Margin="5,0,5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0"
+                                       Text="{Binding VisitorsView.FilteredVisitors.Count , StringFormat=Visitors({0}), FallbackValue='Visitors'}"
+                                       Foreground="{StaticResource MyColor}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock"  BasedOn ="{StaticResource GreyScaleTextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding TrackItemsShort.SelectedTrackLocation.Caption}" Value="{x:Null}">
+                                                <Setter Property="Grid.RowSpan" Value="2" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" 
                                    Style="{StaticResource GreyScaleTextBlock}" 
-                                    Foreground="{StaticResource MyColor}"
+                                   Foreground="{StaticResource MyColor}"
                                    Text="{Binding TrackItemsShort.SelectedTrackLocation.Caption}"/>
-                        </StackPanel>
+                        </Grid>
                     </Button>
                 </StackPanel>
                 <!-- **************************************************Top Panel***********************************************-->

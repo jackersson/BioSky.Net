@@ -47,13 +47,6 @@ namespace BioShell
         _shellViewModel.MainMenu = value;
       }
     }
-    public object ProgressRing
-    {
-      get { return _shellViewModel.ProgressRing; }
-      set {
-        _shellViewModel.ProgressRing = value;
-      }
-    }
     public object LoginInformation
     {
       get { return _shellViewModel.LoginInformation; }

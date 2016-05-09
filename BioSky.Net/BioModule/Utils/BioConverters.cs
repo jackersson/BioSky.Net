@@ -163,18 +163,17 @@ namespace BioModule.Utils
       _locator   = locator;
       _database  = _locator.GetProcessor<IBioSkyNetRepository>();
       _bioEngine = _locator.GetProcessor<IBioEngine>();
-      
 
-      PersonIdToThumbnailConverter         = new ConvertPersonIdToThumbnail  (_database)          ;
-      PhotoIdToImageConverter              = new ConvertPhotoIdToImage(_database);
-      FileLocationToImageConverter         = new ConvertFileLocationToImage     (_database)          ;
-      PersonIdToFirstnameConverter         = new ConvertPersonIdToFirstname     (_database.Persons)  ;
-      PersonIdToLastnameConverter          = new ConvertPersonIdToLastname      (_database.Persons)  ;
+      PersonIdToThumbnailConverter         = new ConvertPersonIdToThumbnail     (_database          );
+      PhotoIdToImageConverter              = new ConvertPhotoIdToImage          (_database          );
+      FileLocationToImageConverter         = new ConvertFileLocationToImage     (_database          );
+      PersonIdToFirstnameConverter         = new ConvertPersonIdToFirstname     (_database.Persons  );
+      PersonIdToLastnameConverter          = new ConvertPersonIdToLastname      (_database.Persons  );
       LocationIdToLocationnameConverter    = new ConvertLocationIdToLocationname(_database.Locations);
-      PermissionToVisibilityConverter      = new ConvertPermissionToVisibility  (_bioEngine)         ;
-      MultiPermissionToVisibilityConverter = new MultiPermissionConverter       (_bioEngine)         ;
-      FingerTypeToMarginConverter          = new FingerTypeToMarginConverter();
+      PermissionToVisibilityConverter      = new ConvertPermissionToVisibility  (_bioEngine         );
+      MultiPermissionToVisibilityConverter = new MultiPermissionConverter       (_bioEngine         );
 
+      FingerTypeToMarginConverter = new FingerTypeToMarginConverter();
       PhotoIdToExistenseConverter = new PhotoIdToExistenseConverter();
     }
 
@@ -212,7 +211,7 @@ namespace BioModule.Utils
     }
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-      return true;
+      //return true;
       if (value != null)
       {
         Activity activity = (Activity)parameter;
@@ -719,7 +718,7 @@ namespace BioModule.Utils
 
         if (flag)
         {
-          if (values[1] == null)
+          if (!(values[1] is bool))
             return false;
           bool isEnabledFlag = (bool)values[1];
           return isEnabledFlag;

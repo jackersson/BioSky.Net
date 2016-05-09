@@ -66,6 +66,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="32"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="48"/>
@@ -92,12 +93,27 @@
                     Maximum="200"
                     Value="{Binding ZoomRate, Mode=TwoWay}"
                     LargeChange="20"
-                    SmallChange="10" Margin="0,0, 5, 0"                   
+                    SmallChange="10" Margin="0,0, 10, 0"                   
                     />
 
             <RadioButton x:Name="Switch" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
                          cal:Message.Attach="[Event IsCheckedChanged] = [Action Zoom(CurrentImageScrollViewer.ActualWidth, CurrentImageScrollViewer.ActualHeight)]"                               
-                         IsChecked="{Binding ZoomToFitState, Mode=TwoWay}" ToolTip="{lex:Loc ZoomToFit}"/>
+                         IsChecked="{Binding ZoomToFitState, Mode=TwoWay}" ToolTip="Zoom To Fit"/>
+
+            <ToggleButton Name="ExpandButton" Visibility="{Binding ExpanderButtonVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,1"
+                      Width="40" Height="40" Panel.ZIndex="100" BorderBrush="#7F3587BD" BorderThickness="1"
+                      Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5"   IsChecked="{Binding IsExpanded}"
+                      ToolTip="Expand view" 
+                      Style="{StaticResource MetroCircleToggleButtonStyle}">
+                <Image Name="ExpandButtonImage" Width="20" Height="20" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
+                       VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform" Opacity="0.5" 
+                       Source="{Binding Source={StaticResource ResourceLoader}, Path=ExpandIconSource}">
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="0" />
+                    </Image.RenderTransform>
+                </Image>
+            </ToggleButton>
 
         </Grid> 
     </Grid>

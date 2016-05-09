@@ -87,7 +87,14 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- tell Dragablz tab control to use the Material Design theme -->
-            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" />
+            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}">
+                <Setter Property="ShowDefaultCloseButton" Value="True"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Items.Count}" Value="1" >
+                        <Setter Property="ShowDefaultCloseButton" Value="False"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -104,8 +111,7 @@
         <dragablz:TabablzControl x:Name="MyTabview" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"                                 
                                  SelectedItem="{Binding ActiveItem, Mode=TwoWay}"      
                                  ItemsSource="{Binding Items}" Background="#FF3E3E42"
-                                 AllowDrop="True" ShowDefaultCloseButton="True"                                
-                                 >
+                                 AllowDrop="True">
             <dragablz:TabablzControl.Resources>
                 <DataTemplate DataType="{x:Type vm:UsersViewModel}">
                     <local:UsersView x:Name="ActiveItem" DataContext="{Binding Mode=OneWay}">
@@ -114,8 +120,7 @@
                 <DataTemplate DataType="{x:Type vm:VisitorsViewModel}">
                     <ContentControl x:Name="ActiveItem" 
                                     cal:View.Context="Detailed"                                    
-                                    cal:View.Model="{Binding}"                              
-                                 >
+                                    cal:View.Model="{Binding Mode=OneWay}">
                     </ContentControl>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:UserPageViewModel}">

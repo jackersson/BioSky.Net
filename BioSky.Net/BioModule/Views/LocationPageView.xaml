@@ -25,7 +25,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <x:StaticExtension Member="resloader:ResourceLoader.Instance" x:Key="ResourceLoader"/>
-            <x:StaticExtension Member="bioContracts:PermissionController.Instance" x:Key="Permissions"/>
             
             <Style x:Key="GreyScaleImage" TargetType="Image">
                 <Style.Triggers>
@@ -139,7 +138,7 @@
                 Tag="{x:Static bioContracts:Activity.LocationAdd}">
             <Button.IsEnabled>
                 <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
-                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                    <Binding Source="{x:Static utils:PermissionControllerHolder.PermissionController}" Path="CurrentPermissionRights"/>
                     <Binding Path="CanApply"/>
                     <Binding ElementName="ApplyButton" Path="Tag"/>
                 </MultiBinding>
@@ -163,7 +162,7 @@
                 Tag="{x:Static bioContracts:Activity.LocationRemove}">
             <Button.IsEnabled>
                 <MultiBinding Converter="{x:Static utils:ConverterInitializer.MultiPermissionToVisibilityConverter}">
-                    <Binding Source="{StaticResource Permissions}" Path="CurrentPermissionRights"/>
+                    <Binding Source="{x:Static utils:PermissionControllerHolder.PermissionController}" Path="CurrentPermissionRights"/>
                     <Binding Path="CanDelete"/>
                     <Binding ElementName="DeleteButton" Path="Tag"/>
                 </MultiBinding>

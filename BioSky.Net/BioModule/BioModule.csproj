@@ -223,6 +223,7 @@
     <Compile Include="Utils\IBioImageModel.cs" />
     <Compile Include="Utils\IUserPhotoController.cs" />
     <Compile Include="Utils\MarkerUtils.cs" />
+    <Compile Include="Utils\PermissionControllerHolder.cs" />
     <Compile Include="Utils\TrackLocationUtils.cs" />
     <Compile Include="Validation\Error.cs" />
     <Compile Include="Validation\IValidator.cs" />
@@ -233,7 +234,6 @@
     <Compile Include="ViewModels\DevicesListViewModel.cs" />
     <Compile Include="ViewModels\ErrorViewerDialogViewModel.cs" />
     <Compile Include="ViewModels\FaceEnrollmentBarViewModel.cs" />
-    <Compile Include="ViewModels\FingerBarViewModel.cs" />
     <Compile Include="ViewModels\FingerInformationViewModel.cs" />
     <Compile Include="ViewModels\FingerprintEnrollmentBarViewModel.cs" />
     <Compile Include="ViewModels\FullTrackControlItemViewModel.cs" />
@@ -329,9 +329,6 @@
     </Compile>
     <Compile Include="Views\FaceEnrollmentBarView.xaml.cs">
       <DependentUpon>FaceEnrollmentBarView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\FingerBarView.xaml.cs">
-      <DependentUpon>FingerBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FingerInformationView.xaml.cs">
       <DependentUpon>FingerInformationView.xaml</DependentUpon>
@@ -501,10 +498,6 @@
     <Page Include="Views\FaceEnrollmentBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\FingerBarView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\FingerInformationView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -741,6 +734,7 @@
     <None Include="Resources\bothHands.png" />
     <None Include="Resources\snapshoot.png" />
     <None Include="Resources\expand.png" />
+    <None Include="Resources\settings.png" />
     <Content Include="Resources\warning.png" />
     <None Include="Resources\user_image.png" />
     <None Include="Resources\info_circle.png" />
@@ -756,7 +750,6 @@
     <None Include="Resources\screenshot.png" />
     <None Include="Resources\right_arrow.png" />
     <None Include="Resources\thumnail.png" />
-    <None Include="Resources\settings.png" />
     <None Include="Resources\Stop.png" />
     <None Include="Resources\Start.png" />
     <None Include="Resources\plus.png" />

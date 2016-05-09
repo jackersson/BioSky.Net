@@ -83,7 +83,7 @@ namespace BioCaptureDevices
       if (_videoSource.VideoCapabilities.Length <= selectedResolution || selectedResolution < 0)
         return;
 
-      VideoCapabilities selected = _videoSource.VideoCapabilities[selectedResolution];
+      VideoCapabilities selected = _videoSource.VideoCapabilities[selectedResolution];      
 
       if (selected != _videoSource.VideoResolution)
       {
@@ -129,8 +129,9 @@ namespace BioCaptureDevices
     {
       if ( reason != ReasonToFinishPlaying.StoppedByUser)
         _commands.Enqueue(CaptureDeviceCommands.Connect);
-      Exception ex = new Exception(CaptureDeviceErrorInfo.Instance.GetErrorMessage(reason));
-      OnStop(true, ex);      
+      Exception ex              = new Exception(CaptureDeviceErrorInfo.Instance.GetErrorMessage(reason));
+      ErrorMessage errorMessage = new ErrorMessage(ex, reason);    
+      OnStop(true, errorMessage);      
     }    
     
     private void _videoSource_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -205,7 +206,7 @@ namespace BioCaptureDevices
         if (_videoSource.IsRunning)
           _videoSource.Stop();
         
-        OnStop(true, new Exception());
+        OnStop(true, new ErrorMessage(new Exception(), null));
 
       }
       catch (Exception ex) {
@@ -226,7 +227,7 @@ namespace BioCaptureDevices
         observer.Value.OnFrame(ref frame);
     }
 
-    private void OnStop(bool stopped, Exception message)
+    private void OnStop(bool stopped, ErrorMessage message)
     {
       foreach (KeyValuePair<int, ICaptureDeviceObserver> observer in _observer.Observers)       
         observer.Value.OnStop(true, message, LocationDevice.CaptureDevice);
@@ -244,7 +245,5 @@ namespace BioCaptureDevices
     private readonly IDeviceConnectivity<FilterInfo> _capDevConnectivity;
     private readonly string _cameraName;
     private ConcurrentQueue<CaptureDeviceCommands> _commands;
-    
-
   }
 }

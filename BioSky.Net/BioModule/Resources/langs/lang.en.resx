@@ -213,7 +213,7 @@
   <data name="RegisteredUsers" xml:space="preserve">
     <value>Registered Users</value>
   </data>
-  <data name="EnrollFromImageFile" xml:space="preserve">
+  <data name="EnrollFromPhoto" xml:space="preserve">
     <value>Enroll from image file</value>
   </data>
   <data name="EnrollFromCamera" xml:space="preserve">
@@ -322,7 +322,7 @@
     <value>Apply</value>
   </data>
   <data name="LocalStoragePath" xml:space="preserve">
-    <value>Loca lStorage Path</value>
+    <value>Local Storage Path</value>
   </data>
   <data name="Developers" xml:space="preserve">
     <value>Developers:</value>
@@ -376,10 +376,10 @@
     <value>Superviser</value>
   </data>
   <data name="NoAvailablePhotos" xml:space="preserve">
-    <value>NoAvailablePhotos</value>
+    <value>No Available Photos</value>
   </data>
   <data name="YourPhotos" xml:space="preserve">
-    <value>YourPhotos</value>
+    <value>Your Photos</value>
   </data>
   <data name="Devices" xml:space="preserve">
     <value>Devices</value>
@@ -401,5 +401,20 @@
   </data>
   <data name="Irises" xml:space="preserve">
     <value>Irises</value>
+  </data>
+  <data name="Faces" xml:space="preserve">
+    <value>Faces</value>
+  </data>
+  <data name="FingerDevices" xml:space="preserve">
+    <value>Finger Devices</value>
+  </data>
+  <data name="IrisDevices" xml:space="preserve">
+    <value>Iris Devices</value>
+  </data>
+  <data name="string_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="string_Custom" xml:space="preserve">
+    <value>Custom</value>
   </data>
 </root>

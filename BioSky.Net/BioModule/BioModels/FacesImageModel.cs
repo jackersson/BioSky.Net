@@ -161,8 +161,8 @@ namespace BioModule.BioModels
       }
       else
       {
-        //Bitmap processedFrame = DrawFaces(ref frame);
-        Bitmap processedFrame = frame;
+        Bitmap processedFrame = DrawFaces(ref frame);
+        //Bitmap processedFrame = frame;
 
         newFrame = BitmapConversion.BitmapToBitmapSource(processedFrame);
       }
@@ -200,7 +200,7 @@ namespace BioModule.BioModels
       _markerBitmapHolder.Unmarked = source;
     }
 
-    public void OnStop(bool stopped, Exception message, LocationDevice device)
+    public void OnStop(bool stopped, ErrorMessage error, LocationDevice device)
     {
       if (_markerBitmapHolder.Unmarked != null)
         _imageView.SetSingleImage(_markerBitmapHolder.Unmarked);

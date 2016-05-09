@@ -150,28 +150,10 @@
         </TextBlock>
 
         <local:ProgressRingView Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Center" Panel.ZIndex="100"
-                                VerticalAlignment="Center" DataContext="{Binding Progress}"/>
-        
-        <!--*****************************************ExpandViewButton********************************************************-->
-
-        <ToggleButton Name="ExpandButton" 
-                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,0,1"
-                      Width="40" Height="40" Panel.ZIndex="100" BorderBrush="#7F3587BD" BorderThickness="1"
-                      Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5"   IsChecked="{Binding IsExpanded}"
-                      ToolTip="Expand view" 
-                      Style="{StaticResource MetroCircleToggleButtonStyle}">
-            <Image Name="ExpandButtonImage" Width="20" Height="20" IsHitTestVisible="False" RenderTransformOrigin ="0.5,0.5" 
-                       VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform" Opacity="0.5" 
-                       Source="{Binding Source={StaticResource ResourceLoader}, Path=ExpandIconSource}">
-                <Image.RenderTransform>
-                    <RotateTransform Angle="0" />
-                </Image.RenderTransform>
-            </Image>            
-        </ToggleButton>
-        <!--*****************************************ExpandViewButton********************************************************-->
+                                VerticalAlignment="Center" DataContext="{Binding Progress}"/>        
 
         <!--*****************************************EnrollmentExpanderView**************************************************-->
-        <Expander Margin="0,0,38,0"      
+        <Expander      
             Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5" 
             ExpandDirection="Up" 
             HorizontalAlignment="Stretch"
@@ -255,7 +237,7 @@
                             </Button>
                         </Grid>
                         <ContentPresenter x:Name="ExpanderContent"
-                                          Visibility="Collapsed" Margin="0,0,0,4"
+                                          Visibility="Collapsed" Margin="0,0,0,7"
                                           Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2"
                                           VerticalAlignment="Bottom" HorizontalAlignment="Center"
                                           >
@@ -380,7 +362,7 @@
         <!--*****************************************PhotoInfoExpanderView**************************************************-->
 
 
-        <!--<StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
+        <StackPanel VerticalAlignment="Bottom" Grid.RowSpan="2" 
                     Orientation="Vertical" HorizontalAlignment="Left" Width="40">
             <Button Width="40" Height="40" Tag="{Binding BioImageModels[0].IsActive}"
                     ToolTip="Faces"   BorderBrush="#7F3587BD" BorderThickness="0" Style="{StaticResource MyBioImageButton}"
@@ -440,7 +422,7 @@
                 
                  >
             <Image Width="32" Height="32" Source="{Binding Source={StaticResource ResourceLoader}, Path=CancelIconSource}" />
-        </Button>-->
+        </Button>
 
         <Button cal:Message.Attach="[Event Click] = [Action Next()]" 
                 Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" 

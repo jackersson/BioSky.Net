@@ -125,7 +125,7 @@ namespace BioShell
       get
       {
         if (_notifier == null)
-          _notifier = _container.Resolve<INotifier>();
+          _notifier = _container.Resolve<INotifier>();        
 
         return _notifier == null ? new BioNotifier() : _notifier;
       }

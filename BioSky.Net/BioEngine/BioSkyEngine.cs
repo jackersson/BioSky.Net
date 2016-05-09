@@ -20,6 +20,7 @@ namespace BioEngine
       _loginInformation        = locator.GetProcessor<ILoginInformation>       ();
       _fingerprintDeviceEngine = locator.GetProcessor<IFingerprintDeviceEngine>();
       _irisDeviceEngine        = locator.GetProcessor<IIrisDeviceEngine>       ();
+      _permissionController    = locator.GetProcessor<IPermissionController>   ();
 
       AuthenticatedPerson = null;
     }
@@ -61,7 +62,7 @@ namespace BioEngine
 
     public bool IsActivityAllowed(Activity activity)
     {
-      return PermissionController.Instance.isActivityAllowed(activity);
+      return _permissionController.isActivityAllowed(activity);
     }    
 
     private Person _authenticatedPerson;
@@ -75,8 +76,8 @@ namespace BioEngine
         Rights rights = (_authenticatedPerson != null)
                                                                    ? _authenticatedPerson.Rights
                                                                    : Rights.Manager;
-
-        PermissionController.Instance.UpdateAuthenticatedPersonRights(rights);
+        
+        _permissionController.UpdateAuthenticatedPersonRights(rights);
       }
     }
 
@@ -87,5 +88,6 @@ namespace BioEngine
     private readonly ITrackLocationEngine     _trackLocationEngine    ;
     private          ILoginInformation        _loginInformation       ;
     private readonly IIrisDeviceEngine        _irisDeviceEngine       ;
+    private readonly IPermissionController    _permissionController   ;
   }
 }

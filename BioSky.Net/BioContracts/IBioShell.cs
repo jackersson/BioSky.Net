@@ -14,9 +14,7 @@ namespace BioContracts
 
     object ToolBar { get; set; }
 
-    object MainMenu { get; set; }  
-
-    object ProgressRing { get; set; }
+    object MainMenu { get; set; } 
 
     object LoginInformation { get; set; }
 

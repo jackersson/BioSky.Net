@@ -4,10 +4,11 @@ using Caliburn.Micro;
 using System.Windows.Media.Imaging;
 using BioModule.ResourcesLoader;
 using System.Windows;
+using BioContracts;
 
 namespace BioModule.ViewModels
 {
-  public class ProgressRingViewModel : PropertyChangedBase 
+  public class ProgressRingViewModel : PropertyChangedBase , IProgressShowable
   {   
     public ProgressRingViewModel()
     {    
@@ -77,6 +78,11 @@ namespace BioModule.ViewModels
           NotifyOfPropertyChange(() => ProgressRingActive);      
         }
       }
+    }
+
+    public IProgressShowable GetLoadingViewModel()
+    {
+      return this;
     }
 
 

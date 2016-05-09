@@ -86,10 +86,10 @@ namespace BioModule.ViewModels
         observer.Value.OnFrame(ref frame);
     }
 
-    public void OnStop(bool stopped, Exception ex, LocationDevice device) {
+    public void OnStop(bool stopped, ErrorMessage ex, LocationDevice device) {
 
-      if (ex.Message != "Stoped by user")
-        _notifier.ShowInformation(ex.Message);
+      if ((CaptureDeviceFinishPlayingEnum)ex.ExceptionEnum != CaptureDeviceFinishPlayingEnum.StoppedByUser)
+        _notifier.ShowInformation(ex.ExceptionMessage.Message);
       NotifyOfPropertyChange(() => DeviceConnectedIcon);
     }    
 

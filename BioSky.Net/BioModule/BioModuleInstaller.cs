@@ -67,6 +67,12 @@ namespace BioModule
         container.Register(Component.For<ILoginInformation>().ImplementedBy<LoginInformationViewModel>());
         container.Register(Component.For<IDialogsHolder, DialogsHolder>().ImplementedBy<DialogsHolder>());
 
+        container.Register(Component.For<IPermissionController>().ImplementedBy<PermissionController>());
+        container.Register(Component.For<IProgressShowable>().ImplementedBy<ProgressRingViewModel>());
+
+        container.Register(Component.For<PermissionControllerHolder>().LifeStyle.Singleton);
+
+
         container.Resolve<IProcessorLocator>().Init(container);
 
         // IBioStarter starter = container.Resolve<IBioStarter>();
